@@ -4,6 +4,10 @@ export type DefaultCategoryDefinition = {
   systemKey: string;
 };
 
+export function normalizeSeedCategoryName(name: string) {
+  return name.normalize("NFKC").trim().replace(/\s+/gu, " ").toLocaleLowerCase("id-ID");
+}
+
 export const DEFAULT_EXPENSE_CATEGORIES = [
   { name: "Makanan dan Minuman", type: "expense", systemKey: "expense-food-and-drink" },
   { name: "Transportasi", type: "expense", systemKey: "expense-transportation" },

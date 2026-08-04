@@ -47,6 +47,7 @@ export const accounts = pgTable(
     uniqueIndex("accounts_user_system_key_uidx")
       .on(table.userId, table.systemKey)
       .where(sql`${table.systemKey} is not null`),
+    uniqueIndex("accounts_id_user_id_uidx").on(table.id, table.userId),
   ],
 );
 

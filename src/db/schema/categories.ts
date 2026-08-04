@@ -24,6 +24,7 @@ export const categories = pgTable(
       .notNull()
       .references(() => profiles.userId, { onDelete: "cascade" }),
     name: varchar("name", { length: 80 }).notNull(),
+    normalizedName: varchar("normalized_name", { length: 80 }).notNull(),
     type: categoryType("type").notNull(),
     icon: varchar("icon", { length: 64 }),
     color: varchar("color", { length: 32 }),
@@ -49,6 +50,14 @@ export const categories = pgTable(
     uniqueIndex("categories_user_system_key_uidx")
       .on(table.userId, table.systemKey)
       .where(sql`${table.systemKey} is not null`),
+    uniqueIndex("categories_user_type_normalized_name_active_uidx")
+      .on(table.userId, table.type, table.normalizedName)
+      .where(sql`${table.status} = 'active'`),
+    uniqueIndex("categories_id_user_type_uidx").on(
+      table.id,
+      table.userId,
+      table.type,
+    ),
   ],
 );
 

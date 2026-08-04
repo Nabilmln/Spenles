@@ -3,7 +3,10 @@ import "server-only";
 import { and, count, eq, inArray } from "drizzle-orm";
 import { db } from "@/db";
 import { accounts, categories, profiles } from "@/db/schema";
-import { DEFAULT_CATEGORIES } from "@/db/seed/default-categories";
+import {
+  DEFAULT_CATEGORIES,
+  normalizeSeedCategoryName,
+} from "@/db/seed/default-categories";
 
 export type FoundationUser = {
   id: string;
@@ -27,6 +30,7 @@ export async function ensureUserFoundation(user: FoundationUser) {
         DEFAULT_CATEGORIES.map((category) => ({
           userId: user.id,
           name: category.name,
+          normalizedName: normalizeSeedCategoryName(category.name),
           type: category.type,
           systemKey: category.systemKey,
           isDefault: true,
