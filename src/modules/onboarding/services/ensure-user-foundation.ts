@@ -16,13 +16,12 @@ export async function ensureUserFoundation(user: FoundationUser) {
   const displayName = user.name.trim() || "Pengguna Spenles";
   const categoryKeys = DEFAULT_CATEGORIES.map((category) => category.systemKey);
 
-  return db.transaction(async (tx) => {
-    await tx
+  await db.batch([
+    db
       .insert(profiles)
       .values({ userId: user.id, displayName })
-      .onConflictDoNothing();
-
-    await tx
+      .onConflictDoNothing(),
+    db
       .insert(categories)
       .values(
         DEFAULT_CATEGORIES.map((category) => ({
@@ -33,9 +32,8 @@ export async function ensureUserFoundation(user: FoundationUser) {
           isDefault: true,
         })),
       )
-      .onConflictDoNothing();
-
-    await tx
+      .onConflictDoNothing(),
+    db
       .insert(accounts)
       .values({
         userId: user.id,
@@ -45,45 +43,45 @@ export async function ensureUserFoundation(user: FoundationUser) {
         openingBalance: BigInt(0),
         systemKey: DEFAULT_ACCOUNT_KEY,
       })
-      .onConflictDoNothing();
+      .onConflictDoNothing(),
+  ]);
 
-    const [profileCount, categoryCount, accountCount] = await Promise.all([
-      tx
-        .select({ value: count() })
-        .from(profiles)
-        .where(eq(profiles.userId, user.id)),
-      tx
-        .select({ value: count() })
-        .from(categories)
-        .where(
-          and(
-            eq(categories.userId, user.id),
-            inArray(categories.systemKey, categoryKeys),
-          ),
+  const [profileCount, categoryCount, accountCount] = await Promise.all([
+    db
+      .select({ value: count() })
+      .from(profiles)
+      .where(eq(profiles.userId, user.id)),
+    db
+      .select({ value: count() })
+      .from(categories)
+      .where(
+        and(
+          eq(categories.userId, user.id),
+          inArray(categories.systemKey, categoryKeys),
         ),
-      tx
-        .select({ value: count() })
-        .from(accounts)
-        .where(
-          and(
-            eq(accounts.userId, user.id),
-            eq(accounts.systemKey, DEFAULT_ACCOUNT_KEY),
-          ),
+      ),
+    db
+      .select({ value: count() })
+      .from(accounts)
+      .where(
+        and(
+          eq(accounts.userId, user.id),
+          eq(accounts.systemKey, DEFAULT_ACCOUNT_KEY),
         ),
-    ]);
+      ),
+  ]);
 
-    if (
-      profileCount[0]?.value !== 1 ||
-      categoryCount[0]?.value !== DEFAULT_CATEGORIES.length ||
-      accountCount[0]?.value !== 1
-    ) {
-      throw new Error("Inisialisasi akun belum lengkap.");
-    }
+  if (
+    profileCount[0]?.value !== 1 ||
+    categoryCount[0]?.value !== DEFAULT_CATEGORIES.length ||
+    accountCount[0]?.value !== 1
+  ) {
+    throw new Error("Inisialisasi akun belum lengkap.");
+  }
 
-    return {
-      profileCreated: true,
-      categoryCount: categoryCount[0].value,
-      accountCount: accountCount[0].value,
-    };
-  });
+  return {
+    profileCreated: true,
+    categoryCount: categoryCount[0].value,
+    accountCount: accountCount[0].value,
+  };
 }
