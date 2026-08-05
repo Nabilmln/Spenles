@@ -1,6 +1,7 @@
 import "server-only";
 
 import { and, eq } from "drizzle-orm";
+import { hasPostgresErrorCode } from "@/db/errors";
 import type { Database } from "@/db/types";
 import { categories } from "@/db/schema";
 
@@ -41,12 +42,7 @@ export async function setOwnedCategoryStatus(
       ? { ok: true as const, id: rows[0].id }
       : { ok: false as const, reason: "not-found" as const };
   } catch (error) {
-    if (
-      typeof error === "object" &&
-      error !== null &&
-      "code" in error &&
-      (error as { code?: string }).code === "23505"
-    ) {
+    if (hasPostgresErrorCode(error, "23505")) {
       return { ok: false as const, reason: "duplicate" as const };
     }
     throw error;

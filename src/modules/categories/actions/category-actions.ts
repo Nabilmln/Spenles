@@ -3,6 +3,7 @@
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
+import { hasPostgresErrorCode } from "@/db/errors";
 import { categories } from "@/db/schema";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { categoryIdSchema, categorySchema } from "../schemas/category";
@@ -18,11 +19,6 @@ export type CategoryStatusActionState = { error?: string };
 function optionalValue(formData: FormData, key: string) {
   const value = formData.get(key);
   return typeof value === "string" && value ? value : null;
-}
-
-function isUniqueViolation(error: unknown) {
-  return typeof error === "object" && error !== null && "code" in error &&
-    (error as { code?: string }).code === "23505";
 }
 
 export async function createCategoryAction(
@@ -49,7 +45,7 @@ export async function createCategoryAction(
     }).returning({ id: categories.id });
     if (!rows[0]) return { error: "Kategori belum dapat dibuat." };
   } catch (error) {
-    return { error: isUniqueViolation(error) ? "Kategori aktif dengan nama tersebut sudah ada." : "Kategori belum dapat dibuat." };
+    return { error: hasPostgresErrorCode(error, "23505") ? "Kategori aktif dengan nama tersebut sudah ada." : "Kategori belum dapat dibuat." };
   }
   revalidatePath("/categories");
   revalidatePath("/transactions");
@@ -84,7 +80,7 @@ export async function updateCategoryAction(
     });
     if (!updated) return { error: "Kategori tidak ditemukan." };
   } catch (error) {
-    return { error: isUniqueViolation(error) ? "Kategori aktif dengan nama tersebut sudah ada." : "Kategori belum dapat diperbarui." };
+    return { error: hasPostgresErrorCode(error, "23505") ? "Kategori aktif dengan nama tersebut sudah ada." : "Kategori belum dapat diperbarui." };
   }
   revalidatePath("/categories");
   revalidatePath("/transactions");
