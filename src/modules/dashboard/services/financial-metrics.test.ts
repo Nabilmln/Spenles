@@ -37,6 +37,16 @@ describe("financial metrics", () => {
       state: "absolute-only",
       changeBps: null,
     });
+    expect(compareFinancialValue(-5n, -10n)).toMatchObject({
+      delta: 5n,
+      state: "absolute-only",
+      changeBps: null,
+    });
+    expect(compareFinancialValue(-20n, -10n)).toMatchObject({
+      delta: -10n,
+      state: "absolute-only",
+      changeBps: null,
+    });
   });
 
   it("calculates ratios without division by zero", () => {

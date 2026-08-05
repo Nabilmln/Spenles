@@ -8,6 +8,8 @@ export default defineConfig({
     restoreMocks: true,
     clearMocks: true,
     fileParallelism: false,
+    testTimeout: 30_000,
+    hookTimeout: 30_000,
   },
   resolve: {
     alias: {

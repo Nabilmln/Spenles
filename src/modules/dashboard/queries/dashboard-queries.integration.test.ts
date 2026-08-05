@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { accounts, categories, profiles, transactions } from "@/db/schema";
 import { ensureUserFoundationWithDatabase } from "@/modules/onboarding/services/ensure-user-foundation";
@@ -15,6 +15,8 @@ import {
 const database = getTestDatabase();
 const userA = `phase03-test-a-${randomUUID()}`;
 const userB = `phase03-test-b-${randomUUID()}`;
+const planUserA = `phase03-plan-a-${randomUUID()}`;
+const planUserB = `phase03-plan-b-${randomUUID()}`;
 const periods = resolveDashboardPeriods(
   {
     selection: { kind: "month", month: "2026-08" },
@@ -29,6 +31,10 @@ let incomeCategoryA = "";
 let expenseCategoryA = "";
 let expenseCategoryA2 = "";
 let incomeCategoryB = "";
+let planAccountA = "";
+let planAccountB = "";
+let planExpenseCategoryA = "";
+let planExpenseCategoryB = "";
 
 beforeAll(async () => {
   await ensureUserFoundationWithDatabase(database, {
@@ -39,12 +45,20 @@ beforeAll(async () => {
     id: userB,
     name: "Dashboard User B",
   });
+  await ensureUserFoundationWithDatabase(database, {
+    id: planUserA,
+    name: "Dashboard Plan User A",
+  });
+  await ensureUserFoundationWithDatabase(database, {
+    id: planUserB,
+    name: "Dashboard Plan User B",
+  });
 
   const [ownedAccounts, ownedCategories] = await Promise.all([
     database
       .select({ id: accounts.id, userId: accounts.userId })
       .from(accounts)
-      .where(inArray(accounts.userId, [userA, userB])),
+      .where(inArray(accounts.userId, [userA, userB, planUserA, planUserB])),
     database
       .select({
         id: categories.id,
@@ -52,11 +66,19 @@ beforeAll(async () => {
         type: categories.type,
       })
       .from(categories)
-      .where(inArray(categories.userId, [userA, userB])),
+      .where(
+        inArray(categories.userId, [userA, userB, planUserA, planUserB]),
+      ),
   ]);
 
   accountA = ownedAccounts.find((item) => item.userId === userA)!.id;
   accountB = ownedAccounts.find((item) => item.userId === userB)!.id;
+  planAccountA = ownedAccounts.find(
+    (item) => item.userId === planUserA,
+  )!.id;
+  planAccountB = ownedAccounts.find(
+    (item) => item.userId === planUserB,
+  )!.id;
   incomeCategoryA = ownedCategories.find(
     (item) => item.userId === userA && item.type === "income",
   )!.id;
@@ -65,6 +87,12 @@ beforeAll(async () => {
   )!.id;
   incomeCategoryB = ownedCategories.find(
     (item) => item.userId === userB && item.type === "income",
+  )!.id;
+  planExpenseCategoryA = ownedCategories.find(
+    (item) => item.userId === planUserA && item.type === "expense",
+  )!.id;
+  planExpenseCategoryB = ownedCategories.find(
+    (item) => item.userId === planUserB && item.type === "expense",
   )!.id;
 
   const [extraCategory] = await database
@@ -157,12 +185,49 @@ beforeAll(async () => {
       transactionAt: new Date("2026-08-15T05:00:00.000Z"),
     },
   ]);
+
+  await database.execute(sql`
+    insert into transactions (
+      user_id,
+      account_id,
+      category_id,
+      type,
+      amount,
+      transaction_at
+    )
+    select
+      ${planUserA},
+      ${planAccountA}::uuid,
+      ${planExpenseCategoryA}::uuid,
+      'expense'::category_type,
+      ((sequence % 1000) + 1)::bigint,
+      timestamp with time zone '2023-01-01 00:00:00+00'
+        + sequence * interval '6 hours'
+    from generate_series(0, 5999) as sequence
+
+    union all
+
+    select
+      ${planUserB},
+      ${planAccountB}::uuid,
+      ${planExpenseCategoryB}::uuid,
+      'expense'::category_type,
+      ((sequence % 1000) + 1)::bigint,
+      timestamp with time zone '2023-01-01 00:00:00+00'
+        + sequence * interval '6 hours'
+    from generate_series(0, 5999) as sequence
+  `);
+
+  await database.execute(sql`analyze transactions`);
 });
 
 afterAll(async () => {
   await database
     .delete(profiles)
-    .where(inArray(profiles.userId, [userA, userB]));
+    .where(
+      inArray(profiles.userId, [userA, userB, planUserA, planUserB]),
+    );
+  await database.execute(sql`analyze transactions`);
 });
 
 describe("Phase 03 dashboard queries", () => {
@@ -249,5 +314,74 @@ describe("Phase 03 dashboard queries", () => {
       .from(categories)
       .where(and(eq(categories.userId, userB), eq(categories.type, "expense")));
     expect(categoriesForB.length).toBeGreaterThan(0);
+  });
+
+  it("uses active transaction indexes for representative dashboard plans", async () => {
+    type ExplainRow = { "QUERY PLAN": string };
+    const start = new Date("2026-08-01T00:00:00.000Z");
+    const end = new Date("2026-09-01T00:00:00.000Z");
+
+    const plans = await Promise.all([
+      database.execute<ExplainRow>(sql`
+        explain (analyze, buffers, format text)
+        select
+          coalesce(sum(amount) filter (where type = 'income'), 0),
+          coalesce(sum(amount) filter (where type = 'expense'), 0)
+        from transactions
+        where user_id = ${planUserA}
+          and deleted_at is null
+          and transaction_at >= ${start}
+          and transaction_at < ${end}
+      `),
+      database.execute<ExplainRow>(sql`
+        explain (analyze, buffers, format text)
+        select
+          date_trunc('month', timezone('Asia/Jakarta', transaction_at)),
+          sum(amount)
+        from transactions
+        where user_id = ${planUserA}
+          and deleted_at is null
+          and transaction_at >= ${start}
+          and transaction_at < ${end}
+        group by date_trunc(
+          'month',
+          timezone('Asia/Jakarta', transaction_at)
+        )
+      `),
+      database.execute<ExplainRow>(sql`
+        explain (analyze, buffers, format text)
+        select category_id, sum(amount)
+        from transactions
+        where user_id = ${planUserA}
+          and deleted_at is null
+          and type = 'expense'
+          and transaction_at >= ${start}
+          and transaction_at < ${end}
+        group by category_id
+      `),
+      database.execute<ExplainRow>(sql`
+        explain (analyze, buffers, format text)
+        select id, transaction_at
+        from transactions
+        where user_id = ${planUserA}
+          and deleted_at is null
+          and transaction_at >= ${start}
+          and transaction_at < ${end}
+        order by transaction_at desc, id desc
+        limit 5
+      `),
+    ]);
+
+    const planTexts = plans.map((result) =>
+      result.rows.map((row) => row["QUERY PLAN"]).join("\n"),
+    );
+
+    expect(planTexts).toHaveLength(4);
+    for (const planText of planTexts) {
+      expect(planText).toMatch(
+        /transactions_user_(?:occurred_id|type_occurred)_active_idx/,
+      );
+      expect(planText).not.toMatch(/Seq Scan on transactions/);
+    }
   });
 });
