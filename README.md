@@ -5,7 +5,9 @@ Fase 01 menyediakan fondasi aplikasi dan Fase 02 menyediakan transaksi
 pemasukan/pengeluaran, kalkulator aman, riwayat transaksi, serta pengelolaan
 kategori. Fase 03 menyediakan dashboard arus kas dengan periode tervalidasi,
 ringkasan perbandingan, tiga grafik aksesibel, profil arus kas, dan transaksi
-terbaru.
+terbaru. Fase 04 menyediakan banyak akun IDR, saldo otoritatif, transfer
+internal, anggaran kategori bulanan, transaksi berulang idempoten, scheduler
+aman, dan peringatan dalam aplikasi.
 
 ## Persyaratan
 
@@ -16,8 +18,9 @@ terbaru.
 ## Menjalankan secara lokal
 
 1. Salin `.env.example` menjadi `.env.local`.
-2. Isi `DATABASE_URL`, `NEON_AUTH_BASE_URL`, dan
-   `NEON_AUTH_COOKIE_SECRET`.
+2. Isi `DATABASE_URL`, `NEON_AUTH_BASE_URL`,
+   `NEON_AUTH_COOKIE_SECRET`, dan `CRON_SECRET`. `CRON_SECRET` harus berupa
+   rahasia acak server-only dengan sedikitnya 32 karakter.
 3. Pasang dependensi dan migrasikan database:
 
 ```bash
@@ -62,3 +65,11 @@ npm run test:integration
 ```
 
 Jangan arahkan `TEST_DATABASE_URL` ke database development atau production.
+
+## Scheduler transaksi berulang
+
+Vercel Cron memanggil `GET /api/cron/recurring-transactions` setiap jam sesuai
+`vercel.json`. Endpoint hanya menerima `Authorization: Bearer CRON_SECRET`,
+tidak menggunakan sesi browser sebagai otoritas, tidak menerima user ID, dan
+hanya mengembalikan hitungan operasional aman. Pastikan paket Vercel yang
+digunakan mendukung jadwal per jam sebelum rilis.

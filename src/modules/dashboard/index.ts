@@ -1,4 +1,5 @@
 export * from "./components/accessible-chart-table";
+export * from "./components/account-summary";
 export * from "./components/cash-flow-profile";
 export * from "./components/category-expense-chart";
 export * from "./components/chart-shell";

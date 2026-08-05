@@ -15,6 +15,13 @@
       "when": 1785844032075,
       "tag": "0001_phase-02-transactions",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785932853713,
+      "tag": "0002_phase-04-budgets",
+      "breakpoints": true
     }
   ]
 }

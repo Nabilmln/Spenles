@@ -4,6 +4,7 @@ import { formatIdr } from "@/lib/money/format-idr";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import {
   AccessibleChartTable,
+  AccountSummary,
   buildCategoryChartContract,
   buildCategoryVisualPoints,
   buildFinancialSnapshot,
@@ -28,6 +29,8 @@ import {
   type DashboardSearchParams,
 } from "@/modules/dashboard";
 import { getProfile } from "@/modules/profiles";
+import { getActiveAccountsTotal } from "@/modules/accounts";
+import { AlertList, listOwnedPhase04Alerts } from "@/modules/alerts";
 
 export const metadata = { title: "Beranda" };
 export const dynamic = "force-dynamic";
@@ -85,12 +88,16 @@ export default async function DashboardPage({
     chartMonthlyResult,
     categoriesResult,
     recentResult,
+    accountTotalResult,
+    alertsResult,
   ] = await Promise.allSettled([
     getSelectedAndPreviousTotals(user.id, periods.selected, periods.previous),
     getMonthlyAggregates(user.id, periods.selected),
     getMonthlyAggregates(user.id, periods.chart),
     getCategoryExpenseAggregates(user.id, periods.selected),
     getRecentDashboardTransactions(user.id, periods.selected),
+    getActiveAccountsTotal(user.id),
+    listOwnedPhase04Alerts(user.id),
   ]);
 
   const totals = isFulfilled(totalsResult) ? totalsResult.value : null;
@@ -130,13 +137,21 @@ export default async function DashboardPage({
       <div className="dashboard-hero">
         <SectionHeading
           description={`Ringkasan pribadi dalam IDR dengan batas waktu ${analysisTimezone}.`}
-          eyebrow="Dashboard · Fase 03"
+          eyebrow="Dashboard"
           title={`Halo, ${profile?.displayName ?? "Pengguna Spenles"}`}
         />
         <Link className="button button-primary" href="/transactions/new">
           Tambah transaksi
         </Link>
       </div>
+
+      {isFulfilled(alertsResult) ? <AlertList alerts={alertsResult.value} /> : null}
+
+      {isFulfilled(accountTotalResult) ? (
+        <AccountSummary total={accountTotalResult.value} />
+      ) : (
+        <DashboardSectionError title="Ringkasan akun belum tersedia" />
+      )}
 
       <PeriodSelector
         defaultMonth={periods.chartMonthKeys.at(-1)!}

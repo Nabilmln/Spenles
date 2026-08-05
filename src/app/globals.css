@@ -315,3 +315,58 @@ h1, h2, p { margin-top: 0; }
   .dashboard-empty { grid-template-columns: auto minmax(0, 1fr); }
   .dashboard-empty .button { grid-column: 1 / -1; width: 100%; }
 }
+
+.domain-form { display: grid; gap: 1rem; }
+.domain-form small { color: var(--muted); }
+.domain-layout { display: grid; grid-template-columns: minmax(18rem, .75fr) minmax(0, 1.25fr); gap: 1rem; align-items: start; }
+.domain-layout > section { display: grid; gap: 1rem; }
+.domain-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.domain-card { display: grid; gap: .9rem; min-width: 0; }
+.domain-card h2 { margin: .15rem 0 0; }
+.domain-card p { margin: 0; }
+.domain-card-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.status-badge { display: inline-flex; align-items: center; min-height: 1.8rem; padding: .25rem .55rem; border-radius: 999px; color: var(--muted); background: var(--surface-subtle); font-size: .72rem; font-weight: 800; white-space: nowrap; }
+.status-active, .budget-safe { color: var(--income); background: color-mix(in srgb, var(--income) 10%, transparent); }
+.status-paused, .budget-warning { color: #b45309; background: color-mix(in srgb, var(--warning) 16%, transparent); }
+.budget-exceeded { color: var(--expense); background: color-mix(in srgb, var(--expense) 10%, transparent); }
+.balance-label { color: var(--muted); font-size: .78rem; }
+.domain-card > strong, .account-detail > strong, .account-summary > strong { overflow-wrap: anywhere; font-size: clamp(1.35rem, 2.7vw, 2rem); }
+.negative-balance, .warning-copy { color: var(--expense) !important; }
+.warning-copy { font-weight: 700; }
+.transfer-row { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 1rem; }
+.transfer-row p { margin: .2rem 0 0; color: var(--muted); font-size: .78rem; }
+.budget-progress { height: .7rem; overflow: hidden; border-radius: 999px; background: var(--surface-subtle); }
+.budget-progress > span { display: block; height: 100%; border-radius: inherit; background: var(--primary-600); }
+.budget-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: .65rem; margin: 0; }
+.budget-metrics div { display: grid; gap: .15rem; }
+.budget-metrics dt { color: var(--muted); font-size: .72rem; }
+.budget-metrics dd { margin: 0; font-weight: 750; }
+.alert-list { display: grid; gap: .65rem; }
+.alert-banner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: .9rem 1rem; border: 1px solid var(--border); border-radius: .8rem; }
+.alert-banner p { margin: .25rem 0 0; font-size: .8rem; }
+.alert-warning { border-color: color-mix(in srgb, var(--warning) 45%, var(--border)); background: color-mix(in srgb, var(--warning) 8%, var(--surface)); }
+.alert-danger { border-color: color-mix(in srgb, var(--expense) 35%, var(--border)); background: color-mix(in srgb, var(--expense) 7%, var(--surface)); }
+.account-summary { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 1rem; }
+.account-summary h2 { margin: .15rem 0 0; }
+.mobile-more { position: relative; }
+.mobile-more summary { list-style: none; cursor: pointer; }
+.mobile-more summary::-webkit-details-marker { display: none; }
+.mobile-more-popover { position: absolute; right: 0; bottom: calc(100% + .7rem); display: grid; min-width: 12rem; padding: .45rem; border: 1px solid var(--border); border-radius: .8rem; background: var(--surface); box-shadow: var(--shadow); }
+.mobile-more-popover a { display: flex; align-items: center; gap: .65rem; min-height: 2.8rem; padding: .55rem .7rem; border-radius: .55rem; }
+.mobile-more-popover a:hover, .mobile-more-popover a:focus-visible { background: var(--surface-subtle); }
+
+@media (max-width: 1100px) {
+  .domain-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 860px) {
+  .domain-layout { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 540px) {
+  .domain-grid { grid-template-columns: 1fr; }
+  .transfer-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .transfer-row form, .transfer-row .status-badge { grid-column: 1 / -1; justify-self: start; }
+  .account-summary { grid-template-columns: 1fr; }
+  .alert-banner { align-items: flex-start; flex-direction: column; }
+}

@@ -50,6 +50,8 @@ export async function createTransactionAction(
     return { error: "Transaksi belum dapat disimpan." };
   }
   revalidatePath("/transactions");
+  revalidatePath("/accounts");
+  revalidatePath("/budgets");
   revalidatePath("/dashboard");
   redirect("/transactions");
 }
@@ -82,6 +84,8 @@ export async function updateTransactionAction(
     return { error: "Transaksi belum dapat diperbarui." };
   }
   revalidatePath("/transactions");
+  revalidatePath("/accounts");
+  revalidatePath("/budgets");
   revalidatePath("/dashboard");
   redirect("/transactions");
 }
@@ -93,5 +97,7 @@ export async function deleteTransactionAction(formData: FormData) {
   const deleted = await softDeleteOwnedTransaction(db, user.id, id.data);
   if (!deleted) return;
   revalidatePath("/transactions");
+  revalidatePath("/accounts");
+  revalidatePath("/budgets");
   revalidatePath("/dashboard");
 }

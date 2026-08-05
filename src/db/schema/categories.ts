@@ -58,6 +58,7 @@ export const categories = pgTable(
       table.userId,
       table.type,
     ),
+    uniqueIndex("categories_id_user_id_uidx").on(table.id, table.userId),
   ],
 );
 

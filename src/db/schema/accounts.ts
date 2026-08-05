@@ -13,7 +13,12 @@ import {
 } from "drizzle-orm/pg-core";
 import { profiles } from "./profiles";
 
-export const accountType = pgEnum("account_type", ["cash"]);
+export const accountType = pgEnum("account_type", [
+  "cash",
+  "bank",
+  "e_wallet",
+  "other",
+]);
 export const recordStatus = pgEnum("record_status", ["active", "archived"]);
 
 export const accounts = pgTable(
@@ -42,6 +47,10 @@ export const accounts = pgTable(
     check("accounts_name_not_blank", sql`length(trim(${table.name})) > 0`),
     check("accounts_currency_idr", sql`${table.currency} = 'IDR'`),
     check("accounts_opening_balance_non_negative", sql`${table.openingBalance} >= 0`),
+    check(
+      "accounts_opening_balance_safe",
+      sql`${table.openingBalance} <= 9007199254740991`,
+    ),
     index("accounts_user_id_idx").on(table.userId),
     index("accounts_user_status_idx").on(table.userId, table.status),
     uniqueIndex("accounts_user_system_key_uidx")

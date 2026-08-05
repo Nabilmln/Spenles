@@ -49,6 +49,8 @@ export async function createCategoryAction(
   }
   revalidatePath("/categories");
   revalidatePath("/transactions");
+  revalidatePath("/budgets");
+  revalidatePath("/recurring-transactions");
   revalidatePath("/dashboard");
   return { success: "Kategori berhasil dibuat." };
 }
@@ -84,6 +86,8 @@ export async function updateCategoryAction(
   }
   revalidatePath("/categories");
   revalidatePath("/transactions");
+  revalidatePath("/budgets");
+  revalidatePath("/recurring-transactions");
   revalidatePath("/dashboard");
   return { success: "Kategori berhasil diperbarui." };
 }
@@ -106,6 +110,8 @@ async function setCategoryStatus(
   }
   revalidatePath("/categories");
   revalidatePath("/transactions");
+  revalidatePath("/budgets");
+  revalidatePath("/recurring-transactions");
   revalidatePath("/dashboard");
   return {};
 }

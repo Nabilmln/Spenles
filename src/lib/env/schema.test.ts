@@ -26,4 +26,11 @@ describe("parseServerEnv", () => {
       parseServerEnv({ ...validEnv, DATABASE_URL: "https://example.com" }),
     ).toThrow("DATABASE_URL");
   });
+
+  it("accepts an omitted scheduler secret and rejects a short configured one", () => {
+    expect(parseServerEnv(validEnv).CRON_SECRET).toBeUndefined();
+    expect(() =>
+      parseServerEnv({ ...validEnv, CRON_SECRET: "short" }),
+    ).toThrow("CRON_SECRET");
+  });
 });

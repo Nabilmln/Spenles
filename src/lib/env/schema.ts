@@ -6,6 +6,7 @@ export const serverEnvSchema = z.object({
   }),
   NEON_AUTH_BASE_URL: z.url(),
   NEON_AUTH_COOKIE_SECRET: z.string().min(32),
+  CRON_SECRET: z.string().min(32).optional(),
 });
 
 export type ServerEnv = z.infer<typeof serverEnvSchema>;

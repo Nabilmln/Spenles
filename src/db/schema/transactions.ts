@@ -7,6 +7,7 @@ import {
   pgTable,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
@@ -66,6 +67,7 @@ export const transactions = pgTable(
     index("transactions_user_amount_id_active_idx")
       .on(table.userId, table.amount, table.id)
       .where(sql`${table.deletedAt} is null`),
+    uniqueIndex("transactions_id_user_id_uidx").on(table.id, table.userId),
   ],
 );
 

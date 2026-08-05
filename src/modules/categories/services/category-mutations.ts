@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, eq } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { hasPostgresErrorCode } from "@/db/errors";
 import type { Database } from "@/db/types";
 import { categories } from "@/db/schema";
@@ -32,6 +32,35 @@ export async function setOwnedCategoryStatus(
   status: "active" | "archived",
 ) {
   try {
+    if (status === "archived") {
+      const result = await database.execute<{ id: string }>(sql`
+        with archived_category as (
+          update categories
+          set status = 'archived', updated_at = now()
+          where id = ${categoryId}::uuid
+            and user_id = ${userId}
+          returning id
+        ),
+        paused_rules as (
+          update recurring_rules as rule
+          set
+            status = 'paused',
+            pause_reason = 'blocked_category',
+            last_failure_code = 'blocked_category',
+            last_failure_at = now(),
+            updated_at = now()
+          from archived_category
+          where rule.user_id = ${userId}
+            and rule.category_id = archived_category.id
+            and rule.status = 'active'
+          returning rule.id
+        )
+        select id from archived_category
+      `);
+      return result.rows[0]
+        ? { ok: true as const, id: result.rows[0].id }
+        : { ok: false as const, reason: "not-found" as const };
+    }
     const rows = await database
       .update(categories)
       .set({ status, updatedAt: new Date() })
