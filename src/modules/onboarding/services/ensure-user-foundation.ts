@@ -2,6 +2,7 @@ import "server-only";
 
 import { and, count, eq, inArray } from "drizzle-orm";
 import { db } from "@/db";
+import type { Database } from "@/db/types";
 import { accounts, categories, profiles } from "@/db/schema";
 import {
   DEFAULT_CATEGORIES,
@@ -15,16 +16,19 @@ export type FoundationUser = {
 
 const DEFAULT_ACCOUNT_KEY = "default-cash-account";
 
-export async function ensureUserFoundation(user: FoundationUser) {
+export async function ensureUserFoundationWithDatabase(
+  database: Database,
+  user: FoundationUser,
+) {
   const displayName = user.name.trim() || "Pengguna Spenles";
   const categoryKeys = DEFAULT_CATEGORIES.map((category) => category.systemKey);
 
-  await db.batch([
-    db
+  await database.batch([
+    database
       .insert(profiles)
       .values({ userId: user.id, displayName })
       .onConflictDoNothing(),
-    db
+    database
       .insert(categories)
       .values(
         DEFAULT_CATEGORIES.map((category) => ({
@@ -37,7 +41,7 @@ export async function ensureUserFoundation(user: FoundationUser) {
         })),
       )
       .onConflictDoNothing(),
-    db
+    database
       .insert(accounts)
       .values({
         userId: user.id,
@@ -51,11 +55,11 @@ export async function ensureUserFoundation(user: FoundationUser) {
   ]);
 
   const [profileCount, categoryCount, accountCount] = await Promise.all([
-    db
+    database
       .select({ value: count() })
       .from(profiles)
       .where(eq(profiles.userId, user.id)),
-    db
+    database
       .select({ value: count() })
       .from(categories)
       .where(
@@ -64,7 +68,7 @@ export async function ensureUserFoundation(user: FoundationUser) {
           inArray(categories.systemKey, categoryKeys),
         ),
       ),
-    db
+    database
       .select({ value: count() })
       .from(accounts)
       .where(
@@ -88,4 +92,8 @@ export async function ensureUserFoundation(user: FoundationUser) {
     categoryCount: categoryCount[0].value,
     accountCount: accountCount[0].value,
   };
+}
+
+export function ensureUserFoundation(user: FoundationUser) {
+  return ensureUserFoundationWithDatabase(db, user);
 }

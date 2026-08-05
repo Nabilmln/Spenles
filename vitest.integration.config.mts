@@ -1,15 +1,13 @@
-import { configDefaults, defineConfig } from "vitest/config";
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   test: {
-    environment: "jsdom",
-    exclude: [...configDefaults.exclude, "**/*.integration.test.ts"],
-    setupFiles: ["./vitest.setup.ts"],
+    environment: "node",
+    include: ["**/*.integration.test.ts"],
+    setupFiles: ["./vitest.integration.setup.ts"],
     restoreMocks: true,
     clearMocks: true,
-    coverage: {
-      reporter: ["text", "html"],
-    },
+    fileParallelism: false,
   },
   resolve: {
     alias: {

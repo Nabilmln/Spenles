@@ -1,5 +1,6 @@
 import { archiveCategoryAction, restoreCategoryAction, updateCategoryAction } from "../actions/category-actions";
 import { CategoryForm } from "./category-form";
+import { CategoryStatusForm } from "./category-status-form";
 
 type Category = {
   id: string;
@@ -29,16 +30,18 @@ export function CategoryList({ rows }: { rows: Category[] }) {
                     <CategoryForm action={updateCategoryAction} initial={category} />
                   </div>
                 </details>
-                <form action={archiveCategoryAction}>
-                  <input type="hidden" name="id" value={category.id} />
-                  <button className="button button-secondary" type="submit">Arsipkan</button>
-                </form>
+                <CategoryStatusForm
+                  action={archiveCategoryAction}
+                  categoryId={category.id}
+                  label="Arsipkan"
+                />
               </>
             ) : (
-              <form action={restoreCategoryAction}>
-                <input type="hidden" name="id" value={category.id} />
-                <button className="button button-secondary" type="submit">Pulihkan</button>
-              </form>
+              <CategoryStatusForm
+                action={restoreCategoryAction}
+                categoryId={category.id}
+                label="Pulihkan"
+              />
             )}
           </div>
         </article>

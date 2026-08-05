@@ -30,4 +30,9 @@ describe("transaction filters", () => {
     const result = parseTransactionFilters({ page: ["2", "999"] });
     expect(result.success && result.data.page).toBe(2);
   });
+
+  it("accepts at most 366 inclusive calendar days", () => {
+    expect(parseTransactionFilters({ from: "2024-01-01", to: "2024-12-31" }).success).toBe(true);
+    expect(parseTransactionFilters({ from: "2024-01-01", to: "2025-01-01" }).success).toBe(false);
+  });
 });

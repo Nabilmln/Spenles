@@ -1,9 +1,9 @@
 # Spenles
 
 Spenles adalah aplikasi web pengelolaan keuangan pribadi berbahasa Indonesia.
-Fase 01 menyediakan fondasi aplikasi: Neon Auth, profil pengguna, kategori
-bawaan, akun `Kas Utama`, layout responsif, dan tema terang/gelap. Fitur
-transaksi dan analisis keuangan belum termasuk.
+Fase 01 menyediakan fondasi aplikasi dan Fase 02 menyediakan transaksi
+pemasukan/pengeluaran, kalkulator aman, riwayat transaksi, serta pengelolaan
+kategori. Dashboard analitik Fase 03 belum diimplementasikan.
 
 ## Persyaratan
 
@@ -38,6 +38,7 @@ pnpm, atau Bun.
 npm run lint
 npm run typecheck
 npm run test
+npm run test:integration
 npm run build
 npm run db:generate
 npm run db:migrate
@@ -46,3 +47,16 @@ npm run db:studio
 
 Kode aplikasi berada di `src/`. Akses database hanya boleh melalui modul
 server-only di `src/db/`.
+
+## Database integration test
+
+Database integration test wajib memakai Neon branch/database terpisah melalui
+`TEST_DATABASE_URL`. Command berikut akan berhenti tanpa membuka koneksi bila
+variabel tersebut hilang, sama dengan `DATABASE_URL`, atau target
+teridentifikasi sebagai production:
+
+```bash
+npm run test:integration
+```
+
+Jangan arahkan `TEST_DATABASE_URL` ke database development atau production.

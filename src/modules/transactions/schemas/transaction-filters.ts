@@ -25,7 +25,7 @@ export const transactionFilterSchema = z
     if (value.from && value.to) {
       const from = jakartaDateBoundary(value.from);
       const to = jakartaDateBoundary(value.to);
-      if (!from || !to || from > to || to.getTime() - from.getTime() > 366 * 86_400_000) {
+      if (!from || !to || from > to || to.getTime() - from.getTime() >= 366 * 86_400_000) {
         context.addIssue({ code: "custom", message: "Rentang tanggal tidak valid atau melebihi 366 hari." });
       }
     }

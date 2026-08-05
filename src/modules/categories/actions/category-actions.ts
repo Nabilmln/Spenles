@@ -6,9 +6,14 @@ import { db } from "@/db";
 import { categories } from "@/db/schema";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { categoryIdSchema, categorySchema } from "../schemas/category";
+import {
+  setOwnedCategoryStatus,
+  updateOwnedCategory,
+} from "../services/category-mutations";
 import { normalizeCategoryName } from "../services/normalize-category-name";
 
 export type CategoryActionState = { success?: string; error?: string };
+export type CategoryStatusActionState = { error?: string };
 
 function optionalValue(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -33,7 +38,7 @@ export async function createCategoryAction(
   });
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
   try {
-    await db.insert(categories).values({
+    const rows = await db.insert(categories).values({
       userId: user.id,
       name: parsed.data.name,
       normalizedName: normalizeCategoryName(parsed.data.name),
@@ -41,11 +46,14 @@ export async function createCategoryAction(
       icon: parsed.data.icon,
       color: parsed.data.color,
       isDefault: false,
-    });
+    }).returning({ id: categories.id });
+    if (!rows[0]) return { error: "Kategori belum dapat dibuat." };
   } catch (error) {
     return { error: isUniqueViolation(error) ? "Kategori aktif dengan nama tersebut sudah ada." : "Kategori belum dapat dibuat." };
   }
   revalidatePath("/categories");
+  revalidatePath("/transactions");
+  revalidatePath("/dashboard");
   return { success: "Kategori berhasil dibuat." };
 }
 
@@ -68,44 +76,54 @@ export async function updateCategoryAction(
   });
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
   try {
-    await db
-      .update(categories)
-      .set({
-        name: parsed.data.name,
-        normalizedName: normalizeCategoryName(parsed.data.name),
-        icon: parsed.data.icon,
-        color: parsed.data.color,
-        updatedAt: new Date(),
-      })
-      .where(and(eq(categories.id, id.data), eq(categories.userId, user.id)));
+    const updated = await updateOwnedCategory(db, user.id, id.data, {
+      name: parsed.data.name,
+      normalizedName: normalizeCategoryName(parsed.data.name),
+      icon: parsed.data.icon,
+      color: parsed.data.color,
+    });
+    if (!updated) return { error: "Kategori tidak ditemukan." };
   } catch (error) {
     return { error: isUniqueViolation(error) ? "Kategori aktif dengan nama tersebut sudah ada." : "Kategori belum dapat diperbarui." };
   }
   revalidatePath("/categories");
   revalidatePath("/transactions");
+  revalidatePath("/dashboard");
   return { success: "Kategori berhasil diperbarui." };
 }
 
-async function setCategoryStatus(formData: FormData, status: "active" | "archived") {
+async function setCategoryStatus(
+  formData: FormData,
+  status: "active" | "archived",
+): Promise<CategoryStatusActionState> {
   const user = await requireSessionUser();
   const id = categoryIdSchema.safeParse(formData.get("id"));
-  if (!id.success) return;
+  if (!id.success) return { error: "Kategori tidak ditemukan." };
   try {
-    await db
-      .update(categories)
-      .set({ status, updatedAt: new Date() })
-      .where(and(eq(categories.id, id.data), eq(categories.userId, user.id)));
+    const result = await setOwnedCategoryStatus(db, user.id, id.data, status);
+    if (!result.ok && result.reason === "duplicate") {
+      return { error: "Kategori tidak dapat dipulihkan karena nama aktif yang sama sudah ada." };
+    }
+    if (!result.ok) return { error: "Kategori tidak ditemukan." };
   } catch {
-    return;
+    return { error: "Status kategori belum dapat diperbarui." };
   }
   revalidatePath("/categories");
   revalidatePath("/transactions");
+  revalidatePath("/dashboard");
+  return {};
 }
 
-export async function archiveCategoryAction(formData: FormData) {
-  await setCategoryStatus(formData, "archived");
+export async function archiveCategoryAction(
+  _state: CategoryStatusActionState,
+  formData: FormData,
+) {
+  return setCategoryStatus(formData, "archived");
 }
 
-export async function restoreCategoryAction(formData: FormData) {
-  await setCategoryStatus(formData, "active");
+export async function restoreCategoryAction(
+  _state: CategoryStatusActionState,
+  formData: FormData,
+) {
+  return setCategoryStatus(formData, "active");
 }

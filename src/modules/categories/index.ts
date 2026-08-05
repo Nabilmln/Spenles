@@ -3,3 +3,4 @@ export * from "./queries/categories";
 export * from "./actions/category-actions";
 export * from "./components/category-form";
 export * from "./components/category-list";
+export * from "./components/category-status-form";
