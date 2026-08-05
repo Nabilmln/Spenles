@@ -22,6 +22,20 @@
       "when": 1785932853713,
       "tag": "0002_phase-04-budgets",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1785938558202,
+      "tag": "0003_phase-05-split-bill",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1785939222504,
+      "tag": "0004_phase-05-result-ownership",
+      "breakpoints": true
     }
   ]
 }

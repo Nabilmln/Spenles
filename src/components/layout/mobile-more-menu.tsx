@@ -1,13 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { ListTree, MoreHorizontal, Repeat2, Target, UserRound } from "lucide-react";
+import {
+  ListTree,
+  MoreHorizontal,
+  Repeat2,
+  Target,
+  UserRound,
+  UsersRound,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 
 const links = [
   { href: "/categories", label: "Kategori", icon: ListTree },
   { href: "/budgets", label: "Anggaran", icon: Target },
   { href: "/recurring-transactions", label: "Berulang", icon: Repeat2 },
+  { href: "/split-bills", label: "Split Bill", icon: UsersRound },
   { href: "/settings/profile", label: "Profil", icon: UserRound },
 ];
 

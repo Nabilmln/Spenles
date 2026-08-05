@@ -1,0 +1,7 @@
+export const SPLIT_BILL_CALCULATION_VERSION = 1;
+export const SPLIT_BILL_MAX_MONEY = 9_007_199_254_740_991n;
+export const SPLIT_BILL_MAX_PARTICIPANTS = 50;
+export const SPLIT_BILL_MAX_ITEMS = 200;
+export const SPLIT_BILL_MAX_ASSIGNMENTS = 2_000;
+export const SPLIT_BILL_MAX_QUANTITY = 10_000;
+export const SPLIT_BILL_PAGE_SIZES = [10, 20, 50] as const;

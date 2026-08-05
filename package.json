@@ -15,7 +15,8 @@
     "test:integration": "vitest run --config vitest.integration.config.mts",
     "test:watch": "vitest",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "drizzle-kit migrate",
+    "db:migrate": "node scripts/migrate.mjs",
+    "db:migrate:test": "node scripts/migrate.mjs --test",
     "db:studio": "drizzle-kit studio"
   },
   "dependencies": {

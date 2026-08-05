@@ -1,0 +1,3478 @@
+{
+  "id": "503284a4-3bb5-4e4d-8c7a-a082d0ab7739",
+  "prevId": "d3a3e46b-b98e-4969-afdf-5fadbdf69e29",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.accounts": {
+      "name": "accounts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "account_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'cash'"
+        },
+        "currency": {
+          "name": "currency",
+          "type": "varchar(3)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'IDR'"
+        },
+        "opening_balance": {
+          "name": "opening_balance",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "0"
+        },
+        "status": {
+          "name": "status",
+          "type": "record_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'active'"
+        },
+        "system_key": {
+          "name": "system_key",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "accounts_user_id_idx": {
+          "name": "accounts_user_id_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "accounts_user_status_idx": {
+          "name": "accounts_user_status_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "accounts_user_system_key_uidx": {
+          "name": "accounts_user_system_key_uidx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "system_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"accounts\".\"system_key\" is not null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "accounts_id_user_id_uidx": {
+          "name": "accounts_id_user_id_uidx",
+          "columns": [
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "accounts_user_id_profiles_user_id_fk": {
+          "name": "accounts_user_id_profiles_user_id_fk",
+          "tableFrom": "accounts",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "accounts_name_not_blank": {
+          "name": "accounts_name_not_blank",
+          "value": "length(trim(\"accounts\".\"name\")) > 0"
+        },
+        "accounts_currency_idr": {
+          "name": "accounts_currency_idr",
+          "value": "\"accounts\".\"currency\" = 'IDR'"
+        },
+        "accounts_opening_balance_non_negative": {
+          "name": "accounts_opening_balance_non_negative",
+          "value": "\"accounts\".\"opening_balance\" >= 0"
+        },
+        "accounts_opening_balance_safe": {
+          "name": "accounts_opening_balance_safe",
+          "value": "\"accounts\".\"opening_balance\" <= 9007199254740991"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.budgets": {
+      "name": "budgets",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "budget_month": {
+          "name": "budget_month",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "warning_threshold_bps": {
+          "name": "warning_threshold_bps",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 8000
+        },
+        "status": {
+          "name": "status",
+          "type": "record_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'active'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "budgets_user_category_month_active_uidx": {
+          "name": "budgets_user_category_month_active_uidx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "category_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "budget_month",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"budgets\".\"status\" = 'active'",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "budgets_user_month_status_idx": {
+          "name": "budgets_user_month_status_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "budget_month",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "budgets_user_category_month_idx": {
+          "name": "budgets_user_category_month_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "category_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "budget_month",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "budgets_user_id_profiles_user_id_fk": {
+          "name": "budgets_user_id_profiles_user_id_fk",
+          "tableFrom": "budgets",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "budgets_category_owner_fk": {
+          "name": "budgets_category_owner_fk",
+          "tableFrom": "budgets",
+          "tableTo": "categories",
+          "columnsFrom": [
+            "category_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "id",
+            "user_id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "budgets_month_first_day": {
+          "name": "budgets_month_first_day",
+          "value": "extract(day from \"budgets\".\"budget_month\") = 1"
+        },
+        "budgets_amount_positive": {
+          "name": "budgets_amount_positive",
+          "value": "\"budgets\".\"amount\" > 0"
+        },
+        "budgets_amount_safe": {
+          "name": "budgets_amount_safe",
+          "value": "\"budgets\".\"amount\" <= 9007199254740991"
+        },
+        "budgets_warning_threshold_valid": {
+          "name": "budgets_warning_threshold_valid",
+          "value": "\"budgets\".\"warning_threshold_bps\" between 100 and 10000"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.categories": {
+      "name": "categories",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "normalized_name": {
+          "name": "normalized_name",
+          "type": "varchar(80)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "category_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "icon": {
+          "name": "icon",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "color": {
+          "name": "color",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_default": {
+          "name": "is_default",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "status": {
+          "name": "status",
+          "type": "record_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'active'"
+        },
+        "system_key": {
+          "name": "system_key",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "categories_user_id_idx": {
+          "name": "categories_user_id_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "categories_user_type_idx": {
+          "name": "categories_user_type_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "categories_user_status_idx": {
+          "name": "categories_user_status_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "categories_user_system_key_uidx": {
+          "name": "categories_user_system_key_uidx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "system_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"categories\".\"system_key\" is not null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "categories_user_type_normalized_name_active_uidx": {
+          "name": "categories_user_type_normalized_name_active_uidx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "normalized_name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"categories\".\"status\" = 'active'",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "categories_id_user_type_uidx": {
+          "name": "categories_id_user_type_uidx",
+          "columns": [
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "categories_id_user_id_uidx": {
+          "name": "categories_id_user_id_uidx",
+          "columns": [
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "categories_user_id_profiles_user_id_fk": {
+          "name": "categories_user_id_profiles_user_id_fk",
+          "tableFrom": "categories",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "categories_name_not_blank": {
+          "name": "categories_name_not_blank",
+          "value": "length(trim(\"categories\".\"name\")) > 0"
+        },
+        "categories_default_has_system_key": {
+          "name": "categories_default_has_system_key",
+          "value": "not \"categories\".\"is_default\" or \"categories\".\"system_key\" is not null"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.profiles": {
+      "name": "profiles",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "display_name": {
+          "name": "display_name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "default_currency": {
+          "name": "default_currency",
+          "type": "varchar(3)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'IDR'"
+        },
+        "timezone": {
+          "name": "timezone",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Asia/Jakarta'"
+        },
+        "theme": {
+          "name": "theme",
+          "type": "theme_preference",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'system'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "profiles_user_id_unique": {
+          "name": "profiles_user_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "profiles_display_name_not_blank": {
+          "name": "profiles_display_name_not_blank",
+          "value": "length(trim(\"profiles\".\"display_name\")) > 0"
+        },
+        "profiles_currency_idr": {
+          "name": "profiles_currency_idr",
+          "value": "\"profiles\".\"default_currency\" = 'IDR'"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.recurring_generations": {
+      "name": "recurring_generations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "recurring_rule_id": {
+          "name": "recurring_rule_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "scheduled_for": {
+          "name": "scheduled_for",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "transaction_id": {
+          "name": "transaction_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "generated_at": {
+          "name": "generated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "recurring_generations_rule_scheduled_uidx": {
+          "name": "recurring_generations_rule_scheduled_uidx",
+          "columns": [
+            {
+              "expression": "recurring_rule_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "scheduled_for",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "recurring_generations_transaction_uidx": {
+          "name": "recurring_generations_transaction_uidx",
+          "columns": [
+            {
+              "expression": "transaction_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "recurring_generations_user_generated_idx": {
+          "name": "recurring_generations_user_generated_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "generated_at",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "recurring_generations_user_id_profiles_user_id_fk": {
+          "name": "recurring_generations_user_id_profiles_user_id_fk",
+          "tableFrom": "recurring_generations",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "recurring_generations_rule_owner_fk": {
+          "name": "recurring_generations_rule_owner_fk",
+          "tableFrom": "recurring_generations",
+          "tableTo": "recurring_rules",
+          "columnsFrom": [
+            "recurring_rule_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "id",
+            "user_id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "recurring_generations_transaction_owner_fk": {
+          "name": "recurring_generations_transaction_owner_fk",
+          "tableFrom": "recurring_generations",
+          "tableTo": "transactions",
+          "columnsFrom": [
+            "transaction_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "id",
+            "user_id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.recurring_rules": {
+      "name": "recurring_rules",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "category_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "account_id": {
+          "name": "account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "frequency": {
+          "name": "frequency",
+          "type": "recurring_frequency",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "start_at": {
+          "name": "start_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "end_date": {
+          "name": "end_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "next_occurrence_at": {
+          "name": "next_occurrence_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "recurring_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'active'"
+        },
+        "pause_reason": {
+          "name": "pause_reason",
+          "type": "recurring_pause_reason",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "note": {
+          "name": "note",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_failure_code": {
+          "name": "last_failure_code",
+          "type": "varchar(64)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "last_failure_at": {
+          "name": "last_failure_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "recurring_rules_id_user_id_uidx": {
+          "name": "recurring_rules_id_user_id_uidx",
+          "columns": [
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "recurring_rules_user_status_next_idx": {
+          "name": "recurring_rules_user_status_next_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "next_occurrence_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "recurring_rules_user_account_status_idx": {
+          "name": "recurring_rules_user_account_status_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "account_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "recurring_rules_user_category_status_idx": {
+          "name": "recurring_rules_user_category_status_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "category_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "recurring_rules_due_idx": {
+          "name": "recurring_rules_due_idx",
+          "columns": [
+            {
+              "expression": "next_occurrence_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"recurring_rules\".\"status\" = 'active' and \"recurring_rules\".\"next_occurrence_at\" is not null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "recurring_rules_user_id_profiles_user_id_fk": {
+          "name": "recurring_rules_user_id_profiles_user_id_fk",
+          "tableFrom": "recurring_rules",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "recurring_rules_account_owner_fk": {
+          "name": "recurring_rules_account_owner_fk",
+          "tableFrom": "recurring_rules",
+          "tableTo": "accounts",
+          "columnsFrom": [
+            "account_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "id",
+            "user_id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "recurring_rules_category_owner_type_fk": {
+          "name": "recurring_rules_category_owner_type_fk",
+          "tableFrom": "recurring_rules",
+          "tableTo": "categories",
+          "columnsFrom": [
+            "category_id",
+            "user_id",
+            "type"
+          ],
+          "columnsTo": [
+            "id",
+            "user_id",
+            "type"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "recurring_rules_amount_positive": {
+          "name": "recurring_rules_amount_positive",
+          "value": "\"recurring_rules\".\"amount\" > 0"
+        },
+        "recurring_rules_amount_safe": {
+          "name": "recurring_rules_amount_safe",
+          "value": "\"recurring_rules\".\"amount\" <= 9007199254740991"
+        },
+        "recurring_rules_note_valid": {
+          "name": "recurring_rules_note_valid",
+          "value": "\"recurring_rules\".\"note\" is null or length(trim(\"recurring_rules\".\"note\")) between 1 and 500"
+        },
+        "recurring_rules_pause_reason_valid": {
+          "name": "recurring_rules_pause_reason_valid",
+          "value": "(\"recurring_rules\".\"status\" = 'paused' and \"recurring_rules\".\"pause_reason\" is not null)\n        or (\"recurring_rules\".\"status\" <> 'paused' and \"recurring_rules\".\"pause_reason\" is null)"
+        },
+        "recurring_rules_failure_state_valid": {
+          "name": "recurring_rules_failure_state_valid",
+          "value": "(\"recurring_rules\".\"last_failure_code\" is null) = (\"recurring_rules\".\"last_failure_at\" is null)"
+        },
+        "recurring_rules_end_not_before_start": {
+          "name": "recurring_rules_end_not_before_start",
+          "value": "\"recurring_rules\".\"end_date\" is null or \"recurring_rules\".\"end_date\" >=\n        (\"recurring_rules\".\"start_at\" at time zone 'Asia/Jakarta')::date"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.split_bill_assignment_results": {
+      "name": "split_bill_assignment_results",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "calculation_id": {
+          "name": "calculation_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "split_bill_id": {
+          "name": "split_bill_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_assignment_id": {
+          "name": "source_assignment_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_item_id": {
+          "name": "source_item_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_participant_id": {
+          "name": "source_participant_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "item_amount": {
+          "name": "item_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "item_tax_amount": {
+          "name": "item_tax_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bill_tax_amount": {
+          "name": "bill_tax_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "split_bill_assignment_results_source_uidx": {
+          "name": "split_bill_assignment_results_source_uidx",
+          "columns": [
+            {
+              "expression": "source_assignment_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "split_bill_assignment_results_calculation_item_idx": {
+          "name": "split_bill_assignment_results_calculation_item_idx",
+          "columns": [
+            {
+              "expression": "calculation_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "source_item_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "split_bill_assignment_results_calculation_participant_idx": {
+          "name": "split_bill_assignment_results_calculation_participant_idx",
+          "columns": [
+            {
+              "expression": "calculation_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "source_participant_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "split_bill_assignment_results_calculation_owner_fk": {
+          "name": "split_bill_assignment_results_calculation_owner_fk",
+          "tableFrom": "split_bill_assignment_results",
+          "tableTo": "split_bill_calculations",
+          "columnsFrom": [
+            "calculation_id",
+            "split_bill_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "id",
+            "split_bill_id",
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "split_bill_assignment_results_source_owner_fk": {
+          "name": "split_bill_assignment_results_source_owner_fk",
+          "tableFrom": "split_bill_assignment_results",
+          "tableTo": "split_bill_assignments",
+          "columnsFrom": [
+            "source_assignment_id",
+            "split_bill_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "id",
+            "split_bill_id",
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "split_bill_assignment_results_amounts_valid": {
+          "name": "split_bill_assignment_results_amounts_valid",
+          "value": "\"split_bill_assignment_results\".\"item_amount\" between 0 and 9007199254740991\n        and \"split_bill_assignment_results\".\"item_tax_amount\" between 0 and 9007199254740991\n        and \"split_bill_assignment_results\".\"bill_tax_amount\" between 0 and 9007199254740991"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.split_bill_assignments": {
+      "name": "split_bill_assignments",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "split_bill_id": {
+          "name": "split_bill_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "item_id": {
+          "name": "item_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "participant_id": {
+          "name": "participant_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "split_bill_assignments_item_participant_uidx": {
+          "name": "split_bill_assignments_item_participant_uidx",
+          "columns": [
+            {
+              "expression": "item_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "participant_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "split_bill_assignments_user_bill_item_idx": {
+          "name": "split_bill_assignments_user_bill_item_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "split_bill_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "item_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "split_bill_assignments_user_bill_participant_idx": {
+          "name": "split_bill_assignments_user_bill_participant_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "split_bill_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "participant_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "split_bill_assignments_bill_owner_fk": {
+          "name": "split_bill_assignments_bill_owner_fk",
+          "tableFrom": "split_bill_assignments",
+          "tableTo": "split_bills",
+          "columnsFrom": [
+            "split_bill_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "id",
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "split_bill_assignments_item_owner_fk": {
+          "name": "split_bill_assignments_item_owner_fk",
+          "tableFrom": "split_bill_assignments",
+          "tableTo": "split_bill_items",
+          "columnsFrom": [
+            "item_id",
+            "split_bill_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "id",
+            "split_bill_id",
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "split_bill_assignments_participant_owner_fk": {
+          "name": "split_bill_assignments_participant_owner_fk",
+          "tableFrom": "split_bill_assignments",
+          "tableTo": "split_bill_participants",
+          "columnsFrom": [
+            "participant_id",
+            "split_bill_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "id",
+            "split_bill_id",
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "split_bill_assignments_id_bill_user_uidx": {
+          "name": "split_bill_assignments_id_bill_user_uidx",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id",
+            "split_bill_id",
+            "user_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.split_bill_calculations": {
+      "name": "split_bill_calculations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "split_bill_id": {
+          "name": "split_bill_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "calculation_version": {
+          "name": "calculation_version",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_revision": {
+          "name": "source_revision",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "merchant_name_snapshot": {
+          "name": "merchant_name_snapshot",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bill_date_snapshot": {
+          "name": "bill_date_snapshot",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "note_snapshot": {
+          "name": "note_snapshot",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "discount_mode": {
+          "name": "discount_mode",
+          "type": "split_bill_discount_mode",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fixed_discount_amount": {
+          "name": "fixed_discount_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "discount_bps": {
+          "name": "discount_bps",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bill_tax_bps": {
+          "name": "bill_tax_bps",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "service_charge_bps": {
+          "name": "service_charge_bps",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subtotal_amount": {
+          "name": "subtotal_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "discount_amount": {
+          "name": "discount_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "discounted_subtotal_amount": {
+          "name": "discounted_subtotal_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "item_tax_amount": {
+          "name": "item_tax_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bill_tax_amount": {
+          "name": "bill_tax_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_tax_amount": {
+          "name": "total_tax_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "service_charge_amount": {
+          "name": "service_charge_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "final_amount": {
+          "name": "final_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "split_bill_calculations_bill_uidx": {
+          "name": "split_bill_calculations_bill_uidx",
+          "columns": [
+            {
+              "expression": "split_bill_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "split_bill_calculations_bill_owner_fk": {
+          "name": "split_bill_calculations_bill_owner_fk",
+          "tableFrom": "split_bill_calculations",
+          "tableTo": "split_bills",
+          "columnsFrom": [
+            "split_bill_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "id",
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "split_bill_calculations_id_bill_user_uidx": {
+          "name": "split_bill_calculations_id_bill_user_uidx",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id",
+            "split_bill_id",
+            "user_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "split_bill_calculations_version_valid": {
+          "name": "split_bill_calculations_version_valid",
+          "value": "\"split_bill_calculations\".\"calculation_version\" > 0 and \"split_bill_calculations\".\"source_revision\" >= 0"
+        },
+        "split_bill_calculations_snapshot_valid": {
+          "name": "split_bill_calculations_snapshot_valid",
+          "value": "length(trim(\"split_bill_calculations\".\"merchant_name_snapshot\")) between 1 and 120\n        and (\"split_bill_calculations\".\"note_snapshot\" is null\n          or length(trim(\"split_bill_calculations\".\"note_snapshot\")) between 1 and 500)"
+        },
+        "split_bill_calculations_percentages_valid": {
+          "name": "split_bill_calculations_percentages_valid",
+          "value": "\"split_bill_calculations\".\"discount_bps\" between 0 and 10000\n        and \"split_bill_calculations\".\"bill_tax_bps\" between 0 and 10000\n        and \"split_bill_calculations\".\"service_charge_bps\" between 0 and 10000"
+        },
+        "split_bill_calculations_amounts_valid": {
+          "name": "split_bill_calculations_amounts_valid",
+          "value": "\"split_bill_calculations\".\"fixed_discount_amount\" between 0 and 9007199254740991\n        and \"split_bill_calculations\".\"subtotal_amount\" between 0 and 9007199254740991\n        and \"split_bill_calculations\".\"discount_amount\" between 0 and 9007199254740991\n        and \"split_bill_calculations\".\"discounted_subtotal_amount\" between 0 and 9007199254740991\n        and \"split_bill_calculations\".\"item_tax_amount\" between 0 and 9007199254740991\n        and \"split_bill_calculations\".\"bill_tax_amount\" between 0 and 9007199254740991\n        and \"split_bill_calculations\".\"total_tax_amount\" between 0 and 9007199254740991\n        and \"split_bill_calculations\".\"service_charge_amount\" between 0 and 9007199254740991\n        and \"split_bill_calculations\".\"final_amount\" between 0 and 9007199254740991"
+        },
+        "split_bill_calculations_totals_valid": {
+          "name": "split_bill_calculations_totals_valid",
+          "value": "\"split_bill_calculations\".\"discounted_subtotal_amount\" =\n          \"split_bill_calculations\".\"subtotal_amount\" - \"split_bill_calculations\".\"discount_amount\"\n        and \"split_bill_calculations\".\"total_tax_amount\" =\n          \"split_bill_calculations\".\"item_tax_amount\" + \"split_bill_calculations\".\"bill_tax_amount\"\n        and \"split_bill_calculations\".\"final_amount\" =\n          \"split_bill_calculations\".\"discounted_subtotal_amount\" + \"split_bill_calculations\".\"total_tax_amount\"\n          + \"split_bill_calculations\".\"service_charge_amount\""
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.split_bill_item_results": {
+      "name": "split_bill_item_results",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "calculation_id": {
+          "name": "calculation_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "split_bill_id": {
+          "name": "split_bill_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_item_id": {
+          "name": "source_item_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name_snapshot": {
+          "name": "name_snapshot",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "position_snapshot": {
+          "name": "position_snapshot",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "quantity_snapshot": {
+          "name": "quantity_snapshot",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unit_price_snapshot": {
+          "name": "unit_price_snapshot",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "item_tax_bps_snapshot": {
+          "name": "item_tax_bps_snapshot",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "subtotal_amount": {
+          "name": "subtotal_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "discount_amount": {
+          "name": "discount_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "discounted_amount": {
+          "name": "discounted_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "item_tax_amount": {
+          "name": "item_tax_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bill_tax_amount": {
+          "name": "bill_tax_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_before_service_amount": {
+          "name": "total_before_service_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "split_bill_item_results_calculation_item_uidx": {
+          "name": "split_bill_item_results_calculation_item_uidx",
+          "columns": [
+            {
+              "expression": "calculation_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "source_item_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "split_bill_item_results_calculation_position_uidx": {
+          "name": "split_bill_item_results_calculation_position_uidx",
+          "columns": [
+            {
+              "expression": "calculation_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "position_snapshot",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "split_bill_item_results_user_bill_idx": {
+          "name": "split_bill_item_results_user_bill_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "split_bill_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "position_snapshot",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "split_bill_item_results_calculation_owner_fk": {
+          "name": "split_bill_item_results_calculation_owner_fk",
+          "tableFrom": "split_bill_item_results",
+          "tableTo": "split_bill_calculations",
+          "columnsFrom": [
+            "calculation_id",
+            "split_bill_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "id",
+            "split_bill_id",
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "split_bill_item_results_source_owner_fk": {
+          "name": "split_bill_item_results_source_owner_fk",
+          "tableFrom": "split_bill_item_results",
+          "tableTo": "split_bill_items",
+          "columnsFrom": [
+            "source_item_id",
+            "split_bill_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "id",
+            "split_bill_id",
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "split_bill_item_results_values_valid": {
+          "name": "split_bill_item_results_values_valid",
+          "value": "\"split_bill_item_results\".\"position_snapshot\" > 0\n        and \"split_bill_item_results\".\"quantity_snapshot\" between 1 and 10000\n        and \"split_bill_item_results\".\"unit_price_snapshot\" between 1 and 9007199254740991\n        and \"split_bill_item_results\".\"item_tax_bps_snapshot\" between 0 and 10000\n        and \"split_bill_item_results\".\"subtotal_amount\" between 0 and 9007199254740991\n        and \"split_bill_item_results\".\"discount_amount\" between 0 and 9007199254740991\n        and \"split_bill_item_results\".\"discounted_amount\" between 0 and 9007199254740991\n        and \"split_bill_item_results\".\"item_tax_amount\" between 0 and 9007199254740991\n        and \"split_bill_item_results\".\"bill_tax_amount\" between 0 and 9007199254740991\n        and \"split_bill_item_results\".\"total_before_service_amount\" between 0 and 9007199254740991\n        and \"split_bill_item_results\".\"discounted_amount\" =\n          \"split_bill_item_results\".\"subtotal_amount\" - \"split_bill_item_results\".\"discount_amount\"\n        and \"split_bill_item_results\".\"total_before_service_amount\" =\n          \"split_bill_item_results\".\"discounted_amount\" + \"split_bill_item_results\".\"item_tax_amount\"\n          + \"split_bill_item_results\".\"bill_tax_amount\"\n        and (\"split_bill_item_results\".\"item_tax_bps_snapshot\" = 0 or \"split_bill_item_results\".\"bill_tax_amount\" = 0)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.split_bill_items": {
+      "name": "split_bill_items",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "split_bill_id": {
+          "name": "split_bill_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "position": {
+          "name": "position",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "quantity": {
+          "name": "quantity",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unit_price": {
+          "name": "unit_price",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "item_tax_bps": {
+          "name": "item_tax_bps",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "split_bill_items_bill_position_uidx": {
+          "name": "split_bill_items_bill_position_uidx",
+          "columns": [
+            {
+              "expression": "split_bill_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "position",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "split_bill_items_user_bill_position_idx": {
+          "name": "split_bill_items_user_bill_position_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "split_bill_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "position",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "split_bill_items_bill_owner_fk": {
+          "name": "split_bill_items_bill_owner_fk",
+          "tableFrom": "split_bill_items",
+          "tableTo": "split_bills",
+          "columnsFrom": [
+            "split_bill_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "id",
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "split_bill_items_id_bill_user_uidx": {
+          "name": "split_bill_items_id_bill_user_uidx",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id",
+            "split_bill_id",
+            "user_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "split_bill_items_name_valid": {
+          "name": "split_bill_items_name_valid",
+          "value": "length(trim(\"split_bill_items\".\"name\")) between 1 and 120"
+        },
+        "split_bill_items_position_valid": {
+          "name": "split_bill_items_position_valid",
+          "value": "\"split_bill_items\".\"position\" > 0"
+        },
+        "split_bill_items_quantity_valid": {
+          "name": "split_bill_items_quantity_valid",
+          "value": "\"split_bill_items\".\"quantity\" between 1 and 10000"
+        },
+        "split_bill_items_unit_price_valid": {
+          "name": "split_bill_items_unit_price_valid",
+          "value": "\"split_bill_items\".\"unit_price\" between 1 and 9007199254740991"
+        },
+        "split_bill_items_tax_valid": {
+          "name": "split_bill_items_tax_valid",
+          "value": "\"split_bill_items\".\"item_tax_bps\" between 0 and 10000"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.split_bill_participant_results": {
+      "name": "split_bill_participant_results",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "calculation_id": {
+          "name": "calculation_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "split_bill_id": {
+          "name": "split_bill_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_participant_id": {
+          "name": "source_participant_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name_snapshot": {
+          "name": "name_snapshot",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "position_snapshot": {
+          "name": "position_snapshot",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "item_amount": {
+          "name": "item_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "item_tax_amount": {
+          "name": "item_tax_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bill_tax_amount": {
+          "name": "bill_tax_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "service_charge_amount": {
+          "name": "service_charge_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "final_amount": {
+          "name": "final_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "split_bill_participant_results_source_uidx": {
+          "name": "split_bill_participant_results_source_uidx",
+          "columns": [
+            {
+              "expression": "source_participant_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "split_bill_participant_results_calculation_position_uidx": {
+          "name": "split_bill_participant_results_calculation_position_uidx",
+          "columns": [
+            {
+              "expression": "calculation_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "position_snapshot",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "split_bill_participant_results_user_bill_idx": {
+          "name": "split_bill_participant_results_user_bill_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "split_bill_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "position_snapshot",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "split_bill_participant_results_calculation_owner_fk": {
+          "name": "split_bill_participant_results_calculation_owner_fk",
+          "tableFrom": "split_bill_participant_results",
+          "tableTo": "split_bill_calculations",
+          "columnsFrom": [
+            "calculation_id",
+            "split_bill_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "id",
+            "split_bill_id",
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "split_bill_participant_results_source_owner_fk": {
+          "name": "split_bill_participant_results_source_owner_fk",
+          "tableFrom": "split_bill_participant_results",
+          "tableTo": "split_bill_participants",
+          "columnsFrom": [
+            "source_participant_id",
+            "split_bill_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "id",
+            "split_bill_id",
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "split_bill_participant_results_values_valid": {
+          "name": "split_bill_participant_results_values_valid",
+          "value": "\"split_bill_participant_results\".\"position_snapshot\" > 0\n        and \"split_bill_participant_results\".\"item_amount\" between 0 and 9007199254740991\n        and \"split_bill_participant_results\".\"item_tax_amount\" between 0 and 9007199254740991\n        and \"split_bill_participant_results\".\"bill_tax_amount\" between 0 and 9007199254740991\n        and \"split_bill_participant_results\".\"service_charge_amount\" between 0 and 9007199254740991\n        and \"split_bill_participant_results\".\"final_amount\" between 0 and 9007199254740991\n        and \"split_bill_participant_results\".\"final_amount\" =\n          \"split_bill_participant_results\".\"item_amount\" + \"split_bill_participant_results\".\"item_tax_amount\"\n          + \"split_bill_participant_results\".\"bill_tax_amount\" + \"split_bill_participant_results\".\"service_charge_amount\""
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.split_bill_participants": {
+      "name": "split_bill_participants",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "split_bill_id": {
+          "name": "split_bill_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "position": {
+          "name": "position",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "payment_status": {
+          "name": "payment_status",
+          "type": "split_bill_payment_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'unpaid'"
+        },
+        "paid_amount": {
+          "name": "paid_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "0"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "split_bill_participants_bill_position_uidx": {
+          "name": "split_bill_participants_bill_position_uidx",
+          "columns": [
+            {
+              "expression": "split_bill_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "position",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "split_bill_participants_user_bill_position_idx": {
+          "name": "split_bill_participants_user_bill_position_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "split_bill_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "position",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "split_bill_participants_bill_owner_fk": {
+          "name": "split_bill_participants_bill_owner_fk",
+          "tableFrom": "split_bill_participants",
+          "tableTo": "split_bills",
+          "columnsFrom": [
+            "split_bill_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "id",
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "split_bill_participants_id_bill_user_uidx": {
+          "name": "split_bill_participants_id_bill_user_uidx",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id",
+            "split_bill_id",
+            "user_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "split_bill_participants_name_valid": {
+          "name": "split_bill_participants_name_valid",
+          "value": "length(trim(\"split_bill_participants\".\"name\")) between 1 and 100"
+        },
+        "split_bill_participants_position_valid": {
+          "name": "split_bill_participants_position_valid",
+          "value": "\"split_bill_participants\".\"position\" > 0"
+        },
+        "split_bill_participants_paid_amount_valid": {
+          "name": "split_bill_participants_paid_amount_valid",
+          "value": "\"split_bill_participants\".\"paid_amount\" between 0 and 9007199254740991"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.split_bills": {
+      "name": "split_bills",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "merchant_name": {
+          "name": "merchant_name",
+          "type": "varchar(120)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "bill_date": {
+          "name": "bill_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "note": {
+          "name": "note",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "split_bill_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'draft'"
+        },
+        "discount_mode": {
+          "name": "discount_mode",
+          "type": "split_bill_discount_mode",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'none'"
+        },
+        "fixed_discount_amount": {
+          "name": "fixed_discount_amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "0"
+        },
+        "discount_bps": {
+          "name": "discount_bps",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "bill_tax_bps": {
+          "name": "bill_tax_bps",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "service_charge_bps": {
+          "name": "service_charge_bps",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "revision": {
+          "name": "revision",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "finalized_at": {
+          "name": "finalized_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "archived_at": {
+          "name": "archived_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "split_bills_user_status_date_id_idx": {
+          "name": "split_bills_user_status_date_id_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "bill_date",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "split_bills_user_date_id_idx": {
+          "name": "split_bills_user_date_id_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "bill_date",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "split_bills_user_id_profiles_user_id_fk": {
+          "name": "split_bills_user_id_profiles_user_id_fk",
+          "tableFrom": "split_bills",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "split_bills_id_user_id_uidx": {
+          "name": "split_bills_id_user_id_uidx",
+          "nullsNotDistinct": false,
+          "columns": [
+            "id",
+            "user_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {
+        "split_bills_merchant_valid": {
+          "name": "split_bills_merchant_valid",
+          "value": "length(trim(\"split_bills\".\"merchant_name\")) between 1 and 120"
+        },
+        "split_bills_note_valid": {
+          "name": "split_bills_note_valid",
+          "value": "\"split_bills\".\"note\" is null or length(trim(\"split_bills\".\"note\")) between 1 and 500"
+        },
+        "split_bills_fixed_discount_valid": {
+          "name": "split_bills_fixed_discount_valid",
+          "value": "\"split_bills\".\"fixed_discount_amount\" between 0 and 9007199254740991"
+        },
+        "split_bills_percentages_valid": {
+          "name": "split_bills_percentages_valid",
+          "value": "\"split_bills\".\"discount_bps\" between 0 and 10000\n        and \"split_bills\".\"bill_tax_bps\" between 0 and 10000\n        and \"split_bills\".\"service_charge_bps\" between 0 and 10000"
+        },
+        "split_bills_discount_mode_valid": {
+          "name": "split_bills_discount_mode_valid",
+          "value": "(\"split_bills\".\"discount_mode\" = 'none'\n          and \"split_bills\".\"fixed_discount_amount\" = 0\n          and \"split_bills\".\"discount_bps\" = 0)\n        or (\"split_bills\".\"discount_mode\" = 'fixed'\n          and \"split_bills\".\"fixed_discount_amount\" > 0\n          and \"split_bills\".\"discount_bps\" = 0)\n        or (\"split_bills\".\"discount_mode\" = 'percentage'\n          and \"split_bills\".\"fixed_discount_amount\" = 0\n          and \"split_bills\".\"discount_bps\" between 1 and 10000)"
+        },
+        "split_bills_revision_valid": {
+          "name": "split_bills_revision_valid",
+          "value": "\"split_bills\".\"revision\" >= 0"
+        },
+        "split_bills_lifecycle_valid": {
+          "name": "split_bills_lifecycle_valid",
+          "value": "(\"split_bills\".\"status\" = 'draft'\n          and \"split_bills\".\"finalized_at\" is null\n          and \"split_bills\".\"archived_at\" is null)\n        or (\"split_bills\".\"status\" = 'finalized'\n          and \"split_bills\".\"finalized_at\" is not null\n          and \"split_bills\".\"archived_at\" is null)\n        or (\"split_bills\".\"status\" = 'archived'\n          and \"split_bills\".\"finalized_at\" is not null\n          and \"split_bills\".\"archived_at\" is not null)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.transactions": {
+      "name": "transactions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "account_id": {
+          "name": "account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "category_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "transaction_at": {
+          "name": "transaction_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "note": {
+          "name": "note",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "deleted_at": {
+          "name": "deleted_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "transactions_user_occurred_id_active_idx": {
+          "name": "transactions_user_occurred_id_active_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "transaction_at",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"transactions\".\"deleted_at\" is null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "transactions_user_type_occurred_active_idx": {
+          "name": "transactions_user_type_occurred_active_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "type",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "transaction_at",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"transactions\".\"deleted_at\" is null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "transactions_user_category_occurred_active_idx": {
+          "name": "transactions_user_category_occurred_active_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "category_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "transaction_at",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"transactions\".\"deleted_at\" is null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "transactions_user_account_occurred_active_idx": {
+          "name": "transactions_user_account_occurred_active_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "account_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "transaction_at",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"transactions\".\"deleted_at\" is null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "transactions_user_amount_id_active_idx": {
+          "name": "transactions_user_amount_id_active_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "amount",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "where": "\"transactions\".\"deleted_at\" is null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "transactions_id_user_id_uidx": {
+          "name": "transactions_id_user_id_uidx",
+          "columns": [
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "transactions_user_id_profiles_user_id_fk": {
+          "name": "transactions_user_id_profiles_user_id_fk",
+          "tableFrom": "transactions",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "transactions_account_owner_fk": {
+          "name": "transactions_account_owner_fk",
+          "tableFrom": "transactions",
+          "tableTo": "accounts",
+          "columnsFrom": [
+            "account_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "id",
+            "user_id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "transactions_category_owner_type_fk": {
+          "name": "transactions_category_owner_type_fk",
+          "tableFrom": "transactions",
+          "tableTo": "categories",
+          "columnsFrom": [
+            "category_id",
+            "user_id",
+            "type"
+          ],
+          "columnsTo": [
+            "id",
+            "user_id",
+            "type"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "transactions_amount_positive": {
+          "name": "transactions_amount_positive",
+          "value": "\"transactions\".\"amount\" > 0"
+        },
+        "transactions_amount_safe": {
+          "name": "transactions_amount_safe",
+          "value": "\"transactions\".\"amount\" <= 9007199254740991"
+        },
+        "transactions_note_valid": {
+          "name": "transactions_note_valid",
+          "value": "\"transactions\".\"note\" is null or length(trim(\"transactions\".\"note\")) between 1 and 500"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.transfers": {
+      "name": "transfers",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source_account_id": {
+          "name": "source_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "destination_account_id": {
+          "name": "destination_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "amount": {
+          "name": "amount",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "transferred_at": {
+          "name": "transferred_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "note": {
+          "name": "note",
+          "type": "varchar(500)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reversal_of_id": {
+          "name": "reversal_of_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "transfers_id_user_id_uidx": {
+          "name": "transfers_id_user_id_uidx",
+          "columns": [
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "transfers_user_transferred_id_idx": {
+          "name": "transfers_user_transferred_id_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "transferred_at",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "transfers_user_source_transferred_idx": {
+          "name": "transfers_user_source_transferred_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "source_account_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "transferred_at",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "transfers_user_destination_transferred_idx": {
+          "name": "transfers_user_destination_transferred_idx",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "destination_account_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "transferred_at",
+              "isExpression": false,
+              "asc": false,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "transfers_reversal_of_uidx": {
+          "name": "transfers_reversal_of_uidx",
+          "columns": [
+            {
+              "expression": "reversal_of_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"transfers\".\"reversal_of_id\" is not null",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "transfers_user_id_profiles_user_id_fk": {
+          "name": "transfers_user_id_profiles_user_id_fk",
+          "tableFrom": "transfers",
+          "tableTo": "profiles",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "user_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "transfers_source_account_owner_fk": {
+          "name": "transfers_source_account_owner_fk",
+          "tableFrom": "transfers",
+          "tableTo": "accounts",
+          "columnsFrom": [
+            "source_account_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "id",
+            "user_id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "transfers_destination_account_owner_fk": {
+          "name": "transfers_destination_account_owner_fk",
+          "tableFrom": "transfers",
+          "tableTo": "accounts",
+          "columnsFrom": [
+            "destination_account_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "id",
+            "user_id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "transfers_reversal_owner_fk": {
+          "name": "transfers_reversal_owner_fk",
+          "tableFrom": "transfers",
+          "tableTo": "transfers",
+          "columnsFrom": [
+            "reversal_of_id",
+            "user_id"
+          ],
+          "columnsTo": [
+            "id",
+            "user_id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "transfers_accounts_differ": {
+          "name": "transfers_accounts_differ",
+          "value": "\"transfers\".\"source_account_id\" <> \"transfers\".\"destination_account_id\""
+        },
+        "transfers_amount_positive": {
+          "name": "transfers_amount_positive",
+          "value": "\"transfers\".\"amount\" > 0"
+        },
+        "transfers_amount_safe": {
+          "name": "transfers_amount_safe",
+          "value": "\"transfers\".\"amount\" <= 9007199254740991"
+        },
+        "transfers_note_valid": {
+          "name": "transfers_note_valid",
+          "value": "\"transfers\".\"note\" is null or length(trim(\"transfers\".\"note\")) between 1 and 500"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.account_type": {
+      "name": "account_type",
+      "schema": "public",
+      "values": [
+        "cash",
+        "bank",
+        "e_wallet",
+        "other"
+      ]
+    },
+    "public.record_status": {
+      "name": "record_status",
+      "schema": "public",
+      "values": [
+        "active",
+        "archived"
+      ]
+    },
+    "public.category_type": {
+      "name": "category_type",
+      "schema": "public",
+      "values": [
+        "income",
+        "expense"
+      ]
+    },
+    "public.theme_preference": {
+      "name": "theme_preference",
+      "schema": "public",
+      "values": [
+        "system",
+        "light",
+        "dark"
+      ]
+    },
+    "public.recurring_frequency": {
+      "name": "recurring_frequency",
+      "schema": "public",
+      "values": [
+        "daily",
+        "weekly",
+        "monthly",
+        "yearly"
+      ]
+    },
+    "public.recurring_pause_reason": {
+      "name": "recurring_pause_reason",
+      "schema": "public",
+      "values": [
+        "user",
+        "blocked_account",
+        "blocked_category",
+        "generation_failure"
+      ]
+    },
+    "public.recurring_status": {
+      "name": "recurring_status",
+      "schema": "public",
+      "values": [
+        "active",
+        "paused",
+        "archived"
+      ]
+    },
+    "public.split_bill_discount_mode": {
+      "name": "split_bill_discount_mode",
+      "schema": "public",
+      "values": [
+        "none",
+        "fixed",
+        "percentage"
+      ]
+    },
+    "public.split_bill_payment_status": {
+      "name": "split_bill_payment_status",
+      "schema": "public",
+      "values": [
+        "unpaid",
+        "partially_paid",
+        "paid"
+      ]
+    },
+    "public.split_bill_status": {
+      "name": "split_bill_status",
+      "schema": "public",
+      "values": [
+        "draft",
+        "finalized",
+        "archived"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
