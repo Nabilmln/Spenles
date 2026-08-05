@@ -3,7 +3,9 @@
 Spenles adalah aplikasi web pengelolaan keuangan pribadi berbahasa Indonesia.
 Fase 01 menyediakan fondasi aplikasi dan Fase 02 menyediakan transaksi
 pemasukan/pengeluaran, kalkulator aman, riwayat transaksi, serta pengelolaan
-kategori. Dashboard analitik Fase 03 belum diimplementasikan.
+kategori. Fase 03 menyediakan dashboard arus kas dengan periode tervalidasi,
+ringkasan perbandingan, tiga grafik aksesibel, profil arus kas, dan transaksi
+terbaru.
 
 ## Persyaratan
 
