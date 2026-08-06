@@ -6,7 +6,7 @@ import {
   listTransactions,
   Pagination,
   parseTransactionFilters,
-  TransactionFiltersForm,
+  TransactionFilterBar,
   TransactionList,
   TransactionSummary,
 } from "@/modules/transactions";
@@ -39,7 +39,7 @@ export default async function TransactionsPage({
         <Link className="button button-primary desktop-only" href="/transactions/new">Tambah transaksi</Link>
       </div>
       <TransactionSummary income={summary.income} expense={summary.expense} savings={summary.savings} />
-      <TransactionFiltersForm filters={parsed.data} {...options} />
+      <TransactionFilterBar filters={parsed.data} {...options} />
       <TransactionList rows={result.rows} />
       <Pagination filters={parsed.data} total={result.total} totalPages={result.totalPages} />
     </div>

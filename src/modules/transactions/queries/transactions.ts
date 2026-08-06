@@ -7,18 +7,18 @@ import {
   desc,
   eq,
   gte,
-  ilike,
   isNull,
   lt,
   or,
   sql,
-  type SQL,
 } from "drizzle-orm";
 import { db } from "@/db";
+import type { Database } from "@/db/types";
 import { accounts, categories, transactions } from "@/db/schema";
 import { jakartaDateBoundary } from "@/lib/dates/jakarta";
 import { getPeriodSavings } from "@/modules/accounts";
 import type { TransactionFilters } from "../schemas/transaction-filters";
+import { categoryJoin, conditions } from "./transaction-search";
 
 function monthBounds(month: string) {
   const [year, monthNumber] = month.split("-").map(Number);
@@ -41,23 +41,11 @@ function dateInterval(filters: TransactionFilters) {
   return null;
 }
 
-function conditions(userId: string, filters: TransactionFilters) {
-  const result: SQL[] = [eq(transactions.userId, userId), isNull(transactions.deletedAt)];
-  if (filters.type) result.push(eq(transactions.type, filters.type));
-  if (filters.category) result.push(eq(transactions.categoryId, filters.category));
-  if (filters.account) result.push(eq(transactions.accountId, filters.account));
-  if (filters.q) {
-    const literal = filters.q.replace(/[\\%_]/gu, "\\$&");
-    result.push(ilike(transactions.note, `%${literal}%`));
-  }
-  const interval = dateInterval(filters);
-  if (interval) {
-    result.push(gte(transactions.transactionAt, interval.start), lt(transactions.transactionAt, interval.end));
-  }
-  return result;
-}
-
-export async function listTransactions(userId: string, filters: TransactionFilters) {
+export async function listTransactions(
+  userId: string,
+  filters: TransactionFilters,
+  database: Database = db,
+) {
   const where = and(...conditions(userId, filters));
   const primary = filters.sort === "amount" ? transactions.amount : transactions.transactionAt;
   const direction = filters.direction === "asc" ? asc : desc;
@@ -65,7 +53,7 @@ export async function listTransactions(userId: string, filters: TransactionFilte
     ? [direction(primary), desc(transactions.transactionAt), desc(transactions.id)]
     : [direction(primary), direction(transactions.id)];
   const [rows, totals] = await Promise.all([
-    db
+    database
       .select({
         id: transactions.id,
         type: transactions.type,
@@ -77,12 +65,16 @@ export async function listTransactions(userId: string, filters: TransactionFilte
       })
       .from(transactions)
       .innerJoin(accounts, and(eq(accounts.id, transactions.accountId), eq(accounts.userId, userId)))
-      .innerJoin(categories, and(eq(categories.id, transactions.categoryId), eq(categories.userId, userId)))
+      .innerJoin(categories, categoryJoin(userId))
       .where(where)
       .orderBy(...order)
       .limit(filters.pageSize)
       .offset((filters.page - 1) * filters.pageSize),
-    db.select({ value: count() }).from(transactions).where(where),
+    database
+      .select({ value: count() })
+      .from(transactions)
+      .innerJoin(categories, categoryJoin(userId))
+      .where(where),
   ]);
   const total = totals[0]?.value ?? 0;
   return {
@@ -101,12 +93,16 @@ export async function getTransaction(userId: string, id: string) {
   return rows[0];
 }
 
-export async function getTransactionOptions(userId: string, currentCategoryId?: string) {
+export async function getTransactionOptions(
+  userId: string,
+  currentCategoryId?: string,
+  database: Database = db,
+) {
   const [ownedAccounts, ownedCategories] = await Promise.all([
-    db.select({ id: accounts.id, name: accounts.name, type: accounts.type }).from(accounts).where(
+    database.select({ id: accounts.id, name: accounts.name, type: accounts.type }).from(accounts).where(
       and(eq(accounts.userId, userId), eq(accounts.status, "active"), eq(accounts.currency, "IDR")),
     ).orderBy(asc(accounts.name)),
-    db.select({ id: categories.id, name: categories.name, type: categories.type }).from(categories).where(
+    database.select({ id: categories.id, name: categories.name, type: categories.type }).from(categories).where(
       and(
         eq(categories.userId, userId),
         currentCategoryId
@@ -121,10 +117,11 @@ export async function getTransactionOptions(userId: string, currentCategoryId?: 
 export async function getTransactionSummary(
   userId: string,
   filters: TransactionFilters,
+  database: Database = db,
 ) {
   const interval = dateInterval(filters);
   const [totals, savings] = await Promise.all([
-    db
+    database
       .select({
         income: sql<string>`coalesce(sum(${transactions.amount}) filter (where ${transactions.type} = 'income'), 0)::text`,
         expense: sql<string>`coalesce(sum(${transactions.amount}) filter (where ${transactions.type} = 'expense'), 0)::text`,
@@ -143,7 +140,7 @@ export async function getTransactionSummary(
         ),
       ),
     interval
-      ? getPeriodSavings(userId, interval.start, interval.end)
+      ? getPeriodSavings(userId, interval.start, interval.end, database)
       : Promise.resolve({ savedIn: 0n, savedOut: 0n, net: 0n }),
   ]);
   return {

@@ -11,36 +11,24 @@ export function TransactionSummary({
   savings: bigint;
 }) {
   return (
-    <section aria-label="Ringkasan periode" className="summary-grid">
-      <div className="summary-card card summary-income">
-        <div className="summary-card-heading">
-          <span className="summary-icon">
-            <ArrowDownLeft aria-hidden="true" />
-          </span>
-          <h2>Pendapatan</h2>
-        </div>
-        <strong className="summary-value">+ {formatIdr(income)}</strong>
+    <section aria-label="Ringkasan periode" className="tx-summary card">
+      <div className="tx-summary-section tx-summary-income">
+        <ArrowDownLeft aria-hidden="true" className="tx-summary-icon" />
+        <strong className="tx-summary-value">+ {formatIdr(income)}</strong>
+        <span className="tx-summary-label">Pendapatan</span>
       </div>
-      <div className="summary-card card summary-expense">
-        <div className="summary-card-heading">
-          <span className="summary-icon">
-            <ArrowUpRight aria-hidden="true" />
-          </span>
-          <h2>Pengeluaran</h2>
-        </div>
-        <strong className="summary-value">− {formatIdr(expense)}</strong>
+      <div className="tx-summary-section tx-summary-expense">
+        <ArrowUpRight aria-hidden="true" className="tx-summary-icon" />
+        <strong className="tx-summary-value">− {formatIdr(expense)}</strong>
+        <span className="tx-summary-label">Pengeluaran</span>
       </div>
-      <div className="summary-card card summary-savings">
-        <div className="summary-card-heading">
-          <span className="summary-icon">
-            <PiggyBank aria-hidden="true" />
-          </span>
-          <h2>Tabungan</h2>
-        </div>
-        <strong className="summary-value">
+      <div className="tx-summary-section tx-summary-savings">
+        <PiggyBank aria-hidden="true" className="tx-summary-icon" />
+        <strong className="tx-summary-value">
           {savings < 0n ? "− " : ""}
           {formatIdr(savings < 0n ? -savings : savings)}
         </strong>
+        <span className="tx-summary-label">Tabungan</span>
       </div>
     </section>
   );
