@@ -12,5 +12,9 @@ export const config = {
     "/transfers/:path*",
     "/budgets/:path*",
     "/recurring-transactions/:path*",
+    "/split-bills/:path*",
+    "/reports/:path*",
+    "/api/reports/:path*",
+    "/api/exports/:path*",
   ],
 };

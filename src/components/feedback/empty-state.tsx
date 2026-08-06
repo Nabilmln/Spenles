@@ -9,8 +9,7 @@ export function EmptyState() {
       <div>
         <h2>Belum ada aktivitas keuangan</h2>
         <p>
-          Fondasi akun Anda sudah siap. Pencatatan transaksi akan tersedia pada
-          fase berikutnya.
+          Mulai dengan mencatat pemasukan atau pengeluaran pertama Anda.
         </p>
       </div>
     </div>

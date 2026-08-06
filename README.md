@@ -7,7 +7,10 @@ kategori. Fase 03 menyediakan dashboard arus kas dengan periode tervalidasi,
 ringkasan perbandingan, tiga grafik aksesibel, profil arus kas, dan transaksi
 terbaru. Fase 04 menyediakan banyak akun IDR, saldo otoritatif, transfer
 internal, anggaran kategori bulanan, transaksi berulang idempoten, scheduler
-aman, dan peringatan dalam aplikasi.
+aman, dan peringatan dalam aplikasi. Fase 05 menyediakan split bill dengan
+perhitungan rupiah deterministik dan snapshot final. Fase 06 menyediakan
+laporan PDF privat, ekspor transaksi CSV yang aman untuk spreadsheet, dan
+backup data pribadi JSON berversi.
 
 ## Persyaratan
 
@@ -73,3 +76,11 @@ Vercel Cron memanggil `GET /api/cron/recurring-transactions` setiap jam sesuai
 tidak menggunakan sesi browser sebagai otoritas, tidak menerima user ID, dan
 hanya mengembalikan hitungan operasional aman. Pastikan paket Vercel yang
 digunakan mendukung jadwal per jam sebelum rilis.
+
+## Laporan dan ekspor
+
+Halaman `/reports` menyediakan laporan PDF bulanan, tahunan, atau rentang
+khusus; CSV transaksi; dan backup JSON versi 1.0. Semua unduhan dibuat
+server-side dari sesi terverifikasi, dibatasi ukurannya, dan memakai respons
+private/no-store. Backup mencakup data finansial pribadi tetapi tidak mencakup
+password, sesi, token, credential, atau secret.

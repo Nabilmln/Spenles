@@ -3,6 +3,7 @@
 import Link from "next/link";
 import {
   ListTree,
+  FileBarChart,
   MoreHorizontal,
   Repeat2,
   Target,
@@ -16,6 +17,7 @@ const links = [
   { href: "/budgets", label: "Anggaran", icon: Target },
   { href: "/recurring-transactions", label: "Berulang", icon: Repeat2 },
   { href: "/split-bills", label: "Split Bill", icon: UsersRound },
+  { href: "/reports", label: "Laporan", icon: FileBarChart },
   { href: "/settings/profile", label: "Profil", icon: UserRound },
 ];
 

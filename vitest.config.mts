@@ -3,7 +3,11 @@ import { configDefaults, defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
     environment: "jsdom",
-    exclude: [...configDefaults.exclude, "**/*.integration.test.ts"],
+    exclude: [
+      ...configDefaults.exclude,
+      "**/*.integration.test.ts",
+      "e2e/**/*.spec.ts",
+    ],
     setupFiles: ["./vitest.setup.ts"],
     restoreMocks: true,
     clearMocks: true,
