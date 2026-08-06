@@ -36,7 +36,7 @@ export default async function TransactionsPage({
     <div className="page-stack">
       <div className="page-heading-row">
         <div className="section-heading"><p className="eyebrow">Transaksi</p><h1>Riwayat transaksi</h1><p>Catat dan temukan pemasukan, pengeluaran, maupun tabungan Anda.</p></div>
-        <Link className="button button-primary" href="/transactions/new">Tambah transaksi</Link>
+        <Link className="button button-primary desktop-only" href="/transactions/new">Tambah transaksi</Link>
       </div>
       <TransactionSummary income={summary.income} expense={summary.expense} savings={summary.savings} />
       <TransactionFiltersForm filters={parsed.data} {...options} />

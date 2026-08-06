@@ -19,6 +19,7 @@ import {
 } from "@/modules/accounts/services/transfer-mutations";
 import {
   getOwnedAccount,
+  getPeriodSavings,
   listOwnedAccounts,
 } from "@/modules/accounts/queries/accounts";
 import {
@@ -383,5 +384,55 @@ describe("Phase 04 financial domains", () => {
       .from(recurringGenerations)
       .where(eq(recurringGenerations.id, generation!.id));
     expect(marker).toHaveLength(1);
+  });
+
+  it("aggregates net savings from transfers into savings-designated accounts", async () => {
+    const savingsAccount = (
+      await createOwnedAccount(database, userA, {
+        name: "Tabungan uji",
+        type: "savings",
+        openingBalance: 0n,
+      })
+    )!.id;
+    const interval = {
+      start: new Date("2026-08-01T00:00:00Z"),
+      end: new Date("2026-09-01T00:00:00Z"),
+    };
+    const before = await getPeriodSavings(userA, interval.start, interval.end, database);
+    expect(before).toEqual({ savedIn: 0n, savedOut: 0n, net: 0n });
+
+    await createOwnedTransfer(database, userA, {
+      sourceAccountId: accountA,
+      destinationAccountId: savingsAccount,
+      amount: 300_000n,
+      transferredAt: new Date("2026-08-10T00:00:00Z"),
+      note: "Menabung",
+    });
+    const saved = await getPeriodSavings(userA, interval.start, interval.end, database);
+    expect(saved).toEqual({ savedIn: 300_000n, savedOut: 0n, net: 300_000n });
+
+    await createOwnedTransfer(database, userA, {
+      sourceAccountId: savingsAccount,
+      destinationAccountId: accountA,
+      amount: 50_000n,
+      transferredAt: new Date("2026-08-11T00:00:00Z"),
+      note: "Tarik dana",
+    });
+    const withdrawn = await getPeriodSavings(userA, interval.start, interval.end, database);
+    expect(withdrawn).toEqual({ savedIn: 300_000n, savedOut: 50_000n, net: 250_000n });
+
+    const reversed = await createOwnedTransfer(database, userA, {
+      sourceAccountId: accountA,
+      destinationAccountId: savingsAccount,
+      amount: 20_000n,
+      transferredAt: new Date("2026-08-12T00:00:00Z"),
+      note: "Dibatalkan",
+    });
+    await reverseOwnedTransfer(database, userA, reversed!.id);
+    const afterReversal = await getPeriodSavings(userA, interval.start, interval.end, database);
+    expect(afterReversal).toEqual({ savedIn: 300_000n, savedOut: 50_000n, net: 250_000n });
+
+    const savingsBalance = await getOwnedAccount(userA, savingsAccount, database);
+    expect(savingsBalance?.balance).toBe("250000");
   });
 });

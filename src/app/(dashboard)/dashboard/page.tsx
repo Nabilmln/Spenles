@@ -91,7 +91,7 @@ export default async function DashboardPage({
           eyebrow="Dashboard"
           title={`Halo, ${profile?.displayName ?? "Pengguna Spenles"}!`}
         />
-        <Link className="button button-primary" href="/transactions/new">
+        <Link className="button button-primary desktop-only" href="/transactions/new">
           Tambah transaksi
         </Link>
       </div>
