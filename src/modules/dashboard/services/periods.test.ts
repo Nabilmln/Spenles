@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { resolveDashboardPeriods } from "./periods";
+import { fourDayJakartaInterval, resolveDashboardPeriods } from "./periods";
 
 const now = new Date("2026-08-05T10:00:00.000Z");
 
@@ -102,5 +102,32 @@ describe("resolveDashboardPeriods", () => {
     ]);
     expect(twelve.chartMonthKeys).toHaveLength(12);
     expect(twelve.chartMonthKeys.at(-1)).toBe("2026-08");
+  });
+});
+
+describe("fourDayJakartaInterval", () => {
+  it("covers exactly the four Jakarta calendar days ending today", () => {
+    const interval = fourDayJakartaInterval(
+      new Date("2026-08-06T04:00:00.000Z"),
+    );
+
+    expect(interval.startDate).toBe("2026-08-03");
+    expect(interval.endDateExclusive).toBe("2026-08-07");
+    expect(interval.start.toISOString()).toBe("2026-08-02T17:00:00.000Z");
+    expect(interval.end.toISOString()).toBe("2026-08-06T17:00:00.000Z");
+  });
+
+  it("rolls the Jakarta day boundary at 17:00 UTC", () => {
+    const before = fourDayJakartaInterval(
+      new Date("2026-08-05T16:59:59.999Z"),
+    );
+    const after = fourDayJakartaInterval(
+      new Date("2026-08-05T17:00:00.000Z"),
+    );
+
+    expect(before.startDate).toBe("2026-08-02");
+    expect(before.endDateExclusive).toBe("2026-08-06");
+    expect(after.startDate).toBe("2026-08-03");
+    expect(after.endDateExclusive).toBe("2026-08-07");
   });
 });

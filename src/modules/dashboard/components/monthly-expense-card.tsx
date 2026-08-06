@@ -5,18 +5,21 @@ import { DailyExpenseChart } from "./daily-expense-chart";
 export function MonthlyExpenseCard({
   monthLabel,
   totalExpense,
-  points,
+  monthPoints,
+  recentPoints,
   prevMonth,
   nextMonth,
   currentMonth,
 }: {
   monthLabel: string;
   totalExpense: bigint;
-  points: DailyExpensePoint[];
+  monthPoints: DailyExpensePoint[];
+  recentPoints: DailyExpensePoint[];
   prevMonth: string;
   nextMonth: string;
   currentMonth: string;
 }) {
+  const recentZero = recentPoints.every((point) => point.expenseIdr === "0");
   return (
     <section aria-labelledby="monthly-expense-title" className="monthly-expense-card card">
       <div className="monthly-expense-heading">
@@ -46,9 +49,19 @@ export function MonthlyExpenseCard({
         </div>
       </div>
       <strong className="monthly-expense-total">{formatIdr(totalExpense)}</strong>
-      <DailyExpenseChart points={points} />
+      <div className="desktop-chart">
+        <DailyExpenseChart points={monthPoints} />
+      </div>
+      <div className="mobile-chart">
+        <DailyExpenseChart points={recentPoints} />
+        {recentZero ? (
+          <p className="monthly-expense-zero" role="status">
+            Belum ada pengeluaran dalam 4 hari terakhir.
+          </p>
+        ) : null}
+      </div>
       <p className="field-hint">
-        Grafik menampilkan pengeluaran per hari pada bulan yang dipilih dalam zona Asia/Jakarta.
+        Grafik menampilkan pengeluaran per hari dalam zona Asia/Jakarta.
       </p>
     </section>
   );

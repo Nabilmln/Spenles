@@ -3,8 +3,10 @@ import { SectionHeading } from "@/components/layout/section-heading";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import {
   buildDailyExpenseChartContract,
+  buildFourDayExpenseChartContract,
   currentJakartaMonthKey,
   DashboardFeatureGrid,
+  fourDayJakartaInterval,
   getDailyExpenseAggregates,
   getRollingThreeDayTransactions,
   MonthlyExpenseCard,
@@ -75,13 +77,20 @@ export default async function DashboardPage({
       ? filtersResult.data.selection.month
       : currentJakartaMonthKey();
   const cardInterval = monthIntervalForKey(cardMonth);
-  const [dailyResult, rollingResult] = await Promise.allSettled([
+  const now = new Date();
+  const recentInterval = fourDayJakartaInterval(now);
+  const [dailyResult, recentResult, rollingResult] = await Promise.allSettled([
     getDailyExpenseAggregates(user.id, cardInterval),
+    getDailyExpenseAggregates(user.id, recentInterval),
     getRollingThreeDayTransactions(user.id),
   ]);
   const daily = isFulfilled(dailyResult)
     ? buildDailyExpenseChartContract(cardInterval, dailyResult.value)
     : null;
+  const recent = buildFourDayExpenseChartContract(
+    now,
+    isFulfilled(recentResult) ? recentResult.value : [],
+  );
 
   return (
     <div className="page-stack dashboard-page">
@@ -100,9 +109,10 @@ export default async function DashboardPage({
         <MonthlyExpenseCard
           currentMonth={cardMonth}
           monthLabel={monthLabelFor(cardMonth)}
+          monthPoints={daily.points}
           nextMonth={shiftMonthKey(cardMonth, 1)}
-          points={daily.points}
           prevMonth={shiftMonthKey(cardMonth, -1)}
+          recentPoints={recent.points}
           totalExpense={daily.totalExpense}
         />
       ) : (

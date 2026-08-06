@@ -298,11 +298,15 @@ h1, h2, p { margin-top: 0; }
 .month-nav { display: flex; align-items: center; gap: .45rem; }
 .month-nav .icon-button { width: 2.5rem; height: 2.5rem; font-size: 1.15rem; }
 .daily-chart-canvas { height: 15rem; }
-.feature-grid { box-shadow: none; }
-.feature-grid-links { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .75rem; }
-.feature-link { display: flex; min-height: 4.6rem; align-items: center; gap: .75rem; padding: .9rem 1rem; border: 1px solid var(--border); border-radius: .85rem; color: var(--foreground); background: var(--surface-subtle); font-weight: 700; }
-.feature-link:hover { border-color: var(--primary-500); background: var(--primary-50); }
-.feature-link svg { flex: 0 0 auto; color: var(--primary-600); }
+.desktop-chart { display: block; }
+.mobile-chart { display: none; }
+.monthly-expense-zero { margin: .35rem 0 0; color: var(--muted); font-size: .78rem; font-weight: 500; }
+.feature-nav-card { box-shadow: none; }
+.feature-nav { display: flex; gap: .4rem; overflow-x: auto; padding-bottom: .15rem; scrollbar-width: none; }
+.feature-nav::-webkit-scrollbar { display: none; }
+.feature-nav-item { flex: 1 1 0; display: flex; min-width: 4.75rem; min-height: 3.5rem; align-items: center; justify-content: center; flex-direction: column; gap: .35rem; padding: .5rem .4rem; border-radius: .8rem; color: var(--foreground); font-size: .72rem; font-weight: 700; text-align: center; }
+.feature-nav-item:hover { background: var(--surface-subtle); }
+.feature-nav-item svg { flex: 0 0 auto; color: var(--primary-600); }
 .rolling-days-card { box-shadow: none; }
 .rolling-day-group h3 { margin: 1.1rem 0 .15rem; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; }
 .rolling-day-group:first-child h3 { margin-top: .5rem; }
@@ -342,7 +346,8 @@ h1, h2, p { margin-top: 0; }
   .summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .summary-net { grid-column: 1 / -1; }
   .chart-grid { grid-template-columns: 1fr; }
-  .feature-grid-links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .desktop-chart { display: none; }
+  .mobile-chart { display: block; }
 }
 
 @media (max-width: 540px) {
@@ -379,7 +384,6 @@ h1, h2, p { margin-top: 0; }
   .recent-row .transaction-amount { grid-column: 2; }
   .dashboard-empty { grid-template-columns: auto minmax(0, 1fr); }
   .dashboard-empty .button { grid-column: 1 / -1; width: 100%; }
-  .feature-grid-links { grid-template-columns: 1fr; }
   .monthly-expense-heading { align-items: stretch; flex-direction: column; }
 }
 

@@ -262,3 +262,10 @@ export function monthIntervalForKey(month: string): DateInterval {
   const start = parseMonthKey(month);
   return monthInterval(start, 1, monthLabel(start));
 }
+
+export function fourDayJakartaInterval(now = new Date()): DateInterval {
+  const today = jakartaToday(now);
+  const start = addDays(today, -3);
+  const end = addDays(today, 1);
+  return interval(start, end, "4 hari terakhir");
+}

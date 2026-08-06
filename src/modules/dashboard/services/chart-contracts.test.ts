@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildCategoryChartContract,
   buildCategoryVisualPoints,
+  buildFourDayExpenseChartContract,
   buildMonthlyChartContract,
 } from "./chart-contracts";
 
@@ -63,5 +64,48 @@ describe("dashboard chart contracts", () => {
       visual.reduce((sum, point) => sum + BigInt(point.expenseIdr), 0n),
     ).toBe(contract.totalExpense);
     expect(visual.reduce((sum, point) => sum + point.shareBps, 0)).toBe(10_000);
+  });
+});
+
+describe("four-day recent expense chart", () => {
+  const now = new Date("2026-08-06T04:00:00.000Z");
+
+  it("builds exactly four Jakarta days ending today and zero-fills gaps", () => {
+    const contract = buildFourDayExpenseChartContract(now, [
+      { day: "2026-08-04", expense: 25_000n },
+      { day: "2026-08-06", expense: 50_000n },
+    ]);
+
+    expect(contract.points.map((point) => point.day)).toEqual([
+      "2026-08-03",
+      "2026-08-04",
+      "2026-08-05",
+      "2026-08-06",
+    ]);
+    expect(contract.points.map((point) => point.label)).toEqual([
+      "3 Agu",
+      "4 Agu",
+      "5 Agu",
+      "6 Agu",
+    ]);
+    expect(contract.points.map((point) => point.expenseIdr)).toEqual([
+      "0",
+      "25000",
+      "0",
+      "50000",
+    ]);
+    expect(contract.points[3].plot).toBe(1);
+    expect(contract.totalExpense).toBe(75_000n);
+  });
+
+  it("renders a zero baseline when the recent window has no expense", () => {
+    const contract = buildFourDayExpenseChartContract(now, []);
+
+    expect(contract.points).toHaveLength(4);
+    expect(contract.points.every((point) => point.expenseIdr === "0")).toBe(
+      true,
+    );
+    expect(contract.points.every((point) => point.plot === 0)).toBe(true);
+    expect(contract.totalExpense).toBe(0n);
   });
 });

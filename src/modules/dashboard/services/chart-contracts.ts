@@ -8,6 +8,7 @@ import type {
   MonthlyAggregate,
   MonthlyExpensePoint,
 } from "../types/dashboard";
+import { fourDayJakartaInterval } from "./periods";
 
 const CATEGORY_COLORS: Record<string, string> = {
   blue: "#2563eb",
@@ -150,6 +151,18 @@ export function buildDailyExpenseChartContract(
   }));
 
   return { points, totalExpense };
+}
+
+export function buildFourDayExpenseChartContract(
+  now: Date,
+  rows: DailyExpenseAggregate[],
+) {
+  const interval = fourDayJakartaInterval(now);
+  const { points, totalExpense } = buildDailyExpenseChartContract(
+    interval,
+    rows,
+  );
+  return { interval, points, totalExpense };
 }
 
 export function buildCategoryChartContract(rows: CategoryAggregate[]) {
