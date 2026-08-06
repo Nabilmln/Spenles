@@ -5,6 +5,7 @@ import { db } from "@/db";
 import type { Database } from "@/db/types";
 import type {
   CategoryAggregate,
+  DailyExpenseAggregate,
   DateInterval,
   MonthlyAggregate,
   RecentDashboardTransaction,
@@ -216,6 +217,101 @@ export async function getRecentDashboardTransactions(
       owned_transaction.transaction_at desc,
       owned_transaction.id desc
     limit 5
+  `);
+
+  return result.rows.map(
+    (row): RecentDashboardTransaction => ({
+      id: row.id,
+      type: row.type,
+      amountIdr: row.amount,
+      transactionAt: new Date(row.transaction_at),
+      note: row.note,
+      accountName: row.account_name,
+      categoryName: row.category_name,
+    }),
+  );
+}
+
+type DailyRow = { day: string; expense: string };
+
+export async function getDailyExpenseAggregates(
+  authenticatedUserId: string,
+  interval: DateInterval,
+  database: Database = db,
+) {
+  const result = await database.execute<DailyRow>(sql`
+    select
+      to_char(
+        timezone('Asia/Jakarta', transaction_at),
+        'YYYY-MM-DD'
+      ) as day,
+      coalesce(sum(amount), 0)::text as expense
+    from transactions
+    where user_id = ${authenticatedUserId}
+      and deleted_at is null
+      and type = 'expense'
+      and transaction_at >= ${interval.start}
+      and transaction_at < ${interval.end}
+    group by to_char(
+      timezone('Asia/Jakarta', transaction_at),
+      'YYYY-MM-DD'
+    )
+    order by to_char(
+      timezone('Asia/Jakarta', transaction_at),
+      'YYYY-MM-DD'
+    )
+  `);
+
+  return result.rows.map(
+    (row): DailyExpenseAggregate => ({
+      day: row.day,
+      expense: BigInt(row.expense),
+    }),
+  );
+}
+
+const ROLLING_JAKARTA_OFFSET_MS = 7 * 60 * 60 * 1000;
+
+function jakartaDayStart(daysAgo: number) {
+  const shifted = new Date(Date.now() + ROLLING_JAKARTA_OFFSET_MS);
+  return new Date(
+    Date.UTC(
+      shifted.getUTCFullYear(),
+      shifted.getUTCMonth(),
+      shifted.getUTCDate() - daysAgo,
+    ) - ROLLING_JAKARTA_OFFSET_MS,
+  );
+}
+
+export async function getRollingThreeDayTransactions(
+  authenticatedUserId: string,
+  database: Database = db,
+) {
+  const start = jakartaDayStart(2);
+  const end = jakartaDayStart(-1);
+  const result = await database.execute<RecentRow>(sql`
+    select
+      owned_transaction.id,
+      owned_transaction.type,
+      owned_transaction.amount::text as amount,
+      owned_transaction.transaction_at,
+      owned_transaction.note,
+      owned_account.name as account_name,
+      owned_category.name as category_name
+    from transactions as owned_transaction
+    inner join accounts as owned_account
+      on owned_account.id = owned_transaction.account_id
+      and owned_account.user_id = ${authenticatedUserId}
+    inner join categories as owned_category
+      on owned_category.id = owned_transaction.category_id
+      and owned_category.user_id = ${authenticatedUserId}
+    where owned_transaction.user_id = ${authenticatedUserId}
+      and owned_transaction.deleted_at is null
+      and owned_transaction.transaction_at >= ${start}
+      and owned_transaction.transaction_at < ${end}
+    order by
+      owned_transaction.transaction_at desc,
+      owned_transaction.id desc
   `);
 
   return result.rows.map(

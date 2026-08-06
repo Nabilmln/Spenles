@@ -74,6 +74,11 @@ export type MonthlyAggregate = {
   expense: bigint;
 };
 
+export type DailyExpenseAggregate = {
+  day: string;
+  expense: bigint;
+};
+
 export type CategoryAggregate = {
   categoryId: string;
   name: string;
@@ -85,6 +90,13 @@ export type CategoryAggregate = {
 
 export type MonthlyExpensePoint = {
   period: string;
+  label: string;
+  expenseIdr: string;
+  plot: number;
+};
+
+export type DailyExpensePoint = {
+  day: string;
   label: string;
   expenseIdr: string;
   plot: number;

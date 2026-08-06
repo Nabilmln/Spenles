@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
+import { Poppins } from "next/font/google";
 import { cookies } from "next/headers";
 import "./globals.css";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+  variable: "--font-poppins",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -24,7 +32,7 @@ export default async function RootLayout({
 
   return (
     <html lang="id" className={`theme-${theme}`} suppressHydrationWarning>
-      <body>{children}</body>
+      <body className={poppins.variable}>{children}</body>
     </html>
   );
 }

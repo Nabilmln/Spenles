@@ -7,7 +7,7 @@ import type { Database } from "@/db/types";
 export type AccountBalanceRow = {
   id: string;
   name: string;
-  type: "cash" | "bank" | "e_wallet" | "other";
+  type: "cash" | "bank" | "e_wallet" | "savings" | "other";
   status: "active" | "archived";
   systemKey: string | null;
   openingBalance: string;
@@ -132,4 +132,50 @@ export async function getActiveAccountsTotal(
       and account.status = 'active'
   `);
   return BigInt(result.rows[0]?.total ?? "0");
+}
+
+type SavingsFlowRow = { saved_in: string; saved_out: string };
+
+export async function getPeriodSavings(
+  userId: string,
+  start: Date,
+  end: Date,
+  database: Database = db,
+) {
+  const result = await database.execute<SavingsFlowRow>(sql`
+    select
+      coalesce(sum(
+        case when destination.type = 'savings' then transfer.amount else 0 end
+      ), 0)::text as saved_in,
+      coalesce(sum(
+        case when source.type = 'savings' then transfer.amount else 0 end
+      ), 0)::text as saved_out
+    from transfers as transfer
+    inner join accounts as source
+      on source.id = transfer.source_account_id
+      and source.user_id = transfer.user_id
+      and source.status = 'active'
+    inner join accounts as destination
+      on destination.id = transfer.destination_account_id
+      and destination.user_id = transfer.user_id
+      and destination.status = 'active'
+    where transfer.user_id = ${userId}
+      and transfer.reversal_of_id is null
+      and transfer.transferred_at >= ${start}
+      and transfer.transferred_at < ${end}
+      and not exists (
+        select 1 from transfers as reversal
+        where reversal.reversal_of_id = transfer.id
+          and reversal.user_id = transfer.user_id
+      )
+      and (source.type = 'savings' or destination.type = 'savings')
+  `);
+  const row = result.rows[0] ?? { saved_in: "0", saved_out: "0" };
+  const savedIn = BigInt(row.saved_in);
+  const savedOut = BigInt(row.saved_out);
+  return {
+    savedIn,
+    savedOut,
+    net: savedIn - savedOut,
+  };
 }

@@ -30,8 +30,8 @@ export function ShareSummaryButton({ billId }: { billId: string }) {
         <input type="checkbox" name="includePaymentStatus" defaultChecked />
         Sertakan status pembayaran
       </label>
-      <Button type="submit" variant="secondary" disabled={pending}>
-        {pending ? "Membuat..." : "Salin ringkasan"}
+      <Button type="submit" disabled={pending}>
+        {pending ? "Membuat..." : "Salin Hasil Split Bill"}
       </Button>
       <FormMessage>{state.error}</FormMessage>
       {copyStatus ? <p role="status">{copyStatus}</p> : null}

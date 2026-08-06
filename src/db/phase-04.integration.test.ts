@@ -81,6 +81,7 @@ describe("Phase 04 financial domains", () => {
       "cash",
       "bank",
       "e_wallet",
+      "savings",
       "other",
     ]);
 

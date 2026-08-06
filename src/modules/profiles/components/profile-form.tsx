@@ -54,25 +54,19 @@ export function ProfileForm({
       <div className="settings-grid">
         <div className="field">
           <label htmlFor="defaultCurrency">Mata uang</label>
-          <select
-            className="input"
-            id="defaultCurrency"
-            name="defaultCurrency"
-            defaultValue={profile.defaultCurrency}
-          >
-            <option value="IDR">IDR — Rupiah Indonesia</option>
-          </select>
+          <div className="input-display" id="defaultCurrency">
+            IDR — Rupiah Indonesia
+          </div>
+          <input type="hidden" name="defaultCurrency" value="IDR" />
+          <span className="field-hint">Spenles hanya mendukung IDR.</span>
         </div>
         <div className="field">
           <label htmlFor="timezone">Zona waktu</label>
-          <select
-            className="input"
-            id="timezone"
-            name="timezone"
-            defaultValue={profile.timezone}
-          >
-            <option value="Asia/Jakarta">Asia/Jakarta</option>
-          </select>
+          <div className="input-display" id="timezone">Asia/Jakarta</div>
+          <input type="hidden" name="timezone" value="Asia/Jakarta" />
+          <span className="field-hint">
+            Spenles hanya mendukung Asia/Jakarta.
+          </span>
         </div>
       </div>
       <div className="field">

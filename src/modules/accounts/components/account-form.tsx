@@ -18,7 +18,7 @@ export function AccountForm({
   initial?: {
     id: string;
     name: string;
-    type: "cash" | "bank" | "e_wallet" | "other";
+    type: "cash" | "bank" | "e_wallet" | "savings" | "other";
     openingBalance: string;
   };
 }) {

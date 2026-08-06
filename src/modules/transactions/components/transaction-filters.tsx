@@ -1,4 +1,5 @@
 import type { TransactionFilters } from "../schemas/transaction-filters";
+import { DateRangeField } from "./date-range-field";
 
 export function TransactionFiltersForm({
   filters,
@@ -10,8 +11,9 @@ export function TransactionFiltersForm({
   categories: { id: string; name: string; type: "income" | "expense" }[];
 }) {
   return (
-    <form method="get" className="filter-panel">
+    <form method="get" className="filter-panel" id="transaction-filters-form">
       <input className="input" name="q" defaultValue={filters.q} placeholder="Cari catatan..." aria-label="Cari catatan" />
+      <DateRangeField month={filters.month} from={filters.from} to={filters.to} />
       <select className="input" name="type" defaultValue={filters.type ?? ""} aria-label="Jenis transaksi">
         <option value="">Semua jenis</option><option value="expense">Pengeluaran</option><option value="income">Pemasukan</option>
       </select>
@@ -21,9 +23,6 @@ export function TransactionFiltersForm({
       <select className="input" name="account" defaultValue={filters.account ?? ""} aria-label="Akun">
         <option value="">Semua akun</option>{accounts.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
       </select>
-      <input className="input" type="month" name="month" defaultValue={filters.month} aria-label="Bulan" />
-      <input className="input" type="date" name="from" defaultValue={filters.from} aria-label="Tanggal awal" />
-      <input className="input" type="date" name="to" defaultValue={filters.to} aria-label="Tanggal akhir" />
       <select className="input" name="sort" defaultValue={filters.sort} aria-label="Urutkan">
         <option value="transactionAt">Tanggal</option><option value="amount">Jumlah</option>
       </select>

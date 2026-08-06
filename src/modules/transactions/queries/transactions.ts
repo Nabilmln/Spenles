@@ -11,11 +11,13 @@ import {
   isNull,
   lt,
   or,
+  sql,
   type SQL,
 } from "drizzle-orm";
 import { db } from "@/db";
 import { accounts, categories, transactions } from "@/db/schema";
 import { jakartaDateBoundary } from "@/lib/dates/jakarta";
+import { getPeriodSavings } from "@/modules/accounts";
 import type { TransactionFilters } from "../schemas/transaction-filters";
 
 function monthBounds(month: string) {
@@ -27,6 +29,18 @@ function monthBounds(month: string) {
   return { start, end };
 }
 
+function dateInterval(filters: TransactionFilters) {
+  if (filters.month) {
+    return monthBounds(filters.month);
+  }
+  if (filters.from && filters.to) {
+    const start = jakartaDateBoundary(filters.from)!;
+    const end = new Date(jakartaDateBoundary(filters.to)!.getTime() + 86_400_000);
+    return { start, end };
+  }
+  return null;
+}
+
 function conditions(userId: string, filters: TransactionFilters) {
   const result: SQL[] = [eq(transactions.userId, userId), isNull(transactions.deletedAt)];
   if (filters.type) result.push(eq(transactions.type, filters.type));
@@ -36,13 +50,9 @@ function conditions(userId: string, filters: TransactionFilters) {
     const literal = filters.q.replace(/[\\%_]/gu, "\\$&");
     result.push(ilike(transactions.note, `%${literal}%`));
   }
-  if (filters.month) {
-    const { start, end } = monthBounds(filters.month);
-    result.push(gte(transactions.transactionAt, start), lt(transactions.transactionAt, end));
-  } else if (filters.from && filters.to) {
-    const start = jakartaDateBoundary(filters.from)!;
-    const end = new Date(jakartaDateBoundary(filters.to)!.getTime() + 86_400_000);
-    result.push(gte(transactions.transactionAt, start), lt(transactions.transactionAt, end));
+  const interval = dateInterval(filters);
+  if (interval) {
+    result.push(gte(transactions.transactionAt, interval.start), lt(transactions.transactionAt, interval.end));
   }
   return result;
 }
@@ -93,7 +103,7 @@ export async function getTransaction(userId: string, id: string) {
 
 export async function getTransactionOptions(userId: string, currentCategoryId?: string) {
   const [ownedAccounts, ownedCategories] = await Promise.all([
-    db.select({ id: accounts.id, name: accounts.name }).from(accounts).where(
+    db.select({ id: accounts.id, name: accounts.name, type: accounts.type }).from(accounts).where(
       and(eq(accounts.userId, userId), eq(accounts.status, "active"), eq(accounts.currency, "IDR")),
     ).orderBy(asc(accounts.name)),
     db.select({ id: categories.id, name: categories.name, type: categories.type }).from(categories).where(
@@ -106,4 +116,39 @@ export async function getTransactionOptions(userId: string, currentCategoryId?: 
     ).orderBy(asc(categories.name)),
   ]);
   return { accounts: ownedAccounts, categories: ownedCategories };
+}
+
+export async function getTransactionSummary(
+  userId: string,
+  filters: TransactionFilters,
+) {
+  const interval = dateInterval(filters);
+  const [totals, savings] = await Promise.all([
+    db
+      .select({
+        income: sql<string>`coalesce(sum(${transactions.amount}) filter (where ${transactions.type} = 'income'), 0)::text`,
+        expense: sql<string>`coalesce(sum(${transactions.amount}) filter (where ${transactions.type} = 'expense'), 0)::text`,
+      })
+      .from(transactions)
+      .where(
+        and(
+          eq(transactions.userId, userId),
+          isNull(transactions.deletedAt),
+          interval
+            ? and(
+                gte(transactions.transactionAt, interval.start),
+                lt(transactions.transactionAt, interval.end),
+              )
+            : undefined,
+        ),
+      ),
+    interval
+      ? getPeriodSavings(userId, interval.start, interval.end)
+      : Promise.resolve({ savedIn: 0n, savedOut: 0n, net: 0n }),
+  ]);
+  return {
+    income: BigInt(totals[0]?.income ?? "0"),
+    expense: BigInt(totals[0]?.expense ?? "0"),
+    savings: savings.net,
+  };
 }

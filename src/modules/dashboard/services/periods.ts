@@ -246,3 +246,19 @@ export function resolveDashboardPeriods(
     ),
   };
 }
+
+export function currentJakartaMonthKey(now = new Date()) {
+  const today = jakartaToday(now);
+  return monthKey(today);
+}
+
+export function shiftMonthKey(month: string, offset: number) {
+  const start = parseMonthKey(month);
+  const shifted = addMonths(start, offset);
+  return monthKey(shifted);
+}
+
+export function monthIntervalForKey(month: string): DateInterval {
+  const start = parseMonthKey(month);
+  return monthInterval(start, 1, monthLabel(start));
+}

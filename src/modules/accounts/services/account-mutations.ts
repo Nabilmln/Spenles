@@ -5,7 +5,7 @@ import type { Database } from "@/db/types";
 
 export type AccountMutationInput = {
   name: string;
-  type: "cash" | "bank" | "e_wallet" | "other";
+  type: "cash" | "bank" | "e_wallet" | "savings" | "other";
   openingBalance: bigint;
 };
 

@@ -455,3 +455,48 @@ export async function listCsvTransactions(
 ) {
   return getTransactions(userId, filters, limit, database);
 }
+
+function customInterval(from: string, to: string) {
+  const start = new Date(`${from}T00:00:00+07:00`);
+  const inclusiveEnd = new Date(`${to}T00:00:00+07:00`);
+  return {
+    interval: {
+      kind: "custom" as const,
+      label: `${from} s.d. ${to}`,
+      filePart: `${from}-to-${to}`,
+      startDate: from,
+      endDate: to,
+      start,
+      end: new Date(inclusiveEnd.getTime() + 86_400_000),
+    },
+  };
+}
+
+export async function getReportAnalysis(
+  userId: string,
+  from: string,
+  to: string,
+  database: Database = db,
+) {
+  const { interval } = customInterval(from, to);
+  const filters: ReportFilters = { interval, includeDetails: false };
+  const [summary, months, categories] = await Promise.all([
+    getTotals(userId, filters, database),
+    getMonths(userId, filters, database),
+    getCategories(userId, filters, database),
+  ]);
+  return { summary, months, categories };
+}
+
+export async function listCategoryTransactions(
+  userId: string,
+  categoryId: string,
+  from: string,
+  to: string,
+  limit: number,
+  database: Database = db,
+) {
+  const { interval } = customInterval(from, to);
+  const filters: ExportFilters = { interval, categoryId };
+  return getTransactions(userId, filters, limit, database);
+}

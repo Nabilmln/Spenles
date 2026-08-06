@@ -6,3 +6,4 @@ export * from "./components/pagination";
 export * from "./components/transaction-filters";
 export * from "./components/transaction-form";
 export * from "./components/transaction-list";
+export * from "./components/transaction-summary";

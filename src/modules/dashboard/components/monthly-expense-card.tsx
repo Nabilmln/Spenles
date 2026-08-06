@@ -1,0 +1,55 @@
+import { formatIdr } from "@/lib/money/format-idr";
+import type { DailyExpensePoint } from "../types/dashboard";
+import { DailyExpenseChart } from "./daily-expense-chart";
+
+export function MonthlyExpenseCard({
+  monthLabel,
+  totalExpense,
+  points,
+  prevMonth,
+  nextMonth,
+  currentMonth,
+}: {
+  monthLabel: string;
+  totalExpense: bigint;
+  points: DailyExpensePoint[];
+  prevMonth: string;
+  nextMonth: string;
+  currentMonth: string;
+}) {
+  return (
+    <section aria-labelledby="monthly-expense-title" className="monthly-expense-card card">
+      <div className="monthly-expense-heading">
+        <div>
+          <p className="eyebrow">Ringkasan bulanan</p>
+          <h2 id="monthly-expense-title">Pengeluaran Bulan {monthLabel}</h2>
+        </div>
+        <div className="month-nav" role="group" aria-label="Pilih bulan">
+          <form action="/dashboard" method="get">
+            <input name="month" type="hidden" value={prevMonth} />
+            <button aria-label="Bulan sebelumnya" className="icon-button" type="submit">
+              ‹
+            </button>
+          </form>
+          <form action="/dashboard" method="get">
+            <input name="month" type="hidden" value={currentMonth} />
+            <button className="button button-secondary" type="submit">
+              Bulan ini
+            </button>
+          </form>
+          <form action="/dashboard" method="get">
+            <input name="month" type="hidden" value={nextMonth} />
+            <button aria-label="Bulan berikutnya" className="icon-button" type="submit">
+              ›
+            </button>
+          </form>
+        </div>
+      </div>
+      <strong className="monthly-expense-total">{formatIdr(totalExpense)}</strong>
+      <DailyExpenseChart points={points} />
+      <p className="field-hint">
+        Grafik menampilkan pengeluaran per hari pada bulan yang dipilih dalam zona Asia/Jakarta.
+      </p>
+    </section>
+  );
+}

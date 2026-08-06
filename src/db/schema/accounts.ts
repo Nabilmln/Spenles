@@ -17,6 +17,7 @@ export const accountType = pgEnum("account_type", [
   "cash",
   "bank",
   "e_wallet",
+  "savings",
   "other",
 ]);
 export const recordStatus = pgEnum("record_status", ["active", "archived"]);

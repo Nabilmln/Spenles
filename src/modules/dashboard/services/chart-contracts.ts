@@ -1,6 +1,9 @@
 import type {
   CategoryAggregate,
   CategoryExpensePoint,
+  DailyExpenseAggregate,
+  DateInterval,
+  DailyExpensePoint,
   IncomeExpensePoint,
   MonthlyAggregate,
   MonthlyExpensePoint,
@@ -101,6 +104,52 @@ function roundedShares(values: bigint[], total: bigint) {
     remaining -= 1;
   }
   return floors;
+}
+
+function dayLabel(day: string) {
+  const [year, month, date] = day.split("-").map(Number);
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "numeric",
+    month: "short",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(year, month - 1, date)));
+}
+
+function enumerateDays(startDate: string, endDateExclusive: string) {
+  const result: string[] = [];
+  const cursor = new Date(`${startDate}T00:00:00Z`);
+  const end = new Date(`${endDateExclusive}T00:00:00Z`);
+  while (cursor < end) {
+    result.push(cursor.toISOString().slice(0, 10));
+    cursor.setUTCDate(cursor.getUTCDate() + 1);
+  }
+  return result;
+}
+
+export function buildDailyExpenseChartContract(
+  interval: DateInterval,
+  rows: DailyExpenseAggregate[],
+) {
+  const byDay = new Map(rows.map((row) => [row.day, row.expense]));
+  const days = enumerateDays(interval.startDate, interval.endDateExclusive);
+  const filled = days.map((day) => ({
+    day,
+    expense: byDay.get(day) ?? 0n,
+  }));
+  const maximum = filled.reduce(
+    (value, item) => (item.expense > value ? item.expense : value),
+    0n,
+  );
+  const totalExpense = filled.reduce((sum, item) => sum + item.expense, 0n);
+
+  const points: DailyExpensePoint[] = filled.map((item) => ({
+    day: item.day,
+    label: dayLabel(item.day),
+    expenseIdr: item.expense.toString(),
+    plot: normalizedPlot(item.expense, maximum),
+  }));
+
+  return { points, totalExpense };
 }
 
 export function buildCategoryChartContract(rows: CategoryAggregate[]) {
