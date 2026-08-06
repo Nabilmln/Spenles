@@ -38,7 +38,6 @@ function report(): FinancialReport {
     ],
     budgets: [],
     transactions: [],
-    detailTruncated: false,
   };
 }
 

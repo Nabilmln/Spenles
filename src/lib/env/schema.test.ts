@@ -33,4 +33,11 @@ describe("parseServerEnv", () => {
       parseServerEnv({ ...validEnv, CRON_SECRET: "short" }),
     ).toThrow("CRON_SECRET");
   });
+
+  it("treats an empty or whitespace scheduler secret as unset", () => {
+    expect(parseServerEnv({ ...validEnv, CRON_SECRET: "" }).CRON_SECRET).toBeUndefined();
+    expect(
+      parseServerEnv({ ...validEnv, CRON_SECRET: "   " }).CRON_SECRET,
+    ).toBeUndefined();
+  });
 });

@@ -1,7 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { eq, inArray } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { accounts, categories, profiles } from "@/db/schema";
+import { accounts, categories, profiles, transactions } from "@/db/schema";
 import { createOwnedAccount } from "@/modules/accounts/services/account-mutations";
 import { createOwnedTransfer } from "@/modules/accounts/services/transfer-mutations";
 import { ensureUserFoundationWithDatabase } from "@/modules/onboarding/services/ensure-user-foundation";
@@ -11,6 +11,8 @@ import {
   listCsvTransactions,
   validateOwnedReportFilters,
 } from "@/modules/reports/queries/report-queries";
+import { REPORT_DETAIL_LIMIT } from "@/modules/reports/constants";
+import { ExportLimitError } from "@/modules/reports/services/csv";
 import { parseReportParams } from "@/modules/reports/schemas/export-params";
 import {
   createOwnedTransaction,
@@ -192,5 +194,53 @@ describe("Phase 06 authenticated reports and exports", () => {
     ).toBeTruthy();
     expect(text).not.toMatch(/"userId"|"systemKey"|"normalizedName"/u);
     expect(text).not.toContain("Milik user B");
+  });
+
+  it("accepts exactly REPORT_DETAIL_LIMIT detail rows and rejects one more", async () => {
+    const rows = Array.from(
+      { length: REPORT_DETAIL_LIMIT + 1 },
+      (_, index) => ({
+        id: randomUUID(),
+        userId: userA,
+        accountId: accountA,
+        categoryId: expenseCategory,
+        type: "expense" as const,
+        amount: 1_000n,
+        transactionAt: new Date(
+          Date.UTC(2026, 8, 1, 0, index % 24, index % 60),
+        ),
+        note: `Batas detail ${index}`,
+      }),
+    );
+    await database.insert(transactions).values(rows.slice(0, REPORT_DETAIL_LIMIT));
+    const atLimit = await getFinancialReport(
+      userA,
+      "Phase 06 A",
+      parseReportParams(
+        new URLSearchParams(
+          "period=month&month=2026-09&details=true",
+        ),
+        new Date("2026-09-02T02:00:00.000Z"),
+      )!,
+      database,
+      new Date("2026-09-02T02:00:00.000Z"),
+    );
+    expect(atLimit.transactions).toHaveLength(REPORT_DETAIL_LIMIT);
+
+    await database.insert(transactions).values([rows[REPORT_DETAIL_LIMIT]]);
+    await expect(
+      getFinancialReport(
+        userA,
+        "Phase 06 A",
+        parseReportParams(
+          new URLSearchParams(
+            "period=month&month=2026-09&details=true",
+          ),
+          new Date("2026-09-02T02:00:00.000Z"),
+        )!,
+        database,
+        new Date("2026-09-02T02:00:00.000Z"),
+      ),
+    ).rejects.toThrow(ExportLimitError);
   });
 });

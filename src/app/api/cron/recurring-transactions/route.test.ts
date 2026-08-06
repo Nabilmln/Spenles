@@ -1,12 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-const { secret, runRecurringScheduler } = vi.hoisted(() => ({
+const { secret, runRecurringScheduler, env } = vi.hoisted(() => ({
   secret: "12345678901234567890123456789012",
   runRecurringScheduler: vi.fn(),
+  env: { CRON_SECRET: undefined as string | undefined },
 }));
 
 vi.mock("@/lib/env/server", () => ({
-  getServerEnv: () => ({ CRON_SECRET: secret }),
+  getServerEnv: () => env,
 }));
 vi.mock(
   "@/modules/recurring-transactions/services/run-scheduler",
@@ -17,6 +18,7 @@ import { GET } from "./route";
 
 describe("recurring scheduler route", () => {
   beforeEach(() => {
+    env.CRON_SECRET = secret;
     runRecurringScheduler.mockReset();
     runRecurringScheduler.mockResolvedValue({
       ok: true,
@@ -38,6 +40,21 @@ describe("recurring scheduler route", () => {
       );
       expect(response.status).toBe(401);
     }
+    expect(runRecurringScheduler).not.toHaveBeenCalled();
+  });
+
+  it("fails closed when CRON_SECRET is not configured", async () => {
+    env.CRON_SECRET = undefined;
+    const response = await GET(
+      new Request("https://example.com/api/cron/recurring-transactions", {
+        headers: { authorization: `Bearer ${secret}` },
+      }),
+    );
+    expect(response.status).toBe(401);
+    expect(await response.json()).toEqual({
+      ok: false,
+      error: "Tidak diizinkan.",
+    });
     expect(runRecurringScheduler).not.toHaveBeenCalled();
   });
 

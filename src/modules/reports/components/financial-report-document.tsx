@@ -232,12 +232,6 @@ export function FinancialReportDocument({
         {report.filters.includeDetails ? (
           <View style={styles.section} break>
             <Text style={styles.sectionTitle}>Detail transaksi</Text>
-            {report.detailTruncated ? (
-              <Text style={styles.warning}>
-                Detail dibatasi hingga 500 baris. Gunakan filter yang lebih sempit
-                untuk memperoleh semua detail.
-              </Text>
-            ) : null}
             <View style={styles.table}>
               <View style={[styles.row, styles.header]} fixed>
                 <Text style={styles.cell}>Tanggal</Text>

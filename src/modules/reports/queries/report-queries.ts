@@ -444,7 +444,6 @@ export async function getFinancialReport(
     accounts,
     budgets,
     transactions: detailRows,
-    detailTruncated: false,
   };
 }
 

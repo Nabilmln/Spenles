@@ -14,9 +14,16 @@ backup data pribadi JSON berversi.
 
 ## Persyaratan
 
-- Node.js 22 LTS
+- Node.js 22 LTS (di-pin oleh `.nvmrc` dan `.node-version`; `engines` di
+  `package.json` adalah `>=22 <23`)
 - npm
 - Proyek Neon PostgreSQL dengan Neon Auth aktif
+
+Gunakan Node 22 LTS saat mengembangkan dan sebelum rilis. Pada Windows,
+pakai Node Version Manager untuk Windows (`nvm` dari coreybutler) lalu
+`nvm install 22` dan `nvm use`; pada sistem POSIX pakai `fnm`/`nvm`/`asdf`.
+Saat ini repo di-pin ke Node 22; verifikasi dengan `node --version` sebelum
+menjalankan `npm ci`/`npm run build`.
 
 ## Menjalankan secara lokal
 
@@ -69,6 +76,25 @@ npm run test:integration
 
 Jangan arahkan `TEST_DATABASE_URL` ke database development atau production.
 
+## End-to-end test (Playwright)
+
+Suite E2E berjalan melawan server dev lokal dan Neon branchable Auth
+terisolasi. Salin `.env.e2e.example` menjadi `.env.e2e.local` dan isi semua
+variabel, lalu:
+
+```bash
+npm run test:e2e
+```
+
+Konfigurasi E2E fail-closed: tanpa `.env.e2e.local` yang lengkap, perintah
+berhenti dan mencantumkan variabel yang hilang. Target E2E wajib non-production
+(lokal/preview/test/dev), `TEST_DATABASE_URL` harus berbeda dari `DATABASE_URL`,
+endpoint Auth uji harus berbeda dari endpoint aplikasi, dan
+`E2E_TEST_TARGET_ID` harus sama dengan `E2E_AUTH_TEST_TARGET_ID` (satu target
+Neon branchable yang sama untuk database dan Auth). Jangan pernah mengisi
+`.env.e2e.local` dengan target production atau credential nyata dan jangan
+commit file tersebut.
+
 ## Scheduler transaksi berulang
 
 Vercel Cron memanggil `GET /api/cron/recurring-transactions` setiap jam sesuai
@@ -76,6 +102,21 @@ Vercel Cron memanggil `GET /api/cron/recurring-transactions` setiap jam sesuai
 tidak menggunakan sesi browser sebagai otoritas, tidak menerima user ID, dan
 hanya mengembalikan hitungan operasional aman. Pastikan paket Vercel yang
 digunakan mendukung jadwal per jam sebelum rilis.
+
+`CRON_SECRET` wajib diisi (sedikitnya 32 karakter) untuk rilis: `npm run
+validate:env` gagal bila tidak tersedia, dan endpoint cron mengembalikan
+`401 Tidak diizinkan` (fail-closed, tanpa menjalankan pekerjaan) selama secret
+kosong/keliru. Jangan pernah menempatkan secret pada nilai yang menyerupai
+konfigurasi contoh di `.env.example`. Generate secret misalnya dengan:
+
+```bash
+node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
+```
+
+Jadwal Vercel Cron berjalan dalam UTC. Karena aplikasi menggunakan timezone
+Asia/Jakarta (UTC+7), penjadwalan "setiap jam" memakai pukul UTC; catat bahwa
+transaksi berulang dinilai terhadap waktu server aplikasi, bukan terhadap
+zona waktu per pengguna.
 
 ## Laporan dan ekspor
 

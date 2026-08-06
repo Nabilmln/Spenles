@@ -84,5 +84,4 @@ export type FinancialReport = {
   accounts: ReportAccount[];
   budgets: ReportBudget[];
   transactions: ReportTransaction[];
-  detailTruncated: boolean;
 };

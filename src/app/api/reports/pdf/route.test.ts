@@ -20,6 +20,7 @@ vi.mock("@/modules/reports/services/pdf", () => ({
   renderFinancialReportPdf: mocks.renderFinancialReportPdf,
 }));
 
+import { ExportLimitError } from "@/modules/reports/services/csv";
 import { GET } from "./route";
 
 describe("GET /api/reports/pdf", () => {
@@ -83,6 +84,19 @@ describe("GET /api/reports/pdf", () => {
     expect(response.status).toBe(400);
     await expect(response.json()).resolves.toEqual({
       error: "Parameter laporan tidak valid.",
+    });
+  });
+
+  it("rejects a report with too many detail rows at the 500-row limit", async () => {
+    mocks.getFinancialReport.mockRejectedValue(
+      new ExportLimitError("Detail laporan melebihi batas 500 transaksi."),
+    );
+    const response = await GET(
+      new Request("http://localhost/api/reports/pdf?period=month&month=2026-08"),
+    );
+    expect(response.status).toBe(422);
+    await expect(response.json()).resolves.toEqual({
+      error: "Detail laporan melebihi batas 500 transaksi.",
     });
   });
 });
