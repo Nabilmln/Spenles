@@ -24,6 +24,7 @@ export function RegisterForm() {
           name="name"
           autoComplete="name"
           aria-describedby="name-error"
+          aria-invalid={Boolean(state.fieldErrors?.name)}
           required
         />
         <FormMessage id="name-error">
@@ -38,6 +39,7 @@ export function RegisterForm() {
           type="email"
           autoComplete="email"
           aria-describedby="email-error"
+          aria-invalid={Boolean(state.fieldErrors?.email)}
           required
         />
         <FormMessage id="email-error">
@@ -51,6 +53,7 @@ export function RegisterForm() {
           name="password"
           autoComplete="new-password"
           describedBy="password-error"
+          invalid={Boolean(state.fieldErrors?.password)}
         />
         <FormMessage id="password-error">
           {state.fieldErrors?.password?.[0]}
@@ -63,6 +66,7 @@ export function RegisterForm() {
           name="passwordConfirmation"
           autoComplete="new-password"
           describedBy="confirmation-error"
+          invalid={Boolean(state.fieldErrors?.passwordConfirmation)}
         />
         <FormMessage id="confirmation-error">
           {state.fieldErrors?.passwordConfirmation?.[0]}

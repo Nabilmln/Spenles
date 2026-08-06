@@ -21,7 +21,7 @@ export default async function ReportsPage() {
   return (
     <div className="page-stack reports-page">
       <SectionHeading
-        eyebrow="Phase 06"
+        eyebrow="Laporan"
         title="Laporan dan ekspor"
         description="Unduh laporan PDF, transaksi CSV, atau backup data pribadi. Semua hasil dibuat privat dari sesi Anda."
       />

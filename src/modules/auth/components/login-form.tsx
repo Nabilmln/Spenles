@@ -24,6 +24,7 @@ export function LoginForm() {
           type="email"
           autoComplete="email"
           aria-describedby="email-error"
+          aria-invalid={Boolean(state.fieldErrors?.email)}
           required
         />
         <FormMessage id="email-error">
@@ -42,6 +43,7 @@ export function LoginForm() {
           name="password"
           autoComplete="current-password"
           describedBy="password-error"
+          invalid={Boolean(state.fieldErrors?.password)}
         />
         <FormMessage id="password-error">
           {state.fieldErrors?.password?.[0]}

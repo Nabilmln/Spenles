@@ -39,6 +39,7 @@ export function ProfileForm({
           name="displayName"
           defaultValue={profile.displayName}
           aria-describedby="display-name-error"
+          aria-invalid={Boolean(state.fieldErrors?.displayName)}
           required
         />
         <FormMessage id="display-name-error">

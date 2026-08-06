@@ -6,7 +6,7 @@ export function Sidebar() {
     <aside className="sidebar">
       <Brand />
       <NavigationLinks />
-      <p className="sidebar-phase">Keuangan pribadi · Siap rilis</p>
+      <p className="sidebar-phase">Keuangan pribadi</p>
     </aside>
   );
 }

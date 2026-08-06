@@ -9,11 +9,13 @@ export function PasswordField({
   name,
   autoComplete,
   describedBy,
+  invalid,
 }: {
   id: string;
   name: string;
   autoComplete: string;
   describedBy?: string;
+  invalid?: boolean;
 }) {
   const [visible, setVisible] = useState(false);
 
@@ -25,6 +27,7 @@ export function PasswordField({
         type={visible ? "text" : "password"}
         autoComplete={autoComplete}
         aria-describedby={describedBy}
+        aria-invalid={invalid}
         required
       />
       <button
