@@ -10,11 +10,13 @@ type Sheet = "none" | "range" | "export";
 export function ReportToolbar({
   from,
   to,
-  exportHref,
+  pdfHref,
+  csvHref,
 }: {
   from: string;
   to: string;
-  exportHref: (kind: "pdf" | "csv") => string;
+  pdfHref: string;
+  csvHref: string;
 }) {
   const [sheet, setSheet] = useState<Sheet>("none");
   const exportCloseRef = useRef<HTMLButtonElement>(null);
@@ -84,11 +86,11 @@ export function ReportToolbar({
               Rentang {rangeLabel} akan dipakai untuk ekspor.
             </p>
             <div className="report-export-options">
-              <a className="button button-secondary report-export-option" href={exportHref("pdf")}>
+              <a className="button button-secondary report-export-option" href={pdfHref}>
                 <FileText aria-hidden="true" size={18} />
                 Export PDF
               </a>
-              <a className="button button-secondary report-export-option" href={exportHref("csv")}>
+              <a className="button button-secondary report-export-option" href={csvHref}>
                 <FileSpreadsheet aria-hidden="true" size={18} />
                 Export CSV
               </a>

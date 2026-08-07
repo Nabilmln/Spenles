@@ -5,11 +5,13 @@ import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import type { CategoryActionState } from "../actions/category-actions";
-import { CATEGORY_COLORS, CATEGORY_ICONS } from "../constants/category-options";
+import { CATEGORY_COLORS } from "../constants/category-options";
+import { CategoryIconPicker } from "./category-icon-picker";
 
 export function CategoryForm({
   action,
   initial,
+  formId,
 }: {
   action: (state: CategoryActionState, data: FormData) => Promise<CategoryActionState>;
   initial?: {
@@ -19,43 +21,37 @@ export function CategoryForm({
     icon: string | null;
     color: string | null;
   };
+  formId?: string;
 }) {
   const [state, formAction, pending] = useActionState(action, {});
+  const key = initial?.id ?? "new";
   return (
-    <form action={formAction} className="category-form">
+    <form action={formAction} className="category-form" id={formId}>
       {initial ? <input type="hidden" name="id" value={initial.id} /> : null}
       <div className="field">
-        <label htmlFor={`name-${initial?.id ?? "new"}`}>Nama</label>
-        <Input id={`name-${initial?.id ?? "new"}`} name="name" defaultValue={initial?.name} maxLength={80} required />
+        <label htmlFor={`category-name-${key}`}>Nama kategori</label>
+        <Input id={`category-name-${key}`} name="name" defaultValue={initial?.name} maxLength={80} required />
       </div>
       {!initial ? (
         <div className="field">
-          <label htmlFor="category-type">Jenis</label>
-          <select className="input" id="category-type" name="type" defaultValue="expense">
+          <label htmlFor={`category-type-${key}`}>Jenis</label>
+          <select className="input" id={`category-type-${key}`} name="type" defaultValue="expense">
             <option value="expense">Pengeluaran</option>
-            <option value="income">Pemasukan</option>
+            <option value="income">Pendapatan</option>
           </select>
         </div>
       ) : null}
-      <div className="settings-grid">
-        <div className="field">
-          <label htmlFor={`icon-${initial?.id ?? "new"}`}>Ikon</label>
-          <select className="input" id={`icon-${initial?.id ?? "new"}`} name="icon" defaultValue={initial?.icon ?? ""}>
-            <option value="">Tanpa ikon</option>
-            {CATEGORY_ICONS.map((value) => <option key={value} value={value}>{value}</option>)}
-          </select>
-        </div>
-        <div className="field">
-          <label htmlFor={`color-${initial?.id ?? "new"}`}>Warna</label>
-          <select className="input" id={`color-${initial?.id ?? "new"}`} name="color" defaultValue={initial?.color ?? ""}>
-            <option value="">Warna standar</option>
-            {CATEGORY_COLORS.map((value) => <option key={value} value={value}>{value}</option>)}
-          </select>
-        </div>
+      <CategoryIconPicker value={initial?.icon ?? null} />
+      <div className="field">
+        <label htmlFor={`category-color-${key}`}>Warna</label>
+        <select className="input" id={`category-color-${key}`} name="color" defaultValue={initial?.color ?? ""}>
+          <option value="">Warna standar</option>
+          {CATEGORY_COLORS.map((value) => <option key={value} value={value}>{value}</option>)}
+        </select>
       </div>
       <FormMessage>{state.error}</FormMessage>
       {state.success ? <p className="success-message">{state.success}</p> : null}
-      <Button type="submit" disabled={pending}>{pending ? "Menyimpan..." : initial ? "Simpan perubahan" : "Tambah kategori"}</Button>
+      <Button type="submit" disabled={pending}>{pending ? "Menyimpan..." : initial ? "Simpan perubahan" : "Tambah Kategori"}</Button>
     </form>
   );
 }

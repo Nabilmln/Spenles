@@ -77,3 +77,34 @@ export async function setOwnedCategoryStatus(
     throw error;
   }
 }
+
+export async function isOwnedCategoryReferenced(
+  database: Database,
+  userId: string,
+  categoryId: string,
+) {
+  const rows = await database.execute<{ total: string }>(sql`
+    select
+      (
+        (select count(*) from transactions
+          where user_id = ${userId} and category_id = ${categoryId}::uuid)
+        + (select count(*) from budgets
+          where user_id = ${userId} and category_id = ${categoryId}::uuid)
+        + (select count(*) from recurring_rules
+          where user_id = ${userId} and category_id = ${categoryId}::uuid)
+      )::text as total
+  `);
+  return BigInt(rows.rows[0]?.total ?? "0") > 0n;
+}
+
+export async function deleteOwnedCategory(
+  database: Database,
+  userId: string,
+  categoryId: string,
+) {
+  const rows = await database
+    .delete(categories)
+    .where(and(eq(categories.id, categoryId), eq(categories.userId, userId)))
+    .returning({ id: categories.id });
+  return rows[0]?.id ?? null;
+}

@@ -8,6 +8,8 @@ import { categories } from "@/db/schema";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { categoryIdSchema, categorySchema } from "../schemas/category";
 import {
+  deleteOwnedCategory,
+  isOwnedCategoryReferenced,
   setOwnedCategoryStatus,
   updateOwnedCategory,
 } from "../services/category-mutations";
@@ -128,4 +130,27 @@ export async function restoreCategoryAction(
   formData: FormData,
 ) {
   return setCategoryStatus(formData, "active");
+}
+
+export async function deleteCategoryAction(
+  _state: CategoryActionState,
+  formData: FormData,
+): Promise<CategoryActionState> {
+  const user = await requireSessionUser();
+  const id = categoryIdSchema.safeParse(formData.get("id"));
+  if (!id.success) return { error: "Kategori tidak ditemukan." };
+  const referenced = await isOwnedCategoryReferenced(db, user.id, id.data);
+  if (referenced) {
+    return {
+      error: "Kategori tidak dapat dihapus karena masih dipakai transaksi, anggaran, atau aturan berulang. Arsipkan saja.",
+    };
+  }
+  const deleted = await deleteOwnedCategory(db, user.id, id.data);
+  if (!deleted) return { error: "Kategori tidak ditemukan." };
+  revalidatePath("/categories");
+  revalidatePath("/transactions");
+  revalidatePath("/budgets");
+  revalidatePath("/recurring-transactions");
+  revalidatePath("/dashboard");
+  return { success: "Kategori berhasil dihapus." };
 }

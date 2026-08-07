@@ -75,7 +75,7 @@ describe("report cash flow card", () => {
 
 describe("report toolbar", () => {
   it("shows the current range and opens the range sheet", () => {
-    render(<ReportToolbar from="2026-08-01" to="2026-08-07" exportHref={() => ""} />);
+    render(<ReportToolbar from="2026-08-01" to="2026-08-07" pdfHref="/pdf" csvHref="/csv" />);
 
     expect(screen.getByText("1 Agu – 7 Agu")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /Pilih rentang tanggal/ }));
@@ -87,7 +87,8 @@ describe("report toolbar", () => {
       <ReportToolbar
         from="2026-08-01"
         to="2026-08-07"
-        exportHref={(kind) => (kind === "pdf" ? "/pdf" : "/csv")}
+        pdfHref="/pdf"
+        csvHref="/csv"
       />,
     );
 

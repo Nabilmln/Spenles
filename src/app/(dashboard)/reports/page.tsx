@@ -70,7 +70,8 @@ export default async function ReportsPage({
       <ReportToolbar
         from={from}
         to={to}
-        exportHref={(kind) => exports[kind]}
+        pdfHref={exports.pdf}
+        csvHref={exports.csv}
       />
 
       <CompactReportSummary totals={totals} />
