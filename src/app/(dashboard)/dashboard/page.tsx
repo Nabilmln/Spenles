@@ -6,8 +6,11 @@ import {
   buildFourDayExpenseChartContract,
   currentJakartaMonthKey,
   DashboardFeatureGrid,
+  DashboardGreeting,
+  FinancialOverview,
   fourDayJakartaInterval,
   getDailyExpenseAggregates,
+  getMonthlyAggregates,
   getRollingThreeDayTransactions,
   MonthlyExpenseCard,
   monthIntervalForKey,
@@ -79,11 +82,13 @@ export default async function DashboardPage({
   const cardInterval = monthIntervalForKey(cardMonth);
   const now = new Date();
   const recentInterval = fourDayJakartaInterval(now);
-  const [dailyResult, recentResult, rollingResult] = await Promise.allSettled([
-    getDailyExpenseAggregates(user.id, cardInterval),
-    getDailyExpenseAggregates(user.id, recentInterval),
-    getRollingThreeDayTransactions(user.id),
-  ]);
+  const [dailyResult, recentResult, rollingResult, monthlyResult] =
+    await Promise.allSettled([
+      getDailyExpenseAggregates(user.id, cardInterval),
+      getDailyExpenseAggregates(user.id, recentInterval),
+      getRollingThreeDayTransactions(user.id),
+      getMonthlyAggregates(user.id, cardInterval),
+    ]);
   const daily = isFulfilled(dailyResult)
     ? buildDailyExpenseChartContract(cardInterval, dailyResult.value)
     : null;
@@ -91,19 +96,24 @@ export default async function DashboardPage({
     now,
     isFulfilled(recentResult) ? recentResult.value : [],
   );
+  const overview = isFulfilled(monthlyResult)
+    ? monthlyResult.value.reduce(
+        (acc, row) => ({
+          income: acc.income + row.income,
+          expense: acc.expense + row.expense,
+        }),
+        { income: 0n, expense: 0n },
+      )
+    : { income: 0n, expense: 0n };
 
   return (
     <div className="page-stack dashboard-page">
-      <div className="dashboard-hero">
-        <SectionHeading
-          description="Ringkasan pribadi dalam IDR dengan batas waktu Asia/Jakarta."
-          eyebrow="Dashboard"
-          title={`Halo, ${profile?.displayName ?? "Pengguna Spenles"}!`}
-        />
-        <Link className="button button-primary desktop-only" href="/transactions/new">
-          Tambah transaksi
-        </Link>
-      </div>
+      <DashboardGreeting name={profile?.displayName ?? "Pengguna Spenles"} />
+
+      <FinancialOverview
+        income={overview.income.toString()}
+        expense={overview.expense.toString()}
+      />
 
       {daily ? (
         <MonthlyExpenseCard
