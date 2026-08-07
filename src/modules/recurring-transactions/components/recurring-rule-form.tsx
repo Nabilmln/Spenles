@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { formatJakartaDateTimeInput } from "@/lib/dates/jakarta";
 import type { RecurringActionState } from "../actions/recurring-actions";
 import { RECURRING_FREQUENCIES } from "../constants/frequencies";
@@ -43,10 +44,10 @@ export function RecurringRuleForm({
       {initial ? <input type="hidden" name="id" value={initial.id} /> : null}
       <div className="field">
         <label htmlFor="recurring-type">Jenis transaksi</label>
-        <select className="input" id="recurring-type" name="type" defaultValue={initial?.type ?? "expense"}>
+        <Select id="recurring-type" name="type" defaultValue={initial?.type ?? "expense"}>
           <option value="expense">Pengeluaran</option>
           <option value="income">Pemasukan</option>
-        </select>
+        </Select>
       </div>
       <div className="field">
         <label htmlFor="recurring-amount">Jumlah (IDR)</label>
@@ -55,26 +56,26 @@ export function RecurringRuleForm({
       <div className="settings-grid">
         <div className="field">
           <label htmlFor="recurring-account">Akun</label>
-          <select className="input" id="recurring-account" name="accountId" defaultValue={initial?.accountId} required>
+          <Select id="recurring-account" name="accountId" defaultValue={initial?.accountId} required>
             {accounts.map((account) => <option key={account.id} value={account.id}>{account.name}</option>)}
-          </select>
+          </Select>
         </div>
         <div className="field">
           <label htmlFor="recurring-category">Kategori</label>
-          <select className="input" id="recurring-category" name="categoryId" defaultValue={initial?.categoryId} required>
+          <Select id="recurring-category" name="categoryId" defaultValue={initial?.categoryId} required>
             {categories.map((category) => (
               <option key={category.id} value={category.id}>
                 {category.type === "income" ? "Pemasukan" : "Pengeluaran"} · {category.name}
               </option>
             ))}
-          </select>
+          </Select>
         </div>
       </div>
       <div className="field">
         <label htmlFor="recurring-frequency">Frekuensi</label>
-        <select className="input" id="recurring-frequency" name="frequency" defaultValue={initial?.frequency ?? "monthly"}>
+        <Select id="recurring-frequency" name="frequency" defaultValue={initial?.frequency ?? "monthly"}>
           {RECURRING_FREQUENCIES.map((frequency) => <option key={frequency.value} value={frequency.value}>{frequency.label}</option>)}
-        </select>
+        </Select>
       </div>
       <div className="settings-grid">
         <div className="field">

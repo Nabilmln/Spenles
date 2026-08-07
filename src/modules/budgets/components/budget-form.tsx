@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import type { BudgetActionState } from "../actions/budget-actions";
 
 export function BudgetForm({
@@ -30,8 +31,7 @@ export function BudgetForm({
       {initial ? <input type="hidden" name="id" value={initial.id} /> : null}
       <div className="field">
         <label htmlFor="budget-category">Kategori pengeluaran</label>
-        <select
-          className="input"
+        <Select
           id="budget-category"
           name="categoryId"
           defaultValue={initial?.categoryId}
@@ -41,7 +41,7 @@ export function BudgetForm({
           {categories.map((category) => (
             <option key={category.id} value={category.id}>{category.name}</option>
           ))}
-        </select>
+        </Select>
         {initial ? <input type="hidden" name="categoryId" value={initial.categoryId} /> : null}
       </div>
       <div className="field">
@@ -70,8 +70,7 @@ export function BudgetForm({
       </div>
       <div className="field">
         <label htmlFor="budget-threshold">Ambang peringatan</label>
-        <select
-          className="input"
+        <Select
           id="budget-threshold"
           name="warningThresholdBps"
           defaultValue={String(initial?.warningThresholdBps ?? 8000)}
@@ -81,7 +80,7 @@ export function BudgetForm({
           <option value="8000">80%</option>
           <option value="9000">90%</option>
           <option value="10000">100%</option>
-        </select>
+        </Select>
       </div>
       <FormMessage>{state.error}</FormMessage>
       <Button type="submit" disabled={pending || categories.length === 0}>

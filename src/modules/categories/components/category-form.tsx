@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import type { CategoryActionState } from "../actions/category-actions";
 import { CATEGORY_COLORS } from "../constants/category-options";
 import { CategoryIconPicker } from "./category-icon-picker";
@@ -35,19 +36,19 @@ export function CategoryForm({
       {!initial ? (
         <div className="field">
           <label htmlFor={`category-type-${key}`}>Jenis</label>
-          <select className="input" id={`category-type-${key}`} name="type" defaultValue="expense">
+          <Select id={`category-type-${key}`} name="type" defaultValue="expense">
             <option value="expense">Pengeluaran</option>
             <option value="income">Pendapatan</option>
-          </select>
+          </Select>
         </div>
       ) : null}
       <CategoryIconPicker value={initial?.icon ?? null} />
       <div className="field">
         <label htmlFor={`category-color-${key}`}>Warna</label>
-        <select className="input" id={`category-color-${key}`} name="color" defaultValue={initial?.color ?? ""}>
+        <Select id={`category-color-${key}`} name="color" defaultValue={initial?.color ?? ""}>
           <option value="">Warna standar</option>
           {CATEGORY_COLORS.map((value) => <option key={value} value={value}>{value}</option>)}
-        </select>
+        </Select>
       </div>
       <FormMessage>{state.error}</FormMessage>
       {state.success ? <p className="success-message">{state.success}</p> : null}

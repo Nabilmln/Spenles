@@ -4,6 +4,7 @@ import { useActionState, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import {
   updateParticipantPaymentAction,
   type SplitBillActionState,
@@ -41,8 +42,7 @@ export function PaymentStatusForm({
       <input type="hidden" name="participantId" value={participantId} />
       <div className="field">
         <label htmlFor={`payment-status-${participantId}`}>Status</label>
-        <select
-          className="input"
+        <Select
           id={`payment-status-${participantId}`}
           name="status"
           value={status}
@@ -55,7 +55,7 @@ export function PaymentStatusForm({
           <option value="unpaid">Belum dibayar</option>
           <option value="partially_paid">Dibayar sebagian</option>
           <option value="paid">Lunas</option>
-        </select>
+        </Select>
       </div>
       {status === "partially_paid" ? (
         <div className="field">

@@ -5,6 +5,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import type { SplitBillActionState } from "../actions/split-bill-actions";
 import { calculateSplitBill } from "../services/calculator";
 import type {
@@ -387,9 +388,8 @@ export function SplitBillCreateFlow({
               </div>
               <div className="field">
                 <label htmlFor="discount-mode">Diskon</label>
-                <select
+                <Select
                   id="discount-mode"
-                  className="input"
                   value={discountMode}
                   onChange={(event) =>
                     setDiscountMode(
@@ -400,7 +400,7 @@ export function SplitBillCreateFlow({
                   <option value="none">Tanpa diskon</option>
                   <option value="fixed">Diskon tetap</option>
                   <option value="percentage">Diskon persentase</option>
-                </select>
+                </Select>
               </div>
               {discountMode === "fixed" ? (
                 <div className="field">

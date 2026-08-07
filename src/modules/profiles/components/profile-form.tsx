@@ -5,6 +5,7 @@ import type { Profile } from "@/db/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormMessage } from "@/components/ui/form-message";
+import { Select } from "@/components/ui/select";
 import {
   updateProfileAction,
   type ProfileActionState,
@@ -71,8 +72,7 @@ export function ProfileForm({
       </div>
       <div className="field">
         <label htmlFor="theme">Tema</label>
-        <select
-          className="input"
+        <Select
           id="theme"
           name="theme"
           defaultValue={profile.theme}
@@ -80,7 +80,7 @@ export function ProfileForm({
           <option value="system">Ikuti sistem</option>
           <option value="light">Terang</option>
           <option value="dark">Gelap</option>
-        </select>
+        </Select>
       </div>
       <Button type="submit" disabled={pending}>
         {pending ? "Menyimpan..." : "Simpan perubahan"}

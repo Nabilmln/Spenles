@@ -77,11 +77,11 @@ describe("TransactionFilterBar", () => {
     fireEvent.click(screen.getByRole("button", { name: "Buka filter" }));
 
     expect(screen.getByRole("dialog", { name: "Filter transaksi" })).toBeInTheDocument();
-    expect(screen.getByLabelText("Jenis transaksi")).toBeInTheDocument();
-    expect(screen.getByLabelText("Kategori")).toBeInTheDocument();
-    expect(screen.getByLabelText("Akun")).toBeInTheDocument();
-    expect(screen.getByLabelText("Urutkan")).toBeInTheDocument();
-    expect(screen.getByLabelText("Arah urutan")).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "Jenis transaksi" })).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "Kategori" })).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "Akun" })).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "Urutkan" })).toBeInTheDocument();
+    expect(screen.getByRole("combobox", { name: "Arah urutan" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Terapkan Filter" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Reset" })).toHaveAttribute(
       "href",
@@ -125,13 +125,13 @@ describe("TransactionFilterBar", () => {
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Buka filter" }));
-    fireEvent.change(screen.getByLabelText("Jenis transaksi"), {
+    fireEvent.change(screen.getByRole("combobox", { name: "Jenis transaksi" }), {
       target: { value: "expense" },
     });
-    fireEvent.change(screen.getByLabelText("Kategori"), {
+    fireEvent.change(screen.getByRole("combobox", { name: "Kategori" }), {
       target: { value: "cat-1" },
     });
-    fireEvent.change(screen.getByLabelText("Urutkan"), {
+    fireEvent.change(screen.getByRole("combobox", { name: "Urutkan" }), {
       target: { value: "amount" },
     });
 

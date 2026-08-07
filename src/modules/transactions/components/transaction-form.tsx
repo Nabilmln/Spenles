@@ -8,6 +8,7 @@ import type { TransactionActionState } from "../actions/transaction-actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormMessage } from "@/components/ui/form-message";
+import { Select } from "@/components/ui/select";
 import { formatIdr } from "@/lib/money/format-idr";
 
 type Option = { id: string; name: string; type?: string };
@@ -119,17 +120,16 @@ export function TransactionForm({
           <AmountField amount={amount} setAmount={setAmount} pending={pending} />
           <div className="field">
             <label htmlFor="accountId">Sumber keuangan</label>
-            <select className="input" id="accountId" name="accountId" defaultValue={initial?.accountId} required>
+            <Select id="accountId" name="accountId" defaultValue={initial?.accountId} required>
               <option value="">Pilih akun</option>
               {spendingAccounts.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
-            </select>
+            </Select>
           </div>
           <div className="field">
             <label htmlFor="categoryId">
               {type === "expense" ? "Kategori pengeluaran" : "Kategori pendapatan"}
             </label>
-            <select
-              className="input"
+            <Select
               id="categoryId"
               name="categoryId"
               defaultValue={initial?.categoryId}
@@ -138,7 +138,7 @@ export function TransactionForm({
             >
               <option value="">Pilih kategori</option>
               {matchingCategories.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
-            </select>
+            </Select>
           </div>
           <div className="field">
             <label htmlFor="transactionAt">Tanggal</label>
@@ -395,17 +395,17 @@ function SavingsFields({
       <AmountField amount={amount} setAmount={setAmount} pending={pending} />
       <div className="field">
         <label htmlFor="sourceAccountId">Dari akun</label>
-        <select className="input" id="sourceAccountId" name="sourceAccountId" defaultValue="" required disabled={!hasSavings}>
+        <Select id="sourceAccountId" name="sourceAccountId" defaultValue="" required disabled={!hasSavings}>
           <option value="">Pilih akun</option>
           {sourceAccounts.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
-        </select>
+        </Select>
       </div>
       <div className="field">
         <label htmlFor="destinationAccountId">Ke akun tabungan</label>
-        <select className="input" id="destinationAccountId" name="destinationAccountId" defaultValue="" required disabled={!hasSavings}>
+        <Select id="destinationAccountId" name="destinationAccountId" defaultValue="" required disabled={!hasSavings}>
           <option value="">Pilih akun</option>
           {destinationAccounts.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
-        </select>
+        </Select>
       </div>
       <div className="field">
         <label htmlFor="transferredAt">Tanggal</label>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CalendarRange } from "lucide-react";
+import { CalendarRange, ChevronDown } from "lucide-react";
 
 const OFFSET_MS = 7 * 60 * 60 * 1000;
 const pad = (value: number) => String(value).padStart(2, "0");
@@ -126,6 +126,7 @@ export function DateRangeField({
         <summary aria-label="Pilih rentang tanggal" className="date-range-trigger">
           <CalendarRange aria-hidden="true" size={18} />
           <span>{label}</span>
+          <ChevronDown aria-hidden="true" className="date-range-chevron" size={18} />
         </summary>
         <div className="date-range-menu">
           {presetOptions.map((option) => (

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
+import { Select } from "@/components/ui/select";
 import type { TransactionFilters } from "../schemas/transaction-filters";
 import { DateRangeField } from "./date-range-field";
 
@@ -101,22 +102,20 @@ export function TransactionFilterBar({
             <div className="tx-sheet-fields">
               <label className="field">
                 <span>Jenis transaksi</span>
-                <select
+                <Select
                   aria-label="Jenis transaksi"
-                  className="input"
                   onChange={(event) => setType(event.target.value)}
                   value={type}
                 >
                   <option value="">Semua jenis</option>
                   <option value="expense">Pengeluaran</option>
                   <option value="income">Pemasukan</option>
-                </select>
+                </Select>
               </label>
               <label className="field">
                 <span>Kategori</span>
-                <select
+                <Select
                   aria-label="Kategori"
-                  className="input"
                   onChange={(event) => setCategory(event.target.value)}
                   value={category}
                 >
@@ -126,13 +125,12 @@ export function TransactionFilterBar({
                       {item.name}
                     </option>
                   ))}
-                </select>
+                </Select>
               </label>
               <label className="field">
                 <span>Akun</span>
-                <select
+                <Select
                   aria-label="Akun"
-                  className="input"
                   onChange={(event) => setAccount(event.target.value)}
                   value={account}
                 >
@@ -142,7 +140,7 @@ export function TransactionFilterBar({
                       {item.name}
                     </option>
                   ))}
-                </select>
+                </Select>
               </label>
               <div className="field">
                 <span>Periode</span>

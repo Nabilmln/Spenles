@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { formatJakartaDateTimeInput } from "@/lib/dates/jakarta";
 import {
   createTransferAction,
@@ -24,19 +25,19 @@ export function TransferForm({
       <div className="settings-grid">
         <div className="field">
           <label htmlFor="transfer-source">Dari akun</label>
-          <select className="input" id="transfer-source" name="sourceAccountId" required>
+          <Select id="transfer-source" name="sourceAccountId" required>
             {accounts.map((account) => (
               <option key={account.id} value={account.id}>{account.name}</option>
             ))}
-          </select>
+          </Select>
         </div>
         <div className="field">
           <label htmlFor="transfer-destination">Ke akun</label>
-          <select className="input" id="transfer-destination" name="destinationAccountId" required>
+          <Select id="transfer-destination" name="destinationAccountId" required>
             {accounts.map((account) => (
               <option key={account.id} value={account.id}>{account.name}</option>
             ))}
-          </select>
+          </Select>
         </div>
       </div>
       <div className="field">

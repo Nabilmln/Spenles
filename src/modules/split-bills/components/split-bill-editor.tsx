@@ -4,6 +4,7 @@ import { useActionState, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import type {
   SplitBillActionState,
 } from "../actions/split-bill-actions";
@@ -417,9 +418,8 @@ export function SplitBillEditor({
             <div className="split-charge-grid">
               <div className="field">
                 <label htmlFor="discount-mode">Mode diskon</label>
-                <select
+                <Select
                   id="discount-mode"
-                  className="input"
                   value={discountMode}
                   onChange={(event) =>
                     setDiscountMode(
@@ -430,7 +430,7 @@ export function SplitBillEditor({
                   <option value="none">Tanpa diskon</option>
                   <option value="fixed">Diskon tetap</option>
                   <option value="percentage">Diskon persentase</option>
-                </select>
+                </Select>
               </div>
               {discountMode === "fixed" ? (
                 <div className="field">

@@ -2,6 +2,7 @@ import type {
   DashboardChartRange,
   DashboardFilters,
 } from "../types/dashboard";
+import { Select } from "@/components/ui/select";
 
 function SelectionFields({ filters }: { filters: DashboardFilters }) {
   if (filters.selection.kind === "month") {
@@ -46,8 +47,7 @@ export function PeriodSelector({
         <form className="chart-range-form">
           <SelectionFields filters={filters} />
           <label htmlFor="chart-range">Rentang grafik</label>
-          <select
-            className="input"
+          <Select
             defaultValue={chartRange}
             id="chart-range"
             name="chartRange"
@@ -55,7 +55,7 @@ export function PeriodSelector({
             <option value="6-months">6 bulan</option>
             <option value="12-months">12 bulan</option>
             <option value="current-year">Tahun berjalan</option>
-          </select>
+          </Select>
           <button className="button button-secondary" type="submit">
             Terapkan grafik
           </button>
@@ -66,8 +66,7 @@ export function PeriodSelector({
         <form className="period-form">
           <input name="chartRange" type="hidden" value={chartRange} />
           <label htmlFor="dashboard-period">Periode cepat</label>
-          <select
-            className="input"
+          <Select
             defaultValue={preset}
             id="dashboard-period"
             name="period"
@@ -77,7 +76,7 @@ export function PeriodSelector({
             <option value="last-3-months">3 bulan terakhir</option>
             <option value="last-6-months">6 bulan terakhir</option>
             <option value="current-year">Tahun berjalan</option>
-          </select>
+          </Select>
           <button className="button button-primary" type="submit">
             Terapkan
           </button>

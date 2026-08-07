@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import type { AccountActionState } from "../actions/account-actions";
 import { ACCOUNT_TYPES } from "../constants/account-types";
 
@@ -38,8 +39,7 @@ export function AccountForm({
       </div>
       <div className="field">
         <label htmlFor="account-type">Jenis akun</label>
-        <select
-          className="input"
+        <Select
           id="account-type"
           name="type"
           defaultValue={initial?.type ?? "cash"}
@@ -49,7 +49,7 @@ export function AccountForm({
               {type.label}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
       <div className="field">
         <label htmlFor="opening-balance">Saldo awal (IDR)</label>

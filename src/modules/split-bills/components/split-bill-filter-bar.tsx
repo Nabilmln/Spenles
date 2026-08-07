@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
+import { Select } from "@/components/ui/select";
 import type { SplitBillFilters } from "../schemas/split-bill-filters";
 
 export function activeSplitBillFilterCount(filters: SplitBillFilters) {
@@ -92,9 +93,8 @@ export function SplitBillFilterBar({
             <div className="tx-sheet-fields">
               <label className="field">
                 <span>Status</span>
-                <select
+                <Select
                   aria-label="Status"
-                  className="input"
                   onChange={(event) => setStatus(event.target.value)}
                   value={status}
                 >
@@ -103,7 +103,7 @@ export function SplitBillFilterBar({
                   <option value="finalized">Final</option>
                   <option value="archived">Arsip</option>
                   <option value="all">Semua</option>
-                </select>
+                </Select>
               </label>
               <label className="field">
                 <span>Bulan tagihan</span>
@@ -117,9 +117,8 @@ export function SplitBillFilterBar({
               </label>
               <label className="field">
                 <span>Urutkan</span>
-                <select
+                <Select
                   aria-label="Urutkan"
-                  className="input"
                   onChange={(event) =>
                     setSort(event.target.value as SplitBillFilters["sort"])
                   }
@@ -127,13 +126,12 @@ export function SplitBillFilterBar({
                 >
                   <option value="billDate">Tanggal</option>
                   <option value="amount">Nominal</option>
-                </select>
+                </Select>
               </label>
               <label className="field">
                 <span>Arah urutan</span>
-                <select
+                <Select
                   aria-label="Arah urutan"
-                  className="input"
                   onChange={(event) =>
                     setDirection(
                       event.target.value as SplitBillFilters["direction"],
@@ -143,7 +141,7 @@ export function SplitBillFilterBar({
                 >
                   <option value="desc">Terbaru dahulu</option>
                   <option value="asc">Terlama dahulu</option>
-                </select>
+                </Select>
               </label>
             </div>
             <div className="tx-sheet-actions">
