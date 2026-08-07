@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { parseJakartaDateTime } from "@/lib/dates/jakarta";
+import { jakartaDateBoundary, jakartaNowDate } from "@/lib/dates/jakarta";
 import { MAX_TRANSACTION_AMOUNT } from "@/lib/money/format-idr";
 
 const amountSchema = z
@@ -17,9 +17,10 @@ export const transactionSchema = z.object({
   accountId: z.uuid("Akun tidak valid."),
   categoryId: z.uuid("Kategori tidak valid."),
   transactionAt: z.string().refine((value) => {
-    const date = parseJakartaDateTime(value);
-    return date && date.getTime() <= Date.now() + 5 * 60_000;
-  }, "Tanggal transaksi tidak valid atau terlalu jauh di masa depan."),
+    if (!/^\d{4}-\d{2}-\d{2}$/u.test(value)) return false;
+    if (!jakartaDateBoundary(value)) return false;
+    return value <= jakartaNowDate();
+  }, "Tanggal transaksi tidak valid atau berada di masa depan."),
   note: z
     .string()
     .trim()

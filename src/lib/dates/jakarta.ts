@@ -21,6 +21,38 @@ export function jakartaDateBoundary(value: string) {
   return parseJakartaDateTime(`${value}T00:00`);
 }
 
+function pad(value: number) {
+  return String(value).padStart(2, "0");
+}
+
+function jakartaClockParts() {
+  const shifted = new Date(Date.now() + 7 * 3_600_000);
+  return {
+    hour: pad(shifted.getUTCHours()),
+    minute: pad(shifted.getUTCMinutes()),
+    second: pad(shifted.getUTCSeconds()),
+  };
+}
+
+export function formatJakartaDate(value: Date) {
+  return formatJakartaDateTimeInput(value).slice(0, 10);
+}
+
+export function jakartaNowDate() {
+  return formatJakartaDate(new Date());
+}
+
+export function preserveOrAttachNow(dateOnly: string, original?: Date): Date | null {
+  if (!jakartaDateBoundary(dateOnly)) return null;
+  if (original) {
+    const originalDate = formatJakartaDateTimeInput(original).slice(0, 10);
+    if (originalDate === dateOnly) return new Date(original.getTime());
+  }
+  const { hour, minute, second } = jakartaClockParts();
+  const result = new Date(`${dateOnly}T${hour}:${minute}:${second}+07:00`);
+  return Number.isNaN(result.getTime()) ? null : result;
+}
+
 export function formatJakartaDateTime(value: Date) {
   return new Intl.DateTimeFormat("id-ID", {
     timeZone: "Asia/Jakarta",

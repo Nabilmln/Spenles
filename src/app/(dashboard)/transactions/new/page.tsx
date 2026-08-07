@@ -1,5 +1,5 @@
 import { requireSessionUser } from "@/lib/auth/require-session";
-import { formatJakartaDateTimeInput } from "@/lib/dates/jakarta";
+import { formatJakartaDate } from "@/lib/dates/jakarta";
 import { createTransactionAction, getTransactionOptions, TransactionForm } from "@/modules/transactions";
 
 export default async function NewTransactionPage() {
@@ -12,7 +12,7 @@ export default async function NewTransactionPage() {
         <TransactionForm
           action={createTransactionAction}
           {...options}
-          defaultTransactionAt={formatJakartaDateTimeInput(new Date())}
+          defaultDate={formatJakartaDate(new Date())}
         />
       </div>
     </div>

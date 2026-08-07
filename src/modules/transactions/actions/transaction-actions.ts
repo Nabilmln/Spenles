@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
-import { parseJakartaDateTime } from "@/lib/dates/jakarta";
+import { preserveOrAttachNow } from "@/lib/dates/jakarta";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { transactionIdSchema, transactionSchema } from "../schemas/transaction";
 import {
@@ -11,6 +11,7 @@ import {
   softDeleteOwnedTransaction,
   updateOwnedTransaction,
 } from "../services/transaction-mutations";
+import { getTransaction } from "../queries/transactions";
 
 export type TransactionActionState = { error?: string };
 
@@ -32,7 +33,7 @@ export async function createTransactionAction(
   const user = await requireSessionUser();
   const parsed = transactionSchema.safeParse(input(formData));
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
-  const transactionAt = parseJakartaDateTime(parsed.data.transactionAt);
+  const transactionAt = preserveOrAttachNow(parsed.data.transactionAt);
   if (!transactionAt) return { error: "Tanggal transaksi tidak valid." };
   try {
     const created = await createOwnedTransaction(db, user.id, {
@@ -66,7 +67,8 @@ export async function updateTransactionAction(
   if (!id.success || !parsed.success) {
     return { error: parsed.success ? "Transaksi tidak ditemukan." : parsed.error.issues[0]?.message };
   }
-  const transactionAt = parseJakartaDateTime(parsed.data.transactionAt);
+  const existing = await getTransaction(user.id, id.data);
+  const transactionAt = preserveOrAttachNow(parsed.data.transactionAt, existing?.transactionAt);
   if (!transactionAt) return { error: "Tanggal transaksi tidak valid." };
   try {
     const updated = await updateOwnedTransaction(db, user.id, id.data, {

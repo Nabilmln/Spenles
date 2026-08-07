@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { requireSessionUser } from "@/lib/auth/require-session";
-import { parseJakartaDateTime } from "@/lib/dates/jakarta";
+import { parseJakartaDateTime, preserveOrAttachNow } from "@/lib/dates/jakarta";
 import { transferIdSchema, transferSchema } from "../schemas/transfer";
 import {
   createOwnedTransfer,
@@ -31,7 +31,9 @@ export async function createTransferAction(
     note: formData.get("note") ?? "",
   });
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
-  const transferredAt = parseJakartaDateTime(parsed.data.transferredAt);
+  const transferredAt = /^\d{4}-\d{2}-\d{2}$/u.test(parsed.data.transferredAt)
+    ? preserveOrAttachNow(parsed.data.transferredAt)
+    : parseJakartaDateTime(parsed.data.transferredAt);
   if (!transferredAt || transferredAt.getTime() > Date.now()) {
     return { error: "Waktu transfer tidak valid atau berada di masa depan." };
   }

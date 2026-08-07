@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { requireSessionUser } from "@/lib/auth/require-session";
-import { formatJakartaDateTimeInput } from "@/lib/dates/jakarta";
+import { formatJakartaDate } from "@/lib/dates/jakarta";
 import { getTransaction, getTransactionOptions, TransactionForm, updateTransactionAction } from "@/modules/transactions";
 
 export default async function EditTransactionPage({ params }: { params: Promise<{ id: string }> }) {
@@ -22,7 +22,7 @@ export default async function EditTransactionPage({ params }: { params: Promise<
             amount: transaction.amount.toString(),
             accountId: transaction.accountId,
             categoryId: transaction.categoryId,
-            transactionAt: formatJakartaDateTimeInput(transaction.transactionAt),
+            transactionAt: formatJakartaDate(transaction.transactionAt),
             note: transaction.note ?? "",
           }}
         />
