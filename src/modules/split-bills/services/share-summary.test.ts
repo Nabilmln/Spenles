@@ -11,21 +11,30 @@ describe("split-bill share summary", () => {
       participants: [
         {
           name: "Ayu",
-          finalAmount: "10800",
+          finalAmount: "11600",
           paymentStatus: "partially_paid",
+          items: [
+            { name: "Coto Makassar", unitPrice: "1000", quantity: 1, amount: "11600" },
+          ],
         },
         {
           name: "Bima",
-          finalAmount: "10800",
+          finalAmount: "10000",
           paymentStatus: "paid",
+          items: [
+            { name: "Es Teh", unitPrice: "1000", quantity: 1, amount: "10000" },
+          ],
         },
       ],
       includePaymentStatus: true,
     });
-    expect(text).toContain("Patungan Warung");
-    expect(text).toContain(formatIdr("21600"));
-    expect(text).toContain("Dibayar sebagian");
-    expect(text).toContain("Lunas");
+    expect(text).toContain("Split Bill — Warung");
+    expect(text).toContain("5 Agustus 2026");
+    expect(text).toContain("Ayu: (Dibayar sebagian)");
+    expect(text).toContain("Bima: (Lunas)");
+    expect(text).toContain("• Coto Makassar —");
+    expect(text).toContain("• Es Teh —");
+    expect(text).toContain(`Total Tagihan: ${formatIdr("21600")}`);
     expect(text).not.toContain("user_id");
     expect(text).not.toContain("00000000-");
   });

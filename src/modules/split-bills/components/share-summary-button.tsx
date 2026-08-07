@@ -19,7 +19,7 @@ export function ShareSummaryButton({ billId }: { billId: string }) {
     if (!state.text) return;
     navigator.clipboard
       .writeText(state.text)
-      .then(() => setCopyStatus("Ringkasan disalin."))
+      .then(() => setCopyStatus("Hasil Split Bill berhasil disalin."))
       .catch(() => setCopyStatus("Salin teks secara manual dari kotak ringkasan."));
   }, [state.text]);
 

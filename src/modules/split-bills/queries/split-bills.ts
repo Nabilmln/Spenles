@@ -33,6 +33,16 @@ function monthEnd(month: string) {
   return `${nextYear}-${String(nextMonth).padStart(2, "0")}-01`;
 }
 
+function splitBillOrder(filters: SplitBillFilters) {
+  const direction = filters.direction === "asc" ? asc : desc;
+  const primary =
+    filters.sort === "amount"
+      ? direction(splitBillCalculations.finalAmount)
+      : direction(splitBills.billDate);
+  const tieBreaker = direction(splitBills.id);
+  return [primary, tieBreaker];
+}
+
 function historyConditions(userId: string, filters: SplitBillFilters) {
   const result: SQL[] = [eq(splitBills.userId, userId)];
   if (filters.status && filters.status !== "all") {
@@ -88,7 +98,7 @@ export async function listOwnedSplitBills(
       )
       .where(where)
       .groupBy(splitBills.id, splitBillCalculations.finalAmount)
-      .orderBy(desc(splitBills.billDate), desc(splitBills.id))
+      .orderBy(...splitBillOrder(filters))
       .limit(filters.pageSize)
       .offset((filters.page - 1) * filters.pageSize),
     database.select({ value: count() }).from(splitBills).where(where),

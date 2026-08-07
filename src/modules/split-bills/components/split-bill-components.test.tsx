@@ -64,7 +64,7 @@ describe("split-bill components", () => {
         ]}
         total={1}
         totalPages={1}
-        filters={{ q: "", page: 1, pageSize: 20 }}
+        filters={{ q: "", page: 1, pageSize: 20, sort: "billDate", direction: "desc" }}
       />,
     );
     expect(screen.getByText("Final")).toBeInTheDocument();
@@ -76,5 +76,41 @@ describe("split-bill components", () => {
     expect(
       screen.getByRole("navigation", { name: "Paginasi tagihan patungan" }),
     ).toBeInTheDocument();
+  });
+
+  it("shows a primary empty state when history is genuinely empty", () => {
+    render(
+      <SplitBillList
+        rows={[]}
+        total={0}
+        totalPages={1}
+        filters={{ q: "", page: 1, pageSize: 20, sort: "billDate", direction: "desc" }}
+      />,
+    );
+    expect(
+      screen.getByRole("heading", { name: "Belum ada riwayat Split Bill" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Buat Split Bill" })).toHaveAttribute(
+      "href",
+      "/split-bills/new",
+    );
+  });
+
+  it("offers a reset action when a filter produced no rows", () => {
+    render(
+      <SplitBillList
+        rows={[]}
+        total={0}
+        totalPages={1}
+        filters={{ q: "Tidak Ada", page: 1, pageSize: 20, sort: "billDate", direction: "desc" }}
+      />,
+    );
+    expect(
+      screen.getByRole("heading", { name: "Tidak ada tagihan untuk filter ini" }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Reset filter" })).toHaveAttribute(
+      "href",
+      "/split-bills",
+    );
   });
 });

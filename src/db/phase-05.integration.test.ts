@@ -316,7 +316,7 @@ describe("Phase 05 split-bill database boundaries", () => {
 
     const defaults = await listOwnedSplitBills(
       userA,
-      { q: merchant, page: 1, pageSize: 20 },
+      { q: merchant, page: 1, pageSize: 20, sort: "billDate", direction: "desc" },
       database,
     );
     expect(defaults.total).toBe(0);
@@ -327,6 +327,8 @@ describe("Phase 05 split-bill database boundaries", () => {
         status: "archived",
         page: 1,
         pageSize: 20,
+        sort: "billDate",
+        direction: "desc",
       },
       database,
     );

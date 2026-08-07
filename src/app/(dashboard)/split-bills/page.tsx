@@ -4,6 +4,7 @@ import { requireSessionUser } from "@/lib/auth/require-session";
 import {
   listOwnedSplitBills,
   parseSplitBillFilters,
+  SplitBillFilterBar,
   SplitBillList,
 } from "@/modules/split-bills";
 
@@ -43,50 +44,10 @@ export default async function SplitBillsPage({
           description="Bagi item, diskon, pajak, dan biaya layanan dengan rekonsiliasi rupiah yang tepat."
         />
         <Link className="button button-primary" href="/split-bills/new">
-          Buat split bill
+          Buat Split Bill
         </Link>
       </div>
-      <form className="card filter-panel split-filter-panel">
-        <div className="field">
-          <label htmlFor="split-search">Merchant</label>
-          <input
-            className="input"
-            id="split-search"
-            name="q"
-            defaultValue={parsed.data.q}
-            maxLength={100}
-          />
-        </div>
-        <div className="field">
-          <label htmlFor="split-status">Status</label>
-          <select
-            className="input"
-            id="split-status"
-            name="status"
-            defaultValue={parsed.data.status ?? ""}
-          >
-            <option value="">Aktif</option>
-            <option value="draft">Draft</option>
-            <option value="finalized">Final</option>
-            <option value="archived">Arsip</option>
-            <option value="all">Semua</option>
-          </select>
-        </div>
-        <div className="field">
-          <label htmlFor="split-month">Bulan tagihan</label>
-          <input
-            className="input"
-            id="split-month"
-            name="month"
-            type="month"
-            defaultValue={parsed.data.month}
-          />
-        </div>
-        <input type="hidden" name="pageSize" value={parsed.data.pageSize} />
-        <button className="button button-secondary" type="submit">
-          Terapkan
-        </button>
-      </form>
+      <SplitBillFilterBar filters={parsed.data} />
       <SplitBillList {...result} filters={parsed.data} />
     </div>
   );

@@ -10,6 +10,22 @@ describe("foundational feedback components", () => {
     expect(screen.queryByText(/Rp\s?\d/)).not.toBeInTheDocument();
   });
 
+  it("renders a customized empty state with action", () => {
+    render(
+      <EmptyState
+        title="Belum ada riwayat Split Bill"
+        description="Buat Split Bill pertamamu."
+        action={<button type="button">Buat Split Bill</button>}
+      />,
+    );
+    expect(
+      screen.getByRole("heading", { name: "Belum ada riwayat Split Bill" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Buat Split Bill" }),
+    ).toBeInTheDocument();
+  });
+
   it("announces loading status", () => {
     render(<LoadingState label="Menyiapkan akun..." />);
     expect(screen.getByRole("status")).toHaveTextContent("Menyiapkan akun...");

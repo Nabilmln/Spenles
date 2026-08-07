@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { ReceiptText } from "lucide-react";
+import { EmptyState } from "@/components/feedback/empty-state";
 import { formatIdr } from "@/lib/money/format-idr";
 import type { SplitBillFilters } from "../schemas/split-bill-filters";
 
@@ -37,10 +39,32 @@ export function SplitBillList({
   filters: SplitBillFilters;
 }) {
   if (!rows.length) {
+    const hasFilters = Boolean(
+      filters.q || (filters.status && filters.status !== "all") || filters.month,
+    );
     return (
-      <div className="empty-state">
-        <p>Belum ada tagihan patungan untuk filter ini.</p>
-      </div>
+      <EmptyState
+        icon={<ReceiptText size={28} aria-hidden="true" />}
+        title={
+          hasFilters ? "Tidak ada tagihan untuk filter ini" : "Belum ada riwayat Split Bill"
+        }
+        description={
+          hasFilters
+            ? "Coba ubah kata kunci atau filter yang digunakan."
+            : "Buat Split Bill pertamamu dan pembagian tagihan akan tersimpan di sini."
+        }
+        action={
+          hasFilters ? (
+            <Link className="button button-secondary" href="/split-bills">
+              Reset filter
+            </Link>
+          ) : (
+            <Link className="button button-primary" href="/split-bills/new">
+              Buat Split Bill
+            </Link>
+          )
+        }
+      />
     );
   }
   return (

@@ -232,6 +232,26 @@ export async function createShareSummaryAction(
       participant.paymentStatus,
     ]),
   );
+  const itemBySourceId = new Map(
+    detail.itemResults.map((item) => [item.sourceItemId, item]),
+  );
+  const itemsByParticipant = new Map<
+    string,
+    { name: string; unitPrice: string; quantity: number; amount: string }[]
+  >();
+  for (const assignment of detail.assignmentResults) {
+    const item = itemBySourceId.get(assignment.sourceItemId);
+    if (!item) continue;
+    const entry = {
+      name: item.nameSnapshot,
+      unitPrice: item.unitPriceSnapshot.toString(),
+      quantity: item.quantitySnapshot,
+      amount: assignment.itemAmount.toString(),
+    };
+    const list = itemsByParticipant.get(assignment.sourceParticipantId) ?? [];
+    list.push(entry);
+    itemsByParticipant.set(assignment.sourceParticipantId, list);
+  }
   return {
     text: createSplitBillShareSummary({
       merchantName: detail.calculation.merchantNameSnapshot,
@@ -242,6 +262,7 @@ export async function createShareSummaryAction(
         finalAmount: participant.finalAmount.toString(),
         paymentStatus:
           statusByParticipant.get(participant.sourceParticipantId) ?? "unpaid",
+        items: itemsByParticipant.get(participant.sourceParticipantId) ?? [],
       })),
       includePaymentStatus: formData.get("includePaymentStatus") === "on",
     }),

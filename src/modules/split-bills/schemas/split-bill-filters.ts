@@ -10,6 +10,8 @@ export const splitBillFilterSchema = z.object({
     .regex(/^\d{4}-(0[1-9]|1[0-2])$/u)
     .optional(),
   q: z.string().trim().max(100).default(""),
+  sort: z.enum(["billDate", "amount"]).default("billDate"),
+  direction: z.enum(["asc", "desc"]).default("desc"),
   page: z.coerce.number().int().min(1).max(10_000).default(1),
   pageSize: z.coerce
     .number()
@@ -31,7 +33,7 @@ export function parseSplitBillFilters(
   searchParams: Record<string, string | string[] | undefined>,
 ) {
   const input = Object.fromEntries(
-    ["status", "month", "q", "page", "pageSize"]
+    ["status", "month", "q", "sort", "direction", "page", "pageSize"]
       .map((key) => [
         key,
         Array.isArray(searchParams[key])

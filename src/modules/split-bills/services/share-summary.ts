@@ -14,27 +14,35 @@ export function createSplitBillShareSummary(input: {
     name: string;
     finalAmount: string;
     paymentStatus: keyof typeof paymentLabel;
+    items?: {
+      name: string;
+      unitPrice: string;
+      quantity: number;
+      amount: string;
+    }[];
   }[];
   includePaymentStatus: boolean;
 }) {
-  const participantLines = input.participants.map(
-    (participant, index) =>
-      `${index + 1}. ${participant.name}: ${formatIdr(participant.finalAmount)}${
-        input.includePaymentStatus
-          ? ` — ${paymentLabel[participant.paymentStatus]}`
-          : ""
-      }`,
-  );
-  return [
-    `Patungan ${input.merchantName}`,
-    `Tanggal: ${new Intl.DateTimeFormat("id-ID", {
+  const lines: string[] = [];
+  lines.push(`Split Bill — ${input.merchantName}`);
+  lines.push(
+    new Intl.DateTimeFormat("id-ID", {
       dateStyle: "long",
       timeZone: "Asia/Jakarta",
-    }).format(new Date(`${input.billDate}T00:00:00+07:00`))}`,
-    `Total: ${formatIdr(input.finalAmount)}`,
-    "",
-    ...participantLines,
-    "",
-    "Dihitung dengan Spenles.",
-  ].join("\n");
+    }).format(new Date(`${input.billDate}T00:00:00+07:00`)),
+  );
+  for (const participant of input.participants) {
+    const itemLines = (participant.items ?? []).map(
+      (item) => `• ${item.name} — ${formatIdr(item.amount)}`,
+    );
+    const paymentSuffix = input.includePaymentStatus
+      ? ` (${paymentLabel[participant.paymentStatus]})`
+      : "";
+    lines.push(
+      `${participant.name}:${paymentSuffix}\n${itemLines.join("\n")}\nTotal: ${formatIdr(participant.finalAmount)}`,
+    );
+  }
+  lines.push(`Total Tagihan: ${formatIdr(input.finalAmount)}`);
+  lines.push("Dihitung dengan Spenles.");
+  return lines.join("\n\n");
 }

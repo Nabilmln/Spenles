@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ArrowDownLeft, ArrowUpRight, Pencil, Trash2 } from "lucide-react";
+import { EmptyState } from "@/components/feedback/empty-state";
 import { formatJakartaDateTime } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
 import { deleteTransactionAction } from "../actions/transaction-actions";
@@ -16,7 +17,9 @@ export type TransactionRow = {
 
 export function TransactionList({ rows }: { rows: TransactionRow[] }) {
   if (!rows.length) {
-    return <div className="empty-state"><div><h2>Tidak ada transaksi</h2><p>Tambahkan transaksi atau ubah filter yang digunakan.</p></div></div>;
+    return (
+      <EmptyState title="Belum ada transaksi" description="Transaksi yang kamu catat akan muncul di sini." />
+    );
   }
   return (
     <div className="transaction-list">
