@@ -53,6 +53,11 @@ export type ReportCategory = {
   amountIdr: string;
 };
 
+export type ReportInsight = {
+  averageDailyExpenseIdr: string;
+  inclusiveDays: number;
+};
+
 export type ReportAccount = {
   accountId: string;
   name: string;

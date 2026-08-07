@@ -4,6 +4,7 @@ import { sql, type SQL } from "drizzle-orm";
 import { db } from "@/db";
 import type { Database } from "@/db/types";
 import { calculateBudgetMetrics } from "@/modules/budgets/services/budget-metrics";
+import { inclusiveDayCount } from "@/modules/reports/lib/report-date";
 import { REPORT_DETAIL_LIMIT } from "../constants";
 import type {
   ExportFilters,
@@ -19,6 +20,7 @@ import { ExportLimitError } from "../services/csv";
 
 type TotalsRow = { income: string; expense: string };
 type MonthRow = { month: string; income: string; expense: string };
+type DayRow = { day: string; income: string; expense: string };
 type CategoryRow = { category_id: string; name: string; amount: string };
 type TransactionRow = {
   id: string;
@@ -163,12 +165,40 @@ async function getMonths(
   }));
 }
 
+async function getDays(
+  userId: string,
+  filters: ExportFilters,
+  database: Database,
+): Promise<DayRow[]> {
+  const result = await database.execute<DayRow>(sql`
+    select
+      to_char(
+        timezone('Asia/Jakarta', owned_transaction.transaction_at),
+        'YYYY-MM-DD'
+      ) as day,
+      coalesce(sum(owned_transaction.amount)
+        filter (where owned_transaction.type = 'income'), 0)::text as income,
+      coalesce(sum(owned_transaction.amount)
+        filter (where owned_transaction.type = 'expense'), 0)::text as expense
+    from transactions as owned_transaction
+    where ${transactionFilterSql(userId, filters)}
+    group by to_char(
+      timezone('Asia/Jakarta', owned_transaction.transaction_at),
+      'YYYY-MM-DD'
+    )
+    order by to_char(
+      timezone('Asia/Jakarta', owned_transaction.transaction_at),
+      'YYYY-MM-DD'
+    )
+  `);
+  return result.rows;
+}
+
 async function getCategories(
   userId: string,
   filters: ReportFilters,
   database: Database,
 ): Promise<ReportCategory[]> {
-  if (filters.type === "income") return [];
   const result = await database.execute<CategoryRow>(sql`
     select
       owned_category.id as category_id,
@@ -178,7 +208,10 @@ async function getCategories(
     inner join categories as owned_category
       on owned_category.id = owned_transaction.category_id
       and owned_category.user_id = ${userId}
-    where ${transactionFilterSql(userId, { ...filters, type: "expense" })}
+    where ${transactionFilterSql(userId, {
+      ...filters,
+      type: filters.type ?? "expense",
+    })}
     group by owned_category.id, owned_category.name, owned_category.normalized_name
     order by
       sum(owned_transaction.amount) desc,
@@ -480,12 +513,32 @@ export async function getReportAnalysis(
 ) {
   const { interval } = customInterval(from, to);
   const filters: ReportFilters = { interval, includeDetails: false };
-  const [summary, months, categories] = await Promise.all([
+  const inclusiveDays = inclusiveDayCount(from, to);
+  const daily = inclusiveDays > 0 && inclusiveDays <= 62;
+  const [summary, months, categories, dayRows] = await Promise.all([
     getTotals(userId, filters, database),
-    getMonths(userId, filters, database),
+    daily ? Promise.resolve([]) : getMonths(userId, filters, database),
     getCategories(userId, filters, database),
+    daily ? getDays(userId, filters, database) : Promise.resolve([]),
   ]);
-  return { summary, months, categories };
+  const expense = BigInt(summary.expenseIdr);
+  const averageDailyExpenseIdr =
+    inclusiveDays > 0 ? (expense / BigInt(inclusiveDays)).toString() : "0";
+  const series = daily
+    ? dayRows.map((row) => ({
+        month: row.day,
+        incomeIdr: row.income,
+        expenseIdr: row.expense,
+      }))
+    : months;
+  return {
+    summary,
+    months,
+    categories,
+    daily,
+    series,
+    insight: { inclusiveDays, averageDailyExpenseIdr },
+  };
 }
 
 export async function listCategoryTransactions(
@@ -499,4 +552,34 @@ export async function listCategoryTransactions(
   const { interval } = customInterval(from, to);
   const filters: ExportFilters = { interval, categoryId };
   return getTransactions(userId, filters, limit, database);
+}
+
+export async function getReportCategoryBreakdown(
+  userId: string,
+  from: string,
+  to: string,
+  type: "income" | "expense",
+  database: Database = db,
+) {
+  const { interval } = customInterval(from, to);
+  const filters: ReportFilters = {
+    interval,
+    type,
+    includeDetails: false,
+  };
+  const [categories, summary] = await Promise.all([
+    getCategories(userId, filters, database),
+    getTotals(userId, filters, database),
+  ]);
+  const total = BigInt(summary[type === "income" ? "incomeIdr" : "expenseIdr"]);
+  return {
+    type,
+    totalIdr: total.toString(),
+    categories: categories.map((category) => {
+      const amount = BigInt(category.amountIdr);
+      const shareBps =
+        total === 0n ? 0 : Number((amount * 10_000n) / total);
+      return { ...category, shareBps };
+    }),
+  };
 }

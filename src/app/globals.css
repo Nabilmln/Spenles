@@ -499,6 +499,71 @@ h1, h2, p { margin-top: 0; }
   .compact-report-card .button { width: 100%; }
 }
 
+.report-toolbar { display: flex; gap: .6rem; }
+.report-range-button, .report-export-button { display: inline-flex; min-height: 2.85rem; align-items: center; justify-content: center; gap: .5rem; padding: .65rem 1rem; border: 1px solid var(--border); border-radius: .72rem; color: var(--foreground); background: var(--surface); font-weight: 750; cursor: pointer; }
+.report-range-button svg, .report-export-button svg { flex: 0 0 auto; color: var(--primary-600); }
+.report-range-button { flex: 1 1 auto; }
+.report-export-button { flex: 0 0 auto; }
+
+.report-sheet-backdrop { position: fixed; z-index: 60; inset: 0; display: flex; align-items: flex-end; justify-content: center; background: rgb(15 17 21 / 55%); padding: 1rem; }
+.report-sheet-panel { width: 100%; max-width: 30rem; max-height: 86vh; overflow-y: auto; padding: 1.25rem; border: 1px solid var(--border); border-radius: 1.1rem; background: var(--surface); box-shadow: var(--shadow); }
+.report-sheet-header { display: flex; align-items: center; justify-content: space-between; gap: .75rem; margin-bottom: 1rem; }
+.report-sheet-header h2 { margin: 0; font-size: 1.08rem; }
+.report-sheet-actions { display: flex; gap: .6rem; justify-content: flex-end; margin-top: 1.1rem; }
+.report-sheet-actions .button { flex: 0 1 auto; }
+.report-export-hint { margin: 0 0 1rem; }
+.report-export-options { display: grid; gap: .65rem; }
+.report-export-option { width: 100%; justify-content: flex-start; }
+.report-export-option svg { flex: 0 0 auto; }
+
+.report-calendar-nav { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: .65rem; }
+.report-calendar-nav .icon-button { width: 2.5rem; height: 2.5rem; }
+.report-calendar-weekdays { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .25rem; margin-bottom: .35rem; }
+.report-calendar-weekdays span { text-align: center; color: var(--muted); font-size: .72rem; font-weight: 800; }
+.report-calendar-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: .25rem; }
+.report-calendar-day, .report-calendar-blank { display: grid; min-height: 2.5rem; place-items: center; border-radius: .6rem; font-size: .88rem; }
+.report-calendar-day { border: 1px solid transparent; color: var(--foreground); background: var(--surface-subtle); cursor: pointer; }
+.report-calendar-day:hover:not(:disabled) { background: var(--primary-50); }
+.report-calendar-day:disabled { color: var(--muted); opacity: .5; cursor: not-allowed; }
+.report-calendar-today { border-color: var(--primary-600); font-weight: 800; }
+.report-calendar-range { background: var(--primary-50); border-radius: 0; }
+.report-calendar-start, .report-calendar-end { position: relative; z-index: 1; color: white; background: var(--primary-600); font-weight: 800; }
+.report-calendar-start { border-radius: .6rem 0 0 .6rem; }
+.report-calendar-end { border-radius: 0 .6rem .6rem 0; }
+.report-calendar-drag { background: var(--primary-600); }
+.report-selection-summary { min-height: 1.4rem; margin-top: .9rem; color: var(--foreground); font-size: .88rem; }
+
+.report-summary-compact { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1px solid var(--border); border-radius: 1rem; background: var(--surface); box-shadow: var(--shadow); }
+.report-summary-cell { display: grid; min-width: 0; gap: .2rem; padding: 1.1rem .9rem; }
+.report-summary-cell + .report-summary-cell { border-left: 1px solid var(--border); }
+.report-summary-cell span { color: var(--muted); font-size: .72rem; font-weight: 750; letter-spacing: .04em; text-transform: uppercase; white-space: nowrap; }
+.report-summary-cell strong { overflow: hidden; font-size: 1rem; text-overflow: ellipsis; white-space: nowrap; }
+.report-summary-income strong { color: var(--income); }
+.report-summary-expense strong { color: var(--expense); }
+.report-summary-net-positive { color: var(--income); }
+.report-summary-net-negative { color: var(--expense); }
+.report-summary-net { text-align: right; }
+
+.report-cash-flow-card .dashboard-section-heading { margin-bottom: .5rem; }
+.report-zero-hint { margin: 0 0 .75rem; }
+
+.report-insight-card { display: grid; grid-template-columns: 30% 70%; align-items: center; gap: 1rem; }
+.report-insight-icon { display: grid; width: 3.2rem; height: 3.2rem; place-items: center; justify-self: center; border-radius: 999px; color: var(--primary-600); background: var(--primary-50); }
+.report-insight-copy h2 { margin: 0 0 .25rem; font-size: 1.02rem; }
+.report-insight-copy p { margin: 0; color: var(--muted); font-size: .9rem; line-height: 1.5; }
+.report-insight-copy strong { color: var(--foreground); }
+
+.report-category-type-options { display: flex; gap: .5rem; }
+.report-cat-option { flex: 1 1 0; min-height: 2.85rem; padding: .55rem .7rem; border: 1px solid var(--border); border-radius: .7rem; color: var(--muted); background: var(--surface-subtle); font-weight: 700; cursor: pointer; }
+.report-cat-active { color: white; background: var(--primary-600); border-color: var(--primary-600); }
+
+@media (max-width: 720px) {
+  .report-sheet-actions .button { flex: 1 1 0; justify-content: center; }
+  .report-summary-cell { padding: .9rem .65rem; }
+  .report-summary-cell strong { font-size: .88rem; }
+  .report-insight-card { grid-template-columns: 6.5rem 1fr; }
+}
+
 .domain-form { display: grid; gap: 1rem; }
 .domain-form small { color: var(--muted); }
 .domain-layout { display: grid; grid-template-columns: minmax(18rem, .75fr) minmax(0, 1.25fr); gap: 1rem; align-items: start; }
