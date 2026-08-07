@@ -75,12 +75,14 @@ export function ProfileForm({
         <Select
           id="theme"
           name="theme"
-          defaultValue={profile.theme}
+          defaultValue={profile.theme === "system" ? "light" : profile.theme}
         >
-          <option value="system">Ikuti sistem</option>
           <option value="light">Terang</option>
           <option value="dark">Gelap</option>
         </Select>
+        <span className="field-hint">
+          Ubah tema dengan cepat lewat ikon matahari atau bulan di pojok kanan.
+        </span>
       </div>
       <Button type="submit" disabled={pending}>
         {pending ? "Menyimpan..." : "Simpan perubahan"}
