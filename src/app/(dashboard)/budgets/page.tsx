@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { SectionHeading } from "@/components/layout/section-heading";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { BudgetList, listOwnedBudgets } from "@/modules/budgets";
 
@@ -12,11 +11,7 @@ export default async function BudgetsPage() {
   return (
     <div className="page-stack">
       <div className="page-heading-row">
-        <SectionHeading
-          eyebrow="Anggaran"
-          title="Anggaran bulanan"
-          description="Pemakaian dihitung dari transaksi pengeluaran aktif dalam bulan Jakarta."
-        />
+        <p className="page-description">Pemakaian dihitung dari transaksi pengeluaran aktif dalam bulan Jakarta.</p>
         <Link className="button button-primary" href="/budgets/new">Buat anggaran</Link>
       </div>
       <BudgetList rows={rows} />

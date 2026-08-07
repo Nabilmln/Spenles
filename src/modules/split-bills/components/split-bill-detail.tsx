@@ -64,7 +64,7 @@ export function SplitBillDetail({ detail }: { detail: SplitBillDetailData }) {
           <div className="domain-card-heading">
             <div>
               <p className="eyebrow">{detail.billDate}</p>
-              <h1>{detail.merchantName}</h1>
+              <h2 className="entity-heading">{detail.merchantName}</h2>
             </div>
             <span className={`status-badge split-status-${detail.status}`}>
               {statusLabel[detail.status]}

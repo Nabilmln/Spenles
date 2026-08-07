@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ArrowDownLeft, ArrowUpRight, Pencil } from "lucide-react";
 import { notFound } from "next/navigation";
-import { SectionHeading } from "@/components/layout/section-heading";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { formatJakartaDateTime } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
@@ -51,11 +50,10 @@ export default async function CategoryDetailPage({
   return (
     <div className="page-stack narrow-page">
       <div className="page-heading-row">
-        <SectionHeading
-          eyebrow="Laporan"
-          title={category.name}
-          description={`Rincian ${category.type === "income" ? "pemasukan" : "pengeluaran"} dari ${from} s.d. ${to} dalam Asia/Jakarta.`}
-        />
+        <div className="page-heading-copy">
+          <h2 className="entity-heading">{category.name}</h2>
+          <p className="page-description">{`Rincian ${category.type === "income" ? "pemasukan" : "pengeluaran"} dari ${from} s.d. ${to} dalam Asia/Jakarta.`}</p>
+        </div>
         <Link className="button button-secondary" href={`/reports?from=${from}&to=${to}`}>
           Kembali ke laporan
         </Link>

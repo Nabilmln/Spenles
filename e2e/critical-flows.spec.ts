@@ -37,7 +37,7 @@ test("authentication, private navigation, transaction, and exports", async ({
   await page.getByLabel("Jumlah (rupiah)").fill("12345");
   await page.getByLabel("Akun").selectOption({ index: 1 });
   await page.getByLabel("Kategori").selectOption({ index: 1 });
-  await page.getByLabel("Tanggal dan waktu").fill("2026-08-06T10:00");
+  await page.getByLabel("Tanggal").fill("2026-08-06");
   await page.getByLabel("Catatan (opsional)").fill("E2E Phase 07");
   await page.getByRole("button", { name: "Simpan transaksi" }).click();
   await expect(page).toHaveURL(/\/transactions/u);

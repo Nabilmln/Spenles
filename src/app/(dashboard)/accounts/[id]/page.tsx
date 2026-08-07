@@ -1,10 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { SectionHeading } from "@/components/layout/section-heading";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { formatIdr } from "@/lib/money/format-idr";
 import { getOwnedAccount } from "@/modules/accounts";
-import { accountTypeLabel } from "@/modules/accounts/constants/account-types";
 
 export const dynamic = "force-dynamic";
 
@@ -21,11 +19,10 @@ export default async function AccountDetailPage({
   return (
     <div className="page-stack narrow-page">
       <div className="page-heading-row">
-        <SectionHeading
-          eyebrow={accountTypeLabel(account.type)}
-          title={account.name}
-          description={account.status === "active" ? "Akun aktif" : "Akun diarsipkan"}
-        />
+        <div className="page-heading-copy">
+          <h2 className="entity-heading">{account.name}</h2>
+          <p className="page-description">{account.status === "active" ? "Akun aktif" : "Akun diarsipkan"}</p>
+        </div>
         <Link className="button button-secondary" href={`/accounts/${account.id}/edit`}>Edit</Link>
       </div>
       <section className="card account-detail">

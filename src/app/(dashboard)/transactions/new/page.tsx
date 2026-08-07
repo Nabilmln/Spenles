@@ -7,7 +7,7 @@ export default async function NewTransactionPage() {
   const options = await getTransactionOptions(user.id);
   return (
     <div className="page-stack narrow-page">
-      <div className="section-heading"><p className="eyebrow">Transaksi</p><h1>Tambah transaksi</h1><p>Semua waktu ditampilkan dalam zona Asia/Jakarta.</p></div>
+      <p className="page-description">Semua waktu ditampilkan dalam zona Asia/Jakarta.</p>
       <div className="card">
         <TransactionForm
           action={createTransactionAction}

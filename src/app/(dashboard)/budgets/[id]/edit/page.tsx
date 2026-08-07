@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { SectionHeading } from "@/components/layout/section-heading";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import {
   BudgetForm,
@@ -27,7 +26,7 @@ export default async function EditBudgetPage({
     : [{ id: budget.categoryId, name: budget.categoryName }, ...categories];
   return (
     <div className="page-stack narrow-page">
-      <SectionHeading eyebrow="Anggaran" title="Edit anggaran" description={budget.categoryName} />
+      <p className="page-description">{budget.categoryName}</p>
       <section className="card">
         <BudgetForm action={updateBudgetAction} categories={options} initial={budget} />
       </section>

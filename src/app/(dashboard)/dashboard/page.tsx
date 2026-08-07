@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { SectionHeading } from "@/components/layout/section-heading";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import {
   buildDailyExpenseChartContract,
@@ -57,11 +56,6 @@ export default async function DashboardPage({
   if (!filtersResult.success) {
     return (
       <div className="page-stack">
-        <SectionHeading
-          description="Parameter periode tidak dapat digunakan."
-          eyebrow="Dashboard"
-          title="Periode tidak valid"
-        />
         <section className="dashboard-section-error card" role="alert">
           <div>
             <h2>Periksa pilihan periode</h2>

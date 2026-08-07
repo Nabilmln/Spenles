@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { SectionHeading } from "@/components/layout/section-heading";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { formatJakartaDateTimeInput } from "@/lib/dates/jakarta";
 import {
@@ -31,7 +30,7 @@ export default async function EditRecurringRulePage({
     : [{ id: rule.categoryId, name: rule.categoryName, type: rule.type }, ...options.categories];
   return (
     <div className="page-stack narrow-page">
-      <SectionHeading eyebrow="Otomasi" title="Edit aturan berulang" description="Tanggal mulai tetap menjadi jangkar jadwal." />
+      <p className="page-description">Tanggal mulai tetap menjadi jangkar jadwal.</p>
       <section className="card">
         <RecurringRuleForm
           action={updateRecurringRuleAction}

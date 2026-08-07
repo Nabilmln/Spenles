@@ -1,4 +1,3 @@
-import { SectionHeading } from "@/components/layout/section-heading";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import {
   getReportAnalysis,
@@ -61,11 +60,7 @@ export default async function ReportsPage({
 
   return (
     <div className="page-stack reports-page">
-      <SectionHeading
-        eyebrow="Laporan"
-        title="Analisis keuangan"
-        description="Pantau pemasukan dan pengeluaran per periode, lalu ekspor laporan bila diperlukan. Semua data privat dari sesi Anda."
-      />
+      <p className="page-description">Pantau pemasukan dan pengeluaran per periode, lalu ekspor laporan bila diperlukan. Semua data privat dari sesi Anda.</p>
 
       <ReportToolbar
         from={from}

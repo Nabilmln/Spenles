@@ -1,5 +1,4 @@
 import { notFound, redirect } from "next/navigation";
-import { SectionHeading } from "@/components/layout/section-heading";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import {
   deleteSplitBillDraftAction,
@@ -27,11 +26,10 @@ export default async function EditSplitBillPage({
   if (source.bill.status !== "draft") redirect(`/split-bills/${parsedId.data}`);
   return (
     <div className="page-stack">
-      <SectionHeading
-        eyebrow="Draft Split Bill"
-        title={source.bill.merchantName}
-        description="Simpan perubahan sebelum finalisasi. Draft memakai pemeriksaan revisi untuk mencegah timpa data."
-      />
+      <div className="page-heading-copy">
+        <h2 className="entity-heading">{source.bill.merchantName}</h2>
+        <p className="page-description">Simpan perubahan sebelum finalisasi. Draft memakai pemeriksaan revisi untuk mencegah timpa data.</p>
+      </div>
       <SplitBillEditor
         action={updateSplitBillAction}
         finalizeAction={finalizeSplitBillAction}

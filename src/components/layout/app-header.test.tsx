@@ -103,3 +103,38 @@ describe("HeaderContent home tab", () => {
     ).not.toBeInTheDocument();
   });
 });
+
+describe("HeaderContent edit-route title resolution", () => {
+  const cases: Array<[string, string]> = [
+    ["/transactions/abc123/edit", "Edit transaksi"],
+    ["/accounts/abc123/edit", "Edit akun"],
+    ["/budgets/abc123/edit", "Edit anggaran"],
+    ["/recurring-transactions/abc123/edit", "Edit transaksi berulang"],
+    ["/split-bills/abc123/edit", "Edit split bill"],
+  ];
+
+for (const [route, title] of cases) {
+    it(`resolves ${route} to "${title}"`, () => {
+      vi.mocked(usePathname).mockReturnValue(route);
+      renderHeader();
+      expect(screen.getByRole("heading", { name: title })).toBeInTheDocument();
+    });
+  }
+
+  it("does not label budgets edit as an edit-transaction title", () => {
+    vi.mocked(usePathname).mockReturnValue("/budgets/abc123/edit");
+    renderHeader();
+    expect(screen.getByRole("heading", { name: "Edit anggaran" })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("heading", { name: "Edit transaksi" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("back button on an edit route falls back to the correct parent list", () => {
+    Object.defineProperty(window.history, "length", { value: 1, configurable: true });
+    vi.mocked(usePathname).mockReturnValue("/split-bills/abc123/edit");
+    renderHeader();
+    fireEvent.click(screen.getByRole("button", { name: "Kembali" }));
+    expect(pushMock.mock.calls).toEqual([["/split-bills"]]);
+  });
+});

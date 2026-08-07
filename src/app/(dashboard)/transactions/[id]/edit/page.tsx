@@ -11,7 +11,6 @@ export default async function EditTransactionPage({ params }: { params: Promise<
   const options = await getTransactionOptions(user.id, transaction.categoryId);
   return (
     <div className="page-stack narrow-page">
-      <div className="section-heading"><p className="eyebrow">Transaksi</p><h1>Edit transaksi</h1></div>
       <div className="card">
         <TransactionForm
           action={updateTransactionAction}

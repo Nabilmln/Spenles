@@ -1,4 +1,3 @@
-import { SectionHeading } from "@/components/layout/section-heading";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import {
   createRecurringRuleAction,
@@ -13,7 +12,7 @@ export default async function NewRecurringRulePage() {
   const options = await listRecurringOptions(user.id);
   return (
     <div className="page-stack narrow-page">
-      <SectionHeading eyebrow="Otomasi" title="Buat aturan berulang" description="Kejadian masa lalu tidak dibuat saat aturan disimpan." />
+      <p className="page-description">Kejadian masa lalu tidak dibuat saat aturan disimpan.</p>
       <section className="card">
         <RecurringRuleForm
           action={createRecurringRuleAction}

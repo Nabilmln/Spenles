@@ -1,4 +1,3 @@
-import { SectionHeading } from "@/components/layout/section-heading";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import {
   listActiveAccountOptions,
@@ -18,11 +17,7 @@ export default async function TransfersPage() {
   ]);
   return (
     <div className="page-stack">
-      <SectionHeading
-        eyebrow="Akun"
-        title="Transfer internal"
-        description="Transfer tidak dihitung sebagai pemasukan atau pengeluaran."
-      />
+      <p className="page-description">Transfer tidak dihitung sebagai pemasukan atau pengeluaran.</p>
       <div className="domain-layout">
         <section className="card">
           <h2>Transfer baru</h2>

@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { SectionHeading } from "@/components/layout/section-heading";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import {
   listOwnedRecurringRules,
@@ -15,11 +14,7 @@ export default async function RecurringTransactionsPage() {
   return (
     <div className="page-stack">
       <div className="page-heading-row">
-        <SectionHeading
-          eyebrow="Otomasi"
-          title="Transaksi berulang"
-          description="Jadwal menggunakan Asia/Jakarta dan setiap kejadian hanya dibuat sekali."
-        />
+        <p className="page-description">Jadwal menggunakan Asia/Jakarta dan setiap kejadian hanya dibuat sekali.</p>
         <Link className="button button-primary" href="/recurring-transactions/new">Buat aturan</Link>
       </div>
       <RecurringRuleList rows={rows} />

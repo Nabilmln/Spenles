@@ -22,11 +22,7 @@ export default async function CategoriesPage() {
   }));
   return (
     <div className="page-stack categories-page">
-      <div className="section-heading">
-        <p className="eyebrow">Kategori</p>
-        <h1>Kelola kategori</h1>
-        <p>Kategori diarsipkan tetap tersimpan pada transaksi lama.</p>
-      </div>
+      <p className="page-description">Kategori diarsipkan tetap tersimpan pada transaksi lama.</p>
       <CategoryManager categories={categories} deletableIds={deletableIds} />
     </div>
   );

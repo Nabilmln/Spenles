@@ -22,7 +22,6 @@ export default async function TransactionsPage({
   if (!parsed.success) {
     return (
       <div className="page-stack">
-        <div className="section-heading"><p className="eyebrow">Transaksi</p><h1>Filter tidak valid</h1></div>
         <div className="card"><p>Parameter pencarian atau filter tidak dapat digunakan.</p><Link className="button button-primary" href="/transactions">Reset filter</Link></div>
       </div>
     );
@@ -34,10 +33,7 @@ export default async function TransactionsPage({
   ]);
   return (
     <div className="page-stack">
-      <div className="page-heading-row">
-        <div className="section-heading"><p className="eyebrow">Transaksi</p><h1>Riwayat transaksi</h1><p>Catat dan temukan pemasukan, pengeluaran, maupun tabungan Anda.</p></div>
-        <Link className="button button-primary desktop-only" href="/transactions/new">Tambah transaksi</Link>
-      </div>
+      <p className="page-description">Catat dan temukan pemasukan, pengeluaran, maupun tabungan Anda.</p>
       <TransactionSummary income={summary.income} expense={summary.expense} savings={summary.savings} />
       <TransactionFilterBar filters={parsed.data} {...options} />
       <TransactionList rows={result.rows} />

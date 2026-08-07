@@ -1,4 +1,3 @@
-import { SectionHeading } from "@/components/layout/section-heading";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import {
   BudgetForm,
@@ -13,7 +12,7 @@ export default async function NewBudgetPage() {
   const categories = await listActiveExpenseCategoryOptions(user.id);
   return (
     <div className="page-stack narrow-page">
-      <SectionHeading eyebrow="Anggaran" title="Buat anggaran" description="Satu anggaran aktif per kategori dan bulan." />
+      <p className="page-description">Satu anggaran aktif per kategori dan bulan.</p>
       <section className="card">
         {categories.length > 0 ? (
           <BudgetForm action={createBudgetAction} categories={categories} />

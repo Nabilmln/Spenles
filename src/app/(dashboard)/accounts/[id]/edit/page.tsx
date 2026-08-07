@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import { SectionHeading } from "@/components/layout/section-heading";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import {
   AccountForm,
@@ -20,7 +19,7 @@ export default async function EditAccountPage({
   if (!account) notFound();
   return (
     <div className="page-stack narrow-page">
-      <SectionHeading eyebrow="Akun" title="Edit akun" description={account.name} />
+      <p className="page-description">{account.name}</p>
       <section className="card">
         <AccountForm action={updateAccountAction} initial={account} />
       </section>

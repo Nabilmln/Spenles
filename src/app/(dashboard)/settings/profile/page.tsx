@@ -1,5 +1,4 @@
 import { Card } from "@/components/ui/card";
-import { SectionHeading } from "@/components/layout/section-heading";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { getProfile, ProfileForm } from "@/modules/profiles";
 
@@ -12,7 +11,7 @@ export default async function ProfilePage() {
   if (!profile) throw new Error("Profil tidak ditemukan.");
   return (
     <div className="page-stack narrow-page">
-      <SectionHeading eyebrow="Pengaturan" title="Profil dan preferensi" description="Atur identitas tampilan dan preferensi dasar aplikasi." />
+      <p className="page-description">Atur identitas tampilan dan preferensi dasar aplikasi.</p>
       <Card><ProfileForm profile={profile} email={user.email ?? ""} /></Card>
     </div>
   );
