@@ -3,6 +3,7 @@ import { ReceiptText } from "lucide-react";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { formatIdr } from "@/lib/money/format-idr";
 import type { SplitBillFilters } from "../schemas/split-bill-filters";
+import { SplitBillDeleteButton } from "./split-bill-delete-button";
 
 const statusLabel = {
   draft: "Draft",
@@ -95,6 +96,7 @@ export function SplitBillList({
             >
               {row.status === "draft" ? "Lanjutkan draft" : "Lihat hasil"}
             </Link>
+            <SplitBillDeleteButton billId={row.id} label={row.merchantName} />
           </article>
         ))}
       </div>

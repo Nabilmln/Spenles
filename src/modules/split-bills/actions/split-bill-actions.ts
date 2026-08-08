@@ -15,6 +15,7 @@ import { calculateSplitBill, SplitBillCalculationError } from "../services/calcu
 import {
   archiveOwnedSplitBill,
   createOwnedSplitBillDraft,
+  deleteOwnedSplitBill,
   deleteOwnedSplitBillDraft,
   prepareSplitBillDraft,
   replaceOwnedSplitBillDraft,
@@ -162,6 +163,16 @@ export async function deleteSplitBillDraftAction(formData: FormData) {
   const id = splitBillIdSchema.safeParse(formData.get("id"));
   if (!id.success) return;
   const deleted = await deleteOwnedSplitBillDraft(db, user.id, id.data);
+  if (!deleted) return;
+  revalidatePath("/split-bills");
+  redirect("/split-bills");
+}
+
+export async function deleteSplitBillAction(formData: FormData) {
+  const user = await requireSessionUser();
+  const id = splitBillIdSchema.safeParse(formData.get("id"));
+  if (!id.success) return;
+  const deleted = await deleteOwnedSplitBill(db, user.id, id.data);
   if (!deleted) return;
   revalidatePath("/split-bills");
   redirect("/split-bills");

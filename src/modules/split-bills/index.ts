@@ -1,5 +1,6 @@
 export * from "./actions/split-bill-actions";
 export * from "./components/split-bill-create-flow";
+export * from "./components/split-bill-delete-button";
 export * from "./components/split-bill-detail";
 export * from "./components/split-bill-editor";
 export * from "./components/split-bill-filter-bar";

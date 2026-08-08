@@ -730,6 +730,12 @@ h1, h2, p { margin-top: 0; }
 .split-editor-layout, .split-detail-layout { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(19rem, .55fr); gap: 1rem; align-items: start; }
 .split-editor-main, .split-detail-main, .split-detail-aside { display: grid; gap: 1rem; min-width: 0; }
 .split-summary { position: sticky; top: 1rem; display: grid; gap: 1rem; min-width: 0; }
+.split-delete-confirm { display: grid; gap: .7rem; }
+.split-delete-confirm p { margin: 0; }
+.split-delete-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+.split-delete-actions form { margin: 0; }
+.split-row-delete { display: flex; justify-content: flex-end; }
+.split-row-delete-confirm { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .6rem; }
 .split-summary h2, .split-fieldset h2, .split-finalize-panel h2, .split-detail-layout h2 { margin: 0; }
 .split-fieldset { display: grid; gap: 1rem; min-width: 0; margin: 0; padding: 1rem; border: 1px solid var(--border); border-radius: .8rem; }
 .split-fieldset > legend, .split-fieldset-heading legend { padding: 0 .35rem; font-weight: 800; }

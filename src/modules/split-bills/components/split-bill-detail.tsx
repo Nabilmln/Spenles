@@ -1,11 +1,12 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { formatIdr } from "@/lib/money/format-idr";
 import {
   archiveSplitBillAction,
+  deleteSplitBillAction,
   type SplitBillActionState,
 } from "../actions/split-bill-actions";
 import { PaymentStatusForm } from "./payment-status-form";
@@ -57,6 +58,7 @@ export function SplitBillDetail({ detail }: { detail: SplitBillDetailData }) {
     SplitBillActionState,
     FormData
   >(archiveSplitBillAction, {});
+  const [confirmDelete, setConfirmDelete] = useState(false);
   return (
     <div className="split-detail-layout">
       <section className="split-detail-main">
@@ -160,6 +162,34 @@ export function SplitBillDetail({ detail }: { detail: SplitBillDetailData }) {
               <FormMessage>{archiveState.error}</FormMessage>
               {archiveState.success ? <p role="status">{archiveState.success}</p> : null}
             </form>
+          </article>
+        ) : null}
+        {detail.status === "finalized" || detail.status === "archived" ? (
+          <article className="card">
+            <h2>Hapus</h2>
+            <p>Menghapus tagihan permanen menghilangkan seluruh item dan riwayat pembayaran.</p>
+            {confirmDelete ? (
+              <div className="split-delete-confirm">
+                <p role="alert" className="financial-disclaimer">Yakin? Tindakan ini permanen dan tidak dapat dibatalkan.</p>
+                <div className="split-delete-actions">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => setConfirmDelete(false)}
+                  >
+                    Batal
+                  </Button>
+                  <form action={deleteSplitBillAction}>
+                    <input type="hidden" name="id" value={detail.id} />
+                    <Button type="submit" variant="danger">Hapus permanen</Button>
+                  </form>
+                </div>
+              </div>
+            ) : (
+              <Button type="button" variant="danger" onClick={() => setConfirmDelete(true)}>
+                Hapus tagihan
+              </Button>
+            )}
           </article>
         ) : null}
       </aside>

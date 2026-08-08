@@ -319,6 +319,20 @@ export async function deleteOwnedSplitBillDraft(
   return result.rows[0] ?? null;
 }
 
+export async function deleteOwnedSplitBill(
+  database: Database,
+  userId: string,
+  billId: string,
+) {
+  const result = await database.execute<{ id: string }>(sql`
+    delete from split_bills
+    where id = ${billId}::uuid
+      and user_id = ${userId}
+    returning id
+  `);
+  return result.rows[0] ?? null;
+}
+
 export async function archiveOwnedSplitBill(
   database: Database,
   userId: string,

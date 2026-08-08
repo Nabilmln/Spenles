@@ -4,9 +4,12 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import {
   profiles,
   splitBillAssignments,
+  splitBillAssignmentResults,
   splitBillCalculations,
   splitBillItems,
+  splitBillItemResults,
   splitBillParticipants,
+  splitBillParticipantResults,
   splitBills,
 } from "@/db/schema";
 import { ensureUserFoundationWithDatabase } from "@/modules/onboarding/services/ensure-user-foundation";
@@ -19,6 +22,7 @@ import type { SplitBillDraftData } from "@/modules/split-bills/schemas/split-bil
 import {
   archiveOwnedSplitBill,
   createOwnedSplitBillDraft,
+  deleteOwnedSplitBill,
   deleteOwnedSplitBillDraft,
   prepareSplitBillDraft,
   replaceOwnedSplitBillDraft,
@@ -297,6 +301,65 @@ describe("Phase 05 split-bill database boundaries", () => {
     expect(participants.some((row) => row.splitBillId === created!.id)).toBe(false);
     expect(items.some((row) => row.splitBillId === created!.id)).toBe(false);
     expect(assignments.some((row) => row.splitBillId === created!.id)).toBe(false);
+  });
+
+  it("hard-deletes finalized and archived bills and cascades every source and snapshot row", async () => {
+    for (const status of ["finalized", "archived"] as const) {
+      const created = await createOwnedSplitBillDraft(
+        database,
+        userA,
+        prepareSplitBillDraft(draft()),
+      );
+      await finalizeOwnedSplitBill(database, userA, created!.id, 0);
+      if (status === "archived") {
+        await archiveOwnedSplitBill(database, userA, created!.id);
+      }
+      await expect(
+        deleteOwnedSplitBill(database, userB, created!.id),
+      ).resolves.toBeNull();
+      await expect(
+        deleteOwnedSplitBill(database, userA, created!.id),
+      ).resolves.toMatchObject({ id: created!.id });
+      const [
+        bills,
+        participants,
+        items,
+        assignments,
+        calculations,
+        itemResults,
+        assignmentResults,
+        participantResults,
+      ] = await Promise.all([
+        database.select().from(splitBills),
+        database.select().from(splitBillParticipants),
+        database.select().from(splitBillItems),
+        database.select().from(splitBillAssignments),
+        database.select().from(splitBillCalculations),
+        database.select().from(splitBillItemResults),
+        database.select().from(splitBillAssignmentResults),
+        database.select().from(splitBillParticipantResults),
+      ]);
+      expect(bills.some((row) => row.id === created!.id)).toBe(false);
+      expect(
+        participants.some((row) => row.splitBillId === created!.id),
+      ).toBe(false);
+      expect(items.some((row) => row.splitBillId === created!.id)).toBe(false);
+      expect(
+        assignments.some((row) => row.splitBillId === created!.id),
+      ).toBe(false);
+      expect(
+        calculations.some((row) => row.splitBillId === created!.id),
+      ).toBe(false);
+      expect(
+        itemResults.some((row) => row.splitBillId === created!.id),
+      ).toBe(false);
+      expect(
+        assignmentResults.some((row) => row.splitBillId === created!.id),
+      ).toBe(false);
+      expect(
+        participantResults.some((row) => row.splitBillId === created!.id),
+      ).toBe(false);
+    }
   });
 
   it("keeps history private, deterministic, and archived-hidden by default", async () => {
