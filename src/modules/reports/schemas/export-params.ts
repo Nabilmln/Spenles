@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { formatRangeLong } from "@/lib/dates/format-id";
 import {
   REPORT_EARLIEST_DATE,
   REPORT_MAX_DAYS,
@@ -89,7 +90,7 @@ function buildInterval(
   ) {
     startDate = values.from;
     inclusiveEndDate = values.to;
-    label = `${values.from} s.d. ${values.to}`;
+    label = formatRangeLong(values.from, values.to);
     filePart = `${values.from}-to-${values.to}`;
   } else {
     return null;

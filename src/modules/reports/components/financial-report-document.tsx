@@ -242,7 +242,8 @@ export function FinancialReportDocument({
               {report.transactions.map((row) => (
                 <View style={styles.row} key={row.id} wrap={false}>
                   <Text style={styles.cell}>
-                    {new Intl.DateTimeFormat("sv-SE", {
+                    {new Intl.DateTimeFormat("id-ID", {
+                      dateStyle: "long",
                       timeZone: REPORT_TIMEZONE,
                     }).format(row.transactionAt)}
                   </Text>

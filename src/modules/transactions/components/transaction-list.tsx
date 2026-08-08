@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowDownLeft, ArrowUpRight, Pencil, Trash2 } from "lucide-react";
 import { EmptyState } from "@/components/feedback/empty-state";
-import { formatJakartaDateTime } from "@/lib/dates/jakarta";
+import { formatJakartaDateLong } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
 import { deleteTransactionAction } from "../actions/transaction-actions";
 
@@ -30,7 +30,7 @@ export function TransactionList({ rows }: { rows: TransactionRow[] }) {
           </span>
           <div className="transaction-copy">
             <strong>{row.categoryName}</strong>
-            <span>{row.accountName} · {formatJakartaDateTime(row.transactionAt)}</span>
+            <span>{row.accountName} · {formatJakartaDateLong(row.transactionAt)}</span>
             {row.note ? <small>{row.note}</small> : null}
           </div>
           <strong className={`transaction-amount ${row.type}`}>

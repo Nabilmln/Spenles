@@ -56,7 +56,13 @@ export function ReportToolbar({
 
       {sheet === "range" ? (
         <div className="report-sheet-backdrop" onClick={() => setSheet("none")}>
-          <div className="report-sheet-panel report-sheet-calendar" role="dialog" aria-modal="true" aria-labelledby="report-range-title">
+          <div
+            aria-labelledby="report-range-title"
+            aria-modal="true"
+            className="report-sheet-panel report-sheet-calendar"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+          >
             <ReportDateRangePicker
               currentFrom={from}
               currentTo={to}
@@ -69,7 +75,13 @@ export function ReportToolbar({
 
       {sheet === "export" ? (
         <div className="report-sheet-backdrop" onClick={() => setSheet("none")}>
-          <div className="report-sheet-panel report-export-sheet" role="dialog" aria-modal="true" aria-labelledby="report-export-title">
+          <div
+            aria-labelledby="report-export-title"
+            aria-modal="true"
+            className="report-sheet-panel report-export-sheet"
+            onClick={(event) => event.stopPropagation()}
+            role="dialog"
+          >
             <div className="report-sheet-header">
               <h2 id="report-export-title">Ekspor laporan</h2>
               <button

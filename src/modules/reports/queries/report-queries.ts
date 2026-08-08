@@ -3,6 +3,7 @@ import "server-only";
 import { sql, type SQL } from "drizzle-orm";
 import { db } from "@/db";
 import type { Database } from "@/db/types";
+import { formatRangeLong } from "@/lib/dates/format-id";
 import { calculateBudgetMetrics } from "@/modules/budgets/services/budget-metrics";
 import { inclusiveDayCount } from "@/modules/reports/lib/report-date";
 import { REPORT_DETAIL_LIMIT } from "../constants";
@@ -495,7 +496,7 @@ function customInterval(from: string, to: string) {
   return {
     interval: {
       kind: "custom" as const,
-      label: `${from} s.d. ${to}`,
+      label: formatRangeLong(from, to),
       filePart: `${from}-to-${to}`,
       startDate: from,
       endDate: to,

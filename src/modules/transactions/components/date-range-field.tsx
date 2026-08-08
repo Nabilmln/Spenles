@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { CalendarRange, ChevronDown } from "lucide-react";
+import { formatRangeLong } from "@/lib/dates/format-id";
 
 const OFFSET_MS = 7 * 60 * 60 * 1000;
 const pad = (value: number) => String(value).padStart(2, "0");
@@ -99,7 +100,7 @@ export function DateRangeField({
   const label = hasMonth
     ? monthLabel(month!)
     : hasRange
-      ? `${from} s.d. ${to}`
+      ? formatRangeLong(from!, to!)
       : "Semua periode";
 
   function submitValues(nextMonth: string, nextFrom: string, nextTo: string) {

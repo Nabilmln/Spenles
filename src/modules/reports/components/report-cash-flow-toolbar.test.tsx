@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { ReactNode } from "react";
 import type { ReportMonth } from "../types";
@@ -27,12 +27,12 @@ describe("cash flow grouping", () => {
     expect(points[1].incomePlot).toBe(0.2);
   });
 
-  it("labels monthly series with a short month name", () => {
+  it("labels monthly series with a long month name", () => {
     const series: ReportMonth[] = [
       { month: "2026-08", incomeIdr: "0", expenseIdr: "5000" },
     ];
     const points = buildCashFlowPoints(series);
-    expect(points[0].label).toMatch(/^Agu/u);
+    expect(points[0].label).toMatch(/^Agustus/u);
   });
 
   it("handles an all-zero series without dividing by zero", () => {
@@ -77,8 +77,20 @@ describe("report toolbar", () => {
   it("shows the current range and opens the range sheet", () => {
     render(<ReportToolbar from="2026-08-01" to="2026-08-07" pdfHref="/pdf" csvHref="/csv" />);
 
-    expect(screen.getByText("1 Agu – 7 Agu")).toBeInTheDocument();
+    expect(screen.getByText("1 Agustus – 7 Agustus 2026")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /Pilih rentang tanggal/ }));
+    expect(screen.getByRole("dialog", { name: "Pilih rentang tanggal" })).toBeInTheDocument();
+  });
+
+  it("keeps the range sheet open while picking calendar days", () => {
+    render(<ReportToolbar from="2026-08-01" to="2026-08-07" pdfHref="/pdf" csvHref="/csv" />);
+
+    fireEvent.click(screen.getByRole("button", { name: /Pilih rentang tanggal/ }));
+    const dialog = screen.getByRole("dialog", { name: "Pilih rentang tanggal" });
+    const day = within(dialog).getByRole("button", { name: "3 Agustus 2026" });
+    fireEvent.click(day);
+
+    expect(day).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("dialog", { name: "Pilih rentang tanggal" })).toBeInTheDocument();
   });
 

@@ -83,7 +83,7 @@ function monthLabel(value: CalendarDate) {
 function dateLabel(value: CalendarDate) {
   return new Intl.DateTimeFormat("id-ID", {
     day: "numeric",
-    month: "short",
+    month: "long",
     year: "numeric",
     timeZone: "UTC",
   }).format(new Date(Date.UTC(value.year, value.month - 1, value.day)));

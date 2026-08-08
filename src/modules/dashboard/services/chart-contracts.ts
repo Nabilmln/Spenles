@@ -24,8 +24,8 @@ const CATEGORY_COLORS: Record<string, string> = {
 function monthLabel(period: string) {
   const [year, month] = period.split("-").map(Number);
   return new Intl.DateTimeFormat("id-ID", {
-    month: "short",
-    year: "2-digit",
+    month: "long",
+    year: "numeric",
     timeZone: "UTC",
   }).format(new Date(Date.UTC(year, month - 1, 1)));
 }
@@ -111,7 +111,7 @@ function dayLabel(day: string) {
   const [year, month, date] = day.split("-").map(Number);
   return new Intl.DateTimeFormat("id-ID", {
     day: "numeric",
-    month: "short",
+    month: "long",
     timeZone: "UTC",
   }).format(new Date(Date.UTC(year, month - 1, date)));
 }

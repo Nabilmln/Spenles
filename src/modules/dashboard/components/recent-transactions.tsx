@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowDownLeft, ArrowUpRight, List } from "lucide-react";
-import { formatJakartaDateTime } from "@/lib/dates/jakarta";
+import { formatJakartaDateLong } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
 import type { RecentDashboardTransaction } from "../types/dashboard";
 
@@ -32,7 +32,7 @@ export function RecentTransactions({
               <div className="recent-copy">
                 <strong>{row.categoryName}</strong>
                 <span>
-                  {row.accountName} · {formatJakartaDateTime(row.transactionAt)}
+                  {row.accountName} · {formatJakartaDateLong(row.transactionAt)}
                 </span>
                 {row.note ? <small>{row.note}</small> : null}
               </div>

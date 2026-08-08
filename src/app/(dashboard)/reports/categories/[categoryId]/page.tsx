@@ -2,7 +2,8 @@ import Link from "next/link";
 import { ArrowDownLeft, ArrowUpRight, Pencil } from "lucide-react";
 import { notFound } from "next/navigation";
 import { requireSessionUser } from "@/lib/auth/require-session";
-import { formatJakartaDateTime } from "@/lib/dates/jakarta";
+import { formatJakartaDateLong } from "@/lib/dates/jakarta";
+import { formatRangeLong } from "@/lib/dates/format-id";
 import { formatIdr } from "@/lib/money/format-idr";
 import {
   getReportOptions,
@@ -52,7 +53,7 @@ export default async function CategoryDetailPage({
       <div className="page-heading-row">
         <div className="page-heading-copy">
           <h2 className="entity-heading">{category.name}</h2>
-          <p className="page-description">{`Rincian ${category.type === "income" ? "pemasukan" : "pengeluaran"} dari ${from} s.d. ${to} dalam Asia/Jakarta.`}</p>
+          <p className="page-description">{`Rincian ${category.type === "income" ? "pemasukan" : "pengeluaran"} dari ${formatRangeLong(from, to)} dalam Asia/Jakarta.`}</p>
         </div>
         <Link className="button button-secondary" href={`/reports?from=${from}&to=${to}`}>
           Kembali ke laporan
@@ -75,7 +76,7 @@ export default async function CategoryDetailPage({
               </span>
               <div className="transaction-copy">
                 <strong>{row.accountName}</strong>
-                <span>{formatJakartaDateTime(row.transactionAt)}</span>
+                <span>{formatJakartaDateLong(row.transactionAt)}</span>
                 {row.note ? <small>{row.note}</small> : null}
               </div>
               <strong className={`transaction-amount ${row.type}`}>

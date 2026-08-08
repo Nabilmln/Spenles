@@ -43,15 +43,17 @@ describe("report date utilities", () => {
   });
 
   it("formats Indonesian short and long labels", () => {
-    expect(formatReportDay("2026-08-01", false)).toBe("1 Agu");
-    expect(formatReportDay("2026-08-01", true)).toBe("1 Agu 2026");
+    expect(formatReportDay("2026-08-01", false)).toBe("1 Agustus");
+    expect(formatReportDay("2026-08-01", true)).toBe("1 Agustus 2026");
     expect(formatReportMonthYear(2026, 8)).toBe("Agustus 2026");
   });
 
   it("formats compact ranges bilingual of year boundary", () => {
-    expect(formatReportRange("2026-08-01", "2026-09-01")).toBe("1 Agu – 1 Sep");
+    expect(formatReportRange("2026-08-01", "2026-09-01")).toBe(
+      "1 Agustus – 1 September 2026",
+    );
     expect(formatReportRange("2026-12-20", "2027-01-10")).toBe(
-      "20 Des 2026 – 10 Jan 2027",
+      "20 Desember 2026 – 10 Januari 2027",
     );
   });
 

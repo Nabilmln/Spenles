@@ -1,32 +1,9 @@
-export const REPORT_MONTHS_SHORT = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "Mei",
-  "Jun",
-  "Jul",
-  "Agu",
-  "Sep",
-  "Okt",
-  "Nov",
-  "Des",
-] as const;
-
-export const REPORT_MONTHS_LONG = [
-  "Januari",
-  "Februari",
-  "Maret",
-  "April",
-  "Mei",
-  "Juni",
-  "Juli",
-  "Agustus",
-  "September",
-  "Oktober",
-  "November",
-  "Desember",
-] as const;
+import {
+  formatDateLong,
+  formatDateLongNoYear,
+  formatMonthYearLabel,
+  formatRangeLong,
+} from "@/lib/dates/format-id";
 
 const DATE_KEY = /^(\d{4})-(\d{2})-(\d{2})$/u;
 const DAY_MS = 86_400_000;
@@ -101,32 +78,20 @@ export function todayJakartaDate(now: Date = new Date()) {
 }
 
 export function formatReportDay(value: string, includeYear: boolean) {
-  const parts = parseParts(value);
-  if (!parts) return value;
-  const month = REPORT_MONTHS_SHORT[parts.month - 1];
-  return includeYear
-    ? `${parts.day} ${month} ${parts.year}`
-    : `${parts.day} ${month}`;
+  return includeYear ? formatDateLong(value) : formatDateLongNoYear(value);
 }
 
 export function formatReportMonthYear(year: number, month: number) {
-  const long = REPORT_MONTHS_LONG[month - 1];
-  return `${long} ${year}`;
+  return formatMonthYearLabel(year, month);
 }
 
 /**
- * Formats an inclusive ISO date range using localized compact Indonesian style.
- * Same year:    01 Agu – 01 Sep
- * Cross year:   20 Des 2026 – 10 Jan 2027
+ * Formats an inclusive ISO date range using full Indonesian month names.
+ * Same year:    1 Agustus – 7 Agustus 2026
+ * Cross year:   20 Desember 2026 – 10 Januari 2027
  */
 export function formatReportRange(from: string, to: string) {
-  const start = parseParts(from);
-  const end = parseParts(to);
-  if (!start || !end) return `${from} – ${to}`;
-  if (start.year === end.year) {
-    return `${formatReportDay(from, false)} – ${formatReportDay(to, false)}`;
-  }
-  return `${formatReportDay(from, true)} – ${formatReportDay(to, true)}`;
+  return formatRangeLong(from, to);
 }
 
 export function daysInMonth(year: number, month: number) {

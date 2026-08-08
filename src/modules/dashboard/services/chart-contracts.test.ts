@@ -83,10 +83,10 @@ describe("four-day recent expense chart", () => {
       "2026-08-06",
     ]);
     expect(contract.points.map((point) => point.label)).toEqual([
-      "3 Agu",
-      "4 Agu",
-      "5 Agu",
-      "6 Agu",
+      "3 Agustus",
+      "4 Agustus",
+      "5 Agustus",
+      "6 Agustus",
     ]);
     expect(contract.points.map((point) => point.expenseIdr)).toEqual([
       "0",

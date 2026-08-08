@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
+import { formatDateLong } from "@/lib/dates/format-id";
 import { formatIdr } from "@/lib/money/format-idr";
 import {
   archiveSplitBillAction,
@@ -65,7 +66,7 @@ export function SplitBillDetail({ detail }: { detail: SplitBillDetailData }) {
         <article className="card">
           <div className="domain-card-heading">
             <div>
-              <p className="eyebrow">{detail.billDate}</p>
+              <p className="eyebrow">{formatDateLong(detail.billDate)}</p>
               <h2 className="entity-heading">{detail.merchantName}</h2>
             </div>
             <span className={`status-badge split-status-${detail.status}`}>

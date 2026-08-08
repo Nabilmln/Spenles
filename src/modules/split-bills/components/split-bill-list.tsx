@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ReceiptText } from "lucide-react";
 import { EmptyState } from "@/components/feedback/empty-state";
+import { formatDateLong } from "@/lib/dates/format-id";
 import { formatIdr } from "@/lib/money/format-idr";
 import type { SplitBillFilters } from "../schemas/split-bill-filters";
 import { SplitBillDeleteButton } from "./split-bill-delete-button";
@@ -75,7 +76,7 @@ export function SplitBillList({
           <article className="card domain-card" key={row.id}>
             <div className="domain-card-heading">
               <div>
-                <p className="eyebrow">{row.billDate}</p>
+                <p className="eyebrow">{formatDateLong(row.billDate)}</p>
                 <h2>{row.merchantName}</h2>
               </div>
               <span className={`status-badge split-status-${row.status}`}>

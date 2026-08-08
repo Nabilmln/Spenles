@@ -38,6 +38,13 @@ export function formatJakartaDate(value: Date) {
   return formatJakartaDateTimeInput(value).slice(0, 10);
 }
 
+export function formatJakartaDateLong(value: Date) {
+  return new Intl.DateTimeFormat("id-ID", {
+    timeZone: "Asia/Jakarta",
+    dateStyle: "long",
+  }).format(value);
+}
+
 export function jakartaNowDate() {
   return formatJakartaDate(new Date());
 }
@@ -56,7 +63,7 @@ export function preserveOrAttachNow(dateOnly: string, original?: Date): Date | n
 export function formatJakartaDateTime(value: Date) {
   return new Intl.DateTimeFormat("id-ID", {
     timeZone: "Asia/Jakarta",
-    dateStyle: "medium",
+    dateStyle: "long",
     timeStyle: "short",
   }).format(value);
 }

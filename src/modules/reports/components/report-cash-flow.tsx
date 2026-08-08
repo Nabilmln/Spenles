@@ -1,4 +1,5 @@
 import { formatIdr } from "@/lib/money/format-idr";
+import { formatDateLongNoYear } from "@/lib/dates/format-id";
 import { ChartShell, IncomeExpenseChart } from "@/modules/dashboard";
 import { formatReportRange } from "../lib/report-date";
 import type { ReportMonth } from "../types";
@@ -15,8 +16,8 @@ export type CashFlowPoint = {
 function monthLabel(period: string) {
   const [year, month] = period.split("-").map(Number);
   return new Intl.DateTimeFormat("id-ID", {
-    month: "short",
-    year: "2-digit",
+    month: "long",
+    year: "numeric",
     timeZone: "UTC",
   }).format(new Date(Date.UTC(year, month - 1, 1)));
 }
@@ -34,7 +35,10 @@ export function buildCashFlowPoints(series: ReportMonth[]): CashFlowPoint[] {
       maximum === 0n ? 0 : Number((value * 10_000n) / maximum) / 10_000;
     return {
       period: item.month,
-      label: item.month.length === 7 ? monthLabel(item.month) : item.month,
+      label:
+        item.month.length === 7
+          ? monthLabel(item.month)
+          : formatDateLongNoYear(item.month),
       incomeIdr: item.incomeIdr,
       expenseIdr: item.expenseIdr,
       incomePlot: plot(income),

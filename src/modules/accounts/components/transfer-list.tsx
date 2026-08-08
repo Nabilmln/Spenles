@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
-import { formatJakartaDateTime } from "@/lib/dates/jakarta";
+import { formatJakartaDateLong } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
 import {
   reverseTransferAction,
@@ -38,7 +38,7 @@ export function TransferList({ rows }: { rows: TransferListRow[] }) {
         <article className="card transfer-row" key={row.id}>
           <div>
             <strong>{row.sourceName} → {row.destinationName}</strong>
-            <p>{formatJakartaDateTime(row.transferredAt)}</p>
+            <p>{formatJakartaDateLong(row.transferredAt)}</p>
             {row.note ? <p>{row.note}</p> : null}
           </div>
           <strong>{formatIdr(row.amount)}</strong>

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
-import { formatJakartaDateTime } from "@/lib/dates/jakarta";
+import { formatJakartaDateLong } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
 import {
   archiveRecurringRuleAction,
@@ -70,7 +70,7 @@ export function RecurringRuleList({ rows }: { rows: RecurringRuleListRow[] }) {
           </strong>
           <p>{row.accountName} · {row.type === "income" ? "Pemasukan" : "Pengeluaran"}</p>
           <p>
-            Berikutnya: {row.nextOccurrenceAt ? formatJakartaDateTime(row.nextOccurrenceAt) : "Tidak ada"}
+            Berikutnya: {row.nextOccurrenceAt ? formatJakartaDateLong(row.nextOccurrenceAt) : "Tidak ada"}
           </p>
           {row.pauseReason ? (
             <p className="warning-copy">{reasonLabel[row.pauseReason]}</p>

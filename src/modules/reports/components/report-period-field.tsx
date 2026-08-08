@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { CalendarRange, ChevronDown } from "lucide-react";
+import { formatRangeLong } from "@/lib/dates/format-id";
 
 const OFFSET_MS = 7 * 60 * 60 * 1000;
 const pad = (value: number) => String(value).padStart(2, "0");
@@ -91,7 +92,7 @@ export function ReportPeriodField({
     form.requestSubmit();
   }
 
-  const label = `${from} s.d. ${to}`;
+  const label = formatRangeLong(from, to);
 
   return (
     <div className="date-range-field">
