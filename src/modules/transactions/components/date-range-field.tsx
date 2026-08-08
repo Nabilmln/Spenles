@@ -2,26 +2,10 @@
 
 import { useMemo, useState } from "react";
 import { CalendarRange, ChevronDown } from "lucide-react";
-import { formatRangeLong } from "@/lib/dates/format-id";
+import { monthShift, todayJakartaDate } from "@/lib/dates/calendar";
+import { formatMonthYearLabel, formatRangeLong } from "@/lib/dates/format-id";
 
-const OFFSET_MS = 7 * 60 * 60 * 1000;
 const pad = (value: number) => String(value).padStart(2, "0");
-const iso = (year: number, month: number, day: number) =>
-  `${year}-${pad(month)}-${pad(day)}`;
-
-function todayParts() {
-  const shifted = new Date(Date.now() + OFFSET_MS);
-  return {
-    year: shifted.getUTCFullYear(),
-    month: shifted.getUTCMonth() + 1,
-    day: shifted.getUTCDate(),
-  };
-}
-
-function monthsBack(year: number, month: number, count: number) {
-  const date = new Date(Date.UTC(year, month - 1 - count, 1));
-  return { year: date.getUTCFullYear(), month: date.getUTCMonth() + 1 };
-}
 
 function monthKey(year: number, month: number) {
   return `${year}-${pad(month)}`;
@@ -30,23 +14,21 @@ function monthKey(year: number, month: number) {
 function monthLabel(value: string) {
   const [year, month] = value.split("-").map(Number);
   if (!year || !month) return value;
-  return new Intl.DateTimeFormat("id-ID", {
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(new Date(Date.UTC(year, month - 1, 1)));
+  return formatMonthYearLabel(year, month);
 }
 
 const options = () => {
-  const today = todayParts();
-  const last = monthsBack(today.year, today.month, 1);
-  const lastThree = monthsBack(today.year, today.month, 2);
-  const lastSix = monthsBack(today.year, today.month, 5);
+  const today = todayJakartaDate();
+  const year = Number(today.slice(0, 4));
+  const month = Number(today.slice(5, 7));
+  const last = monthShift(year, month, -1);
+  const lastThree = monthShift(year, month, -2);
+  const lastSix = monthShift(year, month, -5);
   return [
     {
       id: "this-month",
       label: "Bulan ini",
-      month: monthKey(today.year, today.month),
+      month: monthKey(year, month),
       from: "",
       to: "",
     },
@@ -61,22 +43,22 @@ const options = () => {
       id: "last-3-months",
       label: "3 bulan terakhir",
       month: "",
-      from: iso(lastThree.year, lastThree.month, 1),
-      to: iso(today.year, today.month, today.day),
+      from: `${monthKey(lastThree.year, lastThree.month)}-01`,
+      to: today,
     },
     {
       id: "last-6-months",
       label: "6 bulan terakhir",
       month: "",
-      from: iso(lastSix.year, lastSix.month, 1),
-      to: iso(today.year, today.month, today.day),
+      from: `${monthKey(lastSix.year, lastSix.month)}-01`,
+      to: today,
     },
     {
       id: "this-year",
       label: "Tahun berjalan",
       month: "",
-      from: iso(today.year, 1, 1),
-      to: iso(today.year, today.month, today.day),
+      from: `${year}-01-01`,
+      to: today,
     },
   ];
 };
