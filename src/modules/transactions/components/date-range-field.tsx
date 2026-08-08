@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { CalendarRange, ChevronDown } from "lucide-react";
+import { CalendarRangeSelector } from "@/components/ui/calendar-range-selector";
 import { monthShift, todayJakartaDate } from "@/lib/dates/calendar";
 import { formatMonthYearLabel, formatRangeLong } from "@/lib/dates/format-id";
 
@@ -39,27 +40,13 @@ const options = () => {
       from: "",
       to: "",
     },
-    {
-      id: "last-3-months",
-      label: "3 bulan terakhir",
-      month: "",
-      from: `${monthKey(lastThree.year, lastThree.month)}-01`,
-      to: today,
-    },
-    {
-      id: "last-6-months",
-      label: "6 bulan terakhir",
-      month: "",
-      from: `${monthKey(lastSix.year, lastSix.month)}-01`,
-      to: today,
-    },
-    {
-      id: "this-year",
-      label: "Tahun berjalan",
-      month: "",
-      from: `${year}-01-01`,
-      to: today,
-    },
+    // {
+    //   id: "this-year",
+    //   label: "Tahun berjalan",
+    //   month: "",
+    //   from: `${year}-01-01`,
+    //   to: today,
+    // },
   ];
 };
 
@@ -126,28 +113,18 @@ export function DateRangeField({
               {option.label}
             </button>
           ))}
-          <div className="date-range-custom">
-            <input
-              aria-label="Tanggal awal"
-              className="input"
-              onChange={(event) => setCustomFrom(event.target.value)}
-              type="date"
-              value={customFrom}
+          <div className="date-range-calendar">
+            <span className="date-range-custom-heading">Rentang kustom</span>
+            <CalendarRangeSelector
+              from={customFrom}
+              maxDays={366}
+              onChange={(nextFrom, nextTo) => {
+                setCustomFrom(nextFrom);
+                setCustomTo(nextTo);
+                submitValues("", nextFrom, nextTo);
+              }}
+              to={customTo}
             />
-            <input
-              aria-label="Tanggal akhir"
-              className="input"
-              onChange={(event) => setCustomTo(event.target.value)}
-              type="date"
-              value={customTo}
-            />
-            <button
-              className="button button-secondary"
-              onClick={() => submitValues("", customFrom, customTo)}
-              type="button"
-            >
-              Terapkan rentang
-            </button>
           </div>
         </div>
       </details>

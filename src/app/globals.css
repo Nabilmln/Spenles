@@ -234,6 +234,8 @@ strong, b, h1, h2, h3, h4, h5, h6 { font-weight: 500; }
 .date-range-menu > button:hover, .date-range-menu > button:focus-visible { background: var(--surface-subtle); }
 .date-range-custom { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; padding: .6rem .35rem .2rem; border-top: 1px solid var(--border); }
 .date-range-custom .button { grid-column: 1 / -1; }
+.date-range-custom-heading { padding: 0 .35rem .1rem; color: var(--muted); font-size: .72rem; font-weight: 500; letter-spacing: .04em; text-transform: uppercase; }
+.date-range-calendar { padding: .65rem .35rem .2rem; border-top: 1px solid var(--border); }
 .transaction-list { display: grid; gap: .75rem; }
 .transaction-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: center; gap: 1rem; }
 .transaction-icon { display: grid; width: 2.7rem; height: 2.7rem; place-items: center; border-radius: 999px; }
