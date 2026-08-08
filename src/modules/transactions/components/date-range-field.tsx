@@ -23,8 +23,6 @@ const options = () => {
   const year = Number(today.slice(0, 4));
   const month = Number(today.slice(5, 7));
   const last = monthShift(year, month, -1);
-  const lastThree = monthShift(year, month, -2);
-  const lastSix = monthShift(year, month, -5);
   return [
     {
       id: "this-month",
@@ -40,13 +38,6 @@ const options = () => {
       from: "",
       to: "",
     },
-    // {
-    //   id: "this-year",
-    //   label: "Tahun berjalan",
-    //   month: "",
-    //   from: `${year}-01-01`,
-    //   to: today,
-    // },
   ];
 };
 

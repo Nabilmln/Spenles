@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
 import { Select } from "@/components/ui/select";
+import { MonthSelector } from "@/components/ui/month-selector";
 import type { SplitBillFilters } from "../schemas/split-bill-filters";
 
 export function activeSplitBillFilterCount(filters: SplitBillFilters) {
@@ -105,16 +106,10 @@ export function SplitBillFilterBar({
                   <option value="all">Semua</option>
                 </Select>
               </label>
-              <label className="field">
+              <div className="field">
                 <span>Bulan tagihan</span>
-                <input
-                  aria-label="Bulan tagihan"
-                  className="input"
-                  onChange={(event) => setMonth(event.target.value)}
-                  type="month"
-                  value={month}
-                />
-              </label>
+                <MonthSelector month={month} onChange={setMonth} />
+              </div>
               <label className="field">
                 <span>Urutkan</span>
                 <Select
