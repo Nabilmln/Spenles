@@ -51,6 +51,8 @@ export const fieldHintClass = "text-[.78rem] font-medium text-muted";
 
 export const mutedLinkClass = "text-[.78rem] font-medium text-muted";
 
+export const textLinkClass = "font-medium text-primary-600";
+
 export const eyebrowClass =
   "mb-[.65rem] text-[.75rem] font-medium uppercase tracking-[.12em] text-primary-600 dark:text-[#93c5fd]";
 

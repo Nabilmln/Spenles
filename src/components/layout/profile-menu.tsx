@@ -60,9 +60,9 @@ export function ProfileMenu({
         aria-label="Menu profil"
       >
         <span className="grid size-[2.35rem] place-items-center rounded-full bg-primary-600 font-medium text-white" aria-hidden="true">{initial}</span>
-        <span className="profile-trigger-copy">
-          <strong>{displayName}</strong>
-          <small>{email}</small>
+        <span className="hidden min-[861px]:block">
+          <strong className="block max-w-[10rem] truncate text-left text-[.85rem] leading-[1.2]">{displayName}</strong>
+          <small className="block max-w-[10rem] truncate text-left text-[.7rem] text-muted">{email}</small>
         </span>
       </button>
       {open ? (

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { Input } from "@/components/ui/input";
 import { FormMessage } from "@/components/ui/form-message";
+import { mutedLinkClass, textLinkClass } from "@/components/ui/styles";
 import { loginAction, type AuthActionState } from "../actions/login";
 import { PasswordField } from "./password-field";
 import { SubmitButton } from "./submit-button";
@@ -14,7 +15,7 @@ export function LoginForm() {
   const [state, action] = useActionState(loginAction, initialState);
 
   return (
-    <form action={action} className="auth-form" noValidate>
+    <form action={action} className="grid gap-[1.25rem]" noValidate>
       <FormMessage>{state.error}</FormMessage>
       <div className="field">
         <label htmlFor="email">Email</label>
@@ -34,7 +35,7 @@ export function LoginForm() {
       <div className="field">
         <div className="field-label-row">
           <label htmlFor="password">Kata sandi</label>
-          <span className="muted-link" aria-label="Pemulihan kata sandi belum tersedia">
+          <span className={mutedLinkClass} aria-label="Pemulihan kata sandi belum tersedia">
             Lupa kata sandi?
           </span>
         </div>
@@ -50,8 +51,8 @@ export function LoginForm() {
         </FormMessage>
       </div>
       <SubmitButton idleLabel="Masuk" pendingLabel="Memproses..." />
-      <p className="auth-alternative">
-        Belum punya akun? <Link href="/register">Daftar sekarang</Link>
+      <p className="mt-[.3rem] text-center text-[.88rem] text-muted">
+        Belum punya akun? <Link className={textLinkClass} href="/register">Daftar sekarang</Link>
       </p>
     </form>
   );

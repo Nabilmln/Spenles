@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowDownLeft, ArrowUpRight, List } from "lucide-react";
 import { formatJakartaDateLong } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
+import { textLinkClass } from "@/components/ui/styles";
 import type { RecentDashboardTransaction } from "../types/dashboard";
 
 const JAKARTA_OFFSET_MS = 7 * 60 * 60 * 1000;
@@ -58,7 +59,7 @@ export function RollingThreeDayTransactions({
           <p className="eyebrow">Aktivitas terbaru</p>
           <h2 id="rolling-three-day-title">3 hari terakhir</h2>
         </div>
-        <Link className="text-link dashboard-link" href="/transactions">
+        <Link className={`${textLinkClass} dashboard-link`} href="/transactions">
           <List size={17} aria-hidden="true" />
           Lihat semua
         </Link>

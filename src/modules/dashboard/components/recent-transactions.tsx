@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowDownLeft, ArrowUpRight, List } from "lucide-react";
 import { formatJakartaDateLong } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
+import { textLinkClass } from "@/components/ui/styles";
 import type { RecentDashboardTransaction } from "../types/dashboard";
 
 export function RecentTransactions({
@@ -16,7 +17,7 @@ export function RecentTransactions({
           <p className="eyebrow">Aktivitas terbaru</p>
           <h2 id="recent-transactions-title">Transaksi pada periode ini</h2>
         </div>
-        <Link className="text-link dashboard-link" href="/transactions">
+        <Link className={`${textLinkClass} dashboard-link`} href="/transactions">
           <List size={17} />
           Lihat semua
         </Link>

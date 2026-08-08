@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { Input } from "@/components/ui/input";
 import { FormMessage } from "@/components/ui/form-message";
+import { textLinkClass } from "@/components/ui/styles";
 import { registerAction } from "../actions/register";
 import type { AuthActionState } from "../actions/login";
 import { PasswordField } from "./password-field";
@@ -15,7 +16,7 @@ export function RegisterForm() {
   const [state, action] = useActionState(registerAction, initialState);
 
   return (
-    <form action={action} className="auth-form" noValidate>
+    <form action={action} className="grid gap-[1.25rem]" noValidate>
       <FormMessage>{state.error}</FormMessage>
       <div className="field">
         <label htmlFor="name">Nama</label>
@@ -73,8 +74,8 @@ export function RegisterForm() {
         </FormMessage>
       </div>
       <SubmitButton idleLabel="Buat akun" pendingLabel="Mendaftarkan..." />
-      <p className="auth-alternative">
-        Sudah punya akun? <Link href="/login">Masuk</Link>
+      <p className="mt-[.3rem] text-center text-[.88rem] text-muted">
+        Sudah punya akun? <Link className={textLinkClass} href="/login">Masuk</Link>
       </p>
     </form>
   );

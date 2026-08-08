@@ -65,7 +65,7 @@ export function HeaderContent({
       {showBack ? (
         <BackButton fallback={meta.back} />
       ) : (
-        <div className="mobile-brand"><Brand /></div>
+        <div className="hidden max-[860px]:block max-[860px]:flex-1 max-[860px]:[&_a>:last-child]:hidden"><Brand /></div>
       )}
       {showBack && meta.title ? (
         <h1 className="app-header-title m-0 min-w-0 truncate text-[1.05rem] font-medium max-[540px]:text-[.95rem]">{meta.title}</h1>
