@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { requireSessionUser } from "@/lib/auth/require-session";
+import { cardClass } from "@/components/ui/styles";
 import { formatJakartaDate } from "@/lib/dates/jakarta";
 import { getTransaction, getTransactionOptions, TransactionForm, updateTransactionAction } from "@/modules/transactions";
 
@@ -11,7 +12,7 @@ export default async function EditTransactionPage({ params }: { params: Promise<
   const options = await getTransactionOptions(user.id, transaction.categoryId);
   return (
     <div className="page-stack narrow-page">
-      <div className="card">
+      <div className={cardClass}>
         <TransactionForm
           action={updateTransactionAction}
           {...options}

@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { successMessageClass } from "@/components/ui/styles";
 import type {
   SplitBillActionState,
 } from "../actions/split-bill-actions";
@@ -504,7 +505,7 @@ export function SplitBillEditor({
 
           <FormMessage>{state.error}</FormMessage>
           {state.success ? (
-            <p className="success-message" role="status">{state.success}</p>
+            <p className={successMessageClass} role="status">{state.success}</p>
           ) : null}
           <Button type="submit" disabled={pending}>
             {pending ? "Memverifikasi..." : initial.id ? "Simpan draft" : "Buat draft"}

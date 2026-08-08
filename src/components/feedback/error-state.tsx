@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { statePanelClass } from "@/components/ui/styles";
 
 export function ErrorState({
   title = "Terjadi kendala",
@@ -12,9 +13,9 @@ export function ErrorState({
   retry?: () => void;
 }) {
   return (
-    <div className="state-panel" role="alert">
+    <div className={statePanelClass} role="alert">
       <h2>{title}</h2>
-      <p>{message}</p>
+      <p className="m-0 text-muted">{message}</p>
       {retry ? <Button onClick={retry}>Coba lagi</Button> : null}
     </div>
   );

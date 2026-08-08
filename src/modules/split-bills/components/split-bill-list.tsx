@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ReceiptText } from "lucide-react";
 import { EmptyState } from "@/components/feedback/empty-state";
+import { buttonClass } from "@/components/ui/styles";
 import { formatDateLong } from "@/lib/dates/format-id";
 import { formatIdr } from "@/lib/money/format-idr";
 import type { SplitBillFilters } from "../schemas/split-bill-filters";
@@ -57,11 +58,11 @@ export function SplitBillList({
         }
         action={
           hasFilters ? (
-            <Link className="button button-secondary" href="/split-bills">
+            <Link className={buttonClass("secondary", "w-full justify-center")} href="/split-bills">
               Reset filter
             </Link>
           ) : (
-            <Link className="button button-primary" href="/split-bills/new">
+            <Link className={buttonClass("primary", "w-full justify-center")} href="/split-bills/new">
               Buat Split Bill
             </Link>
           )
@@ -88,7 +89,7 @@ export function SplitBillList({
               {row.finalAmount ? formatIdr(row.finalAmount) : "Belum final"}
             </strong>
             <Link
-              className="button button-secondary"
+              className={buttonClass("secondary")}
               href={
                 row.status === "draft"
                   ? `/split-bills/${row.id}/edit`
@@ -103,7 +104,7 @@ export function SplitBillList({
       </div>
       <nav className="pagination" aria-label="Paginasi tagihan patungan">
         <Link
-          className={`button button-secondary ${filters.page <= 1 ? "disabled" : ""}`}
+          className={`${buttonClass("secondary")} ${filters.page <= 1 ? "disabled" : ""}`}
           aria-disabled={filters.page <= 1}
           href={pageHref(filters, Math.max(1, filters.page - 1))}
         >
@@ -113,7 +114,7 @@ export function SplitBillList({
           Halaman {filters.page} dari {totalPages} · {total} tagihan
         </span>
         <Link
-          className={`button button-secondary ${filters.page >= totalPages ? "disabled" : ""}`}
+          className={`${buttonClass("secondary")} ${filters.page >= totalPages ? "disabled" : ""}`}
           aria-disabled={filters.page >= totalPages}
           href={pageHref(filters, Math.min(totalPages, filters.page + 1))}
         >

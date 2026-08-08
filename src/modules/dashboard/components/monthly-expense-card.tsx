@@ -1,3 +1,4 @@
+import { buttonClass } from "@/components/ui/styles";
 import { formatIdr } from "@/lib/money/format-idr";
 import type { DailyExpensePoint } from "../types/dashboard";
 import { DailyExpenseChart } from "./daily-expense-chart";
@@ -36,7 +37,7 @@ export function MonthlyExpenseCard({
           </form>
           <form action="/dashboard" method="get">
             <input name="month" type="hidden" value={currentMonth} />
-            <button className="button button-secondary" type="submit">
+            <button className={buttonClass("secondary")} type="submit">
               Bulan ini
             </button>
           </form>

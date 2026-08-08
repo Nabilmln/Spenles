@@ -7,10 +7,17 @@ afterEach(cleanup);
 const MASK = "••••••";
 
 function renderOverview(income = "4500000", expense = "1200000") {
-  return render(<FinancialOverview income={income} expense={expense} />);
+  return render(
+    <FinancialOverview income={income} expense={expense} name="Nabil" />,
+  );
 }
 
 describe("FinancialOverview", () => {
+  it("shows the greeting together with the user name", () => {
+    renderOverview();
+    expect(screen.getByRole("heading", { name: "Halo, Nabil" })).toBeInTheDocument();
+  });
+
   it("shows Pendapatan and Pengeluaran labels together with both values", () => {
     renderOverview();
     expect(screen.getByText("Pendapatan")).toBeInTheDocument();

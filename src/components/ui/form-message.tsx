@@ -1,3 +1,5 @@
+import { formMessageClass } from "./styles";
+
 export function FormMessage({
   id,
   children,
@@ -8,7 +10,7 @@ export function FormMessage({
   if (!children) return null;
 
   return (
-    <p id={id} className="form-message" role="alert">
+    <p id={id} className={formMessageClass} role="alert">
       {children}
     </p>
   );

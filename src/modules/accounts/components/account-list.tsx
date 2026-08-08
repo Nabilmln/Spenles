@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
+import { buttonClass } from "@/components/ui/styles";
 import { formatIdr } from "@/lib/money/format-idr";
 import {
   archiveAccountAction,
@@ -68,7 +69,7 @@ export function AccountList({ rows }: { rows: AccountBalanceRow[] }) {
               <p className="warning-copy">Saldo akun negatif.</p>
             ) : null}
             <div className="form-actions">
-              <Link className="button button-secondary" href={`/accounts/${row.id}`}>
+              <Link className={buttonClass("secondary")} href={`/accounts/${row.id}`}>
                 Detail
               </Link>
               <AccountStatusForm row={row} />

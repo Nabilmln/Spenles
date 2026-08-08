@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { CalendarRange, ChevronDown } from "lucide-react";
+import { buttonClass } from "@/components/ui/styles";
 import { formatRangeLong } from "@/lib/dates/format-id";
 
 const OFFSET_MS = 7 * 60 * 60 * 1000;
@@ -134,7 +135,7 @@ export function ReportPeriodField({
               value={customTo}
             />
             <button
-              className="button button-secondary"
+              className={buttonClass("secondary")}
               onClick={() => submitValues(customFrom, customTo)}
               type="button"
             >

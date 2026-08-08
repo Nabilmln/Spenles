@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ReceiptText } from "lucide-react";
+import { buttonClass } from "@/components/ui/styles";
 
 export function DashboardEmptyState() {
   return (
@@ -12,7 +13,7 @@ export function DashboardEmptyState() {
           terbentuk.
         </p>
       </div>
-      <Link className="button button-primary" href="/transactions/new">
+      <Link className={buttonClass("primary")} href="/transactions/new">
         Tambah transaksi
       </Link>
     </section>

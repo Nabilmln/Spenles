@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { CalendarRange, FileSpreadsheet, FileText, X } from "lucide-react";
+import { buttonClass } from "@/components/ui/styles";
 import { formatReportRange } from "../lib/report-date";
 import { ReportDateRangePicker } from "./report-date-range-picker";
 
@@ -98,11 +99,11 @@ export function ReportToolbar({
               Rentang {rangeLabel} akan dipakai untuk ekspor.
             </p>
             <div className="report-export-options">
-              <a className="button button-secondary report-export-option" href={pdfHref}>
+              <a className={`${buttonClass("secondary")} report-export-option`} href={pdfHref}>
                 <FileText aria-hidden="true" size={18} />
                 Export PDF
               </a>
-              <a className="button button-secondary report-export-option" href={csvHref}>
+              <a className={`${buttonClass("secondary")} report-export-option`} href={csvHref}>
                 <FileSpreadsheet aria-hidden="true" size={18} />
                 Export CSV
               </a>

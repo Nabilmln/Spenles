@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { successMessageClass } from "@/components/ui/styles";
 import { formatJakartaDateTimeInput } from "@/lib/dates/jakarta";
 import {
   createTransferAction,
@@ -59,7 +60,7 @@ export function TransferForm({
         <textarea className="input textarea" id="transfer-note" name="note" maxLength={500} />
       </div>
       <FormMessage>{state.error}</FormMessage>
-      {state.success ? <p className="success-message" role="status">{state.success}</p> : null}
+      {state.success ? <p className={successMessageClass} role="status">{state.success}</p> : null}
       <Button type="submit" disabled={pending || accounts.length < 2}>
         {pending ? "Menyimpan..." : "Catat transfer"}
       </Button>

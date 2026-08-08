@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
 import { Select } from "@/components/ui/select";
+import { buttonClass } from "@/components/ui/styles";
 import type { TransactionFilters } from "../schemas/transaction-filters";
 import { DateRangeField } from "./date-range-field";
 
@@ -172,10 +173,10 @@ export function TransactionFilterBar({
               </label>
             </div>
             <div className="tx-sheet-actions">
-              <Link className="button button-secondary" href="/transactions">
+              <Link className={buttonClass("secondary")} href="/transactions">
                 Reset
               </Link>
-              <button className="button button-primary" type="submit">
+              <button className={buttonClass("primary")} type="submit">
                 Terapkan Filter
               </button>
             </div>

@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
 import { Select } from "@/components/ui/select";
 import { MonthSelector } from "@/components/ui/month-selector";
+import { buttonClass } from "@/components/ui/styles";
 import type { SplitBillFilters } from "../schemas/split-bill-filters";
 
 export function activeSplitBillFilterCount(filters: SplitBillFilters) {
@@ -140,10 +141,10 @@ export function SplitBillFilterBar({
               </label>
             </div>
             <div className="tx-sheet-actions">
-              <Link className="button button-secondary" href="/split-bills">
+              <Link className={buttonClass("secondary")} href="/split-bills">
                 Reset
               </Link>
-              <button className="button button-primary" type="submit">
+              <button className={buttonClass("primary")} type="submit">
                 Terapkan Filter
               </button>
             </div>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
+import { buttonClass, emptyStateClass } from "@/components/ui/styles";
 import { formatIdr } from "@/lib/money/format-idr";
 import {
   archiveBudgetAction,
@@ -43,7 +44,7 @@ function BudgetStatusForm({ row }: { row: BudgetListRow }) {
 
 export function BudgetList({ rows }: { rows: BudgetListRow[] }) {
   if (rows.length === 0) {
-    return <div className="empty-state"><p>Belum ada anggaran bulanan.</p></div>;
+    return <div className={emptyStateClass}><p className="m-0 text-muted">Belum ada anggaran bulanan.</p></div>;
   }
   return (
     <div className="domain-grid">
@@ -80,7 +81,7 @@ export function BudgetList({ rows }: { rows: BudgetListRow[] }) {
             </dl>
             <div className="form-actions">
               {row.recordStatus === "active" ? (
-                <Link className="button button-secondary" href={`/budgets/${row.id}/edit`}>Edit</Link>
+                <Link className={buttonClass("secondary")} href={`/budgets/${row.id}/edit`}>Edit</Link>
               ) : null}
               <BudgetStatusForm row={row} />
             </div>

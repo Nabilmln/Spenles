@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { passwordToggleClass, passwordWrapClass } from "@/components/ui/styles";
 
 export function PasswordField({
   id,
@@ -20,7 +21,7 @@ export function PasswordField({
   const [visible, setVisible] = useState(false);
 
   return (
-    <div className="password-wrap">
+    <div className={passwordWrapClass}>
       <Input
         id={id}
         name={name}
@@ -28,10 +29,11 @@ export function PasswordField({
         autoComplete={autoComplete}
         aria-describedby={describedBy}
         aria-invalid={invalid}
+        className="pr-12"
         required
       />
       <button
-        className="password-toggle"
+        className={passwordToggleClass}
         type="button"
         onClick={() => setVisible((value) => !value)}
         aria-label={visible ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}

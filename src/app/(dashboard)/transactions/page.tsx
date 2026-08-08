@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { requireSessionUser } from "@/lib/auth/require-session";
+import { buttonClass, cardClass } from "@/components/ui/styles";
 import {
   getTransactionOptions,
   getTransactionSummary,
@@ -22,7 +23,7 @@ export default async function TransactionsPage({
   if (!parsed.success) {
     return (
       <div className="page-stack">
-        <div className="card"><p>Parameter pencarian atau filter tidak dapat digunakan.</p><Link className="button button-primary" href="/transactions">Reset filter</Link></div>
+        <div className={cardClass}><p className="m-0 text-muted">Parameter pencarian atau filter tidak dapat digunakan.</p><Link className={buttonClass("primary")} href="/transactions">Reset filter</Link></div>
       </div>
     );
   }

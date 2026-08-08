@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { successMessageClass } from "@/components/ui/styles";
 import type { SplitBillActionState } from "../actions/split-bill-actions";
 import { calculateSplitBill } from "../services/calculator";
 import type {
@@ -469,7 +470,7 @@ export function SplitBillCreateFlow({
 
         <FormMessage>{state.error}</FormMessage>
         {state.success ? (
-          <p className="success-message" role="status">
+          <p className={successMessageClass} role="status">
             {state.success}
           </p>
         ) : null}

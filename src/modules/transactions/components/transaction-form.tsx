@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormMessage } from "@/components/ui/form-message";
 import { Select } from "@/components/ui/select";
+import { buttonClass, formMessageClass, inputDisplayClass } from "@/components/ui/styles";
 import { formatIdr } from "@/lib/money/format-idr";
 
 type Option = { id: string; name: string; type?: string };
@@ -160,7 +161,7 @@ export function TransactionForm({
             <Button type="submit" disabled={pending}>
               {pending ? "Menyimpan..." : "Konfirmasi"}
             </Button>
-            <Link className="button button-secondary" href="/transactions">Batal</Link>
+            <Link className={buttonClass("secondary")} href="/transactions">Batal</Link>
           </div>
         </>
       )}
@@ -242,7 +243,7 @@ function AmountField({
         aria-expanded={open}
         aria-label="Isi jumlah nominal menggunakan kalkulator"
       >
-        <span className="input-display">{amount ? formatIdr(amount) : "Ketik nominal"}</span>
+        <span className={`${inputDisplayClass} text-foreground text-[1.05rem]`}>{amount ? formatIdr(amount) : "Ketik nominal"}</span>
       </button>
       {amount ? (
         <input type="hidden" name="amount" value={amount} />
@@ -388,7 +389,7 @@ function SavingsFields({
         ))}
       </fieldset>
       {!hasSavings ? (
-        <p className="form-message">
+        <p className={formMessageClass}>
           Buat akun berjenis Tabungan terlebih dahulu di halaman Akun sebelum mencatat tabungan.
         </p>
       ) : null}
@@ -427,7 +428,7 @@ function SavingsFields({
         <Button type="submit" disabled={pending || !hasSavings} aria-describedby={errorId}>
           {pending ? "Menyimpan..." : "Konfirmasi"}
         </Button>
-        <Link className="button button-secondary" href="/transactions">Batal</Link>
+        <Link className={buttonClass("secondary")} href="/transactions">Batal</Link>
       </div>
     </>
   );

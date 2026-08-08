@@ -17,6 +17,7 @@ import {
   updateCategoryAction,
 } from "../actions/category-actions";
 import { resolveCategoryIcon } from "../constants/category-icons";
+import { buttonClass, formMessageClass, successMessageClass } from "@/components/ui/styles";
 import { CategoryForm } from "./category-form";
 
 type CategoryItem = {
@@ -95,7 +96,7 @@ export function CategoryManager({
         </div>
         <button
           aria-label="Tambah Kategori"
-          className="button button-primary category-add-button"
+          className={`${buttonClass("primary")} category-add-button`}
           onClick={openCreate}
           type="button"
         >
@@ -282,7 +283,7 @@ function ArchiveButton({ categoryId }: { categoryId: string }) {
   return (
     <form action={formAction} className="category-menu-form">
       <input name="id" type="hidden" value={categoryId} />
-      {state.error ? <p className="form-message category-menu-error" role="alert">{state.error}</p> : null}
+      {state.error ? <p className={`${formMessageClass} category-menu-error`} role="alert">{state.error}</p> : null}
       <button className="category-menu-item" disabled={pending} role="menuitem" type="submit">
         <Archive aria-hidden="true" size={18} />
         {pending ? "Memproses..." : "Arsipkan"}
@@ -296,7 +297,7 @@ function RestoreButton({ categoryId }: { categoryId: string }) {
   return (
     <form action={formAction} className="category-menu-form">
       <input name="id" type="hidden" value={categoryId} />
-      {state.error ? <p className="form-message category-menu-error" role="alert">{state.error}</p> : null}
+      {state.error ? <p className={`${formMessageClass} category-menu-error`} role="alert">{state.error}</p> : null}
       <button className="category-menu-item" disabled={pending} role="menuitem" type="submit">
         <ArchiveRestore aria-hidden="true" size={18} />
         {pending ? "Memproses..." : "Pulihkan"}
@@ -361,9 +362,9 @@ function DeleteButton({ categoryId }: { categoryId: string }) {
   return (
     <form action={formAction} className="category-confirm-form">
       <input name="id" type="hidden" value={categoryId} />
-      {state.error ? <p className="form-message" role="alert">{state.error}</p> : null}
-      {state.success ? <p className="success-message">{state.success}</p> : null}
-      <button className="button button-danger" disabled={pending} type="submit">
+      {state.error ? <p className={formMessageClass} role="alert">{state.error}</p> : null}
+      {state.success ? <p className={successMessageClass}>{state.success}</p> : null}
+      <button className={buttonClass("danger")} disabled={pending} type="submit">
         {pending ? "Menghapus..." : "Hapus permanen"}
       </button>
     </form>

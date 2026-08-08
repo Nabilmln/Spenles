@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { successMessageClass } from "@/components/ui/styles";
 import type { CategoryActionState } from "../actions/category-actions";
 import { CATEGORY_COLORS } from "../constants/category-options";
 import { CategoryIconPicker } from "./category-icon-picker";
@@ -51,7 +52,7 @@ export function CategoryForm({
         </Select>
       </div>
       <FormMessage>{state.error}</FormMessage>
-      {state.success ? <p className="success-message">{state.success}</p> : null}
+      {state.success ? <p className={successMessageClass}>{state.success}</p> : null}
       <Button type="submit" disabled={pending}>{pending ? "Menyimpan..." : initial ? "Simpan perubahan" : "Tambah Kategori"}</Button>
     </form>
   );

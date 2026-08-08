@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { requireSessionUser } from "@/lib/auth/require-session";
+import { buttonClass } from "@/components/ui/styles";
 import { BudgetList, listOwnedBudgets } from "@/modules/budgets";
 
 export const metadata = { title: "Anggaran" };
@@ -12,7 +13,7 @@ export default async function BudgetsPage() {
     <div className="page-stack">
       <div className="page-heading-row">
         <p className="page-description">Pemakaian dihitung dari transaksi pengeluaran aktif dalam bulan Jakarta.</p>
-        <Link className="button button-primary" href="/budgets/new">Buat anggaran</Link>
+        <Link className={buttonClass("primary")} href="/budgets/new">Buat anggaran</Link>
       </div>
       <BudgetList rows={rows} />
     </div>

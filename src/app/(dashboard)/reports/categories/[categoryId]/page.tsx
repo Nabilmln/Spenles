@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowDownLeft, ArrowUpRight, Pencil } from "lucide-react";
 import { notFound } from "next/navigation";
 import { requireSessionUser } from "@/lib/auth/require-session";
+import { buttonClass, emptyStateClass } from "@/components/ui/styles";
 import { formatJakartaDateLong } from "@/lib/dates/jakarta";
 import { formatRangeLong } from "@/lib/dates/format-id";
 import { formatIdr } from "@/lib/money/format-idr";
@@ -55,7 +56,7 @@ export default async function CategoryDetailPage({
           <h2 className="entity-heading">{category.name}</h2>
           <p className="page-description">{`Rincian ${category.type === "income" ? "pemasukan" : "pengeluaran"} dari ${formatRangeLong(from, to)} dalam Asia/Jakarta.`}</p>
         </div>
-        <Link className="button button-secondary" href={`/reports?from=${from}&to=${to}`}>
+        <Link className={buttonClass("secondary")} href={`/reports?from=${from}&to=${to}`}>
           Kembali ke laporan
         </Link>
       </div>
@@ -95,10 +96,10 @@ export default async function CategoryDetailPage({
           ))}
         </div>
       ) : (
-        <div className="empty-state">
+        <div className={emptyStateClass}>
           <div>
             <h2>Belum ada transaksi</h2>
-            <p>Tidak ada transaksi pada kategori dan periode ini.</p>
+            <p className="m-0 text-muted">Tidak ada transaksi pada kategori dan periode ini.</p>
           </div>
         </div>
       )}

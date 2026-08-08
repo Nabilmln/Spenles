@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormMessage } from "@/components/ui/form-message";
 import { Select } from "@/components/ui/select";
+import { inputDisplayClass, successMessageClass } from "@/components/ui/styles";
 import {
   updateProfileAction,
   type ProfileActionState,
@@ -29,7 +30,7 @@ export function ProfileForm({
     <form action={action} className="settings-form">
       <FormMessage>{state.error}</FormMessage>
       {state.success ? (
-        <p className="success-message" role="status">
+        <p className={successMessageClass} role="status">
           {state.success}
         </p>
       ) : null}
@@ -55,7 +56,7 @@ export function ProfileForm({
       <div className="settings-grid">
         <div className="field">
           <label htmlFor="defaultCurrency">Mata uang</label>
-          <div className="input-display" id="defaultCurrency">
+          <div className={inputDisplayClass} id="defaultCurrency">
             IDR — Rupiah Indonesia
           </div>
           <input type="hidden" name="defaultCurrency" value="IDR" />
@@ -63,7 +64,7 @@ export function ProfileForm({
         </div>
         <div className="field">
           <label htmlFor="timezone">Zona waktu</label>
-          <div className="input-display" id="timezone">Asia/Jakarta</div>
+          <div className={inputDisplayClass} id="timezone">Asia/Jakarta</div>
           <input type="hidden" name="timezone" value="Asia/Jakarta" />
           <span className="field-hint">
             Spenles hanya mendukung Asia/Jakarta.

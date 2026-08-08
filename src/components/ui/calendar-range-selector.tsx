@@ -9,6 +9,7 @@ import {
   todayJakartaDate,
 } from "@/lib/dates/calendar";
 import { formatDateLong, formatMonthYearLabel } from "@/lib/dates/format-id";
+import { buttonClass, formMessageClass } from "./styles";
 
 const WEEK_DAYS = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
 
@@ -90,11 +91,11 @@ export function CalendarRangeSelector({
   }
 
   return (
-    <div className="calendar-selector">
-      <div className="calendar-nav" role="group" aria-label="Navigasi bulan">
+    <div className="min-w-[19rem]">
+      <div className="mb-[.65rem] flex items-center justify-between gap-[.5rem]" role="group" aria-label="Navigasi bulan">
         <button
           aria-label="Bulan sebelumnya"
-          className="icon-button"
+          className="icon-button size-10"
           onClick={() =>
             setView((current) => monthShift(current.year, current.month, -1))
           }
@@ -107,7 +108,7 @@ export function CalendarRangeSelector({
         </strong>
         <button
           aria-label="Bulan berikutnya"
-          className="icon-button"
+          className="icon-button size-10"
           onClick={() =>
             setView((current) => monthShift(current.year, current.month, 1))
           }
@@ -117,19 +118,19 @@ export function CalendarRangeSelector({
         </button>
       </div>
 
-      <div className="calendar-weekdays" aria-hidden="true">
+      <div className="mb-[.35rem] grid grid-cols-7 gap-1" aria-hidden="true">
         {WEEK_DAYS.map((day) => (
-          <span key={day}>{day}</span>
+          <span className="text-center text-[.72rem] font-medium text-muted" key={day}>{day}</span>
         ))}
       </div>
 
-      <div className="calendar-grid" role="grid" aria-label="Kalender bulan">
+      <div className="grid grid-cols-7 gap-1" role="grid" aria-label="Kalender bulan">
         {grid.map((cell, index) => {
           if (!cell) {
             return (
               <span
                 aria-hidden="true"
-                className="calendar-blank"
+                className="grid min-h-[2.5rem] place-items-center rounded-[.6rem] text-[.88rem]"
                 key={`blank-${index}`}
               />
             );
@@ -140,15 +141,12 @@ export function CalendarRangeSelector({
           const isInRange =
             hasRange && cell.date >= pendingFrom! && cell.date <= pendingTo!;
           const isToday = cell.date === today;
-          const hyphen = pendingFrom && pendingTo && pendingFrom !== pendingTo;
           const className = [
-            "calendar-day",
-            isToday ? "calendar-today" : "",
-            isStart ? "calendar-start" : "",
-            isEnd ? "calendar-end" : "",
-            isInRange ? "calendar-range" : "",
-            isFuture ? "calendar-future" : "",
-            hyphen && (isStart || isEnd) ? "calendar-drag" : "",
+            "grid min-h-[2.5rem] place-items-center text-[.88rem] cursor-pointer border border-transparent bg-surface-subtle text-foreground hover:enabled:bg-primary-50 disabled:cursor-not-allowed disabled:text-muted disabled:opacity-50",
+            isToday ? "border-primary-600 font-medium" : "",
+            isStart ? "relative z-[1] rounded-l-[.6rem] bg-primary-600 font-medium text-white" : "",
+            isEnd ? "relative z-[1] rounded-r-[.6rem] bg-primary-600 font-medium text-white" : "",
+            isInRange && !isStart && !isEnd ? "rounded-none bg-primary-50" : "",
           ]
             .filter(Boolean)
             .join(" ");
@@ -174,18 +172,18 @@ export function CalendarRangeSelector({
         })}
       </div>
 
-      <div className="calendar-summary" aria-live="polite">
+      <div className="mt-[.9rem] min-h-[1.4rem] text-[.88rem] text-foreground" aria-live="polite">
         {hasRange ? (
           <span>
             <strong>{formatDateLong(pendingFrom)}</strong> –{" "}
             <strong>{formatDateLong(pendingTo)}</strong>
-            <span className="muted">
+            <span className="text-muted">
               {" "}
               ({inclusiveDayCount(pendingFrom, pendingTo)} hari)
             </span>
           </span>
         ) : (
-          <span className="muted">
+          <span className="text-muted">
             {pendingFrom
               ? "Pilih tanggal akhir."
               : "Pilih tanggal mulai lalu tanggal akhir."}
@@ -194,16 +192,16 @@ export function CalendarRangeSelector({
       </div>
 
       {error ? (
-        <p className="form-message" role="alert">
+        <p className={formMessageClass} role="alert">
           {error}
         </p>
       ) : null}
 
       {onApply ? (
-        <div className="calendar-actions">
+        <div className="mt-[1.1rem] flex justify-end gap-[.6rem]">
           <button
             aria-label="Reset rentang"
-            className="button button-secondary"
+            className={`${buttonClass("secondary")} max-[720px]:flex-1 max-[720px]:justify-center`}
             onClick={reset}
             type="button"
           >
@@ -211,14 +209,18 @@ export function CalendarRangeSelector({
           </button>
           {onCancel ? (
             <button
-              className="button button-secondary"
+              className={`${buttonClass("secondary")} max-[720px]:flex-1 max-[720px]:justify-center`}
               onClick={onCancel}
               type="button"
             >
               Batal
             </button>
           ) : null}
-          <button className="button button-primary" onClick={apply} type="button">
+          <button
+            className={`${buttonClass("primary")} max-[720px]:flex-1 max-[720px]:justify-center`}
+            onClick={apply}
+            type="button"
+          >
             Terapkan
           </button>
         </div>

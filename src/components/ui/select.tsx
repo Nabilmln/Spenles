@@ -129,10 +129,10 @@ export function Select({
   }
 
   return (
-    <span className="select">
+    <span className="relative block w-full">
       <select
         aria-label={ariaLabel}
-        className="select-hidden"
+        className="absolute -m-px size-px overflow-hidden whitespace-nowrap border-0 p-0 [clip:rect(0_0_0_0)]"
         defaultValue={defaultValue}
         disabled={disabled}
         id={idProp ?? ownId}
@@ -160,7 +160,10 @@ export function Select({
         aria-expanded={open}
         aria-haspopup="listbox"
         aria-label={ariaLabel}
-        className={cn("select-trigger", className)}
+        className={cn(
+          "flex w-full min-h-[2.9rem] cursor-pointer items-center justify-between gap-[.5rem] rounded-[.72rem] border border-border bg-surface-subtle px-[.85rem] py-[.72rem] text-left font-medium text-foreground transition-[border,box-shadow] duration-150 focus:border-primary-500 focus:shadow-[0_0_0_3px_rgb(59_130_246/12%)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-65",
+          className,
+        )}
         disabled={disabled}
         onClick={() => {
           if (open) {
@@ -172,33 +175,39 @@ export function Select({
         ref={triggerRef}
         type="button"
       >
-        <span className={cn("select-value", !currentValue && placeholder && "select-placeholder")}>
+        <span className={cn("min-w-0 flex-1 truncate text-[.88rem]", !currentValue && placeholder && "font-medium text-muted")}>
           {currentValue ? selectedText : placeholder ?? selectedText}
         </span>
-        <ChevronDown aria-hidden="true" className="select-chevron" size={18} />
+        <ChevronDown aria-hidden="true" className="shrink-0 text-muted" size={18} />
       </button>
 
       {open ? (
-        <div className="dd-backdrop" onClick={() => setOpen(false)}>
+        <div
+          className="fixed inset-0 z-[70] flex items-end justify-center bg-[rgb(15_17_21/45%)] p-4 pb-[max(1rem,env(safe-area-inset-bottom))] min-[861px]:pointer-events-none min-[861px]:items-start min-[861px]:justify-start min-[861px]:bg-transparent min-[861px]:p-0"
+          onClick={() => setOpen(false)}
+        >
           <div
             aria-label={ariaLabel}
-            className="dd-panel"
+            className="grid w-[min(28rem,100%)] max-h-[70vh] grid-rows-[auto_minmax(0,1fr)] overflow-hidden rounded-[1.15rem_1.15rem_1rem_1rem] border border-border bg-surface shadow-card min-[861px]:absolute min-[861px]:z-[5] min-[861px]:w-[min(24rem,calc(100vw-2rem))]"
             id={listboxId}
             onClick={(event) => event.stopPropagation()}
             ref={listboxRef}
             role="listbox"
             style={anchorStyle}
           >
-            <div className="dd-panel-title" aria-hidden="true">
+            <div className="px-4 pt-4 pb-[.4rem] text-[.76rem] font-medium uppercase tracking-[.04em] text-muted" aria-hidden="true">
               {ariaLabel}
             </div>
-            <div className="dd-options">
+            <div className="overflow-y-auto px-[.4rem] pb-[.4rem]">
               {options.map((option) => {
                 const active = option.value === currentValue;
                 return (
                   <button
                     aria-selected={active}
-                    className={cn("dd-option", active && "dd-option-active")}
+                    className={cn(
+                      "flex w-full min-h-[2.7rem] cursor-pointer items-center justify-between gap-[.6rem] rounded-[.7rem] border-0 bg-transparent px-[.75rem] py-[.55rem] text-left text-[.9rem] font-medium text-foreground hover:bg-surface-subtle focus-visible:bg-surface-subtle",
+                      active && "bg-primary-50 text-primary-700",
+                    )}
                     data-value={option.value}
                     key={option.value}
                     onClick={() => commitValue(option.value)}
@@ -206,11 +215,11 @@ export function Select({
                     tabIndex={-1}
                     type="button"
                   >
-                    <span className="dd-option-label">{option.label}</span>
+                    <span className="min-w-0 flex-1 truncate">{option.label}</span>
                     {active ? (
                       <Check
                         aria-hidden="true"
-                        className="dd-option-check"
+                        className="shrink-0 text-primary-600"
                         size={18}
                       />
                     ) : null}

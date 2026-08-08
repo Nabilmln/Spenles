@@ -1,11 +1,11 @@
 import Link from "next/link";
 import { requireSessionUser } from "@/lib/auth/require-session";
+import { buttonClass } from "@/components/ui/styles";
 import {
   buildDailyExpenseChartContract,
   buildFourDayExpenseChartContract,
   currentJakartaMonthKey,
   DashboardFeatureGrid,
-  DashboardGreeting,
   FinancialOverview,
   fourDayJakartaInterval,
   getDailyExpenseAggregates,
@@ -61,7 +61,7 @@ export default async function DashboardPage({
             <h2>Periksa pilihan periode</h2>
             <p>{filtersResult.error}</p>
           </div>
-          <Link className="button button-primary" href="/dashboard">
+          <Link className={buttonClass("primary")} href="/dashboard">
             Kembali ke bulan ini
           </Link>
         </section>
@@ -102,9 +102,8 @@ export default async function DashboardPage({
 
   return (
     <div className="page-stack dashboard-page">
-      <DashboardGreeting name={profile?.displayName ?? "Pengguna Spenles"} />
-
       <FinancialOverview
+        name={profile?.displayName ?? "Pengguna Spenles"}
         income={overview.income.toString()}
         expense={overview.expense.toString()}
       />

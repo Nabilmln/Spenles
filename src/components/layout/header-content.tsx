@@ -68,9 +68,9 @@ export function HeaderContent({
         <div className="mobile-brand"><Brand /></div>
       )}
       {showBack && meta.title ? (
-        <h1 className="app-header-title">{meta.title}</h1>
+        <h1 className="app-header-title m-0 min-w-0 truncate text-[1.05rem] font-medium max-[540px]:text-[.95rem]">{meta.title}</h1>
       ) : null}
-      <div className="header-spacer" />
+      <div className="flex-1" />
       <ThemeToggle currentTheme={profile.theme} />
       <ProfileMenu
         displayName={profile.displayName}

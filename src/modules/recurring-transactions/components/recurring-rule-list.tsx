@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
+import { buttonClass, emptyStateClass } from "@/components/ui/styles";
 import { formatJakartaDateLong } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
 import {
@@ -51,7 +52,7 @@ function StatusForm({
 }
 
 export function RecurringRuleList({ rows }: { rows: RecurringRuleListRow[] }) {
-  if (rows.length === 0) return <div className="empty-state"><p>Belum ada aturan transaksi berulang.</p></div>;
+  if (rows.length === 0) return <div className={emptyStateClass}><p className="m-0 text-muted">Belum ada aturan transaksi berulang.</p></div>;
   return (
     <div className="domain-grid">
       {rows.map((row) => (
@@ -76,7 +77,7 @@ export function RecurringRuleList({ rows }: { rows: RecurringRuleListRow[] }) {
             <p className="warning-copy">{reasonLabel[row.pauseReason]}</p>
           ) : null}
           <div className="form-actions">
-            {row.status !== "archived" ? <Link className="button button-secondary" href={`/recurring-transactions/${row.id}/edit`}>Edit</Link> : null}
+            {row.status !== "archived" ? <Link className={buttonClass("secondary")} href={`/recurring-transactions/${row.id}/edit`}>Edit</Link> : null}
             {row.status === "active" ? <StatusForm row={row} operation="pause" /> : null}
             {row.status === "paused" ? <StatusForm row={row} operation="resume" /> : null}
             {row.status !== "archived" ? <StatusForm row={row} operation="archive" /> : null}

@@ -3,6 +3,7 @@ import type {
   DashboardFilters,
 } from "../types/dashboard";
 import { Select } from "@/components/ui/select";
+import { buttonClass } from "@/components/ui/styles";
 
 function SelectionFields({ filters }: { filters: DashboardFilters }) {
   if (filters.selection.kind === "month") {
@@ -56,7 +57,7 @@ export function PeriodSelector({
             <option value="12-months">12 bulan</option>
             <option value="current-year">Tahun berjalan</option>
           </Select>
-          <button className="button button-secondary" type="submit">
+          <button className={buttonClass("secondary")} type="submit">
             Terapkan grafik
           </button>
         </form>
@@ -77,7 +78,7 @@ export function PeriodSelector({
             <option value="last-6-months">6 bulan terakhir</option>
             <option value="current-year">Tahun berjalan</option>
           </Select>
-          <button className="button button-primary" type="submit">
+          <button className={buttonClass("primary")} type="submit">
             Terapkan
           </button>
         </form>
@@ -97,7 +98,7 @@ export function PeriodSelector({
             required
             type="month"
           />
-          <button className="button button-secondary" type="submit">
+          <button className={buttonClass("secondary")} type="submit">
             Pilih bulan
           </button>
         </form>
@@ -131,7 +132,7 @@ export function PeriodSelector({
             required
             type="date"
           />
-          <button className="button button-secondary" type="submit">
+          <button className={buttonClass("secondary")} type="submit">
             Terapkan rentang
           </button>
         </form>

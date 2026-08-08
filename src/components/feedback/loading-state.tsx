@@ -1,10 +1,11 @@
 import { LoaderCircle } from "lucide-react";
+import { statePanelClass } from "@/components/ui/styles";
 
 export function LoadingState({ label = "Memuat..." }: { label?: string }) {
   return (
-    <div className="state-panel" role="status">
+    <div className={statePanelClass} role="status">
       <LoaderCircle className="animate-spin" aria-hidden="true" />
-      <p>{label}</p>
+      <p className="m-0 text-muted">{label}</p>
     </div>
   );
 }

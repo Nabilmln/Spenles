@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
+import { emptyStateClass, successMessageClass } from "@/components/ui/styles";
 import { formatJakartaDateLong } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
 import {
@@ -23,14 +24,14 @@ function ReversalForm({ id }: { id: string }) {
         {pending ? "Membalik..." : "Balikkan"}
       </Button>
       <FormMessage>{state.error}</FormMessage>
-      {state.success ? <p className="success-message">{state.success}</p> : null}
+      {state.success ? <p className={successMessageClass}>{state.success}</p> : null}
     </form>
   );
 }
 
 export function TransferList({ rows }: { rows: TransferListRow[] }) {
   if (rows.length === 0) {
-    return <div className="empty-state"><p>Belum ada riwayat transfer.</p></div>;
+    return <div className={emptyStateClass}><p className="m-0 text-muted">Belum ada riwayat transfer.</p></div>;
   }
   return (
     <div className="transaction-list">
