@@ -1,6 +1,6 @@
 import "server-only";
 
-import { and, count, eq, inArray } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import { db } from "@/db";
 import type { Database } from "@/db/types";
 import { accounts, categories, profiles } from "@/db/schema";
@@ -16,12 +16,71 @@ export type FoundationUser = {
 
 const DEFAULT_ACCOUNT_KEY = "default-cash-account";
 
+type FoundationCounts = {
+  profileCount: number;
+  categoryCount: number;
+  accountCount: number;
+};
+
+type ReadinessRow = {
+  profile_count: number;
+  category_count: number;
+  account_count: number;
+};
+
+async function readFoundationCounts(
+  database: Database,
+  userId: string,
+  categoryKeys: string[],
+): Promise<FoundationCounts> {
+  const categoryKeyArrayLiteral = `{${categoryKeys.join(",")}}`;
+  const result = await database.execute<ReadinessRow>(sql`
+    select
+      (select count(*)::int from profiles where user_id = ${userId}) as profile_count,
+      (
+        select count(*)::int from categories
+        where user_id = ${userId}
+          and system_key = any(${categoryKeyArrayLiteral}::text[])
+      ) as category_count,
+      (
+        select count(*)::int from accounts
+        where user_id = ${userId} and system_key = ${DEFAULT_ACCOUNT_KEY}
+      ) as account_count
+  `);
+
+  const row = result.rows[0];
+  if (!row) throw new Error("Query inisialisasi pengguna tidak mengembalikan baris.");
+
+  return {
+    profileCount: row.profile_count,
+    categoryCount: row.category_count,
+    accountCount: row.account_count,
+  };
+}
+
+function isFoundationComplete(counts: FoundationCounts) {
+  return (
+    counts.profileCount === 1 &&
+    counts.categoryCount === DEFAULT_CATEGORIES.length &&
+    counts.accountCount === 1
+  );
+}
+
 export async function ensureUserFoundationWithDatabase(
   database: Database,
   user: FoundationUser,
 ) {
   const displayName = user.name.trim() || "Pengguna Spenles";
   const categoryKeys = DEFAULT_CATEGORIES.map((category) => category.systemKey);
+
+  const existingCounts = await readFoundationCounts(database, user.id, categoryKeys);
+  if (isFoundationComplete(existingCounts)) {
+    return {
+      profileCreated: true,
+      categoryCount: existingCounts.categoryCount,
+      accountCount: existingCounts.accountCount,
+    };
+  }
 
   await database.batch([
     database
@@ -54,43 +113,15 @@ export async function ensureUserFoundationWithDatabase(
       .onConflictDoNothing(),
   ]);
 
-  const [profileCount, categoryCount, accountCount] = await Promise.all([
-    database
-      .select({ value: count() })
-      .from(profiles)
-      .where(eq(profiles.userId, user.id)),
-    database
-      .select({ value: count() })
-      .from(categories)
-      .where(
-        and(
-          eq(categories.userId, user.id),
-          inArray(categories.systemKey, categoryKeys),
-        ),
-      ),
-    database
-      .select({ value: count() })
-      .from(accounts)
-      .where(
-        and(
-          eq(accounts.userId, user.id),
-          eq(accounts.systemKey, DEFAULT_ACCOUNT_KEY),
-        ),
-      ),
-  ]);
-
-  if (
-    profileCount[0]?.value !== 1 ||
-    categoryCount[0]?.value !== DEFAULT_CATEGORIES.length ||
-    accountCount[0]?.value !== 1
-  ) {
+  const verifiedCounts = await readFoundationCounts(database, user.id, categoryKeys);
+  if (!isFoundationComplete(verifiedCounts)) {
     throw new Error("Inisialisasi akun belum lengkap.");
   }
 
   return {
     profileCreated: true,
-    categoryCount: categoryCount[0].value,
-    accountCount: accountCount[0].value,
+    categoryCount: verifiedCounts.categoryCount,
+    accountCount: verifiedCounts.accountCount,
   };
 }
 

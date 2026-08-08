@@ -363,9 +363,11 @@ strong, b, h1, h2, h3, h4, h5, h6 { font-weight: 500; }
 .financial-overview { margin-top: -1rem; }
 .financial-overview-card { padding: 1.1rem 1.15rem 1.3rem; border: 1px solid var(--border); border-radius: .7rem .7rem 1.4rem 1.4rem; background: var(--surface); box-shadow: var(--shadow); }
 .financial-overview-head { display: grid; grid-template-columns: 1fr 1fr auto; align-items: center; gap: .6rem; }
+.financial-overview-head .financial-overview-label:first-child { text-align: right; }
 .financial-overview-label { color: var(--muted); font-size: .78rem; font-weight: 500; letter-spacing: .02em; text-transform: uppercase; }
-.financial-overview-values { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: .45rem; }
+.financial-overview-values { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: .45rem; }
 .financial-overview-value { min-width: 0; display: block; overflow-wrap: anywhere; font-size: clamp(1.1rem, 4.5vw, 1.6rem); letter-spacing: -.03em; line-height: 1.25; }
+.financial-overview-values .financial-overview-value:first-child { padding-right: 1rem; text-align: right; }
 .financial-overview-values .financial-overview-value + .financial-overview-value { padding-left: 1rem; border-left: 1px solid var(--border); }
 .financial-overview-income { color: var(--income); }
 .financial-overview-expense { color: var(--expense); }
