@@ -21,6 +21,11 @@ export const cardClass =
 export const inputClass =
   "w-full min-h-[2.9rem] rounded-[.72rem] border border-border bg-surface-subtle px-[.85rem] py-[.72rem] text-foreground transition-[border,box-shadow] duration-150 focus:border-primary-500 focus:shadow-[0_0_0_3px_rgb(59_130_246/12%)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-65";
 
+export const textareaClass = `${inputClass} min-h-[7rem] resize-y`;
+
+export const iconButtonClass =
+  "grid size-[2.75rem] shrink-0 cursor-pointer place-items-center rounded-[.75rem] border border-border bg-surface text-muted hover:text-expense";
+
 export const inputDisplayClass =
   "flex min-h-[2.9rem] items-center rounded-[.72rem] border border-border bg-surface-subtle px-[.85rem] py-[.72rem] text-[.92rem] font-medium text-muted";
 
@@ -57,6 +62,19 @@ export const eyebrowClass =
   "mb-[.65rem] text-[.75rem] font-medium uppercase tracking-[.12em] text-primary-600 dark:text-[#93c5fd]";
 
 export const pageStackClass = "grid gap-[1.75rem]";
+
+export const pageHeadingRowClass =
+  "flex items-start justify-between gap-4 max-[540px]:flex-col max-[540px]:items-stretch";
+
+export const pageHeadingCopyClass = "min-w-0";
+
+export const pageDescriptionClass = "m-0 max-w-[48rem] text-[.88rem] text-muted";
+
+export const entityHeadingClass = "m-0 text-[1.25rem] tracking-[-.02em]";
+
+export const narrowPageClass = "max-w-[48rem]";
+
+export const pageActionsClass = "flex items-center gap-2";
 
 export const passwordWrapClass = "relative";
 

@@ -6,7 +6,13 @@ import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
-import { successMessageClass } from "@/components/ui/styles";
+import {
+  cardClass,
+  eyebrowClass,
+  fieldClass,
+  successMessageClass,
+  textareaClass,
+} from "@/components/ui/styles";
 import type { SplitBillActionState } from "../actions/split-bill-actions";
 import { calculateSplitBill } from "../services/calculator";
 import type {
@@ -229,14 +235,14 @@ export function SplitBillCreateFlow({
   };
 
   return (
-    <div className="split-create-layout">
-      <form action={formAction} className="domain-form card split-editor-form">
+    <div className="grid grid-cols-[minmax(0,1.45fr)_minmax(19rem,.55fr)] items-start gap-4 max-[900px]:grid-cols-1">
+      <form action={formAction} className={`${cardClass} grid gap-4`}>
         <input type="hidden" name="payload" value={JSON.stringify(payload)} />
 
-        <fieldset className="split-fieldset">
-          <legend>Informasi tagihan</legend>
-          <div className="split-form-grid">
-            <div className="field">
+        <fieldset className="m-0 grid min-w-0 gap-4 rounded-[.8rem] border border-border p-4">
+          <legend className="px-[.35rem] font-medium">Informasi tagihan</legend>
+          <div className="grid grid-cols-2 gap-4 max-[540px]:grid-cols-1">
+            <div className={fieldClass}>
               <label htmlFor="split-merchant">Nama merchant</label>
               <Input
                 id="split-merchant"
@@ -246,7 +252,7 @@ export function SplitBillCreateFlow({
                 required
               />
             </div>
-            <div className="field">
+            <div className={fieldClass}>
               <label htmlFor="split-date">Tanggal tagihan</label>
               <Input
                 id="split-date"
@@ -259,9 +265,9 @@ export function SplitBillCreateFlow({
           </div>
         </fieldset>
 
-        <fieldset className="split-fieldset">
-          <div className="split-fieldset-heading">
-            <legend>Peserta</legend>
+        <fieldset className="m-0 grid min-w-0 gap-4 rounded-[.8rem] border border-border p-4">
+          <div className="flex items-center justify-between gap-4 max-[540px]:flex-col max-[540px]:items-stretch">
+            <legend className="px-[.35rem] font-medium">Peserta</legend>
             <Button
               type="button"
               variant="secondary"
@@ -271,14 +277,14 @@ export function SplitBillCreateFlow({
               <Plus size={16} aria-hidden="true" /> Tambah Peserta
             </Button>
           </div>
-          <div className="split-stack split-create-participants">
+          <div className="grid gap-[.8rem]">
             {participants.map((participant, participantIndex) => (
               <article
-                className="split-participant-card"
+                className="grid gap-[.85rem] rounded-[.8rem] border border-border bg-surface-subtle p-4"
                 key={participant.id}
               >
-                <div className="split-participant-heading">
-                  <div className="field split-participant-name">
+                <div className="flex items-end gap-[.7rem]">
+                  <div className={`${fieldClass} flex-auto min-w-0`}>
                     <label htmlFor={`participant-${participant.id}`}>
                       Peserta {participantIndex + 1}
                     </label>
@@ -303,11 +309,11 @@ export function SplitBillCreateFlow({
                   </Button>
                 </div>
 
-                <div className="split-create-items">
+                <div className="mt-[.4rem] grid gap-[.6rem]">
                   {participant.items.length ? (
                     participant.items.map((item, itemIndex) => (
-                      <div className="split-create-item-row" key={item.id}>
-                        <div className="field">
+                      <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(6.5rem,.6fr)_auto] items-end gap-[.5rem] max-[540px]:grid-cols-2" key={item.id}>
+                        <div className={fieldClass}>
                           <label htmlFor={`item-name-${item.id}`}>
                             Nama item
                           </label>
@@ -323,7 +329,7 @@ export function SplitBillCreateFlow({
                             required
                           />
                         </div>
-                        <div className="field">
+                        <div className={fieldClass}>
                           <label htmlFor={`item-price-${item.id}`}>Harga</label>
                           <Input
                             id={`item-price-${item.id}`}
@@ -345,13 +351,14 @@ export function SplitBillCreateFlow({
                           variant="ghost"
                           onClick={() => removeItem(participant.id, item.id)}
                           aria-label={`Hapus item ${itemIndex + 1} peserta ${participantIndex + 1}`}
+                          className="max-[540px]:col-span-full max-[540px]:justify-self-start"
                         >
                           <Trash2 size={16} aria-hidden="true" />
                         </Button>
                       </div>
                     ))
                   ) : (
-                    <p className="muted split-create-none">
+                    <p className="m-[.1rem_0] text-[.82rem] text-muted">
                       Belum ada barang untuk peserta ini.
                     </p>
                   )}
@@ -370,10 +377,10 @@ export function SplitBillCreateFlow({
         </fieldset>
 
         {hasItems ? (
-          <fieldset className="split-fieldset">
-            <legend>Diskon, pajak, dan layanan</legend>
-            <div className="split-charge-grid">
-              <div className="field">
+          <fieldset className="m-0 grid min-w-0 gap-4 rounded-[.8rem] border border-border p-4">
+            <legend className="px-[.35rem] font-medium">Diskon, pajak, dan layanan</legend>
+            <div className="grid grid-cols-2 gap-4 max-[540px]:grid-cols-1">
+              <div className={fieldClass}>
                 <label htmlFor="bill-tax">Pajak tagihan (%)</label>
                 <Input
                   id="bill-tax"
@@ -387,7 +394,7 @@ export function SplitBillCreateFlow({
                   }
                 />
               </div>
-              <div className="field">
+              <div className={fieldClass}>
                 <label htmlFor="discount-mode">Diskon</label>
                 <Select
                   id="discount-mode"
@@ -404,7 +411,7 @@ export function SplitBillCreateFlow({
                 </Select>
               </div>
               {discountMode === "fixed" ? (
-                <div className="field">
+                <div className={fieldClass}>
                   <label htmlFor="fixed-discount">Diskon tetap (IDR)</label>
                   <Input
                     id="fixed-discount"
@@ -420,7 +427,7 @@ export function SplitBillCreateFlow({
                 </div>
               ) : null}
               {discountMode === "percentage" ? (
-                <div className="field">
+                <div className={fieldClass}>
                   <label htmlFor="discount-percent">Diskon (%)</label>
                   <Input
                     id="discount-percent"
@@ -438,7 +445,7 @@ export function SplitBillCreateFlow({
                   />
                 </div>
               ) : null}
-              <div className="field">
+              <div className={fieldClass}>
                 <label htmlFor="service-charge">Biaya layanan (%)</label>
                 <Input
                   id="service-charge"
@@ -455,11 +462,11 @@ export function SplitBillCreateFlow({
                 />
               </div>
             </div>
-            <div className="field">
+            <div className={fieldClass}>
               <label htmlFor="split-note">Catatan (opsional)</label>
               <textarea
                 id="split-note"
-                className="input textarea"
+                className={textareaClass}
                 value={note}
                 onChange={(event) => setNote(event.target.value)}
                 maxLength={500}
@@ -482,10 +489,10 @@ export function SplitBillCreateFlow({
       {preview ? (
         <CalculationSummary result={preview} />
       ) : (
-        <aside className="card split-summary">
-          <p className="eyebrow">Pratinjau lokal</p>
-          <h2>Lengkapi tagihan</h2>
-          <p className="muted">
+        <aside className={`${cardClass} sticky top-4 grid min-w-0 gap-4 max-[900px]:static`}>
+          <p className={eyebrowClass}>Pratinjau lokal</p>
+          <h2 className="m-0">Lengkapi tagihan</h2>
+          <p className="text-muted">
             Tambahkan setidaknya satu item berharga positif pada peserta untuk
             melihat pratinjau.
           </p>

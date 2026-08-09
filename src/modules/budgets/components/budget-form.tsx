@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { fieldClass, fieldLabelClass } from "@/components/ui/styles";
 import type { BudgetActionState } from "../actions/budget-actions";
 
 export function BudgetForm({
@@ -27,10 +28,10 @@ export function BudgetForm({
 }) {
   const [state, formAction, pending] = useActionState(action, {});
   return (
-    <form action={formAction} className="domain-form">
+    <form action={formAction} className="grid gap-4">
       {initial ? <input type="hidden" name="id" value={initial.id} /> : null}
-      <div className="field">
-        <label htmlFor="budget-category">Kategori pengeluaran</label>
+      <div className={fieldClass}>
+        <label htmlFor="budget-category" className={fieldLabelClass}>Kategori pengeluaran</label>
         <Select
           id="budget-category"
           name="categoryId"
@@ -44,8 +45,8 @@ export function BudgetForm({
         </Select>
         {initial ? <input type="hidden" name="categoryId" value={initial.categoryId} /> : null}
       </div>
-      <div className="field">
-        <label htmlFor="budget-month">Bulan</label>
+      <div className={fieldClass}>
+        <label htmlFor="budget-month" className={fieldLabelClass}>Bulan</label>
         <Input
           id="budget-month"
           name="month"
@@ -56,8 +57,8 @@ export function BudgetForm({
         />
         {initial ? <input type="hidden" name="month" value={initial.month} /> : null}
       </div>
-      <div className="field">
-        <label htmlFor="budget-amount">Jumlah anggaran (IDR)</label>
+      <div className={fieldClass}>
+        <label htmlFor="budget-amount" className={fieldLabelClass}>Jumlah anggaran (IDR)</label>
         <Input
           id="budget-amount"
           name="amount"
@@ -68,8 +69,8 @@ export function BudgetForm({
           required
         />
       </div>
-      <div className="field">
-        <label htmlFor="budget-threshold">Ambang peringatan</label>
+      <div className={fieldClass}>
+        <label htmlFor="budget-threshold" className={fieldLabelClass}>Ambang peringatan</label>
         <Select
           id="budget-threshold"
           name="warningThresholdBps"

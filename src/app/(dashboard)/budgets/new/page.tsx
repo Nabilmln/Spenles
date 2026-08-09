@@ -1,4 +1,5 @@
 import { requireSessionUser } from "@/lib/auth/require-session";
+import { cardClass, narrowPageClass, pageDescriptionClass, pageStackClass } from "@/components/ui/styles";
 import {
   BudgetForm,
   createBudgetAction,
@@ -11,9 +12,9 @@ export default async function NewBudgetPage() {
   const user = await requireSessionUser();
   const categories = await listActiveExpenseCategoryOptions(user.id);
   return (
-    <div className="page-stack narrow-page">
-      <p className="page-description">Satu anggaran aktif per kategori dan bulan.</p>
-      <section className="card">
+    <div className={`${pageStackClass} ${narrowPageClass}`}>
+      <p className={pageDescriptionClass}>Satu anggaran aktif per kategori dan bulan.</p>
+      <section className={cardClass}>
         {categories.length > 0 ? (
           <BudgetForm action={createBudgetAction} categories={categories} />
         ) : (

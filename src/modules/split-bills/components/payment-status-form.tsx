@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { fieldClass } from "@/components/ui/styles";
 import {
   updateParticipantPaymentAction,
   type SplitBillActionState,
@@ -37,10 +38,13 @@ export function PaymentStatusForm({
           ? initialPaidAmount
           : "";
   return (
-    <form action={action} className="payment-form">
+    <form
+      action={action}
+      className="mt-[.5rem] grid grid-cols-[repeat(2,minmax(0,1fr))_auto] items-end gap-[.65rem] max-[540px]:grid-cols-1"
+    >
       <input type="hidden" name="billId" value={billId} />
       <input type="hidden" name="participantId" value={participantId} />
-      <div className="field">
+      <div className={fieldClass}>
         <label htmlFor={`payment-status-${participantId}`}>Status</label>
         <Select
           id={`payment-status-${participantId}`}
@@ -58,7 +62,7 @@ export function PaymentStatusForm({
         </Select>
       </div>
       {status === "partially_paid" ? (
-        <div className="field">
+        <div className={fieldClass}>
           <label htmlFor={`paid-amount-${participantId}`}>
             Nominal dibayar
           </label>
@@ -79,8 +83,10 @@ export function PaymentStatusForm({
       <Button type="submit" variant="secondary" disabled={pending}>
         {pending ? "Menyimpan..." : "Simpan status"}
       </Button>
-      <FormMessage>{state.error}</FormMessage>
-      {state.success ? <p role="status">{state.success}</p> : null}
+      <div className="col-span-full max-[540px]:col-auto">
+        <FormMessage>{state.error}</FormMessage>
+        {state.success ? <p role="status">{state.success}</p> : null}
+      </div>
     </form>
   );
 }

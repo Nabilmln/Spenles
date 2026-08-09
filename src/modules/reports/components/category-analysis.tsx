@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { SlidersHorizontal, X } from "lucide-react";
+import { cardClass, eyebrowClass, iconButtonClass } from "@/components/ui/styles";
+import { cn } from "@/lib/utils";
 import { formatIdr } from "@/lib/money/format-idr";
 import { formatReportRange } from "../lib/report-date";
 
@@ -49,17 +51,17 @@ export function CategoryAnalysis({
   return (
     <section
       aria-labelledby="report-categories-title"
-      className="card report-category-card"
+      className={cn(cardClass, "shadow-none")}
     >
-      <div className="dashboard-section-heading">
+      <div className="mb-4 flex items-start justify-between gap-4 max-[540px]:flex-col">
         <div>
-          <p className="eyebrow">{type === "income" ? "Pemasukan" : "Pengeluaran"}</p>
-          <h2 id="report-categories-title">{title}</h2>
+          <p className={eyebrowClass}>{type === "income" ? "Pemasukan" : "Pengeluaran"}</p>
+          <h2 id="report-categories-title" className="m-0 text-[1.08rem] tracking-[-.02em]">{title}</h2>
         </div>
         <button
           aria-haspopup="dialog"
           aria-label="Buka filter kategori"
-          className="icon-button"
+          className={iconButtonClass}
           onClick={() => setOpen(true)}
           type="button"
         >
@@ -68,44 +70,44 @@ export function CategoryAnalysis({
       </div>
 
       {categories.length ? (
-        <div className="report-category-list">
+        <div className="grid">
           {categories.map((category) => {
             const share = percent(category.amountIdr, total);
             return (
               <Link
-                className="report-category-row"
+                className="grid grid-cols-[minmax(8rem,1fr)_minmax(6rem,2fr)_auto_auto] items-center gap-[.9rem] border-b border-border p-[.8rem_0] last:border-b-0 max-[720px]:grid-cols-[minmax(0,1fr)_auto]"
                 href={`/reports/categories/${category.categoryId}?from=${from}&to=${to}`}
                 key={category.categoryId}
               >
                 <span>{category.name}</span>
-                <span className="report-category-bar" aria-hidden="true">
-                  <i style={{ width: `${Math.min(share, 100)}%` }} />
+                <span className="h-[.55rem] overflow-hidden rounded-full bg-surface-subtle max-[720px]:col-span-full max-[720px]:row-start-2" aria-hidden="true">
+                  <i className="block h-full rounded-[inherit] bg-primary-600" style={{ width: `${Math.min(share, 100)}%` }} />
                 </span>
                 <strong>{formatIdr(category.amountIdr)}</strong>
-                <small>{share.toLocaleString("id-ID")}%</small>
+                <small className="text-[.78rem] text-muted">{share.toLocaleString("id-ID")}%</small>
               </Link>
             );
           })}
         </div>
       ) : (
-        <div className="dashboard-inline-empty" role="status">
+        <div className="mt-4 grid min-h-[10rem] place-items-center rounded-[.8rem] border border-dashed border-border bg-surface-subtle p-4 text-center text-[.84rem] text-muted" role="status">
           Belum ada {type === "income" ? "pemasukan" : "pengeluaran"} pada periode ini.
         </div>
       )}
 
       {open ? (
-        <div className="report-sheet-backdrop" onClick={() => setOpen(false)}>
+        <div className="fixed inset-0 z-60 flex items-end justify-center bg-[rgb(15_17_21/55%)] p-4" onClick={() => setOpen(false)}>
           <div
             aria-labelledby="report-cf-title"
             aria-modal="true"
-            className="report-sheet-panel report-category-filter"
+            className="w-full max-w-[30rem] max-h-[86vh] overflow-y-auto border border-border bg-surface p-[1.25rem] rounded-[1.1rem] shadow-card"
             role="dialog"
           >
-            <div className="report-sheet-header">
-              <h2 id="report-cf-title">Filter kategori</h2>
+            <div className="mb-4 flex items-center justify-between gap-[.75rem]">
+              <h2 id="report-cf-title" className="m-0 text-[1.08rem]">Filter kategori</h2>
               <button
                 aria-label="Tutup filter kategori"
-                className="icon-button"
+                className={iconButtonClass}
                 onClick={() => setOpen(false)}
                 ref={closeRef}
                 type="button"
@@ -114,13 +116,16 @@ export function CategoryAnalysis({
               </button>
             </div>
             <div
-              className="report-category-type-options"
+              className="flex gap-[.5rem]"
               role="group"
               aria-label="Jenis transaksi"
             >
               <button
                 aria-pressed={type === "expense"}
-                className={type === "expense" ? "report-cat-option report-cat-active" : "report-cat-option"}
+                className={cn(
+                  "flex-1 min-h-[2.85rem] cursor-pointer rounded-[.7rem] border border-border bg-surface-subtle p-[.55rem_.7rem] font-medium text-muted",
+                  type === "expense" && "border-primary-600 bg-primary-600 text-white",
+                )}
                 onClick={() => select("expense")}
                 type="button"
               >
@@ -128,14 +133,17 @@ export function CategoryAnalysis({
               </button>
               <button
                 aria-pressed={type === "income"}
-                className={type === "income" ? "report-cat-option report-cat-active" : "report-cat-option"}
+                className={cn(
+                  "flex-1 min-h-[2.85rem] cursor-pointer rounded-[.7rem] border border-border bg-surface-subtle p-[.55rem_.7rem] font-medium text-muted",
+                  type === "income" && "border-primary-600 bg-primary-600 text-white",
+                )}
                 onClick={() => select("income")}
                 type="button"
               >
                 Pemasukan
               </button>
             </div>
-            <p className="financial-disclaimer">
+            <p className="mt-4 rounded-[.7rem] bg-surface-subtle p-3 text-[.76rem] text-muted">
               Periode mengikuti rentang utama laporan: {formatReportRange(from, to)}.
             </p>
           </div>

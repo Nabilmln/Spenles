@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { requireSessionUser } from "@/lib/auth/require-session";
+import { cardClass, narrowPageClass, pageDescriptionClass, pageStackClass } from "@/components/ui/styles";
 import {
   AccountForm,
   getOwnedAccount,
@@ -18,9 +19,9 @@ export default async function EditAccountPage({
   const account = await getOwnedAccount(user.id, id);
   if (!account) notFound();
   return (
-    <div className="page-stack narrow-page">
-      <p className="page-description">{account.name}</p>
-      <section className="card">
+    <div className={`${pageStackClass} ${narrowPageClass}`}>
+      <p className={pageDescriptionClass}>{account.name}</p>
+      <section className={cardClass}>
         <AccountForm action={updateAccountAction} initial={account} />
       </section>
     </div>

@@ -2,6 +2,7 @@
 
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import { iconButtonClass } from "@/components/ui/styles";
 import { formatIdr } from "@/lib/money/format-idr";
 import { cn } from "@/lib/utils";
 
@@ -31,7 +32,7 @@ export function FinancialOverview({
           </h1>
           <button
             type="button"
-            className="icon-button financial-overview-eye shrink-0"
+            className={`${iconButtonClass} shrink-0 hover:text-primary-700 dark:hover:text-[#93c5fd]`}
             aria-label={hidden ? "Tampilkan nominal" : "Sembunyikan nominal"}
             aria-pressed={hidden}
             onClick={() => setHidden((value) => !value)}

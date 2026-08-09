@@ -3,6 +3,7 @@
 import { Moon, Sun } from "lucide-react";
 import { useState, useTransition } from "react";
 import { setThemeAction } from "@/modules/profiles/actions/update-profile";
+import { iconButtonClass } from "@/components/ui/styles";
 
 export function ThemeToggle({ currentTheme }: { currentTheme: "system" | "light" | "dark" }) {
   const [, startTransition] = useTransition();
@@ -26,7 +27,7 @@ export function ThemeToggle({ currentTheme }: { currentTheme: "system" | "light"
   return (
     <button
       type="button"
-      className="icon-button theme-toggle"
+      className={`${iconButtonClass} hover:text-primary-700! dark:hover:text-[#93c5fd]!`}
       onClick={toggle}
       aria-label={label}
       title={label}

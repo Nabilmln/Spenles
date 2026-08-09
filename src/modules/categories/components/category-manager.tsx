@@ -17,8 +17,21 @@ import {
   updateCategoryAction,
 } from "../actions/category-actions";
 import { resolveCategoryIcon } from "../constants/category-icons";
-import { buttonClass, formMessageClass, successMessageClass } from "@/components/ui/styles";
+import { buttonClass, formMessageClass, iconButtonClass, successMessageClass } from "@/components/ui/styles";
+import { cn } from "@/lib/utils";
 import { CategoryForm } from "./category-form";
+
+const sheetClass =
+  "w-[min(34rem,100%)] max-h-[88vh] overflow-y-auto rounded-[1.25rem_1.25rem_1.1rem_1.1rem] border border-border bg-surface p-5 shadow-card [&_p]:text-muted [&_p]:text-[.88rem] [&_p]:leading-[1.5]";
+
+const sheetBackdropClass =
+  "fixed inset-0 z-[60] flex items-end justify-center bg-[rgb(15_17_21/55%)] p-4 min-[861px]:items-center";
+
+const menuBackdropClass =
+  "fixed inset-0 z-[55] flex items-center justify-center bg-[rgb(15_17_21/55%)] p-4";
+
+const menuItemClass =
+  "flex w-full cursor-pointer items-center gap-[.6rem] rounded-[.65rem] border-0 bg-transparent p-[.7rem_.75rem] text-left text-[.92rem] font-medium text-foreground hover:bg-surface-subtle [&_svg]:shrink-0 [&_svg]:text-primary-600";
 
 type CategoryItem = {
   id: string;
@@ -67,11 +80,14 @@ export function CategoryManager({
   }
 
   return (
-    <div className="category-manager">
-      <div aria-label="Jenis kategori" className="category-tabs" role="tablist">
+    <div className="grid gap-4">
+      <div aria-label="Jenis kategori" className="grid grid-cols-[1fr_1fr] gap-[.35rem] rounded-[1rem] border border-border bg-surface-subtle p-1" role="tablist">
         <button
           aria-selected={tab === "expense"}
-          className={tab === "expense" ? "category-tab category-tab-active" : "category-tab"}
+          className={cn(
+            "min-h-[2.7rem] cursor-pointer rounded-[.75rem] border-0 bg-transparent p-[.5rem_.7rem] font-medium text-muted",
+            tab === "expense" && "bg-surface text-primary-700 shadow-card",
+          )}
           onClick={() => setTab("expense")}
           role="tab"
           type="button"
@@ -80,7 +96,10 @@ export function CategoryManager({
         </button>
         <button
           aria-selected={tab === "income"}
-          className={tab === "income" ? "category-tab category-tab-active" : "category-tab"}
+          className={cn(
+            "min-h-[2.7rem] cursor-pointer rounded-[.75rem] border-0 bg-transparent p-[.5rem_.7rem] font-medium text-muted",
+            tab === "income" && "bg-surface text-primary-700 shadow-card",
+          )}
           onClick={() => setTab("income")}
           role="tab"
           type="button"
@@ -89,14 +108,14 @@ export function CategoryManager({
         </button>
       </div>
 
-      <div className="category-panel-heading">
+      <div className="flex items-start justify-between gap-4 max-[560px]:flex-col">
         <div>
-          <h2>{tab === "expense" ? "Kategori pengeluaran" : "Kategori pendapatan"}</h2>
-          <p>Kategori yang diarsipkan tetap tersimpan pada transaksi lama.</p>
+          <h2 className="m-0 text-[1.08rem] tracking-[-.02em]">{tab === "expense" ? "Kategori pengeluaran" : "Kategori pendapatan"}</h2>
+          <p className="mt-[.2rem] text-[.82rem] text-muted">Kategori yang diarsipkan tetap tersimpan pada transaksi lama.</p>
         </div>
         <button
           aria-label="Tambah Kategori"
-          className={`${buttonClass("primary")} category-add-button`}
+          className={`${buttonClass("primary")} min-w-0 max-[560px]:w-full`}
           onClick={openCreate}
           type="button"
         >
@@ -106,35 +125,39 @@ export function CategoryManager({
       </div>
 
       {visible.length === 0 ? (
-        <div className="category-empty">
-          <h2>{tab === "expense" ? "Belum ada kategori pengeluaran" : "Belum ada kategori pendapatan"}</h2>
-          <p>Kategori yang kamu buat akan muncul di sini.</p>
+        <div className="grid gap-[.35rem] rounded-[1rem] border border-dashed border-border bg-surface-subtle p-[clamp(1.5rem,6vw,2.5rem)]">
+          <h2 className="m-0 text-base">{tab === "expense" ? "Belum ada kategori pengeluaran" : "Belum ada kategori pendapatan"}</h2>
+          <p className="m-0 text-[.84rem] text-muted">Kategori yang kamu buat akan muncul di sini.</p>
         </div>
       ) : (
-        <div className="category-list" role="list">
+        <div className="grid gap-[.6rem]" role="list">
           {visible.map((item) => {
             const Icon = resolveCategoryIcon(item.id, item.name, item.icon);
             return (
               <div
-                className="category-row"
+                className="flex min-w-0 items-center gap-[.8rem] rounded-[1rem] border border-border bg-surface p-[.8rem_1rem] shadow-card"
                 key={item.id}
                 role="listitem"
               >
                 <span
-                  className={item.status === "archived" ? "category-row-icon archived" : "category-row-icon"}
+                  className={cn(
+                    "grid h-[2.6rem] w-[2.6rem] shrink-0 place-items-center rounded-full bg-primary-50 text-primary-600",
+                    item.color === "green" && "bg-[color-mix(in_srgb,var(--income)_10%,transparent)] text-income",
+                    item.status === "archived" && "opacity-55",
+                  )}
                   data-color={item.color ?? undefined}
                 >
                   <Icon aria-hidden="true" size={20} />
                 </span>
-                <div className="category-row-copy">
-                  <strong>{item.name}</strong>
-                  {item.status === "archived" ? <small>Diarsipkan</small> : null}
+                <div className="grid min-w-0 flex-auto gap-[.1rem]">
+                  <strong className="truncate">{item.name}</strong>
+                  {item.status === "archived" ? <small className="text-[.76rem] font-medium text-muted">Diarsipkan</small> : null}
                 </div>
                 <button
                   aria-haspopup="menu"
                   aria-label={`Aksi untuk ${item.name}`}
                   aria-expanded={menuFor === item.id}
-                  className="icon-button category-action-button"
+                  className={cn(iconButtonClass, "size-10 shrink-0")}
                   onClick={() => setMenuFor((current) => (current === item.id ? null : item.id))}
                   type="button"
                 >
@@ -196,19 +219,19 @@ function CategorySheet({
     closeRef.current?.focus();
   }, []);
   return (
-    <div className="category-sheet-backdrop" onClick={onClose}>
+    <div className={sheetBackdropClass} onClick={onClose}>
       <div
         aria-labelledby="category-editor-title"
         aria-modal="true"
-        className="category-sheet"
+        className={sheetClass}
         onClick={(event) => event.stopPropagation()}
         role="dialog"
       >
-        <div className="category-sheet-header">
-          <h2 id="category-editor-title">{isNew ? "Tambah kategori" : "Edit kategori"}</h2>
+        <div className="mb-4 flex items-center justify-between gap-4">
+          <h2 className="m-0 text-[1.05rem] tracking-[-.02em]" id="category-editor-title">{isNew ? "Tambah kategori" : "Edit kategori"}</h2>
           <button
             aria-label="Tutup formulir kategori"
-            className="icon-button"
+            className={iconButtonClass}
             onClick={onClose}
             ref={closeRef}
             type="button"
@@ -244,10 +267,10 @@ function CategoryActionMenu({
   onDelete: () => void;
 }) {
   return (
-    <div className="category-menu-backdrop" onClick={onClose}>
+    <div className={menuBackdropClass} onClick={onClose}>
       <div
         aria-label="Menu aksi kategori"
-        className="category-action-menu"
+        className="w-[min(19rem,100%)] rounded-[1rem] border border-border bg-surface p-[.4rem] shadow-card min-[861px]:absolute"
         onClick={(event) => event.stopPropagation()}
         onKeyDown={(event) => {
           if (event.key === "Escape") onClose();
@@ -256,8 +279,8 @@ function CategoryActionMenu({
         role="menu"
         tabIndex={-1}
       >
-        <strong className="category-menu-heading">{item.name}</strong>
-        <button className="category-menu-item" onClick={onEdit} role="menuitem" type="button">
+        <strong className="block p-[.55rem_.7rem_.45rem] text-[.76rem] text-muted">{item.name}</strong>
+        <button className={menuItemClass} onClick={onEdit} role="menuitem" type="button">
           <Pencil aria-hidden="true" size={18} /> Edit kategori
         </button>
         {item.status === "active" ? (
@@ -266,7 +289,7 @@ function CategoryActionMenu({
           <RestoreButton categoryId={item.id} />
         )}
         <button
-          className="category-menu-item category-menu-danger"
+          className={cn(menuItemClass, "text-expense [&_svg]:text-expense")}
           onClick={onDelete}
           role="menuitem"
           type="button"
@@ -281,10 +304,10 @@ function CategoryActionMenu({
 function ArchiveButton({ categoryId }: { categoryId: string }) {
   const [state, formAction, pending] = useActionState(archiveCategoryAction, {});
   return (
-    <form action={formAction} className="category-menu-form">
+    <form action={formAction} className="m-0">
       <input name="id" type="hidden" value={categoryId} />
-      {state.error ? <p className={`${formMessageClass} category-menu-error`} role="alert">{state.error}</p> : null}
-      <button className="category-menu-item" disabled={pending} role="menuitem" type="submit">
+      {state.error ? <p className={cn(formMessageClass, "mx-[.75rem] mt-[.35rem] text-[.76rem]")} role="alert">{state.error}</p> : null}
+      <button className={menuItemClass} disabled={pending} role="menuitem" type="submit">
         <Archive aria-hidden="true" size={18} />
         {pending ? "Memproses..." : "Arsipkan"}
       </button>
@@ -295,10 +318,10 @@ function ArchiveButton({ categoryId }: { categoryId: string }) {
 function RestoreButton({ categoryId }: { categoryId: string }) {
   const [state, formAction, pending] = useActionState(restoreCategoryAction, {});
   return (
-    <form action={formAction} className="category-menu-form">
+    <form action={formAction} className="m-0">
       <input name="id" type="hidden" value={categoryId} />
-      {state.error ? <p className={`${formMessageClass} category-menu-error`} role="alert">{state.error}</p> : null}
-      <button className="category-menu-item" disabled={pending} role="menuitem" type="submit">
+      {state.error ? <p className={cn(formMessageClass, "mx-[.75rem] mt-[.35rem] text-[.76rem]")} role="alert">{state.error}</p> : null}
+      <button className={menuItemClass} disabled={pending} role="menuitem" type="submit">
         <ArchiveRestore aria-hidden="true" size={18} />
         {pending ? "Memproses..." : "Pulihkan"}
       </button>
@@ -320,19 +343,19 @@ function CategoryDeleteSheet({
     closeRef.current?.focus();
   }, []);
   return (
-    <div className="category-sheet-backdrop" onClick={onClose}>
+    <div className={sheetBackdropClass} onClick={onClose}>
       <div
         aria-labelledby="category-delete-title"
         aria-modal="true"
-        className="category-sheet"
+        className={sheetClass}
         onClick={(event) => event.stopPropagation()}
         role="dialog"
       >
-        <div className="category-sheet-header">
-          <h2 id="category-delete-title">Hapus kategori?</h2>
+        <div className="mb-4 flex items-center justify-between gap-4">
+          <h2 className="m-0 text-[1.05rem] tracking-[-.02em]" id="category-delete-title">Hapus kategori?</h2>
           <button
             aria-label="Tutup konfirmasi"
-            className="icon-button"
+            className={iconButtonClass}
             onClick={onClose}
             ref={closeRef}
             type="button"
@@ -348,7 +371,7 @@ function CategoryDeleteSheet({
         {deletable ? (
           <DeleteButton categoryId={item.id} />
         ) : item.status === "archived" ? (
-          <p className="muted">Kategori sudah terarsip.</p>
+          <p className="text-muted">Kategori sudah terarsip.</p>
         ) : (
           <ArchiveButton categoryId={item.id} />
         )}
@@ -360,11 +383,11 @@ function CategoryDeleteSheet({
 function DeleteButton({ categoryId }: { categoryId: string }) {
   const [state, formAction, pending] = useActionState(deleteCategoryAction, {});
   return (
-    <form action={formAction} className="category-confirm-form">
+    <form action={formAction} className="mt-4 grid gap-[.6rem]">
       <input name="id" type="hidden" value={categoryId} />
       {state.error ? <p className={formMessageClass} role="alert">{state.error}</p> : null}
       {state.success ? <p className={successMessageClass}>{state.success}</p> : null}
-      <button className={buttonClass("danger")} disabled={pending} type="submit">
+      <button className={`${buttonClass("danger")} w-full justify-center`} disabled={pending} type="submit">
         {pending ? "Menghapus..." : "Hapus permanen"}
       </button>
     </form>

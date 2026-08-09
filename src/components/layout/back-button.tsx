@@ -2,6 +2,7 @@
 
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { iconButtonClass } from "@/components/ui/styles";
 
 export function BackButton({ fallback }: { fallback?: string }) {
   const router = useRouter();
@@ -17,7 +18,7 @@ export function BackButton({ fallback }: { fallback?: string }) {
   return (
     <button
       type="button"
-      className="icon-button hover:text-primary-700 dark:hover:text-[#93c5fd]"
+      className={`${iconButtonClass} hover:text-primary-700! dark:hover:text-[#93c5fd]!`}
       onClick={goBack}
       aria-label="Kembali"
       title="Kembali"

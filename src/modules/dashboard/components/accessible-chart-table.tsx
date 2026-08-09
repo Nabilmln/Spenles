@@ -16,14 +16,16 @@ export function AccessibleChartTable({
   rows: Array<Record<string, ReactNode>>;
 }) {
   return (
-    <div className="chart-table-wrap">
-      <table className="chart-table">
-        <caption>{caption}</caption>
+    <div className="mt-[.75rem] max-w-full overflow-x-auto">
+      <table className="w-full border-collapse text-[.78rem]">
+        <caption className="pb-[.55rem] text-left text-muted">
+          {caption}
+        </caption>
         <thead>
           <tr>
             {columns.map((column) => (
               <th
-                className={column.align === "right" ? "numeric" : undefined}
+                className={`whitespace-nowrap border-b border-border p-[.55rem] text-left text-[.7rem] uppercase text-muted ${column.align === "right" ? "text-right" : ""}`}
                 key={column.key}
                 scope="col"
               >
@@ -37,7 +39,7 @@ export function AccessibleChartTable({
             <tr key={String(row.id ?? index)}>
               {columns.map((column) => (
                 <td
-                  className={column.align === "right" ? "numeric" : undefined}
+                  className={`whitespace-nowrap border-b border-border p-[.55rem] text-left ${column.align === "right" ? "text-right" : ""}`}
                   key={column.key}
                 >
                   {row[column.key]}

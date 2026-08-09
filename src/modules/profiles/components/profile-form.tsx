@@ -6,7 +6,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormMessage } from "@/components/ui/form-message";
 import { Select } from "@/components/ui/select";
-import { inputDisplayClass, successMessageClass } from "@/components/ui/styles";
+import {
+  fieldClass,
+  fieldHintClass,
+  fieldLabelClass,
+  inputDisplayClass,
+  successMessageClass,
+} from "@/components/ui/styles";
 import {
   updateProfileAction,
   type ProfileActionState,
@@ -27,15 +33,15 @@ export function ProfileForm({
   );
 
   return (
-    <form action={action} className="settings-form">
+    <form action={action} className="grid gap-[1.25rem]">
       <FormMessage>{state.error}</FormMessage>
       {state.success ? (
         <p className={successMessageClass} role="status">
           {state.success}
         </p>
       ) : null}
-      <div className="field">
-        <label htmlFor="displayName">Nama</label>
+      <div className={fieldClass}>
+        <label htmlFor="displayName" className={fieldLabelClass}>Nama</label>
         <Input
           id="displayName"
           name="displayName"
@@ -48,31 +54,31 @@ export function ProfileForm({
           {state.fieldErrors?.displayName?.[0]}
         </FormMessage>
       </div>
-      <div className="field">
-        <label htmlFor="profileEmail">Email</label>
+      <div className={fieldClass}>
+        <label htmlFor="profileEmail" className={fieldLabelClass}>Email</label>
         <Input id="profileEmail" value={email} readOnly disabled />
-        <span className="field-hint">Email dikelola oleh layanan autentikasi.</span>
+        <span className={fieldHintClass}>Email dikelola oleh layanan autentikasi.</span>
       </div>
-      <div className="settings-grid">
-        <div className="field">
-          <label htmlFor="defaultCurrency">Mata uang</label>
+      <div className="grid grid-cols-2 gap-[1rem] max-[540px]:grid-cols-1">
+        <div className={fieldClass}>
+          <label htmlFor="defaultCurrency" className={fieldLabelClass}>Mata uang</label>
           <div className={inputDisplayClass} id="defaultCurrency">
             IDR — Rupiah Indonesia
           </div>
           <input type="hidden" name="defaultCurrency" value="IDR" />
-          <span className="field-hint">Spenles hanya mendukung IDR.</span>
+          <span className={fieldHintClass}>Spenles hanya mendukung IDR.</span>
         </div>
-        <div className="field">
-          <label htmlFor="timezone">Zona waktu</label>
+        <div className={fieldClass}>
+          <label htmlFor="timezone" className={fieldLabelClass}>Zona waktu</label>
           <div className={inputDisplayClass} id="timezone">Asia/Jakarta</div>
           <input type="hidden" name="timezone" value="Asia/Jakarta" />
-          <span className="field-hint">
+          <span className={fieldHintClass}>
             Spenles hanya mendukung Asia/Jakarta.
           </span>
         </div>
       </div>
-      <div className="field">
-        <label htmlFor="theme">Tema</label>
+      <div className={fieldClass}>
+        <label htmlFor="theme" className={fieldLabelClass}>Tema</label>
         <Select
           id="theme"
           name="theme"
@@ -81,7 +87,7 @@ export function ProfileForm({
           <option value="light">Terang</option>
           <option value="dark">Gelap</option>
         </Select>
-        <span className="field-hint">
+        <span className={fieldHintClass}>
           Ubah tema dengan cepat lewat ikon matahari atau bulan di pojok kanan.
         </span>
       </div>

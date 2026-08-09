@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { requireSessionUser } from "@/lib/auth/require-session";
+import { cardClass, narrowPageClass, pageDescriptionClass, pageStackClass } from "@/components/ui/styles";
 import {
   BudgetForm,
   getOwnedBudget,
@@ -25,9 +26,9 @@ export default async function EditBudgetPage({
     ? categories
     : [{ id: budget.categoryId, name: budget.categoryName }, ...categories];
   return (
-    <div className="page-stack narrow-page">
-      <p className="page-description">{budget.categoryName}</p>
-      <section className="card">
+    <div className={`${pageStackClass} ${narrowPageClass}`}>
+      <p className={pageDescriptionClass}>{budget.categoryName}</p>
+      <section className={cardClass}>
         <BudgetForm action={updateBudgetAction} categories={options} initial={budget} />
       </section>
     </div>

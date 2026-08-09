@@ -13,6 +13,7 @@ import {
   todayJakartaDate,
 } from "@/lib/dates/calendar";
 import { formatDateLong, formatMonthYearLabel } from "@/lib/dates/format-id";
+import { iconButtonClass } from "./styles";
 
 const WEEK_DAYS = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
 
@@ -60,7 +61,7 @@ export function MonthSelector({
             <div className="mb-[.65rem] flex items-center justify-between gap-[.5rem]" role="group" aria-label="Navigasi bulan">
               <button
                 aria-label="Bulan sebelumnya"
-                className="icon-button size-10"
+                className={`${iconButtonClass} size-10`}
                 onClick={() =>
                   setView((current) => monthShift(current.year, current.month, -1))
                 }
@@ -73,7 +74,7 @@ export function MonthSelector({
               </strong>
               <button
                 aria-label="Bulan berikutnya"
-                className="icon-button size-10"
+                className={`${iconButtonClass} size-10`}
                 onClick={() =>
                   setView((current) => monthShift(current.year, current.month, 1))
                 }

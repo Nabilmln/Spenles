@@ -10,7 +10,7 @@ function LogoutButton() {
   return (
     <button
       type="submit"
-      className="profile-menu-logout flex w-full min-h-[2.7rem] items-center gap-[.6rem] rounded-[.65rem] border-0 bg-transparent px-[.7rem] py-[.55rem] text-left text-[.88rem] font-medium text-expense hover:bg-[color-mix(in_srgb,var(--expense)_8%,transparent)] hover:text-expense focus-visible:bg-surface-subtle disabled:cursor-not-allowed disabled:opacity-55"
+      className="flex w-full min-h-[2.7rem] items-center gap-[.6rem] rounded-[.65rem] border-0 bg-transparent px-[.7rem] py-[.55rem] text-left text-[.88rem] font-medium text-expense hover:bg-[color-mix(in_srgb,var(--expense)_8%,transparent)] hover:text-expense focus-visible:bg-surface-subtle disabled:cursor-not-allowed disabled:opacity-55"
       disabled={pending}
     >
       <LogOut size={17} aria-hidden="true" />

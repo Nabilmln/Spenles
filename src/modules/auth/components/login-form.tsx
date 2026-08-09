@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { Input } from "@/components/ui/input";
 import { FormMessage } from "@/components/ui/form-message";
-import { mutedLinkClass, textLinkClass } from "@/components/ui/styles";
+import { mutedLinkClass, fieldClass, fieldLabelRowClass, textLinkClass } from "@/components/ui/styles";
 import { loginAction, type AuthActionState } from "../actions/login";
 import { PasswordField } from "./password-field";
 import { SubmitButton } from "./submit-button";
@@ -17,7 +17,7 @@ export function LoginForm() {
   return (
     <form action={action} className="grid gap-[1.25rem]" noValidate>
       <FormMessage>{state.error}</FormMessage>
-      <div className="field">
+      <div className={fieldClass}>
         <label htmlFor="email">Email</label>
         <Input
           id="email"
@@ -32,8 +32,8 @@ export function LoginForm() {
           {state.fieldErrors?.email?.[0]}
         </FormMessage>
       </div>
-      <div className="field">
-        <div className="field-label-row">
+      <div className={fieldClass}>
+        <div className={fieldLabelRowClass}>
           <label htmlFor="password">Kata sandi</label>
           <span className={mutedLinkClass} aria-label="Pemulihan kata sandi belum tersedia">
             Lupa kata sandi?

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ReceiptText } from "lucide-react";
 import { EmptyState } from "@/components/feedback/empty-state";
-import { buttonClass } from "@/components/ui/styles";
+import { buttonClass, cardClass, eyebrowClass } from "@/components/ui/styles";
 import { formatDateLong } from "@/lib/dates/format-id";
 import { formatIdr } from "@/lib/money/format-idr";
 import type { SplitBillFilters } from "../schemas/split-bill-filters";
@@ -11,6 +11,12 @@ const statusLabel = {
   draft: "Draft",
   finalized: "Final",
   archived: "Diarsipkan",
+};
+
+const statusBadgeClass = {
+  draft: "text-[#b45309] bg-[color-mix(in_srgb,var(--warning)_16%,transparent)]",
+  finalized: "text-income bg-[color-mix(in_srgb,var(--income)_10%,transparent)]",
+  archived: "text-muted bg-surface-subtle",
 };
 
 type Row = {
@@ -72,15 +78,15 @@ export function SplitBillList({
   }
   return (
     <>
-      <div className="domain-grid split-history-grid">
+      <div className="grid grid-cols-[repeat(3,minmax(0,1fr))] gap-4 max-[1100px]:grid-cols-[repeat(2,minmax(0,1fr))] max-[540px]:grid-cols-1">
         {rows.map((row) => (
-          <article className="card domain-card" key={row.id}>
-            <div className="domain-card-heading">
+          <article className={`${cardClass} grid min-w-0 gap-[.9rem]`} key={row.id}>
+            <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="eyebrow">{formatDateLong(row.billDate)}</p>
+                <p className={eyebrowClass}>{formatDateLong(row.billDate)}</p>
                 <h2>{row.merchantName}</h2>
               </div>
-              <span className={`status-badge split-status-${row.status}`}>
+              <span className={`inline-flex min-h-[1.8rem] items-center rounded-full px-[.55rem] py-[.25rem] whitespace-nowrap text-[.72rem] font-medium ${statusBadgeClass[row.status]}`}>
                 {statusLabel[row.status]}
               </span>
             </div>
@@ -102,9 +108,9 @@ export function SplitBillList({
           </article>
         ))}
       </div>
-      <nav className="pagination" aria-label="Paginasi tagihan patungan">
+      <nav className="flex items-center justify-between gap-4 text-muted max-[540px]:flex-col max-[540px]:items-stretch max-[540px]:text-center" aria-label="Paginasi tagihan patungan">
         <Link
-          className={`${buttonClass("secondary")} ${filters.page <= 1 ? "disabled" : ""}`}
+          className={`${buttonClass("secondary")} ${filters.page <= 1 ? "pointer-events-none opacity-[.45]" : ""}`}
           aria-disabled={filters.page <= 1}
           href={pageHref(filters, Math.max(1, filters.page - 1))}
         >
@@ -114,7 +120,7 @@ export function SplitBillList({
           Halaman {filters.page} dari {totalPages} · {total} tagihan
         </span>
         <Link
-          className={`${buttonClass("secondary")} ${filters.page >= totalPages ? "disabled" : ""}`}
+          className={`${buttonClass("secondary")} ${filters.page >= totalPages ? "pointer-events-none opacity-[.45]" : ""}`}
           aria-disabled={filters.page >= totalPages}
           href={pageHref(filters, Math.min(totalPages, filters.page + 1))}
         >

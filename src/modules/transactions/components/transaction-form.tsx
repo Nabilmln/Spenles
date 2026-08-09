@@ -9,8 +9,17 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormMessage } from "@/components/ui/form-message";
 import { Select } from "@/components/ui/select";
-import { buttonClass, formMessageClass, inputDisplayClass } from "@/components/ui/styles";
+import { buttonClass, fieldClass, fieldHintClass, fieldLabelClass, formMessageClass, inputDisplayClass, textareaClass } from "@/components/ui/styles";
+import { cn } from "@/lib/utils";
 import { formatIdr } from "@/lib/money/format-idr";
+
+const modeLabelClass =
+  "relative flex flex-1 min-w-[6.5rem] min-h-[2.55rem] cursor-pointer items-center justify-center rounded-[.7rem] border border-border bg-surface-subtle p-[.45rem_.6rem] text-center text-[.78rem] font-medium text-muted focus-within:outline-2 focus-within:outline-primary-500 focus-within:outline-offset-2";
+
+const directionLabelClass =
+  "relative flex flex-1 min-w-[6.5rem] min-h-[2.55rem] cursor-pointer items-center justify-center rounded-[.7rem] border border-border bg-surface-subtle p-[.45rem_.6rem] text-center text-[.78rem] font-medium text-muted";
+
+const modeActiveClass = "border-primary-500 bg-primary-50 text-primary-700";
 
 type Option = { id: string; name: string; type?: string };
 type CategoryOption = Option & { type: "income" | "expense" };
@@ -67,33 +76,35 @@ export function TransactionForm({
   return (
     <form
       action={formAction}
-      className="settings-form transaction-form"
+      className="grid gap-[1.25rem] text-[.9rem]"
       aria-busy={pending}
     >
       {initial ? <input type="hidden" name="id" value={initial.id} /> : null}
 
-      <fieldset className="tx-mode-selector">
-        <legend>Jenis transaksi</legend>
+      <fieldset className="flex flex-wrap gap-2 m-0 p-0 border-0">
+        <legend className="w-full mb-[.45rem] text-[.8rem] font-medium">Jenis transaksi</legend>
         {(["expense", "income"] as const).map((value) => (
-          <label key={value} className={type === value ? "tx-mode-active" : ""}>
+          <label key={value} className={cn(modeLabelClass, type === value && modeActiveClass)}>
             <input
               type="radio"
               name="type"
               value={value}
               checked={type === value}
               onChange={() => setType(value)}
+              className="absolute opacity-0 pointer-events-none"
             />
             {value === "expense" ? "Pengeluaran" : "Pendapatan"}
           </label>
         ))}
         {!initial ? (
-          <label className={type === "savings" ? "tx-mode-active" : ""}>
+          <label className={cn(modeLabelClass, type === "savings" && modeActiveClass)}>
             <input
               type="radio"
               name="type"
               value="savings"
               checked={type === "savings"}
               onChange={() => setType("savings")}
+              className="absolute opacity-0 pointer-events-none"
             />
             Tabungan
           </label>
@@ -119,15 +130,15 @@ export function TransactionForm({
       ) : (
         <>
           <AmountField amount={amount} setAmount={setAmount} pending={pending} />
-          <div className="field">
-            <label htmlFor="accountId">Sumber keuangan</label>
+          <div className={fieldClass}>
+            <label htmlFor="accountId" className={cn(fieldLabelClass, "text-[.8rem]")}>Sumber keuangan</label>
             <Select id="accountId" name="accountId" defaultValue={initial?.accountId} required>
               <option value="">Pilih akun</option>
               {spendingAccounts.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
             </Select>
           </div>
-          <div className="field">
-            <label htmlFor="categoryId">
+          <div className={fieldClass}>
+            <label htmlFor="categoryId" className={cn(fieldLabelClass, "text-[.8rem]")}>
               {type === "expense" ? "Kategori pengeluaran" : "Kategori pendapatan"}
             </label>
             <Select
@@ -141,8 +152,8 @@ export function TransactionForm({
               {matchingCategories.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
             </Select>
           </div>
-          <div className="field">
-            <label htmlFor="transactionAt">Tanggal</label>
+          <div className={fieldClass}>
+            <label htmlFor="transactionAt" className={cn(fieldLabelClass, "text-[.8rem]")}>Tanggal</label>
             <Input
               id="transactionAt"
               name="transactionAt"
@@ -150,18 +161,19 @@ export function TransactionForm({
               value={date}
               onChange={(event) => setDate(event.target.value)}
               required
+              className="min-h-[2.7rem] text-[.88rem]"
             />
-            <p className="field-hint">Waktu pengisian otomatis mengikuti pukul saat ini di zona Asia/Jakarta.</p>
+            <p className={cn(fieldHintClass, "text-[.72rem] mt-[.35rem]")}>Waktu pengisian otomatis mengikuti pukul saat ini di zona Asia/Jakarta.</p>
           </div>
-          <div className="field">
-            <label htmlFor="note">Keterangan (opsional)</label>
-            <textarea className="input textarea" id="note" name="note" maxLength={500} defaultValue={initial?.note} />
+          <div className={fieldClass}>
+            <label htmlFor="note" className={cn(fieldLabelClass, "text-[.8rem]")}>Keterangan (opsional)</label>
+            <textarea className={cn(textareaClass, "min-h-[2.7rem] text-[.88rem]")} id="note" name="note" maxLength={500} defaultValue={initial?.note} />
           </div>
-          <div className="form-actions">
-            <Button type="submit" disabled={pending}>
+          <div className="flex items-center gap-2">
+            <Button type="submit" disabled={pending} className="min-h-[2.6rem] p-[.55rem_.9rem] text-[.88rem]">
               {pending ? "Menyimpan..." : "Konfirmasi"}
             </Button>
-            <Link className={buttonClass("secondary")} href="/transactions">Batal</Link>
+            <Link className={cn(buttonClass("secondary"), "min-h-[2.6rem] p-[.55rem_.9rem] text-[.88rem]")} href="/transactions">Batal</Link>
           </div>
         </>
       )}
@@ -231,13 +243,13 @@ function AmountField({
   }, [open]);
 
   return (
-    <div className="field">
-      <label htmlFor="amount-control">Nominal</label>
+    <div className={fieldClass}>
+      <label htmlFor="amount-control" className={cn(fieldLabelClass, "text-[.8rem]")}>Nominal</label>
       <button
         type="button"
         id="amount-control"
         ref={amountRef}
-        className="amount-trigger"
+        className="w-full min-h-[2.9rem] cursor-pointer rounded-[.72rem] border-0 bg-transparent p-0 text-left focus-visible:outline-2 focus-visible:outline-primary-500 focus-visible:outline-offset-2"
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
         aria-expanded={open}
@@ -253,7 +265,7 @@ function AmountField({
 
       {open ? (
         <div
-          className="calc-backdrop"
+          className="fixed inset-0 z-40 flex items-end justify-center bg-[rgb(15_23_42/45%)] p-4 min-[861px]:items-center"
           role="dialog"
           aria-modal="true"
           aria-label="Kalkulator jumlah"
@@ -264,12 +276,12 @@ function AmountField({
             }
           }}
         >
-          <div className="calc-sheet">
-            <div className="calc-heading">
-              <strong>Kalkulator jumlah</strong>
+          <div className="max-h-[90vh] w-full max-w-[30rem] overflow-y-auto rounded-t-[1.25rem] rounded-b-[1.1rem] border border-border bg-surface p-5 shadow-card min-[861px]:rounded-[1.25rem_1.25rem_1.1rem_1.1rem]">
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <strong className="text-[.95rem]">Kalkulator jumlah</strong>
               <button
                 type="button"
-                className="calc-close"
+                className="cursor-pointer border-0 bg-transparent font-medium text-muted hover:text-foreground"
                 aria-label="Tutup kalkulator"
                 onClick={() => {
                   setOpen(false);
@@ -279,22 +291,22 @@ function AmountField({
                 Tutup
               </button>
             </div>
-            <div className="calc-display">
+            <div className="mb-[.85rem] grid gap-[.3rem] rounded-[.8rem] border border-border bg-surface-subtle p-[.9rem]">
               <input
                 id="calc-expression"
-                className="calc-expression"
+                className="w-full min-h-[1.6rem] border-0 bg-transparent p-0 text-[.85rem] font-medium text-muted outline-none"
                 aria-label="Ekspresi kalkulator"
                 value={expression}
                 onChange={(event) => setExpression(event.target.value)}
                 placeholder="25000 + 18000 + 7500"
                 readOnly
               />
-              <p className="calc-result" aria-live="polite">
+              <p className="m-0 text-[1.15rem] font-medium tracking-[-.03em]" aria-live="polite">
                 {result ? formatIdr(result) : "—"}
               </p>
             </div>
             <FormMessage>{calculatorError}</FormMessage>
-            <div className="calc-keypad">
+            <div className="grid grid-cols-[repeat(4,minmax(0,1fr))] gap-2">
               {["7", "8", "9", "/"].map((key) => <KeypadButton key={key} label={key} aria={key} onClick={() => append(key)} />)}
               {["4", "5", "6", "*"].map((key) => <KeypadButton key={key} label={key} aria={key} onClick={() => append(key)} />)}
               {["1", "2", "3", "-"].map((key) => <KeypadButton key={key} label={key} aria={key} onClick={() => append(key)} />)}
@@ -313,11 +325,11 @@ function AmountField({
                 onClick={() => append(")")}
               />
             </div>
-            <p className="field-hint">Operator: +, −, ×, ÷, dan tanda kurung. Hasil dibulatkan ke rupiah terdekat.</p>
+            <p className={cn(fieldHintClass, "text-[.72rem] mt-[.35rem]")}>Operator: +, −, ×, ÷, dan tanda kurung. Hasil dibulatkan ke rupiah terdekat.</p>
             <Button
               type="button"
               variant="primary"
-              className="calc-done"
+              className="w-full mt-[.9rem] min-h-[2.6rem] p-[.55rem_.9rem] text-[.88rem]"
               disabled={pending || !result}
               onClick={commit}
             >
@@ -340,7 +352,7 @@ function KeypadButton({
   onClick: () => void;
 }) {
   return (
-    <button type="button" className="calc-key" aria-label={aria} onClick={onClick}>
+    <button type="button" className="min-h-[2.85rem] cursor-pointer rounded-[.7rem] border border-border bg-surface-subtle p-[.5rem] text-[.92rem] font-medium text-foreground hover:bg-primary-50 focus-visible:outline-2 focus-visible:outline-primary-500 focus-visible:outline-offset-2" aria-label={aria} onClick={onClick}>
       {label}
     </button>
   );
@@ -373,16 +385,17 @@ function SavingsFields({
 }) {
   return (
     <>
-      <fieldset className="radiogroup direction">
-        <legend>Arah dana</legend>
+      <fieldset className="flex flex-wrap gap-2 m-0 p-0 border-0">
+        <legend className="w-full mb-[.45rem] text-[.8rem] font-medium">Arah dana</legend>
         {(["save", "withdraw"] as const).map((value) => (
-          <label key={value} className={direction === value ? "tx-mode-active" : ""}>
+          <label key={value} className={cn(directionLabelClass, direction === value && modeActiveClass)}>
             <input
               type="radio"
               name="direction"
               value={value}
               checked={direction === value}
               onChange={() => setDirection(value)}
+              className="absolute opacity-0 pointer-events-none"
             />
             {value === "save" ? "Menabung" : "Tarik dana"}
           </label>
@@ -394,22 +407,22 @@ function SavingsFields({
         </p>
       ) : null}
       <AmountField amount={amount} setAmount={setAmount} pending={pending} />
-      <div className="field">
-        <label htmlFor="sourceAccountId">Dari akun</label>
+      <div className={fieldClass}>
+        <label htmlFor="sourceAccountId" className={cn(fieldLabelClass, "text-[.8rem]")}>Dari akun</label>
         <Select id="sourceAccountId" name="sourceAccountId" defaultValue="" required disabled={!hasSavings}>
           <option value="">Pilih akun</option>
           {sourceAccounts.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
         </Select>
       </div>
-      <div className="field">
-        <label htmlFor="destinationAccountId">Ke akun tabungan</label>
+      <div className={fieldClass}>
+        <label htmlFor="destinationAccountId" className={cn(fieldLabelClass, "text-[.8rem]")}>Ke akun tabungan</label>
         <Select id="destinationAccountId" name="destinationAccountId" defaultValue="" required disabled={!hasSavings}>
           <option value="">Pilih akun</option>
           {destinationAccounts.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
         </Select>
       </div>
-      <div className="field">
-        <label htmlFor="transferredAt">Tanggal</label>
+      <div className={fieldClass}>
+        <label htmlFor="transferredAt" className={cn(fieldLabelClass, "text-[.8rem]")}>Tanggal</label>
         <Input
           id="transferredAt"
           name="transferredAt"
@@ -417,18 +430,19 @@ function SavingsFields({
           value={date}
           onChange={(event) => setDate(event.target.value)}
           required
+          className="min-h-[2.7rem] text-[.88rem]"
         />
-        <p className="field-hint">Waktu pengisian diambil mengikuti pukul saat ini di zona Asia/Jakarta.</p>
+        <p className={cn(fieldHintClass, "text-[.72rem] mt-[.35rem]")}>Waktu pengisian diambil mengikuti pukul saat ini di zona Asia/Jakarta.</p>
       </div>
-      <div className="field">
-        <label htmlFor="note">Keterangan (opsional)</label>
-        <textarea className="input textarea" id="note" name="note" maxLength={500} />
+      <div className={fieldClass}>
+        <label htmlFor="note" className={cn(fieldLabelClass, "text-[.8rem]")}>Keterangan (opsional)</label>
+        <textarea className={cn(textareaClass, "min-h-[2.7rem] text-[.88rem]")} id="note" name="note" maxLength={500} />
       </div>
-      <div className="form-actions">
-        <Button type="submit" disabled={pending || !hasSavings} aria-describedby={errorId}>
+      <div className="flex items-center gap-2">
+        <Button type="submit" disabled={pending || !hasSavings} aria-describedby={errorId} className="min-h-[2.6rem] p-[.55rem_.9rem] text-[.88rem]">
           {pending ? "Menyimpan..." : "Konfirmasi"}
         </Button>
-        <Link className={buttonClass("secondary")} href="/transactions">Batal</Link>
+        <Link className={cn(buttonClass("secondary"), "min-h-[2.6rem] p-[.55rem_.9rem] text-[.88rem]")} href="/transactions">Batal</Link>
       </div>
     </>
   );

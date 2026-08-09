@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
-import { buttonClass } from "@/components/ui/styles";
+import { buttonClass, cardClass, eyebrowClass } from "@/components/ui/styles";
 import { formatIdr } from "@/lib/money/format-idr";
 import {
   archiveAccountAction,
@@ -47,28 +47,28 @@ function AccountStatusForm({
 
 export function AccountList({ rows }: { rows: AccountBalanceRow[] }) {
   return (
-    <div className="domain-grid">
+    <div className="grid grid-cols-[repeat(3,minmax(0,1fr))] gap-4 max-[1100px]:grid-cols-[repeat(2,minmax(0,1fr))] max-[540px]:grid-cols-1">
       {rows.map((row) => {
         const negative = BigInt(row.balance) < 0n;
         return (
-          <article className="card domain-card" key={row.id}>
-            <div className="domain-card-heading">
+          <article className={`${cardClass} grid min-w-0 gap-[.9rem]`} key={row.id}>
+            <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="eyebrow">{accountTypeLabel(row.type)}</p>
-                <h2>{row.name}</h2>
+                <p className={`${eyebrowClass} m-0`}>{accountTypeLabel(row.type)}</p>
+                <h2 className="m-[.15rem_0_0]!">{row.name}</h2>
               </div>
-              <span className={`status-badge status-${row.status}`}>
+              <span className={`inline-flex min-h-[1.8rem] items-center rounded-full px-[.55rem] py-[.25rem] whitespace-nowrap text-[.72rem] font-medium ${row.status === "active" ? "text-income bg-[color-mix(in_srgb,var(--income)_10%,transparent)]" : "text-muted bg-surface-subtle"}`}>
                 {row.status === "active" ? "Aktif" : "Diarsipkan"}
               </span>
             </div>
-            <p className="balance-label">Saldo saat ini</p>
-            <strong className={negative ? "negative-balance" : undefined}>
+            <p className="m-0 text-muted text-[.78rem]">Saldo saat ini</p>
+            <strong className={`wrap-anywhere text-[clamp(1.35rem,2.7vw,2rem)] ${negative ? "text-expense" : ""}`}>
               {formatIdr(row.balance)}
             </strong>
             {negative ? (
-              <p className="warning-copy">Saldo akun negatif.</p>
+              <p className="m-0 font-medium text-expense!">Saldo akun negatif.</p>
             ) : null}
-            <div className="form-actions">
+            <div className="flex items-center gap-2">
               <Link className={buttonClass("secondary")} href={`/accounts/${row.id}`}>
                 Detail
               </Link>

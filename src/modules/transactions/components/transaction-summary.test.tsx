@@ -6,7 +6,7 @@ afterEach(cleanup);
 
 describe("TransactionSummary", () => {
   it("renders one compact row with three equal sections and exact values", () => {
-    const { container } = render(
+    render(
       <TransactionSummary
         income={1_000_000n}
         expense={250_000n}
@@ -15,9 +15,8 @@ describe("TransactionSummary", () => {
     );
 
     const region = screen.getByRole("region", { name: "Ringkasan periode" });
-    expect(region).toHaveClass("tx-summary");
     expect(region).toHaveClass("card");
-    expect(container.querySelectorAll(".tx-summary-section")).toHaveLength(3);
+    expect(region.querySelectorAll(":scope > div")).toHaveLength(3);
     expect(screen.getByText("Pendapatan")).toBeInTheDocument();
     expect(screen.getByText("Pengeluaran")).toBeInTheDocument();
     expect(screen.getByText("Tabungan")).toBeInTheDocument();

@@ -79,17 +79,17 @@ export function DateRangeField({
   }
 
   return (
-    <div className="date-range-field">
+    <div className="relative">
       <input name="month" type="hidden" value={selectedMonth} />
       <input name="from" type="hidden" value={customFrom} />
       <input name="to" type="hidden" value={customTo} />
-      <details className="date-range-popover">
-        <summary aria-label="Pilih rentang tanggal" className="date-range-trigger">
+      <details className="relative">
+        <summary aria-label="Pilih rentang tanggal" className="flex min-h-[2.9rem] items-center justify-between gap-[.5rem] rounded-[.72rem] border border-border bg-surface-subtle p-[.72rem_.85rem] font-medium text-foreground cursor-pointer list-none marker:hidden [&::-webkit-details-marker]:hidden">
           <CalendarRange aria-hidden="true" size={18} />
-          <span>{label}</span>
-          <ChevronDown aria-hidden="true" className="date-range-chevron" size={18} />
+          <span className="overflow-hidden text-ellipsis whitespace-nowrap text-[.85rem]">{label}</span>
+          <ChevronDown aria-hidden="true" className="shrink-0 text-muted" size={18} />
         </summary>
-        <div className="date-range-menu">
+        <div className="absolute left-1/2 top-[calc(100%+.45rem)] z-[15] grid w-max min-w-full max-w-[calc(100vw-1.5rem)] -translate-x-1/2 gap-[.3rem] rounded-[.8rem] border border-border bg-surface p-[.5rem] shadow-card">
           {presetOptions.map((option) => (
             <button
               key={option.id}
@@ -100,12 +100,13 @@ export function DateRangeField({
                 submitValues(option.month, option.from, option.to);
               }}
               type="button"
+              className="min-h-[2.6rem] cursor-pointer wrap-anywhere rounded-[.55rem] border-0 bg-transparent p-[.5rem_.65rem] text-left text-[.85rem] text-foreground hover:bg-surface-subtle focus-visible:bg-surface-subtle"
             >
               {option.label}
             </button>
           ))}
-          <div className="date-range-calendar">
-            <span className="date-range-custom-heading">Rentang kustom</span>
+          <div className="border-t border-border p-[.65rem_.35rem_.2rem]">
+            <span className="px-[.35rem] pb-[.1rem] text-[.72rem] font-medium uppercase tracking-[.04em] text-muted">Rentang kustom</span>
             <CalendarRangeSelector
               from={customFrom}
               maxDays={366}

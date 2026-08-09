@@ -1,4 +1,10 @@
-import { buttonClass } from "@/components/ui/styles";
+import {
+  buttonClass,
+  cardClass,
+  eyebrowClass,
+  fieldHintClass,
+  iconButtonClass,
+} from "@/components/ui/styles";
 import { formatIdr } from "@/lib/money/format-idr";
 import type { DailyExpensePoint } from "../types/dashboard";
 import { DailyExpenseChart } from "./daily-expense-chart";
@@ -22,16 +28,20 @@ export function MonthlyExpenseCard({
 }) {
   const recentZero = recentPoints.every((point) => point.expenseIdr === "0");
   return (
-    <section aria-labelledby="monthly-expense-title" className="monthly-expense-card card">
-      <div className="monthly-expense-heading">
+    <section aria-labelledby="monthly-expense-title" className={`${cardClass} shadow-none`}>
+      <div className="flex items-start justify-between gap-4 max-[540px]:flex-col max-[540px]:items-stretch">
         <div>
-          <p className="eyebrow">Ringkasan bulanan</p>
-          <h2 id="monthly-expense-title">Pengeluaran Bulan {monthLabel}</h2>
+          <p className={eyebrowClass}>Ringkasan bulanan</p>
+          <h2 id="monthly-expense-title" className="m-0 text-[1.15rem] tracking-[-.02em]">Pengeluaran Bulan {monthLabel}</h2>
         </div>
-        <div className="month-nav" role="group" aria-label="Pilih bulan">
+        <div className="flex items-center gap-[.45rem]" role="group" aria-label="Pilih bulan">
           <form action="/dashboard" method="get">
             <input name="month" type="hidden" value={prevMonth} />
-            <button aria-label="Bulan sebelumnya" className="icon-button" type="submit">
+            <button
+              aria-label="Bulan sebelumnya"
+              className={`${iconButtonClass} size-10 text-[1.15rem]`}
+              type="submit"
+            >
               ‹
             </button>
           </form>
@@ -43,25 +53,29 @@ export function MonthlyExpenseCard({
           </form>
           <form action="/dashboard" method="get">
             <input name="month" type="hidden" value={nextMonth} />
-            <button aria-label="Bulan berikutnya" className="icon-button" type="submit">
+            <button
+              aria-label="Bulan berikutnya"
+              className={`${iconButtonClass} size-10 text-[1.15rem]`}
+              type="submit"
+            >
               ›
             </button>
           </form>
         </div>
       </div>
-      <strong className="monthly-expense-total">{formatIdr(totalExpense)}</strong>
-      <div className="desktop-chart">
+      <strong className="my-[1.1rem_.2rem] block text-[clamp(1.6rem,4vw,2.5rem)] tracking-[-.04em] [overflow-wrap:anywhere]">{formatIdr(totalExpense)}</strong>
+      <div className="max-[860px]:hidden">
         <DailyExpenseChart points={monthPoints} />
       </div>
-      <div className="mobile-chart">
+      <div className="hidden max-[860px]:block">
         <DailyExpenseChart points={recentPoints} />
         {recentZero ? (
-          <p className="monthly-expense-zero" role="status">
+          <p className="mt-[.35rem] text-[.78rem] font-medium text-muted" role="status">
             Belum ada pengeluaran dalam 4 hari terakhir.
           </p>
         ) : null}
       </div>
-      <p className="field-hint">
+      <p className={fieldHintClass}>
         Grafik menampilkan pengeluaran per hari dalam zona Asia/Jakarta.
       </p>
     </section>

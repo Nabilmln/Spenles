@@ -25,7 +25,7 @@ function ExactTooltip({
   const point = payload?.[0]?.payload;
   if (!active || !point) return null;
   return (
-    <div className="chart-tooltip">
+    <div className="grid gap-[.2rem] rounded-[.65rem] border border-border bg-surface p-[.65rem_.75rem] text-[.75rem] text-foreground shadow-card">
       <strong>{point.name}</strong>
       <span>{formatIdr(point.expenseIdr)}</span>
       <span>{(point.shareBps / 100).toLocaleString("id-ID")}%</span>
@@ -39,7 +39,7 @@ export function CategoryExpenseChart({
   points: CategoryExpensePoint[];
 }) {
   return (
-    <div aria-hidden="true" className="chart-canvas category-chart-canvas">
+    <div aria-hidden="true" className="mt-4 h-[21rem] w-full max-[540px]:h-[19rem]">
       <ResponsiveContainer height="100%" width="100%">
         <BarChart
           data={points}

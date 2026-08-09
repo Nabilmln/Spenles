@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
 import { Select } from "@/components/ui/select";
 import { MonthSelector } from "@/components/ui/month-selector";
-import { buttonClass } from "@/components/ui/styles";
+import { buttonClass, fieldClass, iconButtonClass, inputClass } from "@/components/ui/styles";
 import type { SplitBillFilters } from "../schemas/split-bill-filters";
 
 export function activeSplitBillFilterCount(filters: SplitBillFilters) {
@@ -38,14 +38,14 @@ export function SplitBillFilterBar({
 
   return (
     <form
-      className="tx-filter-bar"
+      className="flex items-stretch gap-[.55rem]"
       id="split-bill-filters-form"
       method="get"
       role="search"
     >
       <input
         aria-label="Cari merchant"
-        className="input tx-search-input"
+        className={`${inputClass} flex-1 min-w-0`}
         defaultValue={filters.q}
         name="q"
         placeholder="Cari merchant"
@@ -55,12 +55,12 @@ export function SplitBillFilterBar({
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-label="Buka filter"
-        className="icon-button tx-filter-button"
+        className={`${iconButtonClass} relative w-[2.9rem] min-h-[2.9rem] shrink-0`}
         onClick={() => setOpen(true)}
         type="button"
       >
         <SlidersHorizontal aria-hidden="true" size={19} />
-        {count > 0 ? <span className="tx-filter-count">{count}</span> : null}
+        {count > 0 ? <span className="absolute -top-[.3rem] -right-[.3rem] grid min-w-[1.1rem] h-[1.1rem] place-items-center rounded-full bg-primary-600 px-[.25rem] text-[.66rem] font-medium text-white">{count}</span> : null}
       </button>
       <input name="status" type="hidden" value={status} />
       <input name="month" type="hidden" value={month} />
@@ -69,22 +69,22 @@ export function SplitBillFilterBar({
       <input name="pageSize" type="hidden" value={filters.pageSize} />
 
       {open ? (
-        <div className="tx-sheet-backdrop" onClick={() => setOpen(false)}>
+        <div className="fixed inset-0 z-40 flex items-end justify-center bg-[rgb(15_23_42/45%)] p-4 min-[861px]:items-center" onClick={() => setOpen(false)}>
           <div
             aria-labelledby="split-filter-title"
             aria-modal="true"
-            className="tx-filter-sheet"
+            className="w-[min(34rem,100%)] max-h-[88vh] overflow-y-auto rounded-[1.25rem_1.25rem_1.1rem_1.1rem] border border-border bg-surface p-[1.25rem] shadow-card"
             onClick={(event) => event.stopPropagation()}
             onKeyDown={(event) => {
               if (event.key === "Escape") setOpen(false);
             }}
             role="dialog"
           >
-            <div className="tx-sheet-header">
+            <div className="mb-4 flex items-center justify-between gap-4">
               <h2 id="split-filter-title">Filter Split Bill</h2>
               <button
                 aria-label="Tutup filter"
-                className="icon-button"
+                className={iconButtonClass}
                 onClick={() => setOpen(false)}
                 ref={closeButtonRef}
                 type="button"
@@ -92,9 +92,9 @@ export function SplitBillFilterBar({
                 <X aria-hidden="true" size={19} />
               </button>
             </div>
-            <div className="tx-sheet-fields">
-              <label className="field">
-                <span>Status</span>
+            <div className="grid gap-[.9rem]">
+              <label className={fieldClass}>
+                <span className="text-[.86rem] font-medium">Status</span>
                 <Select
                   aria-label="Status"
                   onChange={(event) => setStatus(event.target.value)}
@@ -107,12 +107,12 @@ export function SplitBillFilterBar({
                   <option value="all">Semua</option>
                 </Select>
               </label>
-              <div className="field">
-                <span>Bulan tagihan</span>
+              <div className={fieldClass}>
+                <span className="text-[.86rem] font-medium">Bulan tagihan</span>
                 <MonthSelector month={month} onChange={setMonth} />
               </div>
-              <label className="field">
-                <span>Urutkan</span>
+              <label className={fieldClass}>
+                <span className="text-[.86rem] font-medium">Urutkan</span>
                 <Select
                   aria-label="Urutkan"
                   onChange={(event) =>
@@ -124,8 +124,8 @@ export function SplitBillFilterBar({
                   <option value="amount">Nominal</option>
                 </Select>
               </label>
-              <label className="field">
-                <span>Arah urutan</span>
+              <label className={fieldClass}>
+                <span className="text-[.86rem] font-medium">Arah urutan</span>
                 <Select
                   aria-label="Arah urutan"
                   onChange={(event) =>
@@ -140,11 +140,11 @@ export function SplitBillFilterBar({
                 </Select>
               </label>
             </div>
-            <div className="tx-sheet-actions">
-              <Link className={buttonClass("secondary")} href="/split-bills">
+            <div className="mt-[1.25rem] flex gap-[.55rem]">
+              <Link className={buttonClass("secondary", "flex-1 justify-center")} href="/split-bills">
                 Reset
               </Link>
-              <button className={buttonClass("primary")} type="submit">
+              <button className={buttonClass("primary", "flex-1 justify-center")} type="submit">
                 Terapkan Filter
               </button>
             </div>

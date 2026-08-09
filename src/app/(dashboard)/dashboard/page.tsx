@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { requireSessionUser } from "@/lib/auth/require-session";
-import { buttonClass } from "@/components/ui/styles";
+import { buttonClass, cardClass } from "@/components/ui/styles";
 import {
   buildDailyExpenseChartContract,
   buildFourDayExpenseChartContract,
@@ -55,8 +55,8 @@ export default async function DashboardPage({
 
   if (!filtersResult.success) {
     return (
-      <div className="page-stack">
-        <section className="dashboard-section-error card" role="alert">
+      <div className="grid gap-[1.75rem]">
+        <section className={`${cardClass} flex items-center gap-[.8rem] shadow-none`} role="alert">
           <div>
             <h2>Periksa pilihan periode</h2>
             <p>{filtersResult.error}</p>
@@ -101,7 +101,7 @@ export default async function DashboardPage({
     : { income: 0n, expense: 0n };
 
   return (
-    <div className="page-stack dashboard-page">
+    <div className="grid gap-8">
       <FinancialOverview
         name={profile?.displayName ?? "Pengguna Spenles"}
         income={overview.income.toString()}
@@ -119,10 +119,10 @@ export default async function DashboardPage({
           totalExpense={daily.totalExpense}
         />
       ) : (
-        <div className="dashboard-section-error card" role="alert">
+        <div className={`${cardClass} flex items-center gap-[.8rem] shadow-none`} role="alert">
           <div>
-            <h2>Pengeluaran bulanan belum tersedia</h2>
-            <p>Silakan muat ulang halaman untuk mencoba lagi.</p>
+            <h2 className="m-[0_0_.25rem]! text-base!">Pengeluaran bulanan belum tersedia</h2>
+            <p className="m-0 text-muted text-[.84rem]">Silakan muat ulang halaman untuk mencoba lagi.</p>
           </div>
         </div>
       )}
@@ -132,10 +132,10 @@ export default async function DashboardPage({
       {isFulfilled(rollingResult) ? (
         <RollingThreeDayTransactions rows={rollingResult.value} />
       ) : (
-        <div className="dashboard-section-error card" role="alert">
+        <div className={`${cardClass} flex items-center gap-[.8rem] shadow-none`} role="alert">
           <div>
-            <h2>Aktivitas terbaru belum tersedia</h2>
-            <p>Silakan muat ulang halaman untuk mencoba lagi.</p>
+            <h2 className="m-[0_0_.25rem]! text-base!">Aktivitas terbaru belum tersedia</h2>
+            <p className="m-0 text-muted text-[.84rem]">Silakan muat ulang halaman untuk mencoba lagi.</p>
           </div>
         </div>
       )}

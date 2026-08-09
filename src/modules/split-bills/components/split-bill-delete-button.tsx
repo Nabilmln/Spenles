@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { iconButtonClass } from "@/components/ui/styles";
 import { deleteSplitBillAction } from "../actions/split-bill-actions";
 
 export function SplitBillDeleteButton({
@@ -16,9 +17,9 @@ export function SplitBillDeleteButton({
 
   if (confirming) {
     return (
-      <div className="split-row-delete-confirm">
-        <span className="muted">Hapus tagihan ini?</span>
-        <div className="split-delete-actions">
+      <div className="flex flex-wrap items-center justify-between gap-[.6rem]">
+        <span className="text-muted">Hapus tagihan ini?</span>
+        <div className="flex flex-wrap gap-[.6rem]">
           <Button
             type="button"
             variant="secondary"
@@ -36,10 +37,10 @@ export function SplitBillDeleteButton({
   }
 
   return (
-    <div className="split-row-delete">
+    <div className="flex justify-end">
       <button
         type="button"
-        className="icon-button"
+        className={iconButtonClass}
         aria-label={`Hapus ${label}`}
         onClick={() => setConfirming(true)}
       >

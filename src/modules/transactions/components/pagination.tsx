@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 import { buttonClass } from "@/components/ui/styles";
 import type { TransactionFilters } from "../schemas/transaction-filters";
 
@@ -12,10 +13,10 @@ export function Pagination({ filters, total, totalPages }: { filters: Transactio
     return `/transactions?${params}`;
   }
   return (
-    <nav className="pagination" aria-label="Paginasi transaksi">
-      <Link className={`${buttonClass("secondary")} ${filters.page <= 1 ? "disabled" : ""}`} aria-disabled={filters.page <= 1} href={href(Math.max(1, filters.page - 1))}>Sebelumnya</Link>
+    <nav className="flex items-center justify-between gap-4 text-muted max-[540px]:flex-col max-[540px]:items-stretch max-[540px]:text-center" aria-label="Paginasi transaksi">
+      <Link className={cn(buttonClass("secondary"), filters.page <= 1 ? "pointer-events-none opacity-[.45]" : "")} aria-disabled={filters.page <= 1} href={href(Math.max(1, filters.page - 1))}>Sebelumnya</Link>
       <span>Halaman {filters.page} dari {Math.max(totalPages, 1)} · {total} transaksi</span>
-      <Link className={`${buttonClass("secondary")} ${filters.page >= totalPages ? "disabled" : ""}`} aria-disabled={filters.page >= totalPages} href={href(Math.min(totalPages, filters.page + 1))}>Berikutnya</Link>
+      <Link className={cn(buttonClass("secondary"), filters.page >= totalPages ? "pointer-events-none opacity-[.45]" : "")} aria-disabled={filters.page >= totalPages} href={href(Math.min(totalPages, filters.page + 1))}>Berikutnya</Link>
     </nav>
   );
 }

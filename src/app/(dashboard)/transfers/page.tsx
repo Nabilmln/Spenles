@@ -1,4 +1,5 @@
 import { requireSessionUser } from "@/lib/auth/require-session";
+import { cardClass, pageDescriptionClass, pageStackClass } from "@/components/ui/styles";
 import {
   listActiveAccountOptions,
   listOwnedTransfers,
@@ -16,10 +17,10 @@ export default async function TransfersPage() {
     listOwnedTransfers(user.id),
   ]);
   return (
-    <div className="page-stack">
-      <p className="page-description">Transfer tidak dihitung sebagai pemasukan atau pengeluaran.</p>
-      <div className="domain-layout">
-        <section className="card">
+    <div className={pageStackClass}>
+      <p className={pageDescriptionClass}>Transfer tidak dihitung sebagai pemasukan atau pengeluaran.</p>
+      <div className="grid grid-cols-[minmax(18rem,.75fr)_minmax(0,1.25fr)] items-start gap-4 max-[860px]:grid-cols-1">
+        <section className={cardClass}>
           <h2>Transfer baru</h2>
           {accounts.length >= 2 ? (
             <TransferForm accounts={accounts} />

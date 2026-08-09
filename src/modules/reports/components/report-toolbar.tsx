@@ -2,7 +2,8 @@
 
 import { useRef, useState } from "react";
 import { CalendarRange, FileSpreadsheet, FileText, X } from "lucide-react";
-import { buttonClass } from "@/components/ui/styles";
+import { buttonClass, iconButtonClass } from "@/components/ui/styles";
+import { cn } from "@/lib/utils";
 import { formatReportRange } from "../lib/report-date";
 import { ReportDateRangePicker } from "./report-date-range-picker";
 
@@ -32,35 +33,35 @@ export function ReportToolbar({
   }
 
   return (
-    <div className="report-toolbar-outer">
-      <div className="report-toolbar">
+    <div>
+      <div className="flex gap-[.6rem]">
         <button
           aria-label={`Pilih rentang tanggal: ${rangeLabel}`}
-          className="report-range-button"
+          className="inline-flex min-h-[2.85rem] flex-[1_1_auto] cursor-pointer items-center justify-center gap-[.5rem] rounded-[.72rem] border border-border bg-surface p-[.65rem_1rem] font-medium text-foreground"
           onClick={() => setSheet("range")}
           type="button"
         >
-          <CalendarRange aria-hidden="true" size={18} />
-          <span>{rangeLabel}</span>
+          <CalendarRange aria-hidden="true" className="shrink-0 text-primary-600" size={18} />
+          <span className="text-[.85rem]">{rangeLabel}</span>
         </button>
         <button
           aria-haspopup="menu"
           aria-label="Ekspor laporan"
-          className="report-export-button"
+          className="inline-flex min-h-[2.85rem] shrink-0 cursor-pointer items-center justify-center gap-[.5rem] rounded-[.72rem] border border-border bg-surface p-[.65rem_1rem] font-medium text-foreground"
           onClick={() => setSheet("export")}
           type="button"
         >
-          <FileText aria-hidden="true" size={18} />
+          <FileText aria-hidden="true" className="shrink-0 text-primary-600" size={18} />
           <span>Export</span>
         </button>
       </div>
 
       {sheet === "range" ? (
-        <div className="report-sheet-backdrop" onClick={() => setSheet("none")}>
+        <div className="fixed inset-0 z-60 flex items-end justify-center bg-[rgb(15_17_21/55%)] p-4" onClick={() => setSheet("none")}>
           <div
             aria-labelledby="report-range-title"
             aria-modal="true"
-            className="report-sheet-panel report-sheet-calendar"
+            className="w-full max-w-[30rem] max-h-[86vh] overflow-y-auto border border-border bg-surface p-[1.25rem] rounded-[1.1rem] shadow-card"
             onClick={(event) => event.stopPropagation()}
             role="dialog"
           >
@@ -75,19 +76,19 @@ export function ReportToolbar({
       ) : null}
 
       {sheet === "export" ? (
-        <div className="report-sheet-backdrop" onClick={() => setSheet("none")}>
+        <div className="fixed inset-0 z-60 flex items-end justify-center bg-[rgb(15_17_21/55%)] p-4" onClick={() => setSheet("none")}>
           <div
             aria-labelledby="report-export-title"
             aria-modal="true"
-            className="report-sheet-panel report-export-sheet"
+            className="w-full max-w-[30rem] max-h-[86vh] overflow-y-auto border border-border bg-surface p-[1.25rem] rounded-[1.1rem] shadow-card"
             onClick={(event) => event.stopPropagation()}
             role="dialog"
           >
-            <div className="report-sheet-header">
-              <h2 id="report-export-title">Ekspor laporan</h2>
+            <div className="mb-4 flex items-center justify-between gap-[.75rem]">
+              <h2 id="report-export-title" className="m-0 text-[1.08rem]">Ekspor laporan</h2>
               <button
                 aria-label="Tutup menu ekspor"
-                className="icon-button"
+                className={iconButtonClass}
                 onClick={() => setSheet("none")}
                 ref={exportCloseRef}
                 type="button"
@@ -95,20 +96,20 @@ export function ReportToolbar({
                 <X aria-hidden="true" size={19} />
               </button>
             </div>
-            <p className="muted report-export-hint">
+            <p className="m-0 mb-4 text-muted">
               Rentang {rangeLabel} akan dipakai untuk ekspor.
             </p>
-            <div className="report-export-options">
-              <a className={`${buttonClass("secondary")} report-export-option`} href={pdfHref}>
-                <FileText aria-hidden="true" size={18} />
+            <div className="grid gap-[.65rem]">
+              <a className={cn(buttonClass("secondary"), "w-full justify-start")} href={pdfHref}>
+                <FileText aria-hidden="true" className="shrink-0" size={18} />
                 Export PDF
               </a>
-              <a className={`${buttonClass("secondary")} report-export-option`} href={csvHref}>
-                <FileSpreadsheet aria-hidden="true" size={18} />
+              <a className={cn(buttonClass("secondary"), "w-full justify-start")} href={csvHref}>
+                <FileSpreadsheet aria-hidden="true" className="shrink-0" size={18} />
                 Export CSV
               </a>
             </div>
-            <p className="financial-disclaimer">
+            <p className="mt-4 rounded-[.7rem] bg-surface-subtle p-3 text-[.76rem] text-muted">
               Data tetap pribadi. PDF mendukung hingga 366 hari dan detail maks. 500
               transaksi; CSV maks. 10.000 transaksi.
             </p>

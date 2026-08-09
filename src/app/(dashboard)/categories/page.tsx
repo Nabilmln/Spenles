@@ -1,4 +1,5 @@
 import { requireSessionUser } from "@/lib/auth/require-session";
+import { pageDescriptionClass, pageStackClass } from "@/components/ui/styles";
 import {
   CategoryManager,
   listCategories,
@@ -21,8 +22,8 @@ export default async function CategoriesPage() {
     isDefault: row.isDefault,
   }));
   return (
-    <div className="page-stack categories-page">
-      <p className="page-description">Kategori diarsipkan tetap tersimpan pada transaksi lama.</p>
+    <div className={pageStackClass}>
+      <p className={pageDescriptionClass}>Kategori diarsipkan tetap tersimpan pada transaksi lama.</p>
       <CategoryManager categories={categories} deletableIds={deletableIds} />
     </div>
   );

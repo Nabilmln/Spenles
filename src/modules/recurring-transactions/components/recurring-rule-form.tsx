@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { fieldClass, fieldLabelClass, textareaClass } from "@/components/ui/styles";
 import { formatJakartaDateTimeInput } from "@/lib/dates/jakarta";
 import type { RecurringActionState } from "../actions/recurring-actions";
 import { RECURRING_FREQUENCIES } from "../constants/frequencies";
@@ -40,28 +41,28 @@ export function RecurringRuleForm({
   );
   const startValue = defaultStart ?? generatedDefaultStart;
   return (
-    <form action={formAction} className="domain-form">
+    <form action={formAction} className="grid gap-4">
       {initial ? <input type="hidden" name="id" value={initial.id} /> : null}
-      <div className="field">
-        <label htmlFor="recurring-type">Jenis transaksi</label>
+      <div className={fieldClass}>
+        <label htmlFor="recurring-type" className={fieldLabelClass}>Jenis transaksi</label>
         <Select id="recurring-type" name="type" defaultValue={initial?.type ?? "expense"}>
           <option value="expense">Pengeluaran</option>
           <option value="income">Pemasukan</option>
         </Select>
       </div>
-      <div className="field">
-        <label htmlFor="recurring-amount">Jumlah (IDR)</label>
+      <div className={fieldClass}>
+        <label htmlFor="recurring-amount" className={fieldLabelClass}>Jumlah (IDR)</label>
         <Input id="recurring-amount" name="amount" type="number" min="1" step="1" defaultValue={initial?.amount} required />
       </div>
-      <div className="settings-grid">
-        <div className="field">
-          <label htmlFor="recurring-account">Akun</label>
+      <div className="grid grid-cols-2 gap-4 max-[540px]:grid-cols-1">
+        <div className={fieldClass}>
+          <label htmlFor="recurring-account" className={fieldLabelClass}>Akun</label>
           <Select id="recurring-account" name="accountId" defaultValue={initial?.accountId} required>
             {accounts.map((account) => <option key={account.id} value={account.id}>{account.name}</option>)}
           </Select>
         </div>
-        <div className="field">
-          <label htmlFor="recurring-category">Kategori</label>
+        <div className={fieldClass}>
+          <label htmlFor="recurring-category" className={fieldLabelClass}>Kategori</label>
           <Select id="recurring-category" name="categoryId" defaultValue={initial?.categoryId} required>
             {categories.map((category) => (
               <option key={category.id} value={category.id}>
@@ -71,26 +72,26 @@ export function RecurringRuleForm({
           </Select>
         </div>
       </div>
-      <div className="field">
-        <label htmlFor="recurring-frequency">Frekuensi</label>
+      <div className={fieldClass}>
+        <label htmlFor="recurring-frequency" className={fieldLabelClass}>Frekuensi</label>
         <Select id="recurring-frequency" name="frequency" defaultValue={initial?.frequency ?? "monthly"}>
           {RECURRING_FREQUENCIES.map((frequency) => <option key={frequency.value} value={frequency.value}>{frequency.label}</option>)}
         </Select>
       </div>
-      <div className="settings-grid">
-        <div className="field">
-          <label htmlFor="recurring-start">Mulai</label>
+      <div className="grid grid-cols-2 gap-4 max-[540px]:grid-cols-1">
+        <div className={fieldClass}>
+          <label htmlFor="recurring-start" className={fieldLabelClass}>Mulai</label>
           <Input id="recurring-start" name="startAt" type="datetime-local" defaultValue={startValue} disabled={Boolean(initial)} required />
           {initial ? <input type="hidden" name="startAt" value={startValue} /> : null}
         </div>
-        <div className="field">
-          <label htmlFor="recurring-end">Tanggal selesai (opsional)</label>
+        <div className={fieldClass}>
+          <label htmlFor="recurring-end" className={fieldLabelClass}>Tanggal selesai (opsional)</label>
           <Input id="recurring-end" name="endDate" type="date" defaultValue={initial?.endDate ?? ""} />
         </div>
       </div>
-      <div className="field">
-        <label htmlFor="recurring-note">Catatan (opsional)</label>
-        <textarea className="input textarea" id="recurring-note" name="note" defaultValue={initial?.note ?? ""} maxLength={500} />
+      <div className={fieldClass}>
+        <label htmlFor="recurring-note" className={fieldLabelClass}>Catatan (opsional)</label>
+        <textarea className={textareaClass} id="recurring-note" name="note" defaultValue={initial?.note ?? ""} maxLength={500} />
       </div>
       <FormMessage>{state.error}</FormMessage>
       <Button type="submit" disabled={pending || accounts.length === 0 || categories.length === 0}>

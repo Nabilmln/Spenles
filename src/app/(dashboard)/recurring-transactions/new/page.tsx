@@ -1,4 +1,5 @@
 import { requireSessionUser } from "@/lib/auth/require-session";
+import { cardClass, narrowPageClass, pageDescriptionClass, pageStackClass } from "@/components/ui/styles";
 import {
   createRecurringRuleAction,
   listRecurringOptions,
@@ -11,9 +12,9 @@ export default async function NewRecurringRulePage() {
   const user = await requireSessionUser();
   const options = await listRecurringOptions(user.id);
   return (
-    <div className="page-stack narrow-page">
-      <p className="page-description">Kejadian masa lalu tidak dibuat saat aturan disimpan.</p>
-      <section className="card">
+    <div className={`${pageStackClass} ${narrowPageClass}`}>
+      <p className={pageDescriptionClass}>Kejadian masa lalu tidak dibuat saat aturan disimpan.</p>
+      <section className={cardClass}>
         <RecurringRuleForm
           action={createRecurringRuleAction}
           accounts={options.accounts}

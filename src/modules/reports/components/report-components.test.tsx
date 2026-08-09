@@ -29,9 +29,9 @@ describe("compact report summary", () => {
         totals={{ incomeIdr: "0", expenseIdr: "50000", netIdr: "-50000" }}
       />,
     );
-    expect(
-      container.querySelector(".report-summary-net-negative"),
-    ).not.toBeNull();
+    const net = container.querySelectorAll("strong")[2] as HTMLElement;
+    expect(net.textContent).toMatch(/Rp\s*50\.000/u);
+    expect(net.className).toContain("text-expense");
   });
 
   it("marks a positive net difference as surplus", () => {
@@ -40,9 +40,9 @@ describe("compact report summary", () => {
         totals={{ incomeIdr: "0", expenseIdr: "0", netIdr: "1000" }}
       />,
     );
-    expect(
-      container.querySelector(".report-summary-net-positive"),
-    ).not.toBeNull();
+    const net = container.querySelectorAll("strong")[2] as HTMLElement;
+    expect(net.textContent).toMatch(/Rp\s*1\.000/u);
+    expect(net.className).toContain("text-income");
   });
 });
 

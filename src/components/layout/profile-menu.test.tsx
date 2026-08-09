@@ -29,7 +29,7 @@ describe("ProfileMenu", () => {
     const logout = screen
       .getByText("Keluar")
       .closest("button") as HTMLButtonElement;
-    expect(logout).toHaveClass("profile-menu-logout");
+    expect(logout).toHaveClass("text-expense");
     expect(logout).toHaveAttribute("type", "submit");
   });
 

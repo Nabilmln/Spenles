@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { requireSessionUser } from "@/lib/auth/require-session";
-import { buttonClass, cardClass } from "@/components/ui/styles";
+import { buttonClass, cardClass, entityHeadingClass, narrowPageClass, pageDescriptionClass, pageHeadingCopyClass, pageHeadingRowClass, pageStackClass } from "@/components/ui/styles";
 import { formatIdr } from "@/lib/money/format-idr";
 import { getOwnedAccount } from "@/modules/accounts";
 
@@ -18,19 +18,19 @@ export default async function AccountDetailPage({
   if (!account) notFound();
   const negative = BigInt(account.balance) < 0n;
   return (
-    <div className="page-stack narrow-page">
-      <div className="page-heading-row">
-        <div className="page-heading-copy">
-          <h2 className="entity-heading">{account.name}</h2>
-          <p className="page-description">{account.status === "active" ? "Akun aktif" : "Akun diarsipkan"}</p>
+    <div className={`${pageStackClass} ${narrowPageClass}`}>
+      <div className={pageHeadingRowClass}>
+        <div className={pageHeadingCopyClass}>
+          <h2 className={entityHeadingClass}>{account.name}</h2>
+          <p className={pageDescriptionClass}>{account.status === "active" ? "Akun aktif" : "Akun diarsipkan"}</p>
         </div>
         <Link className={buttonClass("secondary")} href={`/accounts/${account.id}/edit`}>Edit</Link>
       </div>
-      <section className={`${cardClass} account-detail`}>
-        <p>Saldo saat ini</p>
-        <strong className={negative ? "negative-balance" : undefined}>{formatIdr(account.balance)}</strong>
-        {negative ? <p className="warning-copy">Saldo akun negatif.</p> : null}
-        <p>Saldo awal: {formatIdr(account.openingBalance)}</p>
+      <section className={`${cardClass} grid gap-[.25rem]`}>
+        <p className="m-0 text-muted text-[.78rem]">Saldo saat ini</p>
+        <strong className={`wrap-anywhere text-[clamp(1.35rem,2.7vw,2rem)] ${negative ? "text-expense" : ""}`}>{formatIdr(account.balance)}</strong>
+        {negative ? <p className="m-0 font-medium text-expense!">Saldo akun negatif.</p> : null}
+        <p className="m-0 text-muted text-[.78rem]">Saldo awal: {formatIdr(account.openingBalance)}</p>
       </section>
     </div>
   );

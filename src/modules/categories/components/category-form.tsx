@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
-import { successMessageClass } from "@/components/ui/styles";
+import { fieldClass, fieldLabelClass, successMessageClass } from "@/components/ui/styles";
 import type { CategoryActionState } from "../actions/category-actions";
 import { CATEGORY_COLORS } from "../constants/category-options";
 import { CategoryIconPicker } from "./category-icon-picker";
@@ -28,15 +28,15 @@ export function CategoryForm({
   const [state, formAction, pending] = useActionState(action, {});
   const key = initial?.id ?? "new";
   return (
-    <form action={formAction} className="category-form" id={formId}>
+    <form action={formAction} className="grid gap-4" id={formId}>
       {initial ? <input type="hidden" name="id" value={initial.id} /> : null}
-      <div className="field">
-        <label htmlFor={`category-name-${key}`}>Nama kategori</label>
+      <div className={fieldClass}>
+        <label htmlFor={`category-name-${key}`} className={fieldLabelClass}>Nama kategori</label>
         <Input id={`category-name-${key}`} name="name" defaultValue={initial?.name} maxLength={80} required />
       </div>
       {!initial ? (
-        <div className="field">
-          <label htmlFor={`category-type-${key}`}>Jenis</label>
+        <div className={fieldClass}>
+          <label htmlFor={`category-type-${key}`} className={fieldLabelClass}>Jenis</label>
           <Select id={`category-type-${key}`} name="type" defaultValue="expense">
             <option value="expense">Pengeluaran</option>
             <option value="income">Pendapatan</option>
@@ -44,8 +44,8 @@ export function CategoryForm({
         </div>
       ) : null}
       <CategoryIconPicker value={initial?.icon ?? null} />
-      <div className="field">
-        <label htmlFor={`category-color-${key}`}>Warna</label>
+      <div className={fieldClass}>
+        <label htmlFor={`category-color-${key}`} className={fieldLabelClass}>Warna</label>
         <Select id={`category-color-${key}`} name="color" defaultValue={initial?.color ?? ""}>
           <option value="">Warna standar</option>
           {CATEGORY_COLORS.map((value) => <option key={value} value={value}>{value}</option>)}
@@ -53,7 +53,7 @@ export function CategoryForm({
       </div>
       <FormMessage>{state.error}</FormMessage>
       {state.success ? <p className={successMessageClass}>{state.success}</p> : null}
-      <Button type="submit" disabled={pending}>{pending ? "Menyimpan..." : initial ? "Simpan perubahan" : "Tambah Kategori"}</Button>
+      <Button className="w-full justify-center" type="submit" disabled={pending}>{pending ? "Menyimpan..." : initial ? "Simpan perubahan" : "Tambah Kategori"}</Button>
     </form>
   );
 }

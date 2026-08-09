@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowDownLeft, ArrowUpRight, Pencil } from "lucide-react";
 import { notFound } from "next/navigation";
 import { requireSessionUser } from "@/lib/auth/require-session";
-import { buttonClass, emptyStateClass } from "@/components/ui/styles";
+import { buttonClass, cardClass, emptyStateClass, entityHeadingClass, iconButtonClass, narrowPageClass, pageDescriptionClass, pageHeadingCopyClass, pageHeadingRowClass, pageStackClass } from "@/components/ui/styles";
 import { formatJakartaDateLong } from "@/lib/dates/jakarta";
 import { formatRangeLong } from "@/lib/dates/format-id";
 import { formatIdr } from "@/lib/money/format-idr";
@@ -50,43 +50,43 @@ export default async function CategoryDetailPage({
   const total = rows.reduce((sum, row) => sum + BigInt(row.amountIdr), 0n);
 
   return (
-    <div className="page-stack narrow-page">
-      <div className="page-heading-row">
-        <div className="page-heading-copy">
-          <h2 className="entity-heading">{category.name}</h2>
-          <p className="page-description">{`Rincian ${category.type === "income" ? "pemasukan" : "pengeluaran"} dari ${formatRangeLong(from, to)} dalam Asia/Jakarta.`}</p>
+    <div className={`${pageStackClass} ${narrowPageClass}`}>
+      <div className={pageHeadingRowClass}>
+        <div className={pageHeadingCopyClass}>
+          <h2 className={entityHeadingClass}>{category.name}</h2>
+          <p className={pageDescriptionClass}>{`Rincian ${category.type === "income" ? "pemasukan" : "pengeluaran"} dari ${formatRangeLong(from, to)} dalam Asia/Jakarta.`}</p>
         </div>
         <Link className={buttonClass("secondary")} href={`/reports?from=${from}&to=${to}`}>
           Kembali ke laporan
         </Link>
       </div>
 
-      <div className="summary-card card summary-net">
-        <div className="summary-card-heading">
-          <h2>Total {category.type === "income" ? "pemasukan" : "pengeluaran"}</h2>
+      <div className={`${cardClass} grid gap-[.2rem]`}>
+        <div>
+          <h2 className="m-0 text-[.86rem] text-muted">Total {category.type === "income" ? "pemasukan" : "pengeluaran"}</h2>
         </div>
-        <strong className="summary-value">{formatIdr(total)}</strong>
+        <strong className="wrap-anywhere text-[clamp(1.35rem,2.5vw,2rem)] tracking-[-.04em]">{formatIdr(total)}</strong>
       </div>
 
       {rows.length ? (
-        <div className="transaction-list">
+        <div className="grid gap-[.75rem]">
           {rows.map((row) => (
-            <article className="transaction-row card" key={row.id}>
-              <span className={`transaction-icon ${row.type}`}>
+            <article className={`${cardClass} grid grid-cols-[auto_minmax(0,1fr)_auto_auto] items-center gap-4 max-[540px]:grid-cols-[auto_minmax(0,1fr)_auto]`} key={row.id}>
+              <span className={`grid size-[2.7rem] place-items-center rounded-full ${row.type === "income" ? "text-income bg-[color-mix(in_srgb,var(--income)_10%,transparent)]" : "text-expense bg-[color-mix(in_srgb,var(--expense)_10%,transparent)]"}`}>
                 {row.type === "income" ? <ArrowDownLeft /> : <ArrowUpRight />}
               </span>
-              <div className="transaction-copy">
+              <div className="grid min-w-0">
                 <strong>{row.accountName}</strong>
-                <span>{formatJakartaDateLong(row.transactionAt)}</span>
-                {row.note ? <small>{row.note}</small> : null}
+                <span className="truncate text-muted">{formatJakartaDateLong(row.transactionAt)}</span>
+                {row.note ? <small className="truncate text-muted">{row.note}</small> : null}
               </div>
-              <strong className={`transaction-amount ${row.type}`}>
+              <strong className={`text-[.9rem] max-[540px]:col-start-2 ${row.type === "income" ? "text-income" : "text-expense"}`}>
                 {row.type === "income" ? "+" : "−"} {formatIdr(row.amountIdr)}
               </strong>
-              <div className="transaction-actions">
+              <div className="flex items-center gap-2 max-[540px]:col-start-3 max-[540px]:row-span-2">
                 <Link
                   aria-label={`Edit transaksi ${row.note ?? ""}`}
-                  className="icon-button"
+                  className={iconButtonClass}
                   href={`/transactions/${row.id}/edit`}
                 >
                   <Pencil size={17} aria-hidden="true" />

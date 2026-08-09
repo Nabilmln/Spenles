@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
+import { textareaClass } from "@/components/ui/styles";
 import {
   createShareSummaryAction,
   type SplitBillActionState,
@@ -24,9 +25,9 @@ export function ShareSummaryButton({ billId }: { billId: string }) {
   }, [state.text]);
 
   return (
-    <form action={action} className="share-summary-form">
+    <form action={action} className="mt-[.5rem] grid gap-[.65rem]">
       <input type="hidden" name="id" value={billId} />
-      <label>
+      <label className="inline-flex items-center gap-[.4rem] text-[.82rem]">
         <input type="checkbox" name="includePaymentStatus" defaultChecked />
         Sertakan status pembayaran
       </label>
@@ -37,7 +38,7 @@ export function ShareSummaryButton({ billId }: { billId: string }) {
       {copyStatus ? <p role="status">{copyStatus}</p> : null}
       {state.text ? (
         <textarea
-          className="input textarea share-text"
+          className={`${textareaClass} min-h-[11rem] text-[.78rem]`}
           readOnly
           value={state.text}
           aria-label="Ringkasan tagihan siap disalin"

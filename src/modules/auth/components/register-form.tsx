@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { Input } from "@/components/ui/input";
 import { FormMessage } from "@/components/ui/form-message";
-import { textLinkClass } from "@/components/ui/styles";
+import { fieldClass, textLinkClass } from "@/components/ui/styles";
 import { registerAction } from "../actions/register";
 import type { AuthActionState } from "../actions/login";
 import { PasswordField } from "./password-field";
@@ -18,7 +18,7 @@ export function RegisterForm() {
   return (
     <form action={action} className="grid gap-[1.25rem]" noValidate>
       <FormMessage>{state.error}</FormMessage>
-      <div className="field">
+      <div className={fieldClass}>
         <label htmlFor="name">Nama</label>
         <Input
           id="name"
@@ -32,7 +32,7 @@ export function RegisterForm() {
           {state.fieldErrors?.name?.[0]}
         </FormMessage>
       </div>
-      <div className="field">
+      <div className={fieldClass}>
         <label htmlFor="email">Email</label>
         <Input
           id="email"
@@ -47,7 +47,7 @@ export function RegisterForm() {
           {state.fieldErrors?.email?.[0]}
         </FormMessage>
       </div>
-      <div className="field">
+      <div className={fieldClass}>
         <label htmlFor="password">Kata sandi</label>
         <PasswordField
           id="password"
@@ -60,7 +60,7 @@ export function RegisterForm() {
           {state.fieldErrors?.password?.[0]}
         </FormMessage>
       </div>
-      <div className="field">
+      <div className={fieldClass}>
         <label htmlFor="passwordConfirmation">Konfirmasi kata sandi</label>
         <PasswordField
           id="passwordConfirmation"

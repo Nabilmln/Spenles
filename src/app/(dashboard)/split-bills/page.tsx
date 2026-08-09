@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { requireSessionUser } from "@/lib/auth/require-session";
-import { buttonClass, cardClass } from "@/components/ui/styles";
+import { buttonClass, cardClass, pageDescriptionClass, pageHeadingRowClass, pageStackClass } from "@/components/ui/styles";
 import {
   listOwnedSplitBills,
   parseSplitBillFilters,
@@ -20,7 +20,7 @@ export default async function SplitBillsPage({
   const parsed = parseSplitBillFilters(await searchParams);
   if (!parsed.success) {
     return (
-      <div className="page-stack">
+      <div className={pageStackClass}>
         <div className={cardClass}>
           <Link className={buttonClass("primary")} href="/split-bills">
             Reset filter
@@ -31,9 +31,9 @@ export default async function SplitBillsPage({
   }
   const result = await listOwnedSplitBills(user.id, parsed.data);
   return (
-    <div className="page-stack">
-      <div className="page-heading-row">
-        <p className="page-description">Bagi item, diskon, pajak, dan biaya layanan dengan rekonsiliasi rupiah yang tepat.</p>
+    <div className={pageStackClass}>
+      <div className={pageHeadingRowClass}>
+        <p className={pageDescriptionClass}>Bagi item, diskon, pajak, dan biaya layanan dengan rekonsiliasi rupiah yang tepat.</p>
         <Link className={buttonClass("primary")} href="/split-bills/new">
           Buat Split Bill
         </Link>

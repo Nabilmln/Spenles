@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
+import { fieldClass, fieldLabelClass } from "@/components/ui/styles";
 import type { AccountActionState } from "../actions/account-actions";
 import { ACCOUNT_TYPES } from "../constants/account-types";
 
@@ -25,10 +26,10 @@ export function AccountForm({
 }) {
   const [state, formAction, pending] = useActionState(action, {});
   return (
-    <form action={formAction} className="domain-form">
+    <form action={formAction} className="grid gap-4">
       {initial ? <input type="hidden" name="id" value={initial.id} /> : null}
-      <div className="field">
-        <label htmlFor="account-name">Nama akun</label>
+      <div className={fieldClass}>
+        <label htmlFor="account-name" className={fieldLabelClass}>Nama akun</label>
         <Input
           id="account-name"
           name="name"
@@ -37,8 +38,8 @@ export function AccountForm({
           required
         />
       </div>
-      <div className="field">
-        <label htmlFor="account-type">Jenis akun</label>
+      <div className={fieldClass}>
+        <label htmlFor="account-type" className={fieldLabelClass}>Jenis akun</label>
         <Select
           id="account-type"
           name="type"
@@ -51,8 +52,8 @@ export function AccountForm({
           ))}
         </Select>
       </div>
-      <div className="field">
-        <label htmlFor="opening-balance">Saldo awal (IDR)</label>
+      <div className={fieldClass}>
+        <label htmlFor="opening-balance" className={fieldLabelClass}>Saldo awal (IDR)</label>
         <Input
           id="opening-balance"
           name="openingBalance"
@@ -64,7 +65,7 @@ export function AccountForm({
           required
         />
         {initial ? (
-          <small>Saldo awal hanya dapat diubah sebelum akun memiliki riwayat.</small>
+          <small className="text-muted">Saldo awal hanya dapat diubah sebelum akun memiliki riwayat.</small>
         ) : null}
       </div>
       <FormMessage>{state.error}</FormMessage>

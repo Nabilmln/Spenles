@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { requireSessionUser } from "@/lib/auth/require-session";
+import { narrowPageClass, pageDescriptionClass, pageStackClass } from "@/components/ui/styles";
 import { getProfile, ProfileForm } from "@/modules/profiles";
 
 export const metadata = { title: "Profil" };
@@ -10,8 +11,8 @@ export default async function ProfilePage() {
   const profile = await getProfile(user.id);
   if (!profile) throw new Error("Profil tidak ditemukan.");
   return (
-    <div className="page-stack narrow-page">
-      <p className="page-description">Atur identitas tampilan dan preferensi dasar aplikasi.</p>
+    <div className={`${pageStackClass} ${narrowPageClass}`}>
+      <p className={pageDescriptionClass}>Atur identitas tampilan dan preferensi dasar aplikasi.</p>
       <Card><ProfileForm profile={profile} email={user.email ?? ""} /></Card>
     </div>
   );

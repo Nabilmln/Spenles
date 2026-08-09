@@ -1,5 +1,6 @@
 import { formatIdr } from "@/lib/money/format-idr";
 import { formatDateLongNoYear } from "@/lib/dates/format-id";
+import { cardClass, eyebrowClass } from "@/components/ui/styles";
 import { ChartShell, IncomeExpenseChart } from "@/modules/dashboard";
 import { formatReportRange } from "../lib/report-date";
 import type { ReportMonth } from "../types";
@@ -66,16 +67,16 @@ export function ReportCashFlow({
     (point) => BigInt(point.incomeIdr) === 0n && BigInt(point.expenseIdr) === 0n,
   );
   return (
-    <section aria-labelledby="report-cash-flow-title" className="card report-cash-flow-card">
-      <div className="dashboard-section-heading">
+    <section aria-labelledby="report-cash-flow-title" className={cardClass}>
+      <div className="mb-[.5rem] flex items-start justify-between gap-4 max-[540px]:flex-col">
         <div>
-          <p className="eyebrow">Arus Kas</p>
-          <h2 id="report-cash-flow-title">Pemasukan vs pengeluaran</h2>
+          <p className={eyebrowClass}>Arus Kas</p>
+          <h2 id="report-cash-flow-title" className="m-0 text-[1.08rem] tracking-[-.02em]">Pemasukan vs pengeluaran</h2>
         </div>
-        <p>{formatReportRange(from, to)}</p>
+        <p className="m-0 text-[.84rem] text-muted">{formatReportRange(from, to)}</p>
       </div>
       {zero ? (
-        <p className="muted report-zero-hint" role="status">
+        <p className="m-0 mb-[.75rem] text-muted" role="status">
           Belum ada data pada periode ini.
         </p>
       ) : null}

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { requireSessionUser } from "@/lib/auth/require-session";
-import { buttonClass, cardClass } from "@/components/ui/styles";
+import { buttonClass, cardClass, pageDescriptionClass, pageStackClass } from "@/components/ui/styles";
 import {
   getTransactionOptions,
   getTransactionSummary,
@@ -22,7 +22,7 @@ export default async function TransactionsPage({
   const parsed = parseTransactionFilters(raw);
   if (!parsed.success) {
     return (
-      <div className="page-stack">
+      <div className={pageStackClass}>
         <div className={cardClass}><p className="m-0 text-muted">Parameter pencarian atau filter tidak dapat digunakan.</p><Link className={buttonClass("primary")} href="/transactions">Reset filter</Link></div>
       </div>
     );
@@ -33,8 +33,8 @@ export default async function TransactionsPage({
     getTransactionSummary(user.id, parsed.data),
   ]);
   return (
-    <div className="page-stack">
-      <p className="page-description">Catat dan temukan pemasukan, pengeluaran, maupun tabungan Anda.</p>
+    <div className={pageStackClass}>
+      <p className={pageDescriptionClass}>Catat dan temukan pemasukan, pengeluaran, maupun tabungan Anda.</p>
       <TransactionSummary income={summary.income} expense={summary.expense} savings={summary.savings} />
       <TransactionFilterBar filters={parsed.data} {...options} />
       <TransactionList rows={result.rows} />

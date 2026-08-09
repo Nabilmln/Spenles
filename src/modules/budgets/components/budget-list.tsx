@@ -4,7 +4,12 @@ import Link from "next/link";
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
-import { buttonClass, emptyStateClass } from "@/components/ui/styles";
+import {
+  buttonClass,
+  cardClass,
+  emptyStateClass,
+  eyebrowClass,
+} from "@/components/ui/styles";
 import { formatIdr } from "@/lib/money/format-idr";
 import {
   archiveBudgetAction,
@@ -18,6 +23,12 @@ const statusLabel = {
   safe: "Aman",
   warning: "Peringatan",
   exceeded: "Terlewati",
+};
+
+const statusBadgeClass = {
+  safe: "text-income bg-[color-mix(in_srgb,var(--income)_10%,transparent)]",
+  warning: "text-[#b45309] bg-[color-mix(in_srgb,var(--warning)_16%,transparent)]",
+  exceeded: "text-expense bg-[color-mix(in_srgb,var(--expense)_10%,transparent)]",
 };
 
 function BudgetStatusForm({ row }: { row: BudgetListRow }) {
@@ -47,23 +58,23 @@ export function BudgetList({ rows }: { rows: BudgetListRow[] }) {
     return <div className={emptyStateClass}><p className="m-0 text-muted">Belum ada anggaran bulanan.</p></div>;
   }
   return (
-    <div className="domain-grid">
+    <div className="grid grid-cols-[repeat(3,minmax(0,1fr))] gap-4 max-[1100px]:grid-cols-[repeat(2,minmax(0,1fr))] max-[540px]:grid-cols-1">
       {rows.map((row) => {
         const percent = BigInt(row.percentageBps);
         const progress = Number(percent > 10_000n ? 10_000n : percent) / 100;
         return (
-          <article className="card domain-card" key={row.id}>
-            <div className="domain-card-heading">
+          <article className={`${cardClass} grid min-w-0 gap-[.9rem]`} key={row.id}>
+            <div className="flex items-start justify-between gap-4">
               <div>
-                <p className="eyebrow">{row.month}</p>
+                <p className={eyebrowClass}>{row.month}</p>
                 <h2>{row.categoryName}</h2>
               </div>
-              <span className={`status-badge budget-${row.budgetStatus}`}>
+              <span className={`inline-flex min-h-[1.8rem] items-center rounded-full px-[.55rem] py-[.25rem] text-[.72rem] font-medium whitespace-nowrap ${statusBadgeClass[row.budgetStatus]}`}>
                 {statusLabel[row.budgetStatus]}
               </span>
             </div>
             <div
-              className="budget-progress"
+              className="h-[.7rem] overflow-hidden rounded-full bg-surface-subtle"
               role="progressbar"
               aria-label={`Pemakaian anggaran ${row.categoryName}`}
               aria-valuemin={0}
@@ -71,15 +82,15 @@ export function BudgetList({ rows }: { rows: BudgetListRow[] }) {
               aria-valuenow={progress}
               aria-valuetext={`${formatPercentageBps(percent)} digunakan`}
             >
-              <span style={{ width: `${progress}%` }} />
+              <span className="block h-full rounded-[inherit] bg-primary-600" style={{ width: `${progress}%` }} />
             </div>
-            <dl className="budget-metrics">
-              <div><dt>Anggaran</dt><dd>{formatIdr(row.amount)}</dd></div>
-              <div><dt>Terpakai</dt><dd>{formatIdr(row.usage)}</dd></div>
-              <div><dt>Sisa</dt><dd>{formatIdr(row.remaining)}</dd></div>
-              <div><dt>Persentase</dt><dd>{formatPercentageBps(percent)}</dd></div>
+            <dl className="m-0 grid grid-cols-2 gap-[.65rem]">
+              <div className="grid gap-[.15rem]"><dt className="text-[.72rem] text-muted">Anggaran</dt><dd className="m-0 font-medium">{formatIdr(row.amount)}</dd></div>
+              <div className="grid gap-[.15rem]"><dt className="text-[.72rem] text-muted">Terpakai</dt><dd className="m-0 font-medium">{formatIdr(row.usage)}</dd></div>
+              <div className="grid gap-[.15rem]"><dt className="text-[.72rem] text-muted">Sisa</dt><dd className="m-0 font-medium">{formatIdr(row.remaining)}</dd></div>
+              <div className="grid gap-[.15rem]"><dt className="text-[.72rem] text-muted">Persentase</dt><dd className="m-0 font-medium">{formatPercentageBps(percent)}</dd></div>
             </dl>
-            <div className="form-actions">
+            <div className="flex items-center gap-2">
               {row.recordStatus === "active" ? (
                 <Link className={buttonClass("secondary")} href={`/budgets/${row.id}/edit`}>Edit</Link>
               ) : null}

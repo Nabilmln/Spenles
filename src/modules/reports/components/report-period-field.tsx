@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { CalendarRange, ChevronDown } from "lucide-react";
-import { buttonClass } from "@/components/ui/styles";
+import { buttonClass, inputClass } from "@/components/ui/styles";
+import { cn } from "@/lib/utils";
 import { formatRangeLong } from "@/lib/dates/format-id";
 
 const OFFSET_MS = 7 * 60 * 60 * 1000;
@@ -96,19 +97,23 @@ export function ReportPeriodField({
   const label = formatRangeLong(from, to);
 
   return (
-    <div className="date-range-field">
+    <div className="relative">
       <input name="from" type="hidden" value={customFrom} />
       <input name="to" type="hidden" value={customTo} />
-      <details className="date-range-popover">
-        <summary aria-label="Pilih rentang tanggal" className="date-range-trigger">
+      <details className="relative">
+        <summary
+          aria-label="Pilih rentang tanggal"
+          className="flex min-h-[2.9rem] cursor-pointer list-none items-center justify-between gap-2 rounded-[.72rem] border border-border bg-surface-subtle p-[.72rem_.85rem] font-medium text-foreground marker:hidden [&::-webkit-details-marker]:hidden"
+        >
           <CalendarRange aria-hidden="true" size={18} />
-          <span>{label}</span>
-          <ChevronDown aria-hidden="true" className="date-range-chevron" size={18} />
+          <span className="truncate text-[.85rem]">{label}</span>
+          <ChevronDown aria-hidden="true" className="shrink-0 text-muted" size={18} />
         </summary>
-        <div className="date-range-menu">
+        <div className="absolute left-1/2 top-[calc(100%+.45rem)] z-15 grid w-max min-w-full max-w-[calc(100vw-1.5rem)] -translate-x-1/2 gap-[.3rem] rounded-[.8rem] border border-border bg-surface p-2 shadow-card">
           {presetOptions.map((option) => (
             <button
               key={option.id}
+              className="min-h-[2.6rem] cursor-pointer rounded-[.55rem] border-0 bg-transparent p-[.5rem_.65rem] text-left text-[.85rem] text-foreground [overflow-wrap:anywhere] hover:bg-surface-subtle focus-visible:bg-surface-subtle"
               onClick={() => {
                 setCustomFrom(option.from);
                 setCustomTo(option.to);
@@ -119,23 +124,23 @@ export function ReportPeriodField({
               {option.label}
             </button>
           ))}
-          <div className="date-range-custom">
+          <div className="grid grid-cols-2 gap-2 border-t border-border p-[.6rem_.35rem_.2rem]">
             <input
               aria-label="Tanggal awal"
-              className="input"
+              className={inputClass}
               onChange={(event) => setCustomFrom(event.target.value)}
               type="date"
               value={customFrom}
             />
             <input
               aria-label="Tanggal akhir"
-              className="input"
+              className={inputClass}
               onChange={(event) => setCustomTo(event.target.value)}
               type="date"
               value={customTo}
             />
             <button
-              className={buttonClass("secondary")}
+              className={cn(buttonClass("secondary"), "col-span-full")}
               onClick={() => submitValues(customFrom, customTo)}
               type="button"
             >

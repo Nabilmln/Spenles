@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ListTree, Repeat2, Target, WalletCards } from "lucide-react";
+import { cardClass } from "@/components/ui/styles";
 
 const features = [
   { href: "/accounts", label: "Akun", icon: WalletCards },
@@ -10,10 +11,14 @@ const features = [
 
 export function DashboardFeatureGrid() {
   return (
-    <nav aria-label="Navigasi fitur" className="feature-nav-card card">
-      <div className="feature-nav">
+    <nav aria-label="Navigasi fitur" className={`${cardClass} shadow-none`}>
+      <div className="flex gap-[.4rem] overflow-x-auto pb-[.15rem] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {features.map(({ href, label, icon: Icon }) => (
-          <Link className="feature-nav-item" href={href} key={href}>
+          <Link
+            className="flex min-h-[3.5rem] min-w-[4.75rem] flex-1 flex-col items-center justify-center gap-[.35rem] rounded-[.8rem] p-[.5rem_.4rem] text-center text-[.72rem] font-medium text-foreground hover:bg-surface-subtle [&_svg]:text-primary-600"
+            href={href}
+            key={href}
+          >
             <Icon aria-hidden="true" size={20} />
             <span>{label}</span>
           </Link>

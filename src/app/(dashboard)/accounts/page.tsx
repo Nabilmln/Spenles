@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { requireSessionUser } from "@/lib/auth/require-session";
-import { buttonClass } from "@/components/ui/styles";
+import { buttonClass, pageActionsClass, pageDescriptionClass, pageHeadingRowClass, pageStackClass } from "@/components/ui/styles";
 import { AccountList, listOwnedAccounts } from "@/modules/accounts";
 
 export const metadata = { title: "Akun" };
@@ -10,10 +10,10 @@ export default async function AccountsPage() {
   const user = await requireSessionUser();
   const rows = await listOwnedAccounts(user.id);
   return (
-    <div className="page-stack">
-      <div className="page-heading-row">
-        <p className="page-description">Saldo dihitung di server dari transaksi aktif dan transfer.</p>
-        <div className="form-actions">
+    <div className={pageStackClass}>
+      <div className={pageHeadingRowClass}>
+        <p className={pageDescriptionClass}>Saldo dihitung di server dari transaksi aktif dan transfer.</p>
+        <div className={pageActionsClass}>
           <Link className={buttonClass("secondary")} href="/transfers">Transfer</Link>
           <Link className={buttonClass("primary")} href="/accounts/new">Tambah akun</Link>
         </div>

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
+import { iconButtonClass } from "@/components/ui/styles";
 import { CalendarRangeSelector } from "@/components/ui/calendar-range-selector";
 
 export function ReportDateRangePicker({
@@ -22,12 +23,12 @@ export function ReportDateRangePicker({
   }, []);
 
   return (
-    <div className="report-sheet">
-      <div className="report-sheet-header">
-        <h2 id="report-range-title">Pilih rentang tanggal</h2>
+    <div>
+      <div className="mb-4 flex items-center justify-between gap-[.75rem]">
+        <h2 id="report-range-title" className="m-0 text-[1.08rem]">Pilih rentang tanggal</h2>
         <button
           aria-label="Tutup pilihan rentang"
-          className="icon-button"
+          className={iconButtonClass}
           onClick={onCancel}
           ref={closeRef}
           type="button"

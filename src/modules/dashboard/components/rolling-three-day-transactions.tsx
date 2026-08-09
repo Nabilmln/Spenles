@@ -2,7 +2,7 @@ import Link from "next/link";
 import { ArrowDownLeft, ArrowUpRight, List } from "lucide-react";
 import { formatJakartaDateLong } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
-import { textLinkClass } from "@/components/ui/styles";
+import { cardClass, eyebrowClass, textLinkClass } from "@/components/ui/styles";
 import type { RecentDashboardTransaction } from "../types/dashboard";
 
 const JAKARTA_OFFSET_MS = 7 * 60 * 60 * 1000;
@@ -53,37 +53,39 @@ export function RollingThreeDayTransactions({
   const orderedDays = [...groups.keys()].sort().reverse();
 
   return (
-    <section aria-labelledby="rolling-three-day-title" className="rolling-days-card card">
-      <div className="dashboard-section-heading">
+    <section aria-labelledby="rolling-three-day-title" className={`${cardClass} shadow-none`}>
+      <div className="mb-4 flex items-start justify-between gap-4 max-[540px]:flex-col">
         <div>
-          <p className="eyebrow">Aktivitas terbaru</p>
-          <h2 id="rolling-three-day-title">3 hari terakhir</h2>
+          <p className={eyebrowClass}>Aktivitas terbaru</p>
+          <h2 id="rolling-three-day-title" className="m-0 text-[1.08rem] tracking-[-.02em]">3 hari terakhir</h2>
         </div>
-        <Link className={`${textLinkClass} dashboard-link`} href="/transactions">
+        <Link className={`${textLinkClass} inline-flex items-center gap-[.4rem] text-[.82rem]`} href="/transactions">
           <List size={17} aria-hidden="true" />
           Lihat semua
         </Link>
       </div>
 
       {orderedDays.length ? (
-        <div className="rolling-days">
+        <div className="grid">
           {orderedDays.map((day) => (
-            <section className="rolling-day-group" key={day}>
-              <h3>{groupLabel(today, day)}</h3>
-              <div className="recent-list">
+            <section key={day}>
+              <h3 className="my-[1.1rem_.15rem] text-[.8rem] uppercase tracking-[.06em] [&:first-child]:mt-[.5rem]">
+                {groupLabel(today, day)}
+              </h3>
+              <div className="grid">
                 {groups.get(day)!.map((row) => (
-                  <article className="recent-row" key={row.id}>
-                    <span className={`transaction-icon ${row.type}`}>
+                  <article className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-[.85rem] border-b border-border p-[.85rem_0] last:border-0 max-[540px]:grid-cols-[auto_minmax(0,1fr)]" key={row.id}>
+                    <span className={`grid size-[2.7rem] shrink-0 place-items-center rounded-full ${row.type === "income" ? "text-income bg-[color-mix(in_srgb,var(--income)_10%,transparent)]" : "text-expense bg-[color-mix(in_srgb,var(--expense)_10%,transparent)]"}`}>
                       {row.type === "income" ? <ArrowDownLeft /> : <ArrowUpRight />}
                     </span>
-                    <div className="recent-copy">
+                    <div className="grid min-w-0">
                       <strong>{row.categoryName}</strong>
-                      <span>
+                      <span className="truncate text-[.76rem] text-muted">
                         {row.accountName} · {formatJakartaDateLong(row.transactionAt)}
                       </span>
-                      {row.note ? <small>{row.note}</small> : null}
+                      {row.note ? <small className="truncate text-[.76rem] text-muted">{row.note}</small> : null}
                     </div>
-                    <strong className={`transaction-amount ${row.type}`}>
+                    <strong className={`max-[540px]:col-start-2 ${row.type === "income" ? "text-income" : "text-expense"}`}>
                       {row.type === "income" ? "+" : "−"} {formatIdr(row.amountIdr)}
                     </strong>
                   </article>
@@ -93,7 +95,7 @@ export function RollingThreeDayTransactions({
           ))}
         </div>
       ) : (
-        <div className="dashboard-inline-empty" role="status">
+        <div className="mt-4 grid min-h-[10rem] place-items-center rounded-[.8rem] border border-dashed border-border bg-surface-subtle p-4 text-center text-[.84rem] text-muted" role="status">
           Belum ada transaksi dalam 3 hari terakhir.
         </div>
       )}

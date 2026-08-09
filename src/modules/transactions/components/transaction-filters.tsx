@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
 import { Select } from "@/components/ui/select";
-import { buttonClass } from "@/components/ui/styles";
+import { buttonClass, fieldClass, iconButtonClass, inputClass } from "@/components/ui/styles";
+import { cn } from "@/lib/utils";
 import type { TransactionFilters } from "../schemas/transaction-filters";
 import { DateRangeField } from "./date-range-field";
 
@@ -39,14 +40,14 @@ export function TransactionFilterBar({
 
   return (
     <form
-      className="tx-filter-bar"
+      className="flex items-stretch gap-[.55rem]"
       id="transaction-filters-form"
       method="get"
       role="search"
     >
       <input
         aria-label="Cari deskripsi atau kategori"
-        className="input tx-search-input"
+        className={cn(inputClass, "flex-1 min-w-0")}
         defaultValue={filters.q}
         name="q"
         placeholder="Cari deskripsi atau kategori"
@@ -56,12 +57,12 @@ export function TransactionFilterBar({
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-label="Buka filter"
-        className="icon-button tx-filter-button"
+        className={cn(iconButtonClass, "relative size-[2.9rem] min-h-[2.9rem]")}
         onClick={() => setOpen(true)}
         type="button"
       >
         <SlidersHorizontal aria-hidden="true" size={19} />
-        {count > 0 ? <span className="tx-filter-count">{count}</span> : null}
+        {count > 0 ? <span className="absolute -top-[.3rem] -right-[.3rem] grid min-w-[1.1rem] h-[1.1rem] place-items-center rounded-full bg-primary-600 px-1 text-[.66rem] font-medium text-white">{count}</span> : null}
       </button>
       <input name="type" type="hidden" value={type} />
       <input name="category" type="hidden" value={category} />
@@ -78,31 +79,31 @@ export function TransactionFilterBar({
       <input name="pageSize" type="hidden" value={filters.pageSize} />
 
       {open ? (
-        <div className="tx-sheet-backdrop" onClick={() => setOpen(false)}>
+        <div className="fixed inset-0 z-40 flex items-end justify-center bg-[rgb(15_23_42/45%)] p-4 min-[861px]:items-center" onClick={() => setOpen(false)}>
           <div
             aria-labelledby="tx-filter-title"
             aria-modal="true"
-            className="tx-filter-sheet"
+            className="max-h-[88vh] w-full max-w-[34rem] overflow-y-auto rounded-t-[1.25rem] rounded-b-[1.1rem] border border-border bg-surface p-5 shadow-card min-[861px]:rounded-[1.25rem_1.25rem_1.1rem_1.1rem]"
             onClick={(event) => event.stopPropagation()}
             onKeyDown={(event) => {
               if (event.key === "Escape") setOpen(false);
             }}
             role="dialog"
           >
-            <div className="tx-sheet-header">
-              <h2 id="tx-filter-title">Filter transaksi</h2>
+            <div className="mb-4 flex items-center justify-between gap-4">
+              <h2 className="m-0 text-[1.05rem] tracking-[-.02em]" id="tx-filter-title">Filter transaksi</h2>
               <button
                 aria-label="Tutup filter"
-                className="icon-button"
+                className={iconButtonClass}
                 onClick={() => setOpen(false)}
                 type="button"
               >
                 <X aria-hidden="true" size={19} />
               </button>
             </div>
-            <div className="tx-sheet-fields">
-              <label className="field">
-                <span>Jenis transaksi</span>
+            <div className="grid gap-[.9rem]">
+              <label className={fieldClass}>
+                <span className="text-[.86rem] font-medium">Jenis transaksi</span>
                 <Select
                   aria-label="Jenis transaksi"
                   onChange={(event) => setType(event.target.value)}
@@ -113,8 +114,8 @@ export function TransactionFilterBar({
                   <option value="income">Pemasukan</option>
                 </Select>
               </label>
-              <label className="field">
-                <span>Kategori</span>
+              <label className={fieldClass}>
+                <span className="text-[.86rem] font-medium">Kategori</span>
                 <Select
                   aria-label="Kategori"
                   onChange={(event) => setCategory(event.target.value)}
@@ -128,8 +129,8 @@ export function TransactionFilterBar({
                   ))}
                 </Select>
               </label>
-              <label className="field">
-                <span>Akun</span>
+              <label className={fieldClass}>
+                <span className="text-[.86rem] font-medium">Akun</span>
                 <Select
                   aria-label="Akun"
                   onChange={(event) => setAccount(event.target.value)}
@@ -143,15 +144,15 @@ export function TransactionFilterBar({
                   ))}
                 </Select>
               </label>
-              <div className="field">
-                <span>Periode</span>
+              <div className={fieldClass}>
+                <span className="text-[.86rem] font-medium">Periode</span>
                 <DateRangeField month={filters.month} from={filters.from} to={filters.to} />
               </div>
-              <label className="field">
-                <span>Urutkan</span>
+              <label className={fieldClass}>
+                <span className="text-[.86rem] font-medium">Urutkan</span>
                 <select
                   aria-label="Urutkan"
-                  className="input"
+                  className={inputClass}
                   onChange={(event) => setSort(event.target.value as TransactionFilters["sort"])}
                   value={sort}
                 >
@@ -159,11 +160,11 @@ export function TransactionFilterBar({
                   <option value="amount">Jumlah</option>
                 </select>
               </label>
-              <label className="field">
-                <span>Arah urutan</span>
+              <label className={fieldClass}>
+                <span className="text-[.86rem] font-medium">Arah urutan</span>
                 <select
                   aria-label="Arah urutan"
-                  className="input"
+                  className={inputClass}
                   onChange={(event) => setDirection(event.target.value as TransactionFilters["direction"])}
                   value={direction}
                 >
@@ -172,11 +173,11 @@ export function TransactionFilterBar({
                 </select>
               </label>
             </div>
-            <div className="tx-sheet-actions">
-              <Link className={buttonClass("secondary")} href="/transactions">
+            <div className="mt-[1.25rem] flex gap-[.55rem]">
+              <Link className={cn(buttonClass("secondary"), "flex-1 justify-center")} href="/transactions">
                 Reset
               </Link>
-              <button className={buttonClass("primary")} type="submit">
+              <button className={cn(buttonClass("primary"), "flex-1 justify-center")} type="submit">
                 Terapkan Filter
               </button>
             </div>

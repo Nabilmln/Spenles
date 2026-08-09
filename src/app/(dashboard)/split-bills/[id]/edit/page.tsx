@@ -1,5 +1,6 @@
 import { notFound, redirect } from "next/navigation";
 import { requireSessionUser } from "@/lib/auth/require-session";
+import { entityHeadingClass, pageDescriptionClass, pageHeadingCopyClass, pageStackClass } from "@/components/ui/styles";
 import {
   deleteSplitBillDraftAction,
   finalizeSplitBillAction,
@@ -25,10 +26,10 @@ export default async function EditSplitBillPage({
   if (!source) notFound();
   if (source.bill.status !== "draft") redirect(`/split-bills/${parsedId.data}`);
   return (
-    <div className="page-stack">
-      <div className="page-heading-copy">
-        <h2 className="entity-heading">{source.bill.merchantName}</h2>
-        <p className="page-description">Simpan perubahan sebelum finalisasi. Draft memakai pemeriksaan revisi untuk mencegah timpa data.</p>
+    <div className={pageStackClass}>
+      <div className={pageHeadingCopyClass}>
+        <h2 className={entityHeadingClass}>{source.bill.merchantName}</h2>
+        <p className={pageDescriptionClass}>Simpan perubahan sebelum finalisasi. Draft memakai pemeriksaan revisi untuk mencegah timpa data.</p>
       </div>
       <SplitBillEditor
         action={updateSplitBillAction}

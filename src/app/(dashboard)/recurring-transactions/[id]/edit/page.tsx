@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { formatJakartaDateTimeInput } from "@/lib/dates/jakarta";
+import { cardClass, narrowPageClass, pageDescriptionClass, pageStackClass } from "@/components/ui/styles";
 import {
   getOwnedRecurringRule,
   listRecurringOptions,
@@ -29,9 +30,9 @@ export default async function EditRecurringRulePage({
     ? options.categories
     : [{ id: rule.categoryId, name: rule.categoryName, type: rule.type }, ...options.categories];
   return (
-    <div className="page-stack narrow-page">
-      <p className="page-description">Tanggal mulai tetap menjadi jangkar jadwal.</p>
-      <section className="card">
+    <div className={`${pageStackClass} ${narrowPageClass}`}>
+      <p className={pageDescriptionClass}>Tanggal mulai tetap menjadi jangkar jadwal.</p>
+      <section className={cardClass}>
         <RecurringRuleForm
           action={updateRecurringRuleAction}
           accounts={accounts}

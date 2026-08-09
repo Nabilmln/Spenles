@@ -1,4 +1,5 @@
 import { requireSessionUser } from "@/lib/auth/require-session";
+import { pageDescriptionClass, pageStackClass } from "@/components/ui/styles";
 import {
   getReportAnalysis,
   getReportCategoryBreakdown,
@@ -59,8 +60,8 @@ export default async function ReportsPage({
   const exports = exportHrefs(from, to);
 
   return (
-    <div className="page-stack reports-page">
-      <p className="page-description">Pantau pemasukan dan pengeluaran per periode, lalu ekspor laporan bila diperlukan. Semua data privat dari sesi Anda.</p>
+    <div className={`${pageStackClass} max-w-[78rem]`}>
+      <p className={pageDescriptionClass}>Pantau pemasukan dan pengeluaran per periode, lalu ekspor laporan bila diperlukan. Semua data privat dari sesi Anda.</p>
 
       <ReportToolbar
         from={from}

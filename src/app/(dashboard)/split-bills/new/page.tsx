@@ -1,5 +1,6 @@
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { formatJakartaDateTimeInput } from "@/lib/dates/jakarta";
+import { narrowPageClass, pageDescriptionClass, pageStackClass } from "@/components/ui/styles";
 import {
   createSplitBillAction,
   SplitBillCreateFlow,
@@ -11,8 +12,8 @@ export const dynamic = "force-dynamic";
 export default async function NewSplitBillPage() {
   await requireSessionUser();
   return (
-    <div className="page-stack narrow-page">
-      <p className="page-description">Tambah peserta lalu isi barang masing-masing. Pratinjau bersifat lokal; server memverifikasi ulang seluruh nominal.</p>
+    <div className={`${pageStackClass} ${narrowPageClass}`}>
+      <p className={pageDescriptionClass}>Tambah peserta lalu isi barang masing-masing. Pratinjau bersifat lokal; server memverifikasi ulang seluruh nominal.</p>
       <SplitBillCreateFlow
         action={createSplitBillAction}
         initialDate={formatJakartaDateTimeInput(new Date()).slice(0, 10)}

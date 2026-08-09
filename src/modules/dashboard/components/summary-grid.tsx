@@ -1,4 +1,5 @@
 import { ArrowDownLeft, ArrowUpRight, WalletCards } from "lucide-react";
+import { cardClass, eyebrowClass } from "@/components/ui/styles";
 import { formatIdr } from "@/lib/money/format-idr";
 import type { FinancialSnapshot } from "../services/financial-metrics";
 import type { TotalsComparison } from "../types/dashboard";
@@ -51,13 +52,15 @@ function SummaryCard({
   icon: React.ReactNode;
 }) {
   return (
-    <article className={`summary-card card summary-${tone}`}>
-      <div className="summary-card-heading">
-        <span className="summary-icon">{icon}</span>
-        <h2>{title}</h2>
+    <article className={`${cardClass} summary-${tone} grid min-w-0 gap-[.4rem] shadow-none ${tone === "net" ? "max-[860px]:col-span-full max-[540px]:col-auto" : ""}`}>
+      <div className="flex items-center gap-[.65rem]">
+        <span className={`grid size-[2.35rem] place-items-center rounded-[.7rem] [&_svg]:size-[1.15rem] ${tone === "income" ? "text-income bg-[color-mix(in_srgb,var(--income)_10%,transparent)]" : tone === "expense" ? "text-expense bg-[color-mix(in_srgb,var(--expense)_10%,transparent)]" : "text-primary-700 bg-primary-50"}`}>
+          {icon}
+        </span>
+        <h2 className="m-0 text-[.86rem] text-muted">{title}</h2>
       </div>
-      <strong className="summary-value">{formatIdr(value)}</strong>
-      <p>{comparisonText(comparison, previousLabel)}</p>
+      <strong className="wrap-anywhere text-[clamp(1.35rem,2.5vw,2rem)] tracking-[-.04em]">{formatIdr(value)}</strong>
+      <p className="min-h-[2.5em] m-0 text-[.78rem] text-muted">{comparisonText(comparison, previousLabel)}</p>
     </article>
   );
 }
@@ -71,13 +74,13 @@ export function SummaryGrid({
 }) {
   return (
     <section aria-labelledby="financial-summary-title">
-      <div className="dashboard-section-heading">
+      <div className="mb-4 flex items-start justify-between gap-4">
         <div>
-          <p className="eyebrow">Ringkasan</p>
-          <h2 id="financial-summary-title">Arus kas periode terpilih</h2>
+          <p className={eyebrowClass}>Ringkasan</p>
+          <h2 id="financial-summary-title" className="m-0 text-[1.08rem] tracking-[-.02em]">Arus kas periode terpilih</h2>
         </div>
       </div>
-      <div className="summary-grid">
+      <div className="grid grid-cols-[repeat(3,minmax(0,1fr))] gap-4 max-[860px]:grid-cols-[repeat(2,minmax(0,1fr))] max-[540px]:grid-cols-1">
         <SummaryCard
           comparison={snapshot.incomeComparison}
           icon={<ArrowDownLeft />}

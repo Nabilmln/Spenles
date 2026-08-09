@@ -3,7 +3,7 @@
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
-import { emptyStateClass, successMessageClass } from "@/components/ui/styles";
+import { cardClass, emptyStateClass, successMessageClass } from "@/components/ui/styles";
 import { formatJakartaDateLong } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
 import {
@@ -12,13 +12,16 @@ import {
 } from "../actions/transfer-actions";
 import type { TransferListRow } from "../queries/transfers";
 
+const archivedBadgeClass =
+  "inline-flex min-h-[1.8rem] items-center rounded-full px-[.55rem] py-[.25rem] whitespace-nowrap text-[.72rem] font-medium text-muted bg-surface-subtle max-[540px]:col-span-full max-[540px]:justify-self-start";
+
 function ReversalForm({ id }: { id: string }) {
   const [state, action, pending] = useActionState<
     TransferActionState,
     FormData
   >(reverseTransferAction, {});
   return (
-    <form action={action}>
+    <form action={action} className="max-[540px]:col-span-full max-[540px]:justify-self-start">
       <input type="hidden" name="id" value={id} />
       <Button type="submit" variant="ghost" disabled={pending}>
         {pending ? "Membalik..." : "Balikkan"}
@@ -34,19 +37,19 @@ export function TransferList({ rows }: { rows: TransferListRow[] }) {
     return <div className={emptyStateClass}><p className="m-0 text-muted">Belum ada riwayat transfer.</p></div>;
   }
   return (
-    <div className="transaction-list">
+    <div className="grid gap-3">
       {rows.map((row) => (
-        <article className="card transfer-row" key={row.id}>
+        <article className={`${cardClass} grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-4 max-[540px]:grid-cols-[minmax(0,1fr)_auto]`} key={row.id}>
           <div>
             <strong>{row.sourceName} → {row.destinationName}</strong>
-            <p>{formatJakartaDateLong(row.transferredAt)}</p>
-            {row.note ? <p>{row.note}</p> : null}
+            <p className="mt-[.2rem] text-muted text-[.78rem]!">{formatJakartaDateLong(row.transferredAt)}</p>
+            {row.note ? <p className="mt-[.2rem] text-muted text-[.78rem]!">{row.note}</p> : null}
           </div>
           <strong>{formatIdr(row.amount)}</strong>
           {row.reversalOfId ? (
-            <span className="status-badge status-archived">Pembalikan</span>
+            <span className={archivedBadgeClass}>Pembalikan</span>
           ) : row.reversed ? (
-            <span className="status-badge status-archived">Sudah dibalik</span>
+            <span className={archivedBadgeClass}>Sudah dibalik</span>
           ) : (
             <ReversalForm id={row.id} />
           )}
