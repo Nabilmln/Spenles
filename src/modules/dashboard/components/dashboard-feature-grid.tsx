@@ -11,7 +11,7 @@ const features = [
 
 export function DashboardFeatureGrid() {
   return (
-    <nav aria-label="Navigasi fitur" className={`${cardClass} shadow-none`}>
+    <nav aria-label="Navigasi fitur" className={`${cardClass} hidden shadow-none max-[860px]:block`}>
       <div className="flex gap-[.4rem] overflow-x-auto pb-[.15rem] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {features.map(({ href, label, icon: Icon }) => (
           <Link
