@@ -5,6 +5,7 @@ import {
   fieldHintClass,
   iconButtonClass,
 } from "@/components/ui/styles";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { formatIdr } from "@/lib/money/format-idr";
 import type { DailyExpensePoint } from "../types/dashboard";
 import { DailyExpenseChart } from "./daily-expense-chart";
@@ -29,8 +30,8 @@ export function MonthlyExpenseCard({
   const recentZero = recentPoints.every((point) => point.expenseIdr === "0");
   return (
     <section aria-labelledby="monthly-expense-title" className={`${cardClass} shadow-none`}>
-      <div className="flex items-start justify-between gap-4 max-[540px]:flex-col max-[540px]:items-stretch">
-        <div>
+      <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-4 max-[540px]:grid-cols-1 max-[540px]:gap-[.6rem]">
+        <div className="min-w-0">
           <p className={eyebrowClass}>Ringkasan bulanan</p>
           <h2 id="monthly-expense-title" className="m-0 text-[1.15rem] tracking-[-.02em]">Pengeluaran Bulan {monthLabel}</h2>
         </div>
@@ -39,10 +40,10 @@ export function MonthlyExpenseCard({
             <input name="month" type="hidden" value={prevMonth} />
             <button
               aria-label="Bulan sebelumnya"
-              className={`${iconButtonClass} size-10 text-[1.15rem]`}
+              className={`${iconButtonClass} size-10`}
               type="submit"
             >
-              ‹
+              <ChevronLeft aria-hidden="true" size={20} />
             </button>
           </form>
           <form action="/dashboard" method="get">
@@ -55,10 +56,10 @@ export function MonthlyExpenseCard({
             <input name="month" type="hidden" value={nextMonth} />
             <button
               aria-label="Bulan berikutnya"
-              className={`${iconButtonClass} size-10 text-[1.15rem]`}
+              className={`${iconButtonClass} size-10`}
               type="submit"
             >
-              ›
+              <ChevronRight aria-hidden="true" size={20} />
             </button>
           </form>
         </div>
