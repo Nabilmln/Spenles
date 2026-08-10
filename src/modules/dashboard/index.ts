@@ -1,6 +1,7 @@
 export * from "./components/accessible-chart-table";
 export * from "./components/account-summary";
 export * from "./components/cash-flow-profile";
+export * from "./components/category-expense-card";
 export * from "./components/category-expense-chart";
 export * from "./components/chart-shell";
 export * from "./components/daily-expense-chart";
@@ -8,6 +9,7 @@ export * from "./components/dashboard-empty-state";
 export * from "./components/dashboard-feature-grid";
 export * from "./components/dashboard-section-error";
 export * from "./components/financial-overview";
+export * from "./components/income-expense-card";
 export * from "./components/income-expense-chart";
 export * from "./components/monthly-expense-card";
 export * from "./components/monthly-expense-chart";

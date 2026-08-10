@@ -1,7 +1,6 @@
 import {
   buttonClass,
   cardClass,
-  eyebrowClass,
   fieldHintClass,
   iconButtonClass,
 } from "@/components/ui/styles";
@@ -29,12 +28,8 @@ export function MonthlyExpenseCard({
 }) {
   const recentZero = recentPoints.every((point) => point.expenseIdr === "0");
   return (
-    <section aria-labelledby="monthly-expense-title" className={`${cardClass} shadow-none`}>
-      <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-start gap-4 max-[540px]:grid-cols-1 max-[540px]:gap-[.6rem]">
-        <div className="min-w-0">
-          <p className={eyebrowClass}>Ringkasan bulanan</p>
-          <h2 id="monthly-expense-title" className="m-0 text-[1.15rem] tracking-[-.02em]">Pengeluaran Bulan {monthLabel}</h2>
-        </div>
+    <section aria-label="Pengeluaran bulanan" className={`${cardClass} shadow-none`}>
+      <div className="flex justify-center">
         <div className="flex items-center gap-[.45rem]" role="group" aria-label="Pilih bulan">
           <form action="/dashboard" method="get">
             <input name="month" type="hidden" value={prevMonth} />
@@ -49,7 +44,7 @@ export function MonthlyExpenseCard({
           <form action="/dashboard" method="get">
             <input name="month" type="hidden" value={currentMonth} />
             <button className={buttonClass("secondary")} type="submit">
-              Bulan ini
+              {monthLabel}
             </button>
           </form>
           <form action="/dashboard" method="get">

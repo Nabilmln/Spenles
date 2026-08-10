@@ -41,7 +41,7 @@ const linkBase =
 const linkActive =
   "text-primary-700 bg-primary-50 dark:text-[#93c5fd] dark:bg-[rgb(37_99_235/16%)]";
 
-export function NavigationLinks({ mobile = false }: { mobile?: boolean }) {
+export function NavigationLinks({ mobile = false, collapsed = false }: { mobile?: boolean; collapsed?: boolean }) {
   const pathname = usePathname();
 
   if (mobile) {
@@ -72,12 +72,16 @@ export function NavigationLinks({ mobile = false }: { mobile?: boolean }) {
         return (
           <Link
             aria-current={active ? "page" : undefined}
-            className={cn(linkBase, active && linkActive)}
+            className={cn(
+              linkBase,
+              collapsed && "justify-center px-0",
+              active && linkActive,
+            )}
             href={href}
             key={href}
           >
             <Icon aria-hidden="true" size={20} />
-            <span>{label}</span>
+            <span className={cn(collapsed && "hidden group-hover/sidebar:inline")}>{label}</span>
           </Link>
         );
       })}

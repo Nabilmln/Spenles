@@ -43,7 +43,7 @@ describe("mobile dashboard cards", () => {
       />,
     );
 
-    expect(screen.getByRole("heading", { name: "Pengeluaran Bulan Agustus 2026" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Agustus 2026" })).toBeInTheDocument();
     expect(screen.getByText(/Rp\s*50\.000/u)).toBeInTheDocument();
     expect(screen.getAllByTestId("daily-chart")).toHaveLength(2);
     expect(screen.getByRole("group", { name: "Pilih bulan" })).toBeInTheDocument();

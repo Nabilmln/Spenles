@@ -53,7 +53,7 @@ export function RollingThreeDayTransactions({
   const orderedDays = [...groups.keys()].sort().reverse();
 
   return (
-    <section aria-labelledby="rolling-three-day-title" className={`${cardClass} shadow-none`}>
+    <section aria-labelledby="rolling-three-day-title" className={`${cardClass} flex h-full flex-col shadow-none`}>
       <div className="mb-4 flex items-start justify-between gap-4 max-[540px]:flex-col">
         <div>
           <p className={eyebrowClass}>Aktivitas terbaru</p>
@@ -66,7 +66,7 @@ export function RollingThreeDayTransactions({
       </div>
 
       {orderedDays.length ? (
-        <div className="grid">
+        <div className="grid flex-1">
           {orderedDays.map((day) => (
             <section key={day}>
               <h3 className="my-[1.1rem_.15rem] text-[.8rem] uppercase tracking-[.06em] [&:first-child]:mt-[.5rem]">
@@ -95,7 +95,7 @@ export function RollingThreeDayTransactions({
           ))}
         </div>
       ) : (
-        <div className="mt-4 grid min-h-[10rem] place-items-center rounded-[.8rem] border border-dashed border-border bg-surface-subtle p-4 text-center text-[.84rem] text-muted" role="status">
+        <div className="mt-4 grid min-h-[10rem] flex-1 place-items-center rounded-[.8rem] border border-dashed border-border bg-surface-subtle p-4 text-center text-[.84rem] text-muted" role="status">
           Belum ada transaksi dalam 3 hari terakhir.
         </div>
       )}
