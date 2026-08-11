@@ -171,7 +171,7 @@ export default async function DashboardPage({
 
   return (
     <div className="grid gap-8 min-[861px]:grid-cols-8 min-[1024px]:grid-cols-12">
-      <div className="min-w-0 min-[861px]:col-span-3 min-[1024px]:col-span-5">
+      <div className="min-w-0 min-[861px]:col-span-4 min-[1024px]:col-span-6">
         <FinancialOverview
           name={profile?.displayName ?? "Pengguna Spenles"}
           income={overview.income.toString()}
@@ -180,19 +180,7 @@ export default async function DashboardPage({
         />
       </div>
 
-      <div className="hidden min-w-0 min-[861px]:col-span-5 min-[861px]:block min-[1024px]:col-span-7">
-        {isFulfilled(chartMonthlyResult) ? (
-          <CashFlowOverviewCard
-            points={chartContract.incomeExpensePoints}
-            totalIncome={chartContract.totalIncome}
-            totalExpense={chartContract.totalExpense}
-          />
-        ) : (
-          <DashboardSectionError title="Grafik arus kas belum tersedia" />
-        )}
-      </div>
-
-      <div className="min-w-0 min-[861px]:col-span-5 min-[1024px]:col-span-7">
+      <div className="min-w-0 min-[861px]:hidden">
         {daily ? (
           <MonthlyExpenseCard
             currentMonth={cardMonth}
@@ -208,26 +196,42 @@ export default async function DashboardPage({
         )}
       </div>
 
-      <div className="hidden min-w-0 min-[861px]:col-span-3 min-[861px]:block min-[1024px]:col-span-5">
-        <div className="grid content-start gap-8">
-          {totals ? (
-            <AverageSpendingCard
-              value={averageDaily}
-              changeBps={averageComparison.changeBps}
-              previousLabel={prevCardInterval.label}
-            />
-          ) : (
-            <DashboardSectionError title="Rata-rata harian belum tersedia" />
-          )}
-          {isFulfilled(savingsResult) && isFulfilled(savingsBalanceResult) ? (
-            <SavingsSummaryCard
-              balance={savingsBalance}
-              periodNet={savingsNet}
-            />
-          ) : (
-            <DashboardSectionError title="Ringkasan tabungan belum tersedia" />
-          )}
-        </div>
+      <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-6">
+        {totals ? (
+          <IncomeVsExpenseComparison
+            income={totals.selected.income}
+            expense={totals.selected.expense}
+            incomeChangeBps={incomeComparison?.changeBps ?? null}
+            expenseChangeBps={expenseComparison?.changeBps ?? null}
+            previousLabel={prevCardInterval.label}
+          />
+        ) : (
+          <DashboardSectionError title="Perbandingan bulanan belum tersedia" />
+        )}
+      </div>
+
+      <div className="hidden min-w-0 min-[861px]:col-span-5 min-[861px]:block min-[1024px]:col-span-8">
+        {isFulfilled(chartMonthlyResult) ? (
+          <CashFlowOverviewCard
+            points={chartContract.incomeExpensePoints}
+            totalIncome={chartContract.totalIncome}
+            totalExpense={chartContract.totalExpense}
+          />
+        ) : (
+          <DashboardSectionError title="Grafik arus kas belum tersedia" />
+        )}
+      </div>
+
+      <div className="hidden min-w-0 min-[861px]:col-span-3 min-[861px]:block min-[1024px]:col-span-4">
+        {totals ? (
+          <AverageSpendingCard
+            value={averageDaily}
+            changeBps={averageComparison.changeBps}
+            previousLabel={prevCardInterval.label}
+          />
+        ) : (
+          <DashboardSectionError title="Rata-rata harian belum tersedia" />
+        )}
       </div>
 
       <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-6">
@@ -254,16 +258,13 @@ export default async function DashboardPage({
       </div>
 
       <div className="hidden min-w-0 min-[861px]:col-span-3 min-[861px]:block min-[1024px]:col-span-5">
-        {totals ? (
-          <IncomeVsExpenseComparison
-            income={totals.selected.income}
-            expense={totals.selected.expense}
-            incomeChangeBps={incomeComparison?.changeBps ?? null}
-            expenseChangeBps={expenseComparison?.changeBps ?? null}
-            previousLabel={prevCardInterval.label}
+        {isFulfilled(savingsResult) && isFulfilled(savingsBalanceResult) ? (
+          <SavingsSummaryCard
+            balance={savingsBalance}
+            periodNet={savingsNet}
           />
         ) : (
-          <DashboardSectionError title="Perbandingan bulanan belum tersedia" />
+          <DashboardSectionError title="Ringkasan tabungan belum tersedia" />
         )}
       </div>
 

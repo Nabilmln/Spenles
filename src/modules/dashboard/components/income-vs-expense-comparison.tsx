@@ -79,13 +79,13 @@ export function IncomeVsExpenseComparison({
   return (
     <section
       aria-label="Perbandingan pemasukan dan pengeluaran"
-      className={`${cardClass} shadow-none`}
+      className={`${cardClass} flex h-full flex-col shadow-none`}
     >
       <p className={eyebrowClass}>Perbandingan</p>
       <h2 className="m-0 mb-[1.1rem] text-[1.08rem] tracking-[-.02em]">
         Pemasukan vs Pengeluaran
       </h2>
-      <div className="grid gap-[1.1rem]">
+      <div className="grid flex-1 content-center gap-[1.1rem]">
         <ComparisonRow
           changeBps={incomeChangeBps}
           label="Pemasukan bulan ini"

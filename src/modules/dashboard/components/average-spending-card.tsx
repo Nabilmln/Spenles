@@ -25,7 +25,7 @@ export function AverageSpendingCard({
   return (
     <section
       aria-label="Rata-rata pengeluaran per hari"
-      className={`${cardClass} shadow-none`}
+      className={`${cardClass} flex h-full flex-col shadow-none`}
     >
       <div className="flex items-center gap-[.65rem]">
         <span className="grid size-[2.35rem] place-items-center rounded-[.7rem] bg-surface-subtle text-primary-700 dark:text-[#93c5fd] [&_svg]:size-[1.15rem]">
@@ -47,6 +47,9 @@ export function AverageSpendingCard({
           {comparison}
         </p>
       ) : null}
+      <p className="mt-auto m-0 pt-[1.1rem] text-[.76rem] text-muted">
+        Rata-rata dihitung atas seluruh hari kalender bulan ini.
+      </p>
     </section>
   );
 }

@@ -42,7 +42,7 @@ export function TopSpendingCard({
           Belum ada pengeluaran pada periode ini.
         </div>
       ) : (
-        <ol className="m-0 list-none p-0">
+        <ol className="m-0 flex-1 list-none p-0">
           {top.map((row, index) => {
             const Icon = resolveCategoryIcon(
               row.categoryId,
@@ -58,7 +58,7 @@ export function TopSpendingCard({
                   <span className="w-[1.4rem] shrink-0 text-center text-[.72rem] font-semibold text-muted">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  <span className="grid size-[2.3rem] shrink-0 place-items-center rounded-full bg-surface-subtle text-primary-700 dark:text-[#93c5fd] [&_svg]:size-[1.1rem]">
+                  <span className="grid size-[2.35rem] shrink-0 place-items-center rounded-full bg-surface-subtle text-primary-700 dark:text-[#93c5fd] [&_svg]:size-[1.15rem]">
                     <Icon aria-hidden="true" />
                   </span>
                   <span className="min-w-0 flex-1 text-[.84rem] font-medium [overflow-wrap:anywhere]">

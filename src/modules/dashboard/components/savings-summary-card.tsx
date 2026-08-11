@@ -21,7 +21,7 @@ export function SavingsSummaryCard({
   return (
     <section
       aria-label="Ringkasan tabungan"
-      className={`${cardClass} shadow-none`}
+      className={`${cardClass} flex h-full flex-col shadow-none`}
     >
       <div className="flex items-center gap-[.65rem]">
         <span className="grid size-[2.35rem] place-items-center rounded-[.7rem] bg-surface-subtle text-primary-700 dark:text-[#93c5fd] [&_svg]:size-[1.15rem]">
@@ -57,6 +57,9 @@ export function SavingsSummaryCard({
           </div>
         </dl>
       )}
+      <p className="mt-auto m-0 pt-[1.1rem] text-[.76rem] text-muted">
+        Mencakup seluruh akun bertipe tabungan.
+      </p>
     </section>
   );
 }
