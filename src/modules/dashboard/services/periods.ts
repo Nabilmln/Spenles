@@ -269,3 +269,9 @@ export function fourDayJakartaInterval(now = new Date()): DateInterval {
   const end = addDays(today, 1);
   return interval(start, end, "4 hari terakhir");
 }
+
+export function countCalendarDays(interval: DateInterval) {
+  const start = parseDateKey(interval.startDate);
+  const end = parseDateKey(interval.endDateExclusive);
+  return dayDistance(start, end);
+}

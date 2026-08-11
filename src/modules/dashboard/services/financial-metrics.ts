@@ -62,6 +62,14 @@ export function calculateExpenseRatioBps(income: bigint, expense: bigint) {
   return divideHalfUp(expense * 10_000n, income).toString();
 }
 
+export function formatChangeBps(value: string) {
+  const bps = BigInt(value);
+  const absolute = bps < 0n ? -bps : bps;
+  return `${(absolute / 100n).toLocaleString("id-ID")},${String(
+    absolute % 100n,
+  ).padStart(2, "0")}%`;
+}
+
 export function classifyFinancialCondition(
   income: bigint,
   expense: bigint,

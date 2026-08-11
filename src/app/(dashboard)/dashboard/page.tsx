@@ -2,13 +2,15 @@ import Link from "next/link";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { buttonClass, cardClass } from "@/components/ui/styles";
 import {
+  AverageSpendingCard,
   buildCategoryChartContract,
   buildDailyExpenseChartContract,
-  buildFinancialSnapshot,
   buildFourDayExpenseChartContract,
   buildMonthlyChartContract,
-  CashFlowProfile,
+  CashFlowOverviewCard,
   CategoryExpenseCard,
+  compareFinancialValue,
+  countCalendarDays,
   currentJakartaMonthKey,
   DashboardFeatureGrid,
   DashboardSectionError,
@@ -19,15 +21,18 @@ import {
   getMonthlyAggregates,
   getRollingThreeDayTransactions,
   getSelectedAndPreviousTotals,
-  IncomeExpenseCard,
+  IncomeVsExpenseComparison,
   MonthlyExpenseCard,
   monthIntervalForKey,
   resolveDashboardPeriods,
   RollingThreeDayTransactions,
   safeParseDashboardFilters,
+  SavingsSummaryCard,
   shiftMonthKey,
+  TopSpendingCard,
   type DashboardSearchParams,
 } from "@/modules/dashboard";
+import { getPeriodSavings, getSavingsBalanceTotal } from "@/modules/accounts";
 import { getProfile } from "@/modules/profiles";
 
 export const metadata = { title: "Beranda" };
@@ -88,6 +93,8 @@ export default async function DashboardPage({
   const now = new Date();
   const recentInterval = fourDayJakartaInterval(now);
   const periods = resolveDashboardPeriods(filtersResult.data, now);
+  const calendarDays = countCalendarDays(cardInterval);
+  const prevCalendarDays = countCalendarDays(prevCardInterval);
 
   const [
     dailyResult,
@@ -97,6 +104,8 @@ export default async function DashboardPage({
     chartMonthlyResult,
     categoryResult,
     totalsResult,
+    savingsResult,
+    savingsBalanceResult,
   ] = await Promise.allSettled([
     getDailyExpenseAggregates(user.id, cardInterval),
     getDailyExpenseAggregates(user.id, recentInterval),
@@ -105,6 +114,8 @@ export default async function DashboardPage({
     getMonthlyAggregates(user.id, periods.chart),
     getCategoryExpenseAggregates(user.id, cardInterval),
     getSelectedAndPreviousTotals(user.id, cardInterval, prevCardInterval),
+    getPeriodSavings(user.id, cardInterval.start, cardInterval.end),
+    getSavingsBalanceTotal(user.id),
   ]);
 
   const daily = isFulfilled(dailyResult)
@@ -134,20 +145,33 @@ export default async function DashboardPage({
     : [];
   const categoryContract = buildCategoryChartContract(categoryRows);
 
-  const snapshot =
-    isFulfilled(totalsResult) && isFulfilled(monthlyResult)
-      ? buildFinancialSnapshot(
-          totalsResult.value.selected,
-          totalsResult.value.previous,
-          monthlyResult.value,
-          categoryRows,
-          1,
-        )
-      : null;
+  const totals = isFulfilled(totalsResult) ? totalsResult.value : null;
+  const averageDaily = totals
+    ? totals.selected.expense / BigInt(calendarDays)
+    : 0n;
+  const prevAverageDaily = totals
+    ? totals.previous.expense / BigInt(prevCalendarDays)
+    : 0n;
+  const averageComparison = compareFinancialValue(
+    averageDaily,
+    prevAverageDaily,
+  );
+  const incomeComparison = totals
+    ? compareFinancialValue(totals.selected.income, totals.previous.income)
+    : null;
+  const expenseComparison = totals
+    ? compareFinancialValue(totals.selected.expense, totals.previous.expense)
+    : null;
+  const savingsNet = isFulfilled(savingsResult)
+    ? savingsResult.value.net
+    : 0n;
+  const savingsBalance = isFulfilled(savingsBalanceResult)
+    ? savingsBalanceResult.value
+    : 0n;
 
   return (
     <div className="grid gap-8 min-[861px]:grid-cols-8 min-[1024px]:grid-cols-12">
-      <div className="min-w-0 min-[861px]:col-span-8 min-[1024px]:col-span-5">
+      <div className="min-w-0 min-[861px]:col-span-3 min-[1024px]:col-span-5">
         <FinancialOverview
           name={profile?.displayName ?? "Pengguna Spenles"}
           income={overview.income.toString()}
@@ -156,19 +180,19 @@ export default async function DashboardPage({
         />
       </div>
 
-      <div className="hidden min-w-0 min-[861px]:col-span-8 min-[861px]:block min-[1024px]:col-span-7">
+      <div className="hidden min-w-0 min-[861px]:col-span-5 min-[861px]:block min-[1024px]:col-span-7">
         {isFulfilled(chartMonthlyResult) ? (
-          <IncomeExpenseCard
+          <CashFlowOverviewCard
             points={chartContract.incomeExpensePoints}
             totalIncome={chartContract.totalIncome}
             totalExpense={chartContract.totalExpense}
           />
         ) : (
-          <DashboardSectionError title="Grafik pemasukan belum tersedia" />
+          <DashboardSectionError title="Grafik arus kas belum tersedia" />
         )}
       </div>
 
-      <div className="min-w-0 min-[861px]:col-span-5 min-[1024px]:col-span-8">
+      <div className="min-w-0 min-[861px]:col-span-5 min-[1024px]:col-span-7">
         {daily ? (
           <MonthlyExpenseCard
             currentMonth={cardMonth}
@@ -184,15 +208,29 @@ export default async function DashboardPage({
         )}
       </div>
 
-      <div className="hidden min-w-0 min-[861px]:col-span-3 min-[861px]:block min-[1024px]:col-span-4">
-        {snapshot ? (
-          <CashFlowProfile snapshot={snapshot} />
-        ) : (
-          <DashboardSectionError title="Pola keuangan belum tersedia" />
-        )}
+      <div className="hidden min-w-0 min-[861px]:col-span-3 min-[861px]:block min-[1024px]:col-span-5">
+        <div className="grid content-start gap-8">
+          {totals ? (
+            <AverageSpendingCard
+              value={averageDaily}
+              changeBps={averageComparison.changeBps}
+              previousLabel={prevCardInterval.label}
+            />
+          ) : (
+            <DashboardSectionError title="Rata-rata harian belum tersedia" />
+          )}
+          {isFulfilled(savingsResult) && isFulfilled(savingsBalanceResult) ? (
+            <SavingsSummaryCard
+              balance={savingsBalance}
+              periodNet={savingsNet}
+            />
+          ) : (
+            <DashboardSectionError title="Ringkasan tabungan belum tersedia" />
+          )}
+        </div>
       </div>
 
-      <div className="hidden min-w-0 min-[861px]:col-span-5 min-[861px]:block min-[1024px]:col-span-7">
+      <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-6">
         {isFulfilled(categoryResult) ? (
           <CategoryExpenseCard
             periodLabel={monthLabelFor(cardMonth)}
@@ -204,7 +242,32 @@ export default async function DashboardPage({
         )}
       </div>
 
-      <div className="min-w-0 min-[861px]:col-span-3 min-[1024px]:col-span-5">
+      <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-6">
+        {isFulfilled(categoryResult) ? (
+          <TopSpendingCard
+            periodLabel={monthLabelFor(cardMonth)}
+            rows={categoryRows}
+          />
+        ) : (
+          <DashboardSectionError title="Kategori teratas belum tersedia" />
+        )}
+      </div>
+
+      <div className="hidden min-w-0 min-[861px]:col-span-3 min-[861px]:block min-[1024px]:col-span-5">
+        {totals ? (
+          <IncomeVsExpenseComparison
+            income={totals.selected.income}
+            expense={totals.selected.expense}
+            incomeChangeBps={incomeComparison?.changeBps ?? null}
+            expenseChangeBps={expenseComparison?.changeBps ?? null}
+            previousLabel={prevCardInterval.label}
+          />
+        ) : (
+          <DashboardSectionError title="Perbandingan bulanan belum tersedia" />
+        )}
+      </div>
+
+      <div className="min-w-0 min-[861px]:col-span-5 min-[1024px]:col-span-7">
         {isFulfilled(rollingResult) ? (
           <RollingThreeDayTransactions rows={rollingResult.value} />
         ) : (

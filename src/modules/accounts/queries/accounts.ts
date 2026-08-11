@@ -134,6 +134,19 @@ export async function getActiveAccountsTotal(
   return BigInt(result.rows[0]?.total ?? "0");
 }
 
+export async function getSavingsBalanceTotal(
+  userId: string,
+  database: Database = db,
+) {
+  const result = await database.execute<{ total: string }>(sql`
+    select coalesce(sum(${balanceExpression}), 0)::text as total
+    from accounts as account
+    where account.user_id = ${userId}
+      and account.type = 'savings'
+  `);
+  return BigInt(result.rows[0]?.total ?? "0");
+}
+
 type SavingsFlowRow = { saved_in: string; saved_out: string };
 
 export async function getPeriodSavings(

@@ -4,6 +4,7 @@ import {
   calculateExpenseRatioBps,
   classifyFinancialCondition,
   compareFinancialValue,
+  formatChangeBps,
 } from "./financial-metrics";
 
 describe("financial metrics", () => {
@@ -52,6 +53,14 @@ describe("financial metrics", () => {
   it("calculates ratios without division by zero", () => {
     expect(calculateExpenseRatioBps(0n, 10n)).toBeNull();
     expect(calculateExpenseRatioBps(3n, 2n)).toBe("6667");
+  });
+
+  it("formats basis-point changes as an absolute local percentage", () => {
+    expect(formatChangeBps("5000")).toBe("50,00%");
+    expect(formatChangeBps("840")).toBe("8,40%");
+    expect(formatChangeBps("-840")).toBe("8,40%");
+    expect(formatChangeBps("0")).toBe("0,00%");
+    expect(formatChangeBps("10025")).toBe("100,25%");
   });
 
   it("classifies exact threshold boundaries", () => {

@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { fourDayJakartaInterval, resolveDashboardPeriods } from "./periods";
+import {
+  countCalendarDays,
+  fourDayJakartaInterval,
+  monthIntervalForKey,
+  resolveDashboardPeriods,
+} from "./periods";
 
 const now = new Date("2026-08-05T10:00:00.000Z");
 
@@ -129,5 +134,29 @@ describe("fourDayJakartaInterval", () => {
     expect(before.endDateExclusive).toBe("2026-08-06");
     expect(after.startDate).toBe("2026-08-03");
     expect(after.endDateExclusive).toBe("2026-08-07");
+  });
+});
+
+describe("countCalendarDays", () => {
+  it("counts full calendar months including leap days", () => {
+    expect(countCalendarDays(monthIntervalForKey("2026-08"))).toBe(31);
+    expect(countCalendarDays(monthIntervalForKey("2026-02"))).toBe(28);
+    expect(countCalendarDays(monthIntervalForKey("2024-02"))).toBe(29);
+  });
+
+  it("counts exact calendar days for arbitrary intervals", () => {
+    const interval = resolveDashboardPeriods(
+      {
+        selection: {
+          kind: "custom",
+          from: "2026-08-10",
+          to: "2026-08-20",
+        },
+        chartRange: "6-months",
+      },
+      now,
+    );
+
+    expect(countCalendarDays(interval.selected)).toBe(11);
   });
 });
