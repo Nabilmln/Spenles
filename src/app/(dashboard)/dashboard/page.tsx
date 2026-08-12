@@ -170,7 +170,7 @@ export default async function DashboardPage({
     : 0n;
 
   return (
-    <div className="grid gap-8 min-[861px]:grid-cols-8 min-[1024px]:grid-cols-12">
+    <div className="grid gap-3 min-[861px]:grid-cols-8 min-[1024px]:grid-cols-12">
       <div className="min-w-0 min-[861px]:col-span-4 min-[1024px]:col-span-6">
         <FinancialOverview
           name={profile?.displayName ?? "Pengguna Spenles"}

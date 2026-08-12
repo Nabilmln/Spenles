@@ -23,41 +23,41 @@ export function SavingsSummaryCard({
       aria-label="Ringkasan tabungan"
       className={`${cardClass} flex h-full flex-col shadow-none`}
     >
-      <div className="flex items-center gap-[.65rem]">
-        <span className="grid size-[2.35rem] place-items-center rounded-[.7rem] bg-surface-subtle text-primary-700 dark:text-[#93c5fd] [&_svg]:size-[1.15rem]">
+      <div className="flex items-center gap-[.5rem]">
+        <span className="grid size-[2rem] place-items-center rounded-[.55rem] bg-primary-50 text-primary-600 dark:text-primary-700 [&_svg]:size-[1rem]">
           <PiggyBank aria-hidden="true" />
         </span>
         <div>
           <p className={`${eyebrowClass} mb-0`}>Tabungan</p>
-          <h2 className="m-0 text-[1.05rem] tracking-[-.02em]">
+          <h2 className="m-0 text-[.88rem] tracking-[-.02em]">
             Ringkasan tabungan
           </h2>
         </div>
       </div>
 
       {!hasSavings ? (
-        <div className="mt-[1rem] rounded-[.8rem] border border-dashed border-border bg-surface-subtle p-[1.1rem] text-center text-[.82rem] text-muted">
+        <div className="mt-[.75rem] rounded-[.65rem] border border-dashed border-border bg-surface-subtle p-[.85rem] text-center text-[.76rem] text-muted">
           Belum ada tabungan.
         </div>
       ) : (
-        <dl className="mt-[.9rem] m-0 grid gap-0">
-          <div className="grid gap-[.25rem] border-b border-border p-[.75rem_0]">
-            <dt className="text-[.75rem] text-muted">Saldo tabungan</dt>
-            <dd className="m-0 font-medium [overflow-wrap:anywhere]">
+        <dl className="mt-[.7rem] m-0 grid gap-0">
+          <div className="grid gap-[.15rem] border-b border-border p-[.55rem_0]">
+            <dt className="text-[.7rem] text-muted">Saldo tabungan</dt>
+            <dd className="m-0 text-[.9rem] font-medium [overflow-wrap:anywhere]">
               {formatIdr(balance)}
             </dd>
           </div>
-          <div className="grid gap-[.25rem] p-[.75rem_0]">
-            <dt className="text-[.75rem] text-muted">
+          <div className="grid gap-[.15rem] p-[.55rem_0]">
+            <dt className="text-[.7rem] text-muted">
               Tersimpan periode ini
             </dt>
-            <dd className={`m-0 font-medium [overflow-wrap:anywhere] ${net.tone}`}>
+            <dd className={`m-0 text-[.9rem] font-medium [overflow-wrap:anywhere] ${net.tone}`}>
               {net.text}
             </dd>
           </div>
         </dl>
       )}
-      <p className="mt-auto m-0 pt-[1.1rem] text-[.76rem] text-muted">
+      <p className="mt-auto m-0 pt-[.85rem] text-[.7rem] text-muted">
         Mencakup seluruh akun bertipe tabungan.
       </p>
     </section>

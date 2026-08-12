@@ -30,15 +30,15 @@ export function MonthlyExpenseCard({
   return (
     <section aria-label="Pengeluaran bulanan" className={`${cardClass} shadow-none`}>
       <div className="flex justify-center">
-        <div className="flex items-center gap-[.45rem]" role="group" aria-label="Pilih bulan">
+        <div className="flex items-center gap-[.35rem]" role="group" aria-label="Pilih bulan">
           <form action="/dashboard" method="get">
             <input name="month" type="hidden" value={prevMonth} />
             <button
               aria-label="Bulan sebelumnya"
-              className={`${iconButtonClass} size-10`}
+              className={`${iconButtonClass} size-[2.2rem]`}
               type="submit"
             >
-              <ChevronLeft aria-hidden="true" size={20} />
+              <ChevronLeft aria-hidden="true" size={17} />
             </button>
           </form>
           <form action="/dashboard" method="get">
@@ -51,22 +51,22 @@ export function MonthlyExpenseCard({
             <input name="month" type="hidden" value={nextMonth} />
             <button
               aria-label="Bulan berikutnya"
-              className={`${iconButtonClass} size-10`}
+              className={`${iconButtonClass} size-[2.2rem]`}
               type="submit"
             >
-              <ChevronRight aria-hidden="true" size={20} />
+              <ChevronRight aria-hidden="true" size={17} />
             </button>
           </form>
         </div>
       </div>
-      <strong className="my-[1.1rem_.2rem] block text-[clamp(1.6rem,4vw,2.5rem)] tracking-[-.04em] [overflow-wrap:anywhere]">{formatIdr(totalExpense)}</strong>
+      <strong className="my-[.85rem_.15rem] block text-[clamp(1.35rem,3.5vw,2.1rem)] tracking-[-.04em] [overflow-wrap:anywhere]">{formatIdr(totalExpense)}</strong>
       <div className="max-[860px]:hidden">
         <DailyExpenseChart points={monthPoints} />
       </div>
       <div className="hidden max-[860px]:block">
         <DailyExpenseChart points={recentPoints} />
         {recentZero ? (
-          <p className="mt-[.35rem] text-[.78rem] font-medium text-muted" role="status">
+          <p className="mt-[.25rem] text-[.74rem] font-medium text-muted" role="status">
             Belum ada pengeluaran dalam 4 hari terakhir.
           </p>
         ) : null}

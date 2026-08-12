@@ -18,7 +18,7 @@ export function BackButton({ fallback }: { fallback?: string }) {
   return (
     <button
       type="button"
-      className={`${iconButtonClass} hover:text-primary-700! dark:hover:text-[#93c5fd]!`}
+      className={`${iconButtonClass}`}
       onClick={goBack}
       aria-label="Kembali"
       title="Kembali"

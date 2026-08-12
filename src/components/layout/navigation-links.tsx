@@ -36,10 +36,10 @@ const mobileLinks = [
 ];
 
 const linkBase =
-  "flex min-h-[2.9rem] items-center gap-[.8rem] rounded-[.75rem] px-[.85rem] py-[.7rem] text-[.92rem] font-medium text-muted hover:bg-surface-subtle hover:text-foreground max-[860px]:min-h-[3.5rem] max-[860px]:flex-col max-[860px]:justify-center max-[860px]:gap-[.2rem] max-[860px]:rounded-[.8rem] max-[860px]:px-[.25rem] max-[860px]:py-[.35rem] max-[860px]:text-[.7rem]";
+  "relative flex h-[2.6rem] items-center gap-[.75rem] rounded-[.65rem] px-[.6rem] text-[.85rem] font-medium text-muted transition-[background,color] duration-150 hover:bg-surface-subtle hover:text-foreground overflow-hidden max-[860px]:min-h-[3.5rem] max-[860px]:flex-col max-[860px]:justify-center max-[860px]:gap-[.2rem] max-[860px]:rounded-[.8rem] max-[860px]:px-[.25rem] max-[860px]:py-[.35rem] max-[860px]:text-[.68rem] max-[860px]:h-auto";
 
 const linkActive =
-  "text-primary-700 bg-primary-50 dark:text-[#93c5fd] dark:bg-[rgb(37_99_235/16%)]";
+  "text-primary-600 bg-primary-50 dark:text-primary-700 dark:bg-primary-50";
 
 export function NavigationLinks({ mobile = false, collapsed = false }: { mobile?: boolean; collapsed?: boolean }) {
   const pathname = usePathname();
@@ -52,10 +52,10 @@ export function NavigationLinks({ mobile = false, collapsed = false }: { mobile?
         ))}
         <Link
           aria-label="Tambah transaksi"
-          className="relative z-[1] grid min-h-[3.5rem] place-items-center before:absolute before:z-[-1] before:size-12 before:rounded-full before:bg-primary-600 before:shadow-[0_8px_18px_rgb(37_99_235/35%)] [&_svg]:text-white"
+          className="relative z-[1] grid min-h-[3.5rem] place-items-center before:absolute before:z-[-1] before:size-11 before:rounded-full before:bg-primary-600 before:shadow-[0_6px_20px_rgb(240_90_36/40%)] [&_svg]:text-white"
           href="/transactions/new"
         >
-          <Plus size={26} strokeWidth={2.75} aria-hidden="true" />
+          <Plus size={24} strokeWidth={2.75} aria-hidden="true" />
           <span className="sr-only">Tambah transaksi</span>
         </Link>
         {mobileLinks.slice(2).map(({ href, label, icon: Icon }) => (
@@ -66,22 +66,24 @@ export function NavigationLinks({ mobile = false, collapsed = false }: { mobile?
   }
 
   return (
-    <nav className="mt-[2.6rem] grid gap-[.4rem]" aria-label="Navigasi utama">
+    <nav className="mt-[1.75rem] grid gap-[.2rem]" aria-label="Navigasi utama">
       {links.map(({ href, label, icon: Icon }) => {
         const active = pathname === href || pathname.startsWith(`${href}/`);
         return (
           <Link
             aria-current={active ? "page" : undefined}
-            className={cn(
-              linkBase,
-              collapsed && "justify-center px-0",
-              active && linkActive,
-            )}
+            className={cn(linkBase, active && linkActive)}
             href={href}
             key={href}
           >
-            <Icon aria-hidden="true" size={20} />
-            <span className={cn(collapsed && "hidden group-hover/sidebar:inline")}>{label}</span>
+            <Icon aria-hidden="true" size={17} className="shrink-0" />
+            <span className="whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-150">{label}</span>
+            {active && (
+              <span
+                className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[60%] rounded-r-full bg-primary-600"
+                aria-hidden="true"
+              />
+            )}
           </Link>
         );
       })}

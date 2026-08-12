@@ -38,24 +38,24 @@ function ComparisonRow({
 }) {
   const comparison = changeLabel(changeBps, previousLabel);
   return (
-    <div className="grid gap-[.35rem]">
-      <div className="flex items-baseline justify-between gap-4">
-        <span className="text-[.8rem] font-medium text-muted">{label}</span>
-        <strong className="min-w-0 text-[.9rem] [overflow-wrap:anywhere]">
+    <div className="grid gap-[.25rem]">
+      <div className="flex items-baseline justify-between gap-3">
+        <span className="text-[.75rem] font-medium text-muted">{label}</span>
+        <strong className="min-w-0 text-[.85rem] [overflow-wrap:anywhere]">
           {formatIdr(value)}
         </strong>
       </div>
       <div
-        className="h-2.5 overflow-hidden rounded-full bg-surface-subtle"
+        className="h-[6px] overflow-hidden rounded-full bg-surface-subtle"
         aria-hidden="true"
       >
         <div
-          className={`h-full rounded-full ${toneBarClass[tone]}`}
+          className={`h-full rounded-full transition-[width] duration-500 ${toneBarClass[tone]}`}
           style={{ width: barWidth(value, maximum) }}
         />
       </div>
       {comparison ? (
-        <p className="m-0 text-[.76rem] text-muted">{comparison}</p>
+        <p className="m-0 text-[.72rem] text-muted">{comparison}</p>
       ) : null}
     </div>
   );
@@ -82,10 +82,10 @@ export function IncomeVsExpenseComparison({
       className={`${cardClass} flex h-full flex-col shadow-none`}
     >
       <p className={eyebrowClass}>Perbandingan</p>
-      <h2 className="m-0 mb-[1.1rem] text-[1.08rem] tracking-[-.02em]">
+      <h2 className="m-0 mb-[.85rem] text-[.95rem] tracking-[-.02em]">
         Pemasukan vs Pengeluaran
       </h2>
-      <div className="grid flex-1 content-center gap-[1.1rem]">
+      <div className="grid flex-1 content-center gap-[.85rem]">
         <ComparisonRow
           changeBps={incomeChangeBps}
           label="Pemasukan bulan ini"
