@@ -39,7 +39,7 @@ export function CategoryExpenseChart({
   points: CategoryExpensePoint[];
 }) {
   return (
-    <div aria-hidden="true" className="mt-4 h-[21rem] w-full max-[540px]:h-[19rem]">
+    <div aria-hidden="true" className="mt-2 h-[11rem] w-full max-[540px]:h-[10rem]">
       <ResponsiveContainer height="100%" width="100%">
         <BarChart
           data={points}

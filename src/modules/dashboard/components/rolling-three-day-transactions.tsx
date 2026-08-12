@@ -109,7 +109,7 @@ export function RollingThreeDayTransactions({
         </div>
       ) : (
         <div
-          className="mt-3 grid min-h-[8rem] flex-1 place-items-center rounded-[.65rem] border border-dashed border-border bg-surface-subtle p-4 text-center text-[.8rem] text-muted"
+          className="mt-3 grid min-h-[4rem] flex-1 place-items-center rounded-[.65rem] border border-dashed border-border bg-surface-subtle p-3 text-center text-[.8rem] text-muted"
           role="status"
         >
           Belum ada transaksi dalam 3 hari terakhir.

@@ -39,7 +39,7 @@ export function CashFlowChart({
   points: IncomeExpensePoint[];
 }) {
   return (
-    <div aria-hidden="true" className="mt-4 h-[16rem] w-full">
+    <div aria-hidden="true" className="mt-2 h-[10rem] w-full">
       <ResponsiveContainer height="100%" width="100%">
         <LineChart
           data={points}

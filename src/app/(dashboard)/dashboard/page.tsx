@@ -171,7 +171,7 @@ export default async function DashboardPage({
 
   return (
     <div className="grid gap-3 min-[861px]:grid-cols-8 min-[1024px]:grid-cols-12">
-      <div className="min-w-0 min-[861px]:col-span-4 min-[1024px]:col-span-6">
+      <div className="min-w-0 min-[861px]:col-span-4 min-[1024px]:col-span-4">
         <FinancialOverview
           name={profile?.displayName ?? "Pengguna Spenles"}
           income={overview.income.toString()}
@@ -196,7 +196,7 @@ export default async function DashboardPage({
         )}
       </div>
 
-      <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-6">
+      <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
         {totals ? (
           <IncomeVsExpenseComparison
             income={totals.selected.income}
@@ -207,6 +207,17 @@ export default async function DashboardPage({
           />
         ) : (
           <DashboardSectionError title="Perbandingan bulanan belum tersedia" />
+        )}
+      </div>
+
+      <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
+        {isFulfilled(savingsResult) && isFulfilled(savingsBalanceResult) ? (
+          <SavingsSummaryCard
+            balance={savingsBalance}
+            periodNet={savingsNet}
+          />
+        ) : (
+          <DashboardSectionError title="Ringkasan tabungan belum tersedia" />
         )}
       </div>
 
@@ -234,7 +245,15 @@ export default async function DashboardPage({
         )}
       </div>
 
-      <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-6">
+      <div className="min-w-0 min-[861px]:col-span-4 min-[1024px]:col-span-4">
+        {isFulfilled(rollingResult) ? (
+          <RollingThreeDayTransactions rows={rollingResult.value} />
+        ) : (
+          <DashboardSectionError title="Aktivitas terbaru belum tersedia" />
+        )}
+      </div>
+
+      <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
         {isFulfilled(categoryResult) ? (
           <CategoryExpenseCard
             periodLabel={monthLabelFor(cardMonth)}
@@ -246,7 +265,7 @@ export default async function DashboardPage({
         )}
       </div>
 
-      <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-6">
+      <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
         {isFulfilled(categoryResult) ? (
           <TopSpendingCard
             periodLabel={monthLabelFor(cardMonth)}
@@ -254,25 +273,6 @@ export default async function DashboardPage({
           />
         ) : (
           <DashboardSectionError title="Kategori teratas belum tersedia" />
-        )}
-      </div>
-
-      <div className="hidden min-w-0 min-[861px]:col-span-3 min-[861px]:block min-[1024px]:col-span-5">
-        {isFulfilled(savingsResult) && isFulfilled(savingsBalanceResult) ? (
-          <SavingsSummaryCard
-            balance={savingsBalance}
-            periodNet={savingsNet}
-          />
-        ) : (
-          <DashboardSectionError title="Ringkasan tabungan belum tersedia" />
-        )}
-      </div>
-
-      <div className="min-w-0 min-[861px]:col-span-5 min-[1024px]:col-span-7">
-        {isFulfilled(rollingResult) ? (
-          <RollingThreeDayTransactions rows={rollingResult.value} />
-        ) : (
-          <DashboardSectionError title="Aktivitas terbaru belum tersedia" />
         )}
       </div>
 
