@@ -22,7 +22,7 @@ function point(
 }
 
 describe("CategoryExpenseCard", () => {
-  it("shows the chart, summary, and an exact table for every category", () => {
+  it("renders the pie chart card with a summary and no data table", () => {
     render(
       <CategoryExpenseCard
         periodLabel="Agustus 2026"
@@ -37,17 +37,15 @@ describe("CategoryExpenseCard", () => {
     expect(
       screen.getByRole("heading", { name: "Pengeluaran per Kategori" }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/Total pengeluaran Rp\s*2\.000\.000/u)).toBeInTheDocument();
-    const table = screen.getByRole("table", { name: "Pengeluaran per kategori" });
-    expect(table).toHaveTextContent("Makanan");
-    expect(table).toHaveTextContent("Transportasi");
-    expect(table).toHaveTextContent(/1\.200\.000/u);
-    expect(table).toHaveTextContent(/800\.000/u);
-    expect(table).toHaveTextContent("60%");
-    expect(table).toHaveTextContent("40%");
+    expect(screen.getByText("Agustus 2026")).toBeInTheDocument();
+    expect(
+      screen.getByText(/Total pengeluaran Rp\s*2\.000\.000/u),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
+    expect(screen.queryByText(/Lihat data tabel/u)).not.toBeInTheDocument();
   });
 
-  it("keeps every category in the exact table beyond the visual top five", () => {
+  it("keeps every category in the sr-only exact list beyond the visual top five", () => {
     render(
       <CategoryExpenseCard
         periodLabel="Agustus 2026"
@@ -63,9 +61,22 @@ describe("CategoryExpenseCard", () => {
       />,
     );
 
-    const table = screen.getByRole("table", { name: "Pengeluaran per kategori" });
-    expect(table).toHaveTextContent("A");
-    expect(table).toHaveTextContent("F");
-    expect(table).not.toHaveTextContent("Kategori lainnya");
+    expect(screen.getByText(/A: Rp\s*1\.000\.000/u)).toBeInTheDocument();
+    expect(screen.getByText(/F: Rp\s*1\.000\.000/u)).toBeInTheDocument();
+    expect(screen.queryByRole("table")).not.toBeInTheDocument();
+  });
+
+  it("shows a zero-data status when there is no expense", () => {
+    render(
+      <CategoryExpenseCard
+        periodLabel="Agustus 2026"
+        points={[]}
+        totalExpense={0n}
+      />,
+    );
+
+    expect(
+      screen.getByText("Belum ada pengeluaran pada periode ini."),
+    ).toBeInTheDocument();
   });
 });

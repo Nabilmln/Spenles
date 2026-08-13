@@ -73,6 +73,26 @@ describe("dashboard chart contracts", () => {
     ).toBe(contract.totalExpense);
     expect(visual.reduce((sum, point) => sum + point.shareBps, 0)).toBe(10_000);
   });
+
+  it("assigns a distinct color to every pie slice", () => {
+    const contract = buildCategoryChartContract(
+      Array.from({ length: 7 }, (_, index) => ({
+        categoryId: String(index),
+        name: `Kategori ${index}`,
+        normalizedName: `kategori ${index}`,
+        color: null,
+        icon: null,
+        expense: BigInt(7 - index),
+      })),
+    );
+    const visual = buildCategoryVisualPoints(contract.points);
+
+    expect(new Set(visual.map((point) => point.color)).size).toBe(
+      visual.length,
+    );
+    expect(visual[0].color).not.toBe(visual[1].color);
+    expect(visual[5].color).not.toBe(visual[0].color);
+  });
 });
 
 describe("four-day recent expense chart", () => {

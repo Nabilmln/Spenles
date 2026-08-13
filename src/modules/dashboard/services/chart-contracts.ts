@@ -305,9 +305,14 @@ export function buildCategoryChartContract(rows: CategoryAggregate[]) {
   return { points, totalExpense };
 }
 
+const CATEGORY_COLOR_VALUES = Object.values(CATEGORY_COLORS);
+
 export function buildCategoryVisualPoints(points: CategoryExpensePoint[]) {
-  if (points.length <= 5) return points;
-  const visible = points.slice(0, 5);
+  const visible = points.slice(0, 5).map((point, index) => ({
+    ...point,
+    color: CATEGORY_COLOR_VALUES[index % CATEGORY_COLOR_VALUES.length],
+  }));
+  if (points.length <= 5) return visible;
   const remainder = points.slice(5);
   return [
     ...visible,

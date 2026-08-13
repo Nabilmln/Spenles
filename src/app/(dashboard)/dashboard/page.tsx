@@ -261,32 +261,12 @@ export default async function DashboardPage({
         )}
       </div>
 
-      <div className="hidden min-w-0 min-[861px]:col-span-5 min-[861px]:block min-[1024px]:col-span-8">
+      <div className="hidden min-w-0 min-[861px]:col-span-8 min-[861px]:block min-[1024px]:col-span-8">
         <CashFlowOverviewCard
           daily={cashFlowDaily}
           monthly={cashFlowMonthly}
           weekly={cashFlowWeekly}
         />
-      </div>
-
-      <div className="hidden min-w-0 min-[861px]:col-span-3 min-[861px]:block min-[1024px]:col-span-4">
-        {totals ? (
-          <AverageSpendingCard
-            value={averageDaily}
-            changeBps={averageComparison.changeBps}
-            previousLabel={prevCardInterval.label}
-          />
-        ) : (
-          <DashboardSectionError title="Rata-rata harian belum tersedia" />
-        )}
-      </div>
-
-      <div className="min-w-0 min-[861px]:col-span-4 min-[1024px]:col-span-4">
-        {isFulfilled(rollingResult) ? (
-          <RollingThreeDayTransactions rows={rollingResult.value} />
-        ) : (
-          <DashboardSectionError title="Aktivitas terbaru belum tersedia" />
-        )}
       </div>
 
       <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
@@ -301,6 +281,14 @@ export default async function DashboardPage({
         )}
       </div>
 
+      <div className="min-w-0 min-[861px]:col-span-4 min-[1024px]:col-span-4">
+        {isFulfilled(rollingResult) ? (
+          <RollingThreeDayTransactions rows={rollingResult.value} />
+        ) : (
+          <DashboardSectionError title="Aktivitas terbaru belum tersedia" />
+        )}
+      </div>
+
       <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
         {isFulfilled(categoryResult) ? (
           <TopSpendingCard
@@ -309,6 +297,18 @@ export default async function DashboardPage({
           />
         ) : (
           <DashboardSectionError title="Kategori teratas belum tersedia" />
+        )}
+      </div>
+
+      <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
+        {totals ? (
+          <AverageSpendingCard
+            value={averageDaily}
+            changeBps={averageComparison.changeBps}
+            previousLabel={prevCardInterval.label}
+          />
+        ) : (
+          <DashboardSectionError title="Rata-rata harian belum tersedia" />
         )}
       </div>
 
