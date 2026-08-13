@@ -13,12 +13,6 @@ const presetSchema = z.enum([
   "custom",
 ]);
 
-const chartRangeSchema = z.enum([
-  "6-months",
-  "12-months",
-  "current-year",
-]);
-
 const monthSchema = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/u);
 const dateSchema = z.string().refine(isValidDateKey, {
   message: "Tanggal tidak valid.",
@@ -30,7 +24,6 @@ const recognizedSchema = z
     month: monthSchema.optional(),
     from: dateSchema.optional(),
     to: dateSchema.optional(),
-    chartRange: chartRangeSchema.default("6-months"),
   })
   .superRefine((value, context) => {
     if (value.month && (value.period || value.from || value.to)) {
@@ -105,7 +98,6 @@ export function safeParseDashboardFilters(
     month: singleValue(searchParams.month),
     from: singleValue(searchParams.from),
     to: singleValue(searchParams.to),
-    chartRange: singleValue(searchParams.chartRange),
   };
 
   if (Object.values(recognized).some((value) => value === null)) {
@@ -143,7 +135,6 @@ export function safeParseDashboardFilters(
     success: true as const,
     data: {
       selection,
-      chartRange: parsed.data.chartRange,
     } satisfies DashboardFilters,
   };
 }

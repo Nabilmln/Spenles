@@ -2,27 +2,24 @@ import { describe, expect, it } from "vitest";
 import { safeParseDashboardFilters } from "./dashboard-filters";
 
 describe("safeParseDashboardFilters", () => {
-  it("uses current month and six chart months by default", () => {
+  it("uses current month by default", () => {
     expect(safeParseDashboardFilters({ ignored: "safe" })).toEqual({
       success: true,
       data: {
         selection: { kind: "preset", period: "current-month" },
-        chartRange: "6-months",
       },
     });
   });
 
-  it("accepts a specific month with an independent chart range", () => {
+  it("accepts a specific month", () => {
     expect(
       safeParseDashboardFilters({
         month: "2026-08",
-        chartRange: "12-months",
       }),
     ).toEqual({
       success: true,
       data: {
         selection: { kind: "month", month: "2026-08" },
-        chartRange: "12-months",
       },
     });
   });

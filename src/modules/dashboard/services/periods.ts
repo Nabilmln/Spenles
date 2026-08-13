@@ -210,18 +210,11 @@ function selectedAndPrevious(filters: DashboardFilters, today: CalendarDate) {
   }
 }
 
-function chartInterval(filters: DashboardFilters, today: CalendarDate) {
-  const currentMonth = { year: today.year, month: today.month, day: 1 };
-  if (filters.chartRange === "current-year") {
-    const start = { year: today.year, month: 1, day: 1 };
-    return monthInterval(start, 12, `Grafik tahun ${today.year}`);
-  }
-  const count = filters.chartRange === "12-months" ? 12 : 6;
-  return monthInterval(
-    addMonths(currentMonth, -(count - 1)),
-    count,
-    `Grafik ${count} bulan`,
-  );
+function startOfWeek(value: CalendarDate): CalendarDate {
+  const dayOfWeek = new Date(
+    Date.UTC(value.year, value.month - 1, value.day),
+  ).getUTCDay();
+  return addDays(value, -((dayOfWeek + 6) % 7));
 }
 
 export function resolveDashboardPeriods(
@@ -230,19 +223,13 @@ export function resolveDashboardPeriods(
 ): DashboardPeriods {
   const today = jakartaToday(now);
   const { selected, previous } = selectedAndPrevious(filters, today);
-  const chart = chartInterval(filters, today);
 
   return {
     selected,
     previous,
-    chart,
     selectedMonthKeys: enumerateMonths(
       parseDateKey(selected.startDate),
       parseDateKey(selected.endDateExclusive),
-    ),
-    chartMonthKeys: enumerateMonths(
-      parseDateKey(chart.startDate),
-      parseDateKey(chart.endDateExclusive),
     ),
   };
 }
@@ -268,6 +255,40 @@ export function fourDayJakartaInterval(now = new Date()): DateInterval {
   const start = addDays(today, -3);
   const end = addDays(today, 1);
   return interval(start, end, "4 hari terakhir");
+}
+
+export function lastDaysJakartaInterval(
+  count: number,
+  now = new Date(),
+): DateInterval {
+  const today = jakartaToday(now);
+  const start = addDays(today, -(count - 1));
+  const end = addDays(today, 1);
+  return interval(start, end, `${count} hari terakhir`);
+}
+
+export function lastWeeksJakartaInterval(
+  count: number,
+  now = new Date(),
+): DateInterval {
+  const today = jakartaToday(now);
+  const currentWeek = startOfWeek(today);
+  const start = addDays(currentWeek, -(count - 1) * 7);
+  const end = addDays(currentWeek, 7);
+  return interval(start, end, `${count} minggu terakhir`);
+}
+
+export function lastMonthsJakartaInterval(
+  count: number,
+  now = new Date(),
+): DateInterval {
+  const today = jakartaToday(now);
+  const currentMonth = { year: today.year, month: today.month, day: 1 };
+  return monthInterval(
+    addMonths(currentMonth, -(count - 1)),
+    count,
+    `${count} bulan terakhir`,
+  );
 }
 
 export function countCalendarDays(interval: DateInterval) {

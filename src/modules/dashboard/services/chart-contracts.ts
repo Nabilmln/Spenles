@@ -153,6 +153,116 @@ export function buildDailyExpenseChartContract(
   return { points, totalExpense };
 }
 
+type IncomeExpensePeriod = {
+  period: string;
+  income: bigint;
+  expense: bigint;
+};
+
+function compactDayLabel(day: string) {
+  const [year, month, date] = day.split("-").map(Number);
+  return new Intl.DateTimeFormat("id-ID", {
+    weekday: "short",
+    day: "numeric",
+  }).format(new Date(Date.UTC(year, month - 1, date)));
+}
+
+function weekStartLabel(day: string) {
+  const [year, month, date] = day.split("-").map(Number);
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "numeric",
+    month: "short",
+  }).format(new Date(Date.UTC(year, month - 1, date)));
+}
+
+function compactMonthLabel(period: string) {
+  const [year, month] = period.split("-").map(Number);
+  const monthName = new Intl.DateTimeFormat("id-ID", {
+    month: "short",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(year, month - 1, 1)));
+  return `${monthName} ${String(year).slice(-2)}`;
+}
+
+function enumerateWeeks(startDate: string, endDateExclusive: string) {
+  const result: string[] = [];
+  const cursor = new Date(`${startDate}T00:00:00Z`);
+  const end = new Date(`${endDateExclusive}T00:00:00Z`);
+  while (cursor < end) {
+    result.push(cursor.toISOString().slice(0, 10));
+    cursor.setUTCDate(cursor.getUTCDate() + 7);
+  }
+  return result;
+}
+
+function enumerateMonths(startDate: string, endDateExclusive: string) {
+  const result: string[] = [];
+  const cursor = new Date(`${startDate}T00:00:00Z`);
+  const end = new Date(`${endDateExclusive}T00:00:00Z`);
+  while (cursor < end) {
+    result.push(cursor.toISOString().slice(0, 7));
+    cursor.setUTCMonth(cursor.getUTCMonth() + 1);
+  }
+  return result;
+}
+
+function buildIncomeExpenseSeries(
+  periodKeys: string[],
+  rows: IncomeExpensePeriod[],
+  labelOf: (period: string) => string,
+) {
+  const byPeriod = new Map(rows.map((row) => [row.period, row]));
+  const filled = periodKeys.map(
+    (period) => byPeriod.get(period) ?? { period, income: 0n, expense: 0n },
+  );
+  const maximum = filled.reduce(
+    (value, item) =>
+      item.income > value
+        ? item.income
+        : item.expense > value
+          ? item.expense
+          : value,
+    0n,
+  );
+  const totalIncome = filled.reduce((sum, item) => sum + item.income, 0n);
+  const totalExpense = filled.reduce((sum, item) => sum + item.expense, 0n);
+
+  const points: IncomeExpensePoint[] = filled.map((item) => ({
+    period: item.period,
+    label: labelOf(item.period),
+    incomeIdr: item.income.toString(),
+    expenseIdr: item.expense.toString(),
+    incomePlot: normalizedPlot(item.income, maximum),
+    expensePlot: normalizedPlot(item.expense, maximum),
+  }));
+
+  return { points, totalIncome, totalExpense };
+}
+
+export function buildDailyCashFlowContract(
+  interval: DateInterval,
+  rows: IncomeExpensePeriod[],
+) {
+  const days = enumerateDays(interval.startDate, interval.endDateExclusive);
+  return buildIncomeExpenseSeries(days, rows, compactDayLabel);
+}
+
+export function buildWeeklyCashFlowContract(
+  interval: DateInterval,
+  rows: IncomeExpensePeriod[],
+) {
+  const weeks = enumerateWeeks(interval.startDate, interval.endDateExclusive);
+  return buildIncomeExpenseSeries(weeks, rows, weekStartLabel);
+}
+
+export function buildMonthlyCashFlowContract(
+  interval: DateInterval,
+  rows: IncomeExpensePeriod[],
+) {
+  const months = enumerateMonths(interval.startDate, interval.endDateExclusive);
+  return buildIncomeExpenseSeries(months, rows, compactMonthLabel);
+}
+
 export function buildFourDayExpenseChartContract(
   now: Date,
   rows: DailyExpenseAggregate[],

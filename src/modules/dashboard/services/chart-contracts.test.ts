@@ -2,9 +2,17 @@ import { describe, expect, it } from "vitest";
 import {
   buildCategoryChartContract,
   buildCategoryVisualPoints,
+  buildDailyCashFlowContract,
   buildFourDayExpenseChartContract,
+  buildMonthlyCashFlowContract,
   buildMonthlyChartContract,
+  buildWeeklyCashFlowContract,
 } from "./chart-contracts";
+import {
+  lastDaysJakartaInterval,
+  lastMonthsJakartaInterval,
+  lastWeeksJakartaInterval,
+} from "./periods";
 
 describe("dashboard chart contracts", () => {
   it("zero-fills months and preserves exact totals", () => {
@@ -107,5 +115,83 @@ describe("four-day recent expense chart", () => {
     );
     expect(contract.points.every((point) => point.plot === 0)).toBe(true);
     expect(contract.totalExpense).toBe(0n);
+  });
+});
+
+describe("cash-flow chart contracts", () => {
+  const now = new Date("2026-08-05T10:00:00.000Z");
+
+  it("builds seven zero-filled Jakarta days with compact labels", () => {
+    const contract = buildDailyCashFlowContract(
+      lastDaysJakartaInterval(7, now),
+      [
+        { period: "2026-07-30", income: 100n, expense: 40n },
+        { period: "2026-08-03", income: 0n, expense: 25n },
+      ],
+    );
+
+    expect(contract.points.map((point) => point.period)).toEqual([
+      "2026-07-30",
+      "2026-07-31",
+      "2026-08-01",
+      "2026-08-02",
+      "2026-08-03",
+      "2026-08-04",
+      "2026-08-05",
+    ]);
+    expect(contract.points.map((point) => point.label)).toEqual([
+      "Kam, 30",
+      "Jum, 31",
+      "Sab, 1",
+      "Min, 2",
+      "Sen, 3",
+      "Sel, 4",
+      "Rab, 5",
+    ]);
+    expect(contract.totalIncome).toBe(100n);
+    expect(contract.totalExpense).toBe(65n);
+    expect(contract.points[0].incomePlot).toBe(1);
+    expect(contract.points[4].expenseIdr).toBe("25");
+  });
+
+  it("builds four Monday-start weeks with start-of-week labels", () => {
+    const contract = buildWeeklyCashFlowContract(
+      lastWeeksJakartaInterval(4, now),
+      [{ period: "2026-07-13", income: 1000n, expense: 400n }],
+    );
+
+    expect(contract.points.map((point) => point.period)).toEqual([
+      "2026-07-13",
+      "2026-07-20",
+      "2026-07-27",
+      "2026-08-03",
+    ]);
+    expect(contract.points.map((point) => point.label)).toEqual([
+      "13 Jul",
+      "20 Jul",
+      "27 Jul",
+      "3 Agu",
+    ]);
+    expect(contract.totalIncome).toBe(1000n);
+    expect(contract.totalExpense).toBe(400n);
+  });
+
+  it("builds twelve months ending with the current month", () => {
+    const contract = buildMonthlyCashFlowContract(
+      lastMonthsJakartaInterval(12, now),
+      [
+        { period: "2025-09", income: 500n, expense: 200n },
+        { period: "2026-08", income: 1000n, expense: 300n },
+      ],
+    );
+
+    expect(contract.points).toHaveLength(12);
+    expect(contract.points[0].period).toBe("2025-09");
+    expect(contract.points[0].label).toBe("Sep 25");
+    expect(contract.points[11].period).toBe("2026-08");
+    expect(contract.points[11].label).toBe("Agu 26");
+    expect(contract.totalIncome).toBe(1500n);
+    expect(contract.totalExpense).toBe(500n);
+    expect(contract.points[11].incomePlot).toBe(1);
   });
 });

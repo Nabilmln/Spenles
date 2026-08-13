@@ -270,6 +270,94 @@ export async function getDailyExpenseAggregates(
   );
 }
 
+type IncomeExpensePeriodRow = {
+  period: string;
+  income: string;
+  expense: string;
+};
+
+export async function getDailyIncomeExpenseAggregates(
+  authenticatedUserId: string,
+  interval: DateInterval,
+  database: Database = db,
+) {
+  const result = await database.execute<IncomeExpensePeriodRow>(sql`
+    select
+      to_char(
+        timezone('Asia/Jakarta', transaction_at),
+        'YYYY-MM-DD'
+      ) as period,
+      coalesce(
+        sum(amount) filter (where type = 'income'),
+        0
+      )::text as income,
+      coalesce(
+        sum(amount) filter (where type = 'expense'),
+        0
+      )::text as expense
+    from transactions
+    where user_id = ${authenticatedUserId}
+      and deleted_at is null
+      and transaction_at >= ${interval.start}
+      and transaction_at < ${interval.end}
+    group by to_char(
+      timezone('Asia/Jakarta', transaction_at),
+      'YYYY-MM-DD'
+    )
+    order by to_char(
+      timezone('Asia/Jakarta', transaction_at),
+      'YYYY-MM-DD'
+    )
+  `);
+
+  return result.rows.map((row) => ({
+    period: row.period,
+    income: BigInt(row.income),
+    expense: BigInt(row.expense),
+  }));
+}
+
+export async function getWeeklyIncomeExpenseAggregates(
+  authenticatedUserId: string,
+  interval: DateInterval,
+  database: Database = db,
+) {
+  const result = await database.execute<IncomeExpensePeriodRow>(sql`
+    select
+      to_char(
+        date_trunc('week', timezone('Asia/Jakarta', transaction_at)),
+        'YYYY-MM-DD'
+      ) as period,
+      coalesce(
+        sum(amount) filter (where type = 'income'),
+        0
+      )::text as income,
+      coalesce(
+        sum(amount) filter (where type = 'expense'),
+        0
+      )::text as expense
+    from transactions
+    where user_id = ${authenticatedUserId}
+      and deleted_at is null
+      and transaction_at >= ${interval.start}
+      and transaction_at < ${interval.end}
+    group by date_trunc(
+      'week',
+      timezone('Asia/Jakarta', transaction_at)
+    )
+    order by date_trunc(
+      'week',
+      timezone('Asia/Jakarta', transaction_at)
+    )
+  `);
+
+  return result.rows.map((row) => ({
+    period: row.period,
+    income: BigInt(row.income),
+    expense: BigInt(row.expense),
+  }));
+}
+
 const ROLLING_JAKARTA_OFFSET_MS = 7 * 60 * 60 * 1000;
 
 function jakartaDayStart(daysAgo: number) {

@@ -20,7 +20,6 @@ const planUserB = `phase03-plan-b-${randomUUID()}`;
 const periods = resolveDashboardPeriods(
   {
     selection: { kind: "month", month: "2026-08" },
-    chartRange: "6-months",
   },
   new Date("2026-08-05T10:00:00.000Z"),
 );

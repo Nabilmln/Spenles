@@ -7,11 +7,6 @@ export type DashboardPreset =
   | "last-6-months"
   | "current-year";
 
-export type DashboardChartRange =
-  | "6-months"
-  | "12-months"
-  | "current-year";
-
 export type DashboardSelection =
   | { kind: "preset"; period: DashboardPreset }
   | { kind: "month"; month: string }
@@ -19,7 +14,6 @@ export type DashboardSelection =
 
 export type DashboardFilters = {
   selection: DashboardSelection;
-  chartRange: DashboardChartRange;
 };
 
 export type DashboardSearchParams = Record<
@@ -38,9 +32,7 @@ export type DateInterval = {
 export type DashboardPeriods = {
   selected: DateInterval;
   previous: DateInterval;
-  chart: DateInterval;
   selectedMonthKeys: string[];
-  chartMonthKeys: string[];
 };
 
 export type AggregateTotals = {

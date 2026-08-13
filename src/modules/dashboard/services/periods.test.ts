@@ -2,6 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   countCalendarDays,
   fourDayJakartaInterval,
+  lastDaysJakartaInterval,
+  lastMonthsJakartaInterval,
+  lastWeeksJakartaInterval,
   monthIntervalForKey,
   resolveDashboardPeriods,
 } from "./periods";
@@ -13,7 +16,6 @@ describe("resolveDashboardPeriods", () => {
     const periods = resolveDashboardPeriods(
       {
         selection: { kind: "preset", period: "current-month" },
-        chartRange: "6-months",
       },
       now,
     );
@@ -32,7 +34,6 @@ describe("resolveDashboardPeriods", () => {
     const periods = resolveDashboardPeriods(
       {
         selection: { kind: "preset", period: "last-3-months" },
-        chartRange: "6-months",
       },
       now,
     );
@@ -50,15 +51,12 @@ describe("resolveDashboardPeriods", () => {
     const periods = resolveDashboardPeriods(
       {
         selection: { kind: "month", month: "2026-01" },
-        chartRange: "current-year",
       },
       now,
     );
 
     expect(periods.selected.startDate).toBe("2026-01-01");
     expect(periods.previous.startDate).toBe("2025-12-01");
-    expect(periods.chartMonthKeys).toHaveLength(12);
-    expect(periods.chartMonthKeys[0]).toBe("2026-01");
   });
 
   it("uses an equal inclusive-day duration for custom previous periods", () => {
@@ -69,7 +67,6 @@ describe("resolveDashboardPeriods", () => {
           from: "2024-02-28",
           to: "2024-03-01",
         },
-        chartRange: "6-months",
       },
       now,
     );
@@ -79,34 +76,6 @@ describe("resolveDashboardPeriods", () => {
     expect(periods.previous.startDate).toBe("2024-02-25");
     expect(periods.previous.endDateExclusive).toBe("2024-02-28");
     expect(periods.selectedMonthKeys).toEqual(["2024-02", "2024-03"]);
-  });
-
-  it("uses six and twelve complete chart buckets including current month", () => {
-    const six = resolveDashboardPeriods(
-      {
-        selection: { kind: "preset", period: "current-month" },
-        chartRange: "6-months",
-      },
-      now,
-    );
-    const twelve = resolveDashboardPeriods(
-      {
-        selection: { kind: "preset", period: "current-month" },
-        chartRange: "12-months",
-      },
-      now,
-    );
-
-    expect(six.chartMonthKeys).toEqual([
-      "2026-03",
-      "2026-04",
-      "2026-05",
-      "2026-06",
-      "2026-07",
-      "2026-08",
-    ]);
-    expect(twelve.chartMonthKeys).toHaveLength(12);
-    expect(twelve.chartMonthKeys.at(-1)).toBe("2026-08");
   });
 });
 
@@ -152,11 +121,37 @@ describe("countCalendarDays", () => {
           from: "2026-08-10",
           to: "2026-08-20",
         },
-        chartRange: "6-months",
       },
       now,
     );
 
     expect(countCalendarDays(interval.selected)).toBe(11);
+  });
+});
+
+describe("cash-flow range intervals", () => {
+  it("covers the last seven Jakarta calendar days", () => {
+    const interval = lastDaysJakartaInterval(7, now);
+
+    expect(interval.startDate).toBe("2026-07-30");
+    expect(interval.endDateExclusive).toBe("2026-08-06");
+    expect(interval.start.toISOString()).toBe("2026-07-29T17:00:00.000Z");
+    expect(interval.end.toISOString()).toBe("2026-08-05T17:00:00.000Z");
+  });
+
+  it("covers the last four Monday-start calendar weeks", () => {
+    const interval = lastWeeksJakartaInterval(4, now);
+
+    expect(interval.startDate).toBe("2026-07-13");
+    expect(interval.endDateExclusive).toBe("2026-08-10");
+    expect(interval.label).toBe("4 minggu terakhir");
+  });
+
+  it("covers the last twelve calendar months including the current month", () => {
+    const interval = lastMonthsJakartaInterval(12, now);
+
+    expect(interval.startDate).toBe("2025-09-01");
+    expect(interval.endDateExclusive).toBe("2026-09-01");
+    expect(countCalendarDays(interval)).toBe(365);
   });
 });

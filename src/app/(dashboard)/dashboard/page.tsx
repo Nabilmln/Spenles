@@ -4,9 +4,11 @@ import { buttonClass, cardClass } from "@/components/ui/styles";
 import {
   AverageSpendingCard,
   buildCategoryChartContract,
+  buildDailyCashFlowContract,
   buildDailyExpenseChartContract,
   buildFourDayExpenseChartContract,
-  buildMonthlyChartContract,
+  buildMonthlyCashFlowContract,
+  buildWeeklyCashFlowContract,
   CashFlowOverviewCard,
   CategoryExpenseCard,
   compareFinancialValue,
@@ -18,19 +20,24 @@ import {
   fourDayJakartaInterval,
   getCategoryExpenseAggregates,
   getDailyExpenseAggregates,
+  getDailyIncomeExpenseAggregates,
   getMonthlyAggregates,
   getRollingThreeDayTransactions,
   getSelectedAndPreviousTotals,
+  getWeeklyIncomeExpenseAggregates,
   IncomeVsExpenseComparison,
+  lastDaysJakartaInterval,
+  lastMonthsJakartaInterval,
+  lastWeeksJakartaInterval,
   MonthlyExpenseCard,
   monthIntervalForKey,
-  resolveDashboardPeriods,
   RollingThreeDayTransactions,
   safeParseDashboardFilters,
   SavingsSummaryCard,
   shiftMonthKey,
   TopSpendingCard,
   type DashboardSearchParams,
+  type IncomeExpensePoint,
 } from "@/modules/dashboard";
 import { getPeriodSavings, getSavingsBalanceTotal } from "@/modules/accounts";
 import { getProfile } from "@/modules/profiles";
@@ -92,7 +99,9 @@ export default async function DashboardPage({
   const prevCardInterval = monthIntervalForKey(shiftMonthKey(cardMonth, -1));
   const now = new Date();
   const recentInterval = fourDayJakartaInterval(now);
-  const periods = resolveDashboardPeriods(filtersResult.data, now);
+  const cashFlowDaysInterval = lastDaysJakartaInterval(7, now);
+  const cashFlowWeeksInterval = lastWeeksJakartaInterval(4, now);
+  const cashFlowMonthsInterval = lastMonthsJakartaInterval(12, now);
   const calendarDays = countCalendarDays(cardInterval);
   const prevCalendarDays = countCalendarDays(prevCardInterval);
 
@@ -101,7 +110,9 @@ export default async function DashboardPage({
     recentResult,
     rollingResult,
     monthlyResult,
-    chartMonthlyResult,
+    cashFlowDailyResult,
+    cashFlowWeeklyResult,
+    cashFlowMonthlyResult,
     categoryResult,
     totalsResult,
     savingsResult,
@@ -111,7 +122,9 @@ export default async function DashboardPage({
     getDailyExpenseAggregates(user.id, recentInterval),
     getRollingThreeDayTransactions(user.id),
     getMonthlyAggregates(user.id, cardInterval),
-    getMonthlyAggregates(user.id, periods.chart),
+    getDailyIncomeExpenseAggregates(user.id, cashFlowDaysInterval),
+    getWeeklyIncomeExpenseAggregates(user.id, cashFlowWeeksInterval),
+    getMonthlyAggregates(user.id, cashFlowMonthsInterval),
     getCategoryExpenseAggregates(user.id, cardInterval),
     getSelectedAndPreviousTotals(user.id, cardInterval, prevCardInterval),
     getPeriodSavings(user.id, cardInterval.start, cardInterval.end),
@@ -135,9 +148,36 @@ export default async function DashboardPage({
       )
     : { income: 0n, expense: 0n };
 
-  const chartContract = buildMonthlyChartContract(
-    periods.chartMonthKeys,
-    isFulfilled(chartMonthlyResult) ? chartMonthlyResult.value : [],
+  function toCashFlowSeries(
+    contract: {
+      points: IncomeExpensePoint[];
+      totalIncome: bigint;
+      totalExpense: bigint;
+    } | null,
+  ) {
+    return contract
+      ? {
+          points: contract.points,
+          totalIncome: contract.totalIncome.toString(),
+          totalExpense: contract.totalExpense.toString(),
+        }
+      : { points: [], totalIncome: "0", totalExpense: "0" };
+  }
+
+  const cashFlowDaily = toCashFlowSeries(
+    isFulfilled(cashFlowDailyResult)
+      ? buildDailyCashFlowContract(cashFlowDaysInterval, cashFlowDailyResult.value)
+      : null,
+  );
+  const cashFlowWeekly = toCashFlowSeries(
+    isFulfilled(cashFlowWeeklyResult)
+      ? buildWeeklyCashFlowContract(cashFlowWeeksInterval, cashFlowWeeklyResult.value)
+      : null,
+  );
+  const cashFlowMonthly = toCashFlowSeries(
+    isFulfilled(cashFlowMonthlyResult)
+      ? buildMonthlyCashFlowContract(cashFlowMonthsInterval, cashFlowMonthlyResult.value)
+      : null,
   );
 
   const categoryRows = isFulfilled(categoryResult)
@@ -222,15 +262,11 @@ export default async function DashboardPage({
       </div>
 
       <div className="hidden min-w-0 min-[861px]:col-span-5 min-[861px]:block min-[1024px]:col-span-8">
-        {isFulfilled(chartMonthlyResult) ? (
-          <CashFlowOverviewCard
-            points={chartContract.incomeExpensePoints}
-            totalIncome={chartContract.totalIncome}
-            totalExpense={chartContract.totalExpense}
-          />
-        ) : (
-          <DashboardSectionError title="Grafik arus kas belum tersedia" />
-        )}
+        <CashFlowOverviewCard
+          daily={cashFlowDaily}
+          monthly={cashFlowMonthly}
+          weekly={cashFlowWeekly}
+        />
       </div>
 
       <div className="hidden min-w-0 min-[861px]:col-span-3 min-[861px]:block min-[1024px]:col-span-4">
