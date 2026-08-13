@@ -7,7 +7,6 @@ import {
   TransferList,
 } from "@/modules/accounts";
 
-export const metadata = { title: "Transfer internal" };
 export const dynamic = "force-dynamic";
 
 export default async function TransfersPage() {

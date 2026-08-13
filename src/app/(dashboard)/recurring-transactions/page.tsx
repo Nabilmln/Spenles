@@ -6,7 +6,6 @@ import {
   RecurringRuleList,
 } from "@/modules/recurring-transactions";
 
-export const metadata = { title: "Transaksi berulang" };
 export const dynamic = "force-dynamic";
 
 export default async function RecurringTransactionsPage() {

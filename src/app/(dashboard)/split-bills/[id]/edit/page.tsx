@@ -11,7 +11,6 @@ import {
   updateSplitBillAction,
 } from "@/modules/split-bills";
 
-export const metadata = { title: "Edit Split Bill" };
 export const dynamic = "force-dynamic";
 
 export default async function EditSplitBillPage({

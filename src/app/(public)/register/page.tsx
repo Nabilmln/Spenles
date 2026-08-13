@@ -3,7 +3,6 @@ import { RegisterForm } from "@/modules/auth/components/register-form";
 import { getSessionUser } from "@/lib/auth/require-session";
 import { eyebrowClass } from "@/components/ui/styles";
 
-export const metadata = { title: "Daftar" };
 export const dynamic = "force-dynamic";
 
 export default async function RegisterPage() {

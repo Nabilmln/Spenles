@@ -3,7 +3,6 @@ import { requireSessionUser } from "@/lib/auth/require-session";
 import { buttonClass, pageDescriptionClass, pageHeadingRowClass, pageStackClass } from "@/components/ui/styles";
 import { BudgetList, listOwnedBudgets } from "@/modules/budgets";
 
-export const metadata = { title: "Anggaran" };
 export const dynamic = "force-dynamic";
 
 export default async function BudgetsPage() {

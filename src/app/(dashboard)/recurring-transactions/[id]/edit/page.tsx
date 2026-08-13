@@ -9,8 +9,6 @@ import {
   updateRecurringRuleAction,
 } from "@/modules/recurring-transactions";
 
-export const metadata = { title: "Edit transaksi berulang" };
-
 export default async function EditRecurringRulePage({
   params,
 }: {

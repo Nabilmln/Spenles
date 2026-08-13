@@ -1,8 +1,6 @@
 import { cardClass, narrowPageClass, pageDescriptionClass, pageStackClass } from "@/components/ui/styles";
 import { AccountForm, createAccountAction } from "@/modules/accounts";
 
-export const metadata = { title: "Tambah akun" };
-
 export default function NewAccountPage() {
   return (
     <div className={`${pageStackClass} ${narrowPageClass}`}>

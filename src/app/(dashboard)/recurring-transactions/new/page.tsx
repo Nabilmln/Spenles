@@ -6,8 +6,6 @@ import {
   RecurringRuleForm,
 } from "@/modules/recurring-transactions";
 
-export const metadata = { title: "Buat transaksi berulang" };
-
 export default async function NewRecurringRulePage() {
   const user = await requireSessionUser();
   const options = await listRecurringOptions(user.id);

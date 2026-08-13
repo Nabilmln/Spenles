@@ -11,10 +11,7 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: {
-    default: "Spenles",
-    template: "%s | Spenles",
-  },
+  title: "Spenles",
   description:
     "Aplikasi pencatatan keuangan, anggaran, arus kas, laporan, dan split bill personal.",
   applicationName: "Spenles",

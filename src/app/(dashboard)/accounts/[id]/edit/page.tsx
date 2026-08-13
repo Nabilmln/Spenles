@@ -7,8 +7,6 @@ import {
   updateAccountAction,
 } from "@/modules/accounts";
 
-export const metadata = { title: "Edit akun" };
-
 export default async function EditAccountPage({
   params,
 }: {

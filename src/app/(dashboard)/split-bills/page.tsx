@@ -8,7 +8,6 @@ import {
   SplitBillList,
 } from "@/modules/split-bills";
 
-export const metadata = { title: "Split Bill" };
 export const dynamic = "force-dynamic";
 
 export default async function SplitBillsPage({

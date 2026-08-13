@@ -3,7 +3,6 @@ import { LoginForm } from "@/modules/auth/components/login-form";
 import { getSessionUser } from "@/lib/auth/require-session";
 import { eyebrowClass } from "@/components/ui/styles";
 
-export const metadata = { title: "Masuk" };
 export const dynamic = "force-dynamic";
 
 export default async function LoginPage() {

@@ -6,8 +6,6 @@ import {
   listActiveExpenseCategoryOptions,
 } from "@/modules/budgets";
 
-export const metadata = { title: "Buat anggaran" };
-
 export default async function NewBudgetPage() {
   const user = await requireSessionUser();
   const categories = await listActiveExpenseCategoryOptions(user.id);

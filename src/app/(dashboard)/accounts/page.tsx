@@ -3,7 +3,6 @@ import { requireSessionUser } from "@/lib/auth/require-session";
 import { buttonClass, pageActionsClass, pageDescriptionClass, pageHeadingRowClass, pageStackClass } from "@/components/ui/styles";
 import { AccountList, listOwnedAccounts } from "@/modules/accounts";
 
-export const metadata = { title: "Akun" };
 export const dynamic = "force-dynamic";
 
 export default async function AccountsPage() {

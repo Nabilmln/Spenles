@@ -42,7 +42,6 @@ import {
 import { getPeriodSavings, getSavingsBalanceTotal } from "@/modules/accounts";
 import { getProfile } from "@/modules/profiles";
 
-export const metadata = { title: "Beranda" };
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 

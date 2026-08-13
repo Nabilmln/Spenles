@@ -3,7 +3,6 @@ import { requireSessionUser } from "@/lib/auth/require-session";
 import { narrowPageClass, pageDescriptionClass, pageStackClass } from "@/components/ui/styles";
 import { getProfile, ProfileForm } from "@/modules/profiles";
 
-export const metadata = { title: "Profil" };
 export const dynamic = "force-dynamic";
 
 export default async function ProfilePage() {

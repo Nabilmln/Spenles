@@ -8,8 +8,6 @@ import {
   updateBudgetAction,
 } from "@/modules/budgets";
 
-export const metadata = { title: "Edit anggaran" };
-
 export default async function EditBudgetPage({
   params,
 }: {
