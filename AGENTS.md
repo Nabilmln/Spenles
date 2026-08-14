@@ -165,3 +165,5 @@ After completing a task, report:
 - Do not commit `.env.local`.
 - Do not mix npm with another package manager.
 - Do not commit generated build directories.
+
+checkpoin streak github ehe
