@@ -8,16 +8,26 @@ export const dynamic = "force-dynamic";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const user = await requireSessionUser();
-  await ensureUserFoundation({
-    id: user.id,
-    name: user.name || user.email || "Pengguna Spenles",
-  });
+  const displayName = user.name || user.email || "Pengguna Spenles";
+  await ensureUserFoundation({ id: user.id, name: displayName });
   try {
     await runRecurringSchedulerForUser(user.id, new Date());
   } catch {
     // Best-effort: a scheduler failure must never block the dashboard.
   }
-  const profile = await getProfile(user.id);
-  if (!profile) throw new Error("Profil belum dapat diinisialisasi.");
+
+  let profile = await getProfile(user.id);
+  if (!profile) {
+    // Re-provision and read again once. ensureUserFoundation is idempotent and
+    // getProfile is not React-cached, so this covers transient write/read skew
+    // on the serverless HTTP driver before failing loudly.
+    await ensureUserFoundation({ id: user.id, name: displayName });
+    profile = await getProfile(user.id);
+  }
+  if (!profile) {
+    throw new Error(
+      `Profil belum dapat diinisialisasi (user ${user.id}). Pastikan migrasi database sudah dijalankan dan DATABASE_URL menunjuk ke database yang sama.`,
+    );
+  }
   return <AppShell profile={profile} email={user.email ?? ""}>{children}</AppShell>;
 }

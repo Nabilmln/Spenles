@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth/server";
 import { registerSchema } from "../schemas/register";
+import { toRegisterErrorMessage } from "../services/register-messages";
 import type { AuthActionState } from "./login";
 
 export async function registerAction(
@@ -27,10 +28,8 @@ export async function registerAction(
   });
 
   if (error) {
-    return {
-      error:
-        "Pendaftaran belum berhasil. Periksa data Anda atau gunakan email lain.",
-    };
+    console.error("[register] signUp.email failed:", error);
+    return { error: toRegisterErrorMessage(error) };
   }
 
   redirect("/dashboard");
