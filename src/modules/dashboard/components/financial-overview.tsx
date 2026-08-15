@@ -21,13 +21,11 @@ function MetricValue({
 }: {
   hidden: boolean;
   value: string;
-  tone: "income" | "expense" | "net-positive" | "net-negative";
+  tone: "income" | "expense";
 }) {
   const toneClass = {
     income: "text-income",
     expense: "text-expense",
-    "net-positive": "text-primary-600 dark:text-primary-700",
-    "net-negative": "text-expense",
   }[tone];
   return (
     <strong
@@ -45,16 +43,13 @@ function MetricValue({
 export function FinancialOverview({
   income,
   expense,
-  net,
   name,
 }: {
   income: string;
   expense: string;
-  net: string;
   name: string;
 }) {
   const [hidden, setHidden] = useState(false);
-  const netNegative = BigInt(net) < 0n;
 
   return (
     <section
@@ -92,22 +87,14 @@ export function FinancialOverview({
 
         <div className="mt-[.7rem] mb-[.65rem] h-px bg-border min-[861px]:hidden" aria-hidden="true" />
 
-        <div className="grid min-w-0 grid-cols-2 gap-x-3 min-[861px]:mt-[.85rem] min-[861px]:grid-cols-3 min-[861px]:gap-x-5">
+        <div className="grid min-w-0 grid-cols-2 gap-x-3 min-[861px]:mt-[.85rem] min-[861px]:gap-x-5">
           <div className="grid min-w-0 content-start gap-[.15rem]">
             <span className={metricLabelClass}>Pendapatan</span>
             <MetricValue hidden={hidden} tone="income" value={income} />
           </div>
-          <div className="grid min-w-0 content-start gap-[.15rem] border-l border-border pl-3 min-[861px]:pl-0">
+          <div className="grid min-w-0 content-start gap-[.15rem] border-l border-border pl-3">
             <span className={metricLabelClass}>Pengeluaran</span>
             <MetricValue hidden={hidden} tone="expense" value={expense} />
-          </div>
-          <div className="col-span-2 mt-[.7rem] grid min-w-0 content-start gap-[.15rem] border-t border-border pt-[.7rem] min-[861px]:col-span-1 min-[861px]:mt-0 min-[861px]:border-0 min-[861px]:pt-0 min-[861px]:border-l min-[861px]:border-border min-[861px]:pl-5">
-            <span className={metricLabelClass}>Arus kas bersih</span>
-            <MetricValue
-              hidden={hidden}
-              tone={netNegative ? "net-negative" : "net-positive"}
-              value={net}
-            />
           </div>
         </div>
       </div>

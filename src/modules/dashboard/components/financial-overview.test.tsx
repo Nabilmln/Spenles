@@ -7,9 +7,8 @@ afterEach(cleanup);
 const MASK = "••••••";
 
 function renderOverview(income = "4500000", expense = "1200000") {
-  const net = (BigInt(income) - BigInt(expense)).toString();
   return render(
-    <FinancialOverview income={income} expense={expense} net={net} name="Nabil" />,
+    <FinancialOverview income={income} expense={expense} name="Nabil" />,
   );
 }
 
@@ -19,31 +18,23 @@ describe("FinancialOverview", () => {
     expect(screen.getByRole("heading", { name: "Halo, Nabil" })).toBeInTheDocument();
   });
 
-  it("shows Pendapatan, Pengeluaran, and Arus kas bersih with their values", () => {
+  it("shows Pendapatan and Pengeluaran with their values only", () => {
     renderOverview();
     expect(screen.getByText("Pendapatan")).toBeInTheDocument();
     expect(screen.getByText("Pengeluaran")).toBeInTheDocument();
-    expect(screen.getByText("Arus kas bersih")).toBeInTheDocument();
+    expect(screen.queryByText("Arus kas bersih")).not.toBeInTheDocument();
     expect(screen.getByText(/4\.500\.000/u)).toBeInTheDocument();
     expect(screen.getByText(/1\.200\.000/u)).toBeInTheDocument();
-    expect(screen.getByText(/3\.300\.000/u)).toBeInTheDocument();
     expect(screen.getByLabelText("Ringkasan keuangan")).toBeInTheDocument();
-  });
-
-  it("computes a negative Arus kas bersih when expenses exceed income", () => {
-    renderOverview("1000000", "2500000");
-    expect(screen.getByText("Arus kas bersih")).toBeInTheDocument();
-    expect(screen.getByText(/1\.500\.000/u)).toBeInTheDocument();
   });
 
   it("keeps zero values visible without removing the container", () => {
     renderOverview("0", "0");
     const values = screen.getAllByText(/Rp\s*0/u);
-    expect(values).toHaveLength(3);
+    expect(values).toHaveLength(2);
     expect(screen.getByLabelText("Ringkasan keuangan")).toBeInTheDocument();
     expect(screen.getByText("Pendapatan")).toBeInTheDocument();
     expect(screen.getByText("Pengeluaran")).toBeInTheDocument();
-    expect(screen.getByText("Arus kas bersih")).toBeInTheDocument();
   });
 
   it("starts visible with a dynamic 'Sembunyikan nominal' label", () => {
@@ -56,7 +47,7 @@ describe("FinancialOverview", () => {
     renderOverview();
     fireEvent.click(screen.getByRole("button", { name: "Sembunyikan nominal" }));
 
-    expect(screen.getAllByText(MASK)).toHaveLength(3);
+    expect(screen.getAllByText(MASK)).toHaveLength(2);
     expect(screen.queryByText(/4\.500\.000/u)).not.toBeInTheDocument();
     expect(screen.queryByText(/1\.200\.000/u)).not.toBeInTheDocument();
     expect(
@@ -77,12 +68,11 @@ describe("FinancialOverview", () => {
     ).toBeInTheDocument();
   });
 
-  it("never hides the Pendapatan, Pengeluaran, or Arus kas bersih labels", () => {
+  it("never hides the Pendapatan or Pengeluaran labels", () => {
     renderOverview();
     fireEvent.click(screen.getByRole("button", { name: "Sembunyikan nominal" }));
     expect(screen.getByText("Pendapatan")).toBeInTheDocument();
     expect(screen.getByText("Pengeluaran")).toBeInTheDocument();
-    expect(screen.getByText("Arus kas bersih")).toBeInTheDocument();
   });
 
   it("exposes no dashboard add-transaction button (only the privacy eye)", () => {

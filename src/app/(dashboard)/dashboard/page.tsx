@@ -215,7 +215,6 @@ export default async function DashboardPage({
           name={profile?.displayName ?? "Pengguna Spenles"}
           income={overview.income.toString()}
           expense={overview.expense.toString()}
-          net={(overview.income - overview.expense).toString()}
         />
       </div>
 
