@@ -3,17 +3,23 @@ import "server-only";
 import { db } from "@/db";
 import type { Database } from "@/db/types";
 import { firstOccurrenceAfter } from "@/lib/dates/recurrence";
-import { hasDueRules, listDueRules } from "../queries/due-rules";
+import {
+  hasDueRules,
+  hasDueRulesForUser,
+  listDueRules,
+  listDueRulesForUser,
+  type DueRule,
+} from "../queries/due-rules";
 import { generateOccurrence } from "./generate-occurrence";
 
 const MAX_OCCURRENCES = 50;
 const CONCURRENCY = 5;
 
-export async function runRecurringScheduler(
-  now = new Date(),
-  database: Database = db,
+async function processDueRules(
+  due: DueRule[],
+  now: Date,
+  database: Database,
 ) {
-  const due = await listDueRules(now, MAX_OCCURRENCES, database);
   const counts = {
     processed: 0,
     generated: 0,
@@ -41,9 +47,32 @@ export async function runRecurringScheduler(
     }
   }
 
+  return counts;
+}
+
+export async function runRecurringScheduler(
+  now = new Date(),
+  database: Database = db,
+) {
+  const due = await listDueRules(now, MAX_OCCURRENCES, database);
+  const counts = await processDueRules(due, now, database);
   return {
     ok: counts.failed === 0,
     ...counts,
     hasMore: await hasDueRules(now, database),
+  };
+}
+
+export async function runRecurringSchedulerForUser(
+  userId: string,
+  now = new Date(),
+  database: Database = db,
+) {
+  const due = await listDueRulesForUser(userId, now, MAX_OCCURRENCES, database);
+  const counts = await processDueRules(due, now, database);
+  return {
+    ok: counts.failed === 0,
+    ...counts,
+    hasMore: await hasDueRulesForUser(userId, now, database),
   };
 }
