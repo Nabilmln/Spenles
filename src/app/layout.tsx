@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
 import { cookies } from "next/headers";
+import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -15,6 +16,15 @@ export const metadata: Metadata = {
   description:
     "Aplikasi pencatatan keuangan, anggaran, arus kas, laporan, dan split bill personal.",
   applicationName: "Spenles",
+  appleWebApp: {
+    capable: true,
+    title: "Spenles",
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#f05a24",
 };
 
 export default async function RootLayout({
@@ -29,7 +39,10 @@ export default async function RootLayout({
 
   return (
     <html lang="id" className={`theme-${theme}`} suppressHydrationWarning>
-      <body className={poppins.variable}>{children}</body>
+      <body className={poppins.variable}>
+        {children}
+        <ServiceWorkerRegister />
+      </body>
     </html>
   );
 }
