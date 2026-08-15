@@ -61,14 +61,6 @@ export function CategoryExpenseChart({
           <Legend iconType="circle" />
         </PieChart>
       </ResponsiveContainer>
-      <div className="pointer-events-none absolute inset-0 grid place-items-center">
-        <div className="text-center">
-          <span className="block text-[.72rem] text-muted">Total</span>
-          <strong className="block min-w-0 max-w-[7rem] text-[1.05rem] [overflow-wrap:anywhere]">
-            {formatIdr(totalExpense)}
-          </strong>
-        </div>
-      </div>
     </div>
   );
 }

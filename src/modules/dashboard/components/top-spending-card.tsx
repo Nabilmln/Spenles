@@ -26,14 +26,16 @@ export function TopSpendingCard({
     >
       <div className="mb-[.65rem] flex items-start justify-between gap-3">
         <div>
-          <p className={eyebrowClass}>Kategori</p>
-          <h2 className="m-0 text-[.95rem] tracking-[-.02em]">
-            Top Pengeluaran
-          </h2>
-          <p className="m-0 mt-[.15rem] text-[.72rem] text-muted">{periodLabel}</p>
+          <p className={eyebrowClass}>TOP PENGELUARAN</p>
+          <p className="m-0 mt-[.15rem] text-[.72rem] text-muted">
+            {periodLabel}
+          </p>
         </div>
-        <Link className={`${textLinkClass} text-[.78rem]`} href="/reports">
-          Lihat laporan
+        <Link
+          className={`${textLinkClass} text-[.78rem] border-1 p-2 rounded-[.7rem]`}
+          href="/reports"
+        >
+          Cek Laporan
         </Link>
       </div>
 
@@ -50,7 +52,10 @@ export function TopSpendingCard({
               row.icon,
             );
             return (
-              <li key={row.categoryId} className="border-t border-border first:border-t-0">
+              <li
+                key={row.categoryId}
+                className="border-t border-border first:border-t-0"
+              >
                 <Link
                   className="flex items-center gap-[.6rem] rounded-[.55rem] p-[.45rem_.2rem] no-underline transition-[background] duration-150 hover:bg-surface-subtle"
                   href={`/reports/categories/${row.categoryId}`}

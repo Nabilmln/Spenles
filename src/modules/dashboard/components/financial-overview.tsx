@@ -80,9 +80,6 @@ export function FinancialOverview({
               )}
             </button>
           </div>
-          <p className="hidden m-0 mt-[.25rem] text-muted text-[.78rem] min-[861px]:block">
-            Ringkasan pribadi dalam IDR dengan batas waktu Asia/Jakarta.
-          </p>
         </div>
 
         <div className="mt-[.7rem] mb-[.65rem] h-px bg-border min-[861px]:hidden" aria-hidden="true" />

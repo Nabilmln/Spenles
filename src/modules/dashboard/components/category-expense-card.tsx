@@ -23,12 +23,6 @@ export function CategoryExpenseCard({
     >
       <div>
         <p className={eyebrowClass}>Kategori</p>
-        <h2
-          id="category-expense-title"
-          className="m-0 text-[1.08rem] tracking-[-.02em]"
-        >
-          Pengeluaran per Kategori
-        </h2>
         <p className="m-0 mt-[.35rem] text-[.84rem] text-muted">{periodLabel}</p>
       </div>
       <strong className="mt-[.35rem] text-[.88rem]">

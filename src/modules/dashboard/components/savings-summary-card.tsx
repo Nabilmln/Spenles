@@ -29,9 +29,6 @@ export function SavingsSummaryCard({
         </span>
         <div>
           <p className={`${eyebrowClass} mb-0`}>Tabungan</p>
-          <h2 className="m-0 text-[.88rem] tracking-[-.02em]">
-            Ringkasan tabungan
-          </h2>
         </div>
       </div>
 

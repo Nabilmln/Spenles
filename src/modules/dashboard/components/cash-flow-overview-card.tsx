@@ -50,9 +50,6 @@ export function CashFlowOverviewCard({
       <div className="flex items-start justify-between gap-4">
         <div>
           <p className={eyebrowClass}>Arus kas</p>
-          <h2 id="cash-flow-title" className="m-0 text-[1.08rem] tracking-[-.02em]">
-            Arus Kas
-          </h2>
         </div>
         <div
           aria-label="Rentang arus kas"

@@ -32,24 +32,18 @@ export function AverageSpendingCard({
           <CalendarDays aria-hidden="true" />
         </span>
         <div>
-          <p className={`${eyebrowClass} mb-0`}>Rata-rata</p>
-          <h2 className="m-0 text-[.88rem] tracking-[-.02em]">
-            Pengeluaran per hari
-          </h2>
+          <p className={`${eyebrowClass} mb-0`}>Rata-rata pengeluaran</p>
         </div>
       </div>
       <strong className="mt-[.7rem] block min-w-0 text-[clamp(1.2rem,2.5vw,1.65rem)] tracking-[-.04em] [overflow-wrap:anywhere]">
+      <p className="m-0 mt-[.1rem] text-[.72rem] text-muted">per hari</p>
         {formatIdr(value)}
       </strong>
-      <p className="m-0 mt-[.1rem] text-[.72rem] text-muted">per hari</p>
       {comparison ? (
         <p className="mt-[.55rem] m-0 text-[.78rem] text-muted">
           {comparison}
         </p>
       ) : null}
-      <p className="m-0 pt-[1rem] text-[.76rem] text-muted">
-        Rata-rata dihitung atas seluruh hari kalender bulan ini.
-      </p>
     </section>
   );
 }
