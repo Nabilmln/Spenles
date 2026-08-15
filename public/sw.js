@@ -1,6 +1,7 @@
 /* Spenles service worker — static asset caching only.
  * Navigations (HTML) and API requests are intentionally not intercepted so
- * server-rendered, authenticated pages always fetch fresh data. */
+ * server-rendered, authenticated pages always fetch fresh data. Requests from
+ * browser extensions (e.g. chrome-extension://) are never touched. */
 
 const RUNTIME_CACHE = "spenles-runtime-v1";
 
@@ -29,17 +30,27 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  let url;
+  try {
+    url = new URL(request.url);
+  } catch {
+    return;
+  }
+  if (url.protocol !== "http:" && url.protocol !== "https:") return;
+
   event.respondWith(
     (async () => {
       const cache = await caches.open(RUNTIME_CACHE);
-      const cached = await cache.match(request);
-      const network = fetch(request)
+      const cached = await cache.match(request).catch(() => undefined);
+      const network = await fetch(request)
         .then((response) => {
-          if (response.ok) cache.put(request, response.clone());
+          if (response.ok) {
+            cache.put(request, response.clone()).catch(() => {});
+          }
           return response;
         })
-        .catch(() => cached);
-      return cached || network;
+        .catch(() => undefined);
+      return cached || network || Response.error();
     })(),
   );
 });
