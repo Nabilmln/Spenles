@@ -33,10 +33,8 @@ function ExactTooltip({
 
 export function CategoryExpenseChart({
   points,
-  totalExpense,
 }: {
   points: CategoryExpensePoint[];
-  totalExpense: string;
 }) {
   return (
     <div aria-hidden="true" className="relative mt-4 h-[19rem] w-full">
@@ -46,7 +44,8 @@ export function CategoryExpenseChart({
             data={points}
             dataKey="shareBps"
             innerRadius="55%"
-            isAnimationActive={false}
+            animationDuration={600}
+            animationEasing="ease-out"
             nameKey="name"
             outerRadius="85%"
             paddingAngle={2}

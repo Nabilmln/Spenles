@@ -66,7 +66,8 @@ export function CashFlowChart({
           <Line
             dataKey="incomePlot"
             dot={false}
-            isAnimationActive={false}
+            animationDuration={600}
+            animationEasing="ease-out"
             stroke="var(--income)"
             strokeWidth={2.5}
             type="monotone"
@@ -74,7 +75,8 @@ export function CashFlowChart({
           <Line
             dataKey="expensePlot"
             dot={false}
-            isAnimationActive={false}
+            animationDuration={600}
+            animationEasing="ease-out"
             stroke="var(--expense)"
             strokeWidth={2.5}
             type="monotone"

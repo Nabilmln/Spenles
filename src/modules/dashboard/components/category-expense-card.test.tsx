@@ -35,8 +35,9 @@ describe("CategoryExpenseCard", () => {
     );
 
     expect(
-      screen.getByRole("heading", { name: "Pengeluaran per Kategori" }),
+      screen.getByRole("region", { name: "Pengeluaran per Kategori" }),
     ).toBeInTheDocument();
+    expect(screen.getByText("Kategori")).toBeInTheDocument();
     expect(screen.getByText("Agustus 2026")).toBeInTheDocument();
     expect(
       screen.getByText(/Total pengeluaran Rp\s*2\.000\.000/u),

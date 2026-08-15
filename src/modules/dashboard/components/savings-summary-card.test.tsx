@@ -9,7 +9,7 @@ describe("SavingsSummaryCard", () => {
     render(<SavingsSummaryCard balance={1500000n} periodNet={250000n} />);
 
     expect(
-      screen.getByRole("heading", { name: "Ringkasan tabungan" }),
+      screen.getByRole("region", { name: "Ringkasan tabungan" }),
     ).toBeInTheDocument();
     expect(screen.getByText(/Rp\s*1\.500\.000/u)).toBeInTheDocument();
     expect(screen.getByText(/\+ Rp\s*250\.000/u)).toBeInTheDocument();

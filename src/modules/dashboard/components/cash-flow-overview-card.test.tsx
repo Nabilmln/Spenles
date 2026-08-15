@@ -52,7 +52,9 @@ describe("CashFlowOverviewCard", () => {
       />,
     );
 
-    expect(screen.getByRole("heading", { name: "Arus Kas" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "Arus Kas" }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Harian" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Mingguan" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Bulanan" })).toBeInTheDocument();

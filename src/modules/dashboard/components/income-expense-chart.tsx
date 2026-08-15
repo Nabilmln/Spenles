@@ -54,14 +54,16 @@ export function IncomeExpenseChart({
           <Bar
             dataKey="incomePlot"
             fill="var(--income)"
-            isAnimationActive={false}
+            animationDuration={600}
+            animationEasing="ease-out"
             maxBarSize={34}
             radius={[6, 6, 0, 0]}
           />
           <Bar
             dataKey="expensePlot"
             fill="var(--expense)"
-            isAnimationActive={false}
+            animationDuration={600}
+            animationEasing="ease-out"
             maxBarSize={34}
             radius={[6, 6, 0, 0]}
           />

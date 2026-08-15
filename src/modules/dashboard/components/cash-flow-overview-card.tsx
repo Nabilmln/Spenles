@@ -44,7 +44,7 @@ export function CashFlowOverviewCard({
 
   return (
     <section
-      aria-labelledby="cash-flow-title"
+      aria-label="Arus Kas"
       className={`${cardClass} flex h-full flex-col shadow-none`}
     >
       <div className="flex items-start justify-between gap-4">

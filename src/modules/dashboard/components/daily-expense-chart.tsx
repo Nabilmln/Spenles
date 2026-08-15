@@ -47,7 +47,8 @@ export function DailyExpenseChart({
           <Line
             dataKey="plot"
             dot={false}
-            isAnimationActive={false}
+            animationDuration={600}
+            animationEasing="ease-out"
             stroke="var(--primary-600)"
             strokeWidth={2.5}
             type="monotone"

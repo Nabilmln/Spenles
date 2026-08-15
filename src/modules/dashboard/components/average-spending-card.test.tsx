@@ -15,8 +15,9 @@ describe("AverageSpendingCard", () => {
     );
 
     expect(
-      screen.getByRole("heading", { name: "Pengeluaran per hari" }),
+      screen.getByRole("region", { name: "Rata-rata pengeluaran per hari" }),
     ).toBeInTheDocument();
+    expect(screen.getByText("Rata-rata pengeluaran")).toBeInTheDocument();
     expect(screen.getByText(/Rp\s*50\.000/u)).toBeInTheDocument();
     expect(screen.getByText("per hari")).toBeInTheDocument();
   });

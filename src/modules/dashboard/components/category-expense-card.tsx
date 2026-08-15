@@ -18,7 +18,7 @@ export function CategoryExpenseCard({
 
   return (
     <section
-      aria-labelledby="category-expense-title"
+      aria-label="Pengeluaran per Kategori"
       className={`${cardClass} flex h-full flex-col shadow-none`}
     >
       <div>
@@ -29,10 +29,7 @@ export function CategoryExpenseCard({
         Total pengeluaran {formatIdr(totalExpense)}
       </strong>
 
-      <CategoryExpenseChart
-        points={visualPoints}
-        totalExpense={totalExpense.toString()}
-      />
+      <CategoryExpenseChart points={visualPoints} />
 
       {!hasData ? (
         <p

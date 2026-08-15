@@ -47,7 +47,8 @@ export function MonthlyExpenseChart({
           <Bar
             dataKey="plot"
             fill="var(--expense)"
-            isAnimationActive={false}
+            animationDuration={600}
+            animationEasing="ease-out"
             maxBarSize={52}
             radius={[7, 7, 0, 0]}
           />
