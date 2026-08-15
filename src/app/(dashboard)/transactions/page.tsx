@@ -36,6 +36,11 @@ export default async function TransactionsPage({
     <div className={pageStackClass}>
       <p className={pageDescriptionClass}>Catat dan temukan pemasukan, pengeluaran, maupun tabungan Anda.</p>
       <TransactionSummary income={summary.income} expense={summary.expense} savings={summary.savings} />
+      <div className="flex items-center justify-end">
+        <Link className={buttonClass("primary")} href="/transactions/new">
+          Tambah transaksi
+        </Link>
+      </div>
       <TransactionFilterBar filters={parsed.data} {...options} />
       <TransactionList rows={result.rows} />
       <Pagination filters={parsed.data} total={result.total} totalPages={result.totalPages} />
