@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import { buttonBase, buttonVariant } from "./styles";
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "primary" | "secondary" | "ghost" | "danger";
+  variant?: "primary" | "secondary" | "blue" | "ghost" | "danger";
 };
 
 export function Button({
