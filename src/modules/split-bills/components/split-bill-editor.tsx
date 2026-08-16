@@ -1,15 +1,14 @@
 "use client";
 
-import { useActionState, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
-import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import {
   cardClass,
   eyebrowClass,
   fieldClass,
-  successMessageClass,
   textareaClass,
 } from "@/components/ui/styles";
 import type {
@@ -69,8 +68,8 @@ export function SplitBillEditor({
   deleteAction?: (formData: FormData) => Promise<void>;
   initial: SplitBillEditorData;
 }) {
-  const [state, formAction, pending] = useActionState(action, {});
-  const [finalState, finalizeFormAction, finalizing] = useActionState(
+  const [state, formAction, pending] = useToastActionState(action, {});
+  const [, finalizeFormAction, finalizing] = useToastActionState(
     finalizeAction ?? action,
     {},
   );
@@ -514,10 +513,6 @@ export function SplitBillEditor({
             </small>
           </fieldset>
 
-          <FormMessage>{state.error}</FormMessage>
-          {state.success ? (
-            <p className={successMessageClass} role="status">{state.success}</p>
-          ) : null}
           <Button type="submit" disabled={pending}>
             {pending ? "Memverifikasi..." : initial.id ? "Simpan draft" : "Buat draft"}
           </Button>
@@ -538,7 +533,6 @@ export function SplitBillEditor({
               <Button type="submit" disabled={finalizing}>
                 {finalizing ? "Memfinalisasi..." : "Finalisasi"}
               </Button>
-              <FormMessage>{finalState.error}</FormMessage>
             </form>
             {deleteAction ? (
               <form action={deleteAction} className="grid justify-items-end gap-[.4rem] max-[540px]:w-full max-[540px]:justify-items-stretch">

@@ -1,16 +1,15 @@
 "use client";
 
-import { useActionState, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import { useToastActionState } from "@/components/ui/toast";
 import { Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import {
   cardClass,
   eyebrowClass,
   fieldClass,
-  successMessageClass,
   textareaClass,
 } from "@/components/ui/styles";
 import type { SplitBillActionState } from "../actions/split-bill-actions";
@@ -53,7 +52,7 @@ export function SplitBillCreateFlow({
   ) => Promise<SplitBillActionState>;
   initialDate: string;
 }) {
-  const [state, formAction, pending] = useActionState(action, {});
+  const [, formAction, pending] = useToastActionState(action, {});
   const [merchantName, setMerchantName] = useState("");
   const [billDate, setBillDate] = useState(initialDate);
   const [note, setNote] = useState("");
@@ -475,12 +474,6 @@ export function SplitBillCreateFlow({
           </fieldset>
         ) : null}
 
-        <FormMessage>{state.error}</FormMessage>
-        {state.success ? (
-          <p className={successMessageClass} role="status">
-            {state.success}
-          </p>
-        ) : null}
         <Button type="submit" disabled={pending}>
           {pending ? "Memverifikasi..." : "Buat draft"}
         </Button>

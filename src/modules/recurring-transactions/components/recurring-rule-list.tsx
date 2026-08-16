@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
-import { FormMessage } from "@/components/ui/form-message";
 import { buttonClass, cardClass, emptyStateClass, eyebrowClass } from "@/components/ui/styles";
 import { formatJakartaDateLong } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
@@ -45,7 +44,7 @@ function StatusForm({
       : operation === "resume"
         ? resumeRecurringRuleAction
         : archiveRecurringRuleAction;
-  const [state, formAction, pending] = useActionState<
+  const [, formAction, pending] = useToastActionState<
     RecurringActionState,
     FormData
   >(action, {});
@@ -55,7 +54,6 @@ function StatusForm({
       <Button type="submit" variant="ghost" disabled={pending}>
         {pending ? "Memproses..." : operation === "pause" ? "Jeda" : operation === "resume" ? "Lanjutkan" : "Arsipkan"}
       </Button>
-      <FormMessage>{state.error}</FormMessage>
     </form>
   );
 }

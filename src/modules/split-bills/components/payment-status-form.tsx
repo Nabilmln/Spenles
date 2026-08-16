@@ -1,8 +1,8 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useState } from "react";
+import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
-import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { fieldClass } from "@/components/ui/styles";
@@ -24,7 +24,7 @@ export function PaymentStatusForm({
   initialStatus: "unpaid" | "partially_paid" | "paid";
   initialPaidAmount: string;
 }) {
-  const [state, action, pending] = useActionState<
+  const [, action, pending] = useToastActionState<
     SplitBillActionState,
     FormData
   >(updateParticipantPaymentAction, {});
@@ -83,10 +83,6 @@ export function PaymentStatusForm({
       <Button type="submit" variant="secondary" disabled={pending}>
         {pending ? "Menyimpan..." : "Simpan status"}
       </Button>
-      <div className="col-span-full max-[540px]:col-auto">
-        <FormMessage>{state.error}</FormMessage>
-        {state.success ? <p role="status">{state.success}</p> : null}
-      </div>
     </form>
   );
 }

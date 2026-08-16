@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
-import { FormMessage } from "@/components/ui/form-message";
 import { buttonClass, cardClass, eyebrowClass } from "@/components/ui/styles";
 import { formatIdr } from "@/lib/money/format-idr";
 import {
@@ -21,7 +20,7 @@ function AccountStatusForm({
 }) {
   const action =
     row.status === "active" ? archiveAccountAction : restoreAccountAction;
-  const [state, formAction, pending] = useActionState<
+  const [, formAction, pending] = useToastActionState<
     AccountActionState,
     FormData
   >(action, {});
@@ -41,7 +40,6 @@ function AccountStatusForm({
             ? "Arsipkan"
             : "Pulihkan"}
       </Button>
-      <FormMessage>{state.error}</FormMessage>
     </form>
   );
 }

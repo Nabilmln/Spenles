@@ -1,8 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
+import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
-import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { fieldClass, fieldLabelClass } from "@/components/ui/styles";
@@ -26,7 +25,7 @@ export function BudgetForm({
     warningThresholdBps: number;
   };
 }) {
-  const [state, formAction, pending] = useActionState(action, {});
+  const [, formAction, pending] = useToastActionState(action, {});
   return (
     <form action={formAction} className="grid gap-4">
       {initial ? <input type="hidden" name="id" value={initial.id} /> : null}
@@ -83,7 +82,6 @@ export function BudgetForm({
           <option value="10000">100%</option>
         </Select>
       </div>
-      <FormMessage>{state.error}</FormMessage>
       <Button type="submit" disabled={pending || categories.length === 0}>
         {pending ? "Menyimpan..." : initial ? "Simpan perubahan" : "Buat anggaran"}
       </Button>

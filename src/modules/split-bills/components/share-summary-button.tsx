@@ -1,8 +1,8 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
-import { FormMessage } from "@/components/ui/form-message";
 import { textareaClass } from "@/components/ui/styles";
 import {
   createShareSummaryAction,
@@ -10,7 +10,7 @@ import {
 } from "../actions/split-bill-actions";
 
 export function ShareSummaryButton({ billId }: { billId: string }) {
-  const [state, action, pending] = useActionState<
+  const [state, action, pending] = useToastActionState<
     SplitBillActionState,
     FormData
   >(createShareSummaryAction, {});
@@ -34,7 +34,6 @@ export function ShareSummaryButton({ billId }: { billId: string }) {
       <Button type="submit" disabled={pending}>
         {pending ? "Membuat..." : "Salin Hasil Split Bill"}
       </Button>
-      <FormMessage>{state.error}</FormMessage>
       {copyStatus ? <p role="status">{copyStatus}</p> : null}
       {state.text ? (
         <textarea

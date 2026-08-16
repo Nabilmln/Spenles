@@ -1,8 +1,8 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useState } from "react";
+import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
-import { FormMessage } from "@/components/ui/form-message";
 import { formatDayDateLong } from "@/lib/dates/format-id";
 import { formatIdr } from "@/lib/money/format-idr";
 import {
@@ -61,7 +61,7 @@ export type SplitBillDetailData = {
 };
 
 export function SplitBillDetail({ detail }: { detail: SplitBillDetailData }) {
-  const [archiveState, archiveAction, pending] = useActionState<
+  const [, archiveAction, pending] = useToastActionState<
     SplitBillActionState,
     FormData
   >(archiveSplitBillAction, {});
@@ -168,8 +168,6 @@ export function SplitBillDetail({ detail }: { detail: SplitBillDetailData }) {
               <Button type="submit" variant="secondary" disabled={pending} className="w-full">
                 {pending ? "Mengarsipkan..." : "Arsipkan tagihan"}
               </Button>
-              <FormMessage>{archiveState.error}</FormMessage>
-              {archiveState.success ? <p role="status">{archiveState.success}</p> : null}
             </form>
           </article>
         ) : null}

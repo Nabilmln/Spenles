@@ -1,9 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
-import { FormMessage } from "@/components/ui/form-message";
 import {
   buttonClass,
   cardClass,
@@ -34,7 +33,7 @@ const statusBadgeClass = {
 function BudgetStatusForm({ row }: { row: BudgetListRow }) {
   const action =
     row.recordStatus === "active" ? archiveBudgetAction : restoreBudgetAction;
-  const [state, formAction, pending] = useActionState<
+  const [, formAction, pending] = useToastActionState<
     BudgetActionState,
     FormData
   >(action, {});
@@ -48,7 +47,6 @@ function BudgetStatusForm({ row }: { row: BudgetListRow }) {
             ? "Arsipkan"
             : "Pulihkan"}
       </Button>
-      <FormMessage>{state.error}</FormMessage>
     </form>
   );
 }

@@ -1,11 +1,10 @@
 "use client";
 
-import { useActionState } from "react";
+import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
-import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
-import { fieldClass, fieldLabelClass, successMessageClass, textareaClass } from "@/components/ui/styles";
+import { fieldClass, fieldLabelClass, textareaClass } from "@/components/ui/styles";
 import { formatJakartaDateTimeInput } from "@/lib/dates/jakarta";
 import {
   createTransferAction,
@@ -17,7 +16,7 @@ export function TransferForm({
 }: {
   accounts: Array<{ id: string; name: string }>;
 }) {
-  const [state, action, pending] = useActionState<
+  const [, action, pending] = useToastActionState<
     TransferActionState,
     FormData
   >(createTransferAction, {});
@@ -59,8 +58,6 @@ export function TransferForm({
         <label htmlFor="transfer-note" className={fieldLabelClass}>Catatan (opsional)</label>
         <textarea className={textareaClass} id="transfer-note" name="note" maxLength={500} />
       </div>
-      <FormMessage>{state.error}</FormMessage>
-      {state.success ? <p className={successMessageClass} role="status">{state.success}</p> : null}
       <Button type="submit" disabled={pending || accounts.length < 2}>
         {pending ? "Menyimpan..." : "Catat transfer"}
       </Button>

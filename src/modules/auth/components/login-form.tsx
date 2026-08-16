@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useToastActionState } from "@/components/ui/toast";
 import { Input } from "@/components/ui/input";
 import { FormMessage } from "@/components/ui/form-message";
 import { mutedLinkClass, fieldClass, fieldLabelRowClass, textLinkClass } from "@/components/ui/styles";
@@ -12,11 +12,10 @@ import { SubmitButton } from "./submit-button";
 const initialState: AuthActionState = {};
 
 export function LoginForm() {
-  const [state, action] = useActionState(loginAction, initialState);
+  const [state, action] = useToastActionState(loginAction, initialState);
 
   return (
     <form action={action} className="grid gap-[1.25rem]" noValidate>
-      <FormMessage>{state.error}</FormMessage>
       <div className={fieldClass}>
         <label htmlFor="email">Email</label>
         <Input

@@ -1,6 +1,7 @@
 "use client";
 
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useToastActionState } from "@/components/ui/toast";
 import {
   Archive,
   ArchiveRestore,
@@ -17,7 +18,7 @@ import {
   updateCategoryAction,
 } from "../actions/category-actions";
 import { resolveCategoryIcon } from "../constants/category-icons";
-import { buttonClass, formMessageClass, iconButtonClass, successMessageClass } from "@/components/ui/styles";
+import { buttonClass, iconButtonClass } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import { CategoryForm } from "./category-form";
 
@@ -302,11 +303,10 @@ function CategoryActionMenu({
 }
 
 function ArchiveButton({ categoryId }: { categoryId: string }) {
-  const [state, formAction, pending] = useActionState(archiveCategoryAction, {});
+  const [, formAction, pending] = useToastActionState(archiveCategoryAction, {});
   return (
     <form action={formAction} className="m-0">
       <input name="id" type="hidden" value={categoryId} />
-      {state.error ? <p className={cn(formMessageClass, "mx-[.75rem] mt-[.35rem] text-[.76rem]")} role="alert">{state.error}</p> : null}
       <button className={menuItemClass} disabled={pending} role="menuitem" type="submit">
         <Archive aria-hidden="true" size={18} />
         {pending ? "Memproses..." : "Arsipkan"}
@@ -316,11 +316,10 @@ function ArchiveButton({ categoryId }: { categoryId: string }) {
 }
 
 function RestoreButton({ categoryId }: { categoryId: string }) {
-  const [state, formAction, pending] = useActionState(restoreCategoryAction, {});
+  const [, formAction, pending] = useToastActionState(restoreCategoryAction, {});
   return (
     <form action={formAction} className="m-0">
       <input name="id" type="hidden" value={categoryId} />
-      {state.error ? <p className={cn(formMessageClass, "mx-[.75rem] mt-[.35rem] text-[.76rem]")} role="alert">{state.error}</p> : null}
       <button className={menuItemClass} disabled={pending} role="menuitem" type="submit">
         <ArchiveRestore aria-hidden="true" size={18} />
         {pending ? "Memproses..." : "Pulihkan"}
@@ -381,12 +380,10 @@ function CategoryDeleteSheet({
 }
 
 function DeleteButton({ categoryId }: { categoryId: string }) {
-  const [state, formAction, pending] = useActionState(deleteCategoryAction, {});
+  const [, formAction, pending] = useToastActionState(deleteCategoryAction, {});
   return (
     <form action={formAction} className="mt-4 grid gap-[.6rem]">
       <input name="id" type="hidden" value={categoryId} />
-      {state.error ? <p className={formMessageClass} role="alert">{state.error}</p> : null}
-      {state.success ? <p className={successMessageClass}>{state.success}</p> : null}
       <button className={`${buttonClass("danger")} w-full justify-center`} disabled={pending} type="submit">
         {pending ? "Menghapus..." : "Hapus permanen"}
       </button>

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
 import { cookies } from "next/headers";
 import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
+import { ToastProvider } from "@/components/ui/toast";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -40,7 +41,7 @@ export default async function RootLayout({
   return (
     <html lang="id" className={`theme-${theme}`} suppressHydrationWarning>
       <body className={poppins.variable}>
-        {children}
+        <ToastProvider>{children}</ToastProvider>
         <ServiceWorkerRegister />
       </body>
     </html>

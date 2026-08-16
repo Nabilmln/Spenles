@@ -1,8 +1,7 @@
 "use client";
 
-import { useActionState } from "react";
+import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
-import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { fieldClass, fieldLabelClass } from "@/components/ui/styles";
@@ -24,7 +23,7 @@ export function AccountForm({
     openingBalance: string;
   };
 }) {
-  const [state, formAction, pending] = useActionState(action, {});
+  const [, formAction, pending] = useToastActionState(action, {});
   return (
     <form action={formAction} className="grid gap-4">
       {initial ? <input type="hidden" name="id" value={initial.id} /> : null}
@@ -68,7 +67,6 @@ export function AccountForm({
           <small className="text-muted">Saldo awal hanya dapat diubah sebelum akun memiliki riwayat.</small>
         ) : null}
       </div>
-      <FormMessage>{state.error}</FormMessage>
       <Button type="submit" disabled={pending}>
         {pending ? "Menyimpan..." : initial ? "Simpan perubahan" : "Buat akun"}
       </Button>

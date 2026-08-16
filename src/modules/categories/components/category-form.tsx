@@ -1,11 +1,10 @@
 "use client";
 
-import { useActionState } from "react";
+import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
-import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
-import { fieldClass, fieldLabelClass, successMessageClass } from "@/components/ui/styles";
+import { fieldClass, fieldLabelClass } from "@/components/ui/styles";
 import type { CategoryActionState } from "../actions/category-actions";
 import { CATEGORY_COLORS } from "../constants/category-options";
 import { CategoryIconPicker } from "./category-icon-picker";
@@ -25,7 +24,7 @@ export function CategoryForm({
   };
   formId?: string;
 }) {
-  const [state, formAction, pending] = useActionState(action, {});
+  const [, formAction, pending] = useToastActionState(action, {});
   const key = initial?.id ?? "new";
   return (
     <form action={formAction} className="grid gap-4" id={formId}>
@@ -51,8 +50,6 @@ export function CategoryForm({
           {CATEGORY_COLORS.map((value) => <option key={value} value={value}>{value}</option>)}
         </Select>
       </div>
-      <FormMessage>{state.error}</FormMessage>
-      {state.success ? <p className={successMessageClass}>{state.success}</p> : null}
       <Button className="w-full justify-center" type="submit" disabled={pending}>{pending ? "Menyimpan..." : initial ? "Simpan perubahan" : "Tambah Kategori"}</Button>
     </form>
   );

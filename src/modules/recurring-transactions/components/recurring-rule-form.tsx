@@ -1,8 +1,8 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useState } from "react";
+import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
-import { FormMessage } from "@/components/ui/form-message";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { fieldClass, fieldLabelClass, textareaClass } from "@/components/ui/styles";
@@ -35,7 +35,7 @@ export function RecurringRuleForm({
     note: string | null;
   };
 }) {
-  const [state, formAction, pending] = useActionState(action, {});
+  const [, formAction, pending] = useToastActionState(action, {});
   const [generatedDefaultStart] = useState(() =>
     formatJakartaDateTimeInput(new Date(Date.now() + 60_000)),
   );
@@ -93,7 +93,6 @@ export function RecurringRuleForm({
         <label htmlFor="recurring-note" className={fieldLabelClass}>Catatan (opsional)</label>
         <textarea className={textareaClass} id="recurring-note" name="note" defaultValue={initial?.note ?? ""} maxLength={500} />
       </div>
-      <FormMessage>{state.error}</FormMessage>
       <Button type="submit" disabled={pending || accounts.length === 0 || categories.length === 0}>
         {pending ? "Menyimpan..." : initial ? "Simpan perubahan" : "Buat aturan"}
       </Button>

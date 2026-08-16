@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useToastActionState } from "@/components/ui/toast";
 import type { Profile } from "@/db/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,7 +11,6 @@ import {
   fieldHintClass,
   fieldLabelClass,
   inputDisplayClass,
-  successMessageClass,
 } from "@/components/ui/styles";
 import {
   updateProfileAction,
@@ -27,19 +26,13 @@ export function ProfileForm({
   profile: Profile;
   email: string;
 }) {
-  const [state, action, pending] = useActionState(
+  const [state, action, pending] = useToastActionState(
     updateProfileAction,
     initialState,
   );
 
   return (
     <form action={action} className="grid gap-[1.25rem]">
-      <FormMessage>{state.error}</FormMessage>
-      {state.success ? (
-        <p className={successMessageClass} role="status">
-          {state.success}
-        </p>
-      ) : null}
       <div className={fieldClass}>
         <label htmlFor="displayName" className={fieldLabelClass}>Nama</label>
         <Input

@@ -143,3 +143,9 @@ strong, b, h1, h2, h3, h4, h5, h6 { font-weight: 500; }
 .dashboard-grid > *:nth-child(8) { animation-delay: .42s; }
 .dashboard-grid > *:nth-child(9) { animation-delay: .48s; }
 .dashboard-grid > *:nth-child(10) { animation-delay: .54s; }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.toast-in { animation: toast-in .25s ease-out both; }

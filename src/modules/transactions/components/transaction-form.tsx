@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useToastActionState } from "@/components/ui/toast";
 import { calculateExpression } from "../services/calculator";
 import { createTransferAction } from "@/modules/accounts/actions/transfer-actions";
 import type { TransactionActionState } from "../actions/transaction-actions";
@@ -46,7 +47,7 @@ export function TransactionForm({
   };
   defaultDate?: string;
 }) {
-  const [state, formAction, pending] = useActionState<TransactionActionState, FormData>(
+  const [, formAction, pending] = useToastActionState<TransactionActionState, FormData>(
     async (previous, data) => {
       if (data.get("type") === "savings") {
         return createTransferAction(previous, data);
@@ -110,8 +111,6 @@ export function TransactionForm({
           </label>
         ) : null}
       </fieldset>
-
-      <FormMessage id="form-error">{state.error}</FormMessage>
 
       {type === "savings" ? (
         <SavingsFields

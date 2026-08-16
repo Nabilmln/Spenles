@@ -1,9 +1,8 @@
 "use client";
 
-import { useActionState } from "react";
+import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
-import { FormMessage } from "@/components/ui/form-message";
-import { cardClass, emptyStateClass, successMessageClass } from "@/components/ui/styles";
+import { cardClass, emptyStateClass } from "@/components/ui/styles";
 import { formatJakartaDateLong } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
 import {
@@ -16,7 +15,7 @@ const archivedBadgeClass =
   "inline-flex min-h-[1.8rem] items-center rounded-full px-[.55rem] py-[.25rem] whitespace-nowrap text-[.72rem] font-medium text-muted bg-surface-subtle max-[540px]:col-span-full max-[540px]:justify-self-start";
 
 function ReversalForm({ id }: { id: string }) {
-  const [state, action, pending] = useActionState<
+  const [, action, pending] = useToastActionState<
     TransferActionState,
     FormData
   >(reverseTransferAction, {});
@@ -26,8 +25,6 @@ function ReversalForm({ id }: { id: string }) {
       <Button type="submit" variant="ghost" disabled={pending}>
         {pending ? "Membalik..." : "Balikkan"}
       </Button>
-      <FormMessage>{state.error}</FormMessage>
-      {state.success ? <p className={successMessageClass}>{state.success}</p> : null}
     </form>
   );
 }
