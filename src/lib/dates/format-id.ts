@@ -13,6 +13,16 @@ export const MONTHS_LONG = [
   "Desember",
 ] as const;
 
+const WEEKDAYS = [
+  "Minggu",
+  "Senin",
+  "Selasa",
+  "Rabu",
+  "Kamis",
+  "Jumat",
+  "Sabtu",
+] as const;
+
 const DATE_KEY = /^(\d{4})-(\d{2})-(\d{2})$/u;
 
 type DateParts = { year: number; month: number; day: number };
@@ -42,6 +52,19 @@ export function formatDateLong(value: string) {
   const parts = parseDateParts(value);
   if (!parts) return value;
   return `${parts.day} ${MONTHS_LONG[parts.month - 1]} ${parts.year}`;
+}
+
+/**
+ * Formats a calendar-only ISO date string as weekday and full Indonesian date.
+ * "2026-08-05" -> "Rabu, 5 Agustus 2026".
+ */
+export function formatDayDateLong(value: string) {
+  const parts = parseDateParts(value);
+  if (!parts) return value;
+  const weekday = WEEKDAYS[
+    new Date(Date.UTC(parts.year, parts.month - 1, parts.day)).getUTCDay()
+  ];
+  return `${weekday}, ${formatDateLong(value)}`;
 }
 
 /**

@@ -71,7 +71,6 @@ export function ReportCashFlow({
       <div className="mb-[.5rem] flex items-start justify-between gap-4 max-[540px]:flex-col">
         <div>
           <p className={eyebrowClass}>Arus Kas</p>
-          <h2 id="report-cash-flow-title" className="m-0 text-[1.08rem] tracking-[-.02em]">Pemasukan vs pengeluaran</h2>
         </div>
         <p className="m-0 text-[.84rem] text-muted">{formatReportRange(from, to)}</p>
       </div>

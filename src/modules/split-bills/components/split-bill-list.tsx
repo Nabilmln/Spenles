@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { ReceiptText } from "lucide-react";
 import { EmptyState } from "@/components/feedback/empty-state";
-import { buttonClass, cardClass, eyebrowClass } from "@/components/ui/styles";
-import { formatDateLong } from "@/lib/dates/format-id";
+import { buttonClass, cardClass } from "@/components/ui/styles";
+import { formatDayDateLong } from "@/lib/dates/format-id";
 import { formatIdr } from "@/lib/money/format-idr";
 import type { SplitBillFilters } from "../schemas/split-bill-filters";
 import { SplitBillDeleteButton } from "./split-bill-delete-button";
@@ -80,31 +80,39 @@ export function SplitBillList({
     <>
       <div className="grid grid-cols-[repeat(3,minmax(0,1fr))] gap-4 max-[1100px]:grid-cols-[repeat(2,minmax(0,1fr))] max-[540px]:grid-cols-1">
         {rows.map((row) => (
-          <article className={`${cardClass} grid min-w-0 gap-[.9rem]`} key={row.id}>
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className={eyebrowClass}>{formatDateLong(row.billDate)}</p>
-                <h2>{row.merchantName}</h2>
+          <article className={`${cardClass} grid min-w-0 gap-[.75rem]`} key={row.id}>
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="m-0 text-[.78rem] font-medium text-muted">
+                  {formatDayDateLong(row.billDate)}
+                </p>
+                <h2 className="truncate">{row.merchantName}</h2>
               </div>
-              <span className={`inline-flex min-h-[1.8rem] items-center rounded-full px-[.55rem] py-[.25rem] whitespace-nowrap text-[.72rem] font-medium ${statusBadgeClass[row.status]}`}>
+              <span className={`inline-flex min-h-[1.6rem] shrink-0 items-center rounded-full px-[.5rem] py-[.15rem] whitespace-nowrap text-[.7rem] font-medium ${statusBadgeClass[row.status]}`}>
                 {statusLabel[row.status]}
               </span>
             </div>
-            <p>{row.participantCount} peserta</p>
-            <strong>
-              {row.finalAmount ? formatIdr(row.finalAmount) : "Belum final"}
-            </strong>
-            <Link
-              className={buttonClass("secondary")}
-              href={
-                row.status === "draft"
-                  ? `/split-bills/${row.id}/edit`
-                  : `/split-bills/${row.id}`
-              }
-            >
-              {row.status === "draft" ? "Lanjutkan draft" : "Lihat hasil"}
-            </Link>
-            <SplitBillDeleteButton billId={row.id} label={row.merchantName} />
+            <div className="flex items-baseline justify-between gap-3">
+              <span className="text-[.8rem] text-muted">
+                {row.participantCount} peserta
+              </span>
+              <strong className="min-w-0 text-[.95rem] [overflow-wrap:anywhere]">
+                {row.finalAmount ? formatIdr(row.finalAmount) : "Belum final"}
+              </strong>
+            </div>
+            <div className="flex items-center justify-between gap-2 border-t border-border pt-[.75rem]">
+              <Link
+                className={buttonClass("primary", "flex-1 justify-center")}
+                href={
+                  row.status === "draft"
+                    ? `/split-bills/${row.id}/edit`
+                    : `/split-bills/${row.id}`
+                }
+              >
+                {row.status === "draft" ? "Lanjutkan draft" : "Lihat hasil"}
+              </Link>
+              <SplitBillDeleteButton billId={row.id} label={row.merchantName} />
+            </div>
           </article>
         ))}
       </div>

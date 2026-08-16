@@ -3,7 +3,7 @@
 import { useActionState, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
-import { formatDateLong } from "@/lib/dates/format-id";
+import { formatDayDateLong } from "@/lib/dates/format-id";
 import { formatIdr } from "@/lib/money/format-idr";
 import {
   archiveSplitBillAction,
@@ -72,7 +72,9 @@ export function SplitBillDetail({ detail }: { detail: SplitBillDetailData }) {
         <article className={cardClass}>
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className={eyebrowClass}>{formatDateLong(detail.billDate)}</p>
+              <p className="m-0 text-[.78rem] font-medium text-muted">
+                {formatDayDateLong(detail.billDate)}
+              </p>
               <h2 className="m-0 text-[1.25rem] tracking-[-.02em]">{detail.merchantName}</h2>
             </div>
             <span className={`inline-flex min-h-[1.8rem] items-center rounded-full px-[.55rem] py-[.25rem] whitespace-nowrap text-[.72rem] font-medium ${statusBadgeClass[detail.status]}`}>
@@ -140,7 +142,7 @@ export function SplitBillDetail({ detail }: { detail: SplitBillDetailData }) {
       </section>
 
       <aside className="grid min-w-0 gap-4">
-        <article className={`${cardClass} sticky top-4 grid min-w-0 gap-4 max-[900px]:static`}>
+        <article className={`${cardClass} grid min-w-0 gap-4`}>
           <p className={eyebrowClass}>Snapshot final</p>
           <h2 className="m-0">Ringkasan</h2>
           <dl className="m-0 grid gap-[.55rem]">
@@ -161,9 +163,9 @@ export function SplitBillDetail({ detail }: { detail: SplitBillDetailData }) {
           <article className={cardClass}>
             <h2 className="m-0">Arsip</h2>
             <p>Arsip mempertahankan snapshot dan membekukan status pembayaran.</p>
-            <form action={archiveAction}>
+            <form action={archiveAction} className="mt-[.75rem] grid gap-[.6rem]">
               <input type="hidden" name="id" value={detail.id} />
-              <Button type="submit" variant="ghost" disabled={pending}>
+              <Button type="submit" variant="secondary" disabled={pending} className="w-full">
                 {pending ? "Mengarsipkan..." : "Arsipkan tagihan"}
               </Button>
               <FormMessage>{archiveState.error}</FormMessage>
@@ -176,24 +178,25 @@ export function SplitBillDetail({ detail }: { detail: SplitBillDetailData }) {
             <h2 className="m-0">Hapus</h2>
             <p>Menghapus tagihan permanen menghilangkan seluruh item dan riwayat pembayaran.</p>
             {confirmDelete ? (
-              <div className="grid gap-[.7rem]">
+              <div className="mt-[.75rem] grid gap-[.7rem]">
                 <p role="alert" className="m-0 rounded-[.7rem] bg-surface-subtle p-[.75rem] text-[.76rem] text-muted">Yakin? Tindakan ini permanen dan tidak dapat dibatalkan.</p>
-                <div className="flex flex-wrap gap-[.6rem]">
+                <div className="grid grid-cols-2 gap-[.6rem]">
                   <Button
                     type="button"
                     variant="secondary"
                     onClick={() => setConfirmDelete(false)}
+                    className="w-full"
                   >
                     Batal
                   </Button>
                   <form action={deleteSplitBillAction}>
                     <input type="hidden" name="id" value={detail.id} />
-                    <Button type="submit" variant="danger">Hapus permanen</Button>
+                    <Button type="submit" variant="danger" className="w-full">Hapus permanen</Button>
                   </form>
                 </div>
               </div>
             ) : (
-              <Button type="button" variant="danger" onClick={() => setConfirmDelete(true)}>
+              <Button type="button" variant="danger" onClick={() => setConfirmDelete(true)} className="mt-[.75rem] w-full">
                 Hapus tagihan
               </Button>
             )}

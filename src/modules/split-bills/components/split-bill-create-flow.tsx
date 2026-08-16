@@ -489,7 +489,7 @@ export function SplitBillCreateFlow({
       {preview ? (
         <CalculationSummary result={preview} />
       ) : (
-        <aside className={`${cardClass} sticky top-4 grid min-w-0 gap-4 max-[900px]:static`}>
+        <aside className={`${cardClass} grid min-w-0 gap-4`}>
           <p className={eyebrowClass}>Pratinjau lokal</p>
           <h2 className="m-0">Lengkapi tagihan</h2>
           <p className="text-muted">

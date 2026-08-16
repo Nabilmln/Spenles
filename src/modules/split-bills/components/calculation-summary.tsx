@@ -10,7 +10,7 @@ export function CalculationSummary({
   authoritative?: boolean;
 }) {
   return (
-    <aside className={`${cardClass} sticky top-4 grid min-w-0 gap-4 max-[900px]:static`} aria-label="Ringkasan perhitungan">
+    <aside className={`${cardClass} grid min-w-0 gap-4`} aria-label="Ringkasan perhitungan">
       <div>
         <p className={eyebrowClass}>
           {authoritative ? "Snapshot final" : "Pratinjau lokal"}
