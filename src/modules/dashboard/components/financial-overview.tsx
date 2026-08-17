@@ -2,7 +2,7 @@
 
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
-import { eyebrowClass, iconButtonClass } from "@/components/ui/styles";
+import { iconButtonClass } from "@/components/ui/styles";
 import { formatIdr } from "@/lib/money/format-idr";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +13,12 @@ const metricLabelClass =
 
 const metricValueClass =
   "min-w-0 block text-[clamp(.95rem,3.5vw,1.35rem)] leading-[1.2] tracking-[-.03em] [overflow-wrap:anywhere] min-[861px]:text-[1.15rem]";
+
+const eyebrowClass =
+  "mb-[.3rem] text-[.7rem] font-semibold uppercase tracking-[.14em] text-primary-600 dark:text-primary-700";
+
+const tileClass =
+  "grid min-w-0 content-start gap-[.15rem] max-[860px]:rounded-[.8rem] max-[860px]:border max-[860px]:border-border max-[860px]:bg-surface max-[860px]:p-[.8rem] max-[860px]:shadow-card";
 
 function MetricValue({
   hidden,
@@ -56,13 +62,13 @@ export function FinancialOverview({
       aria-label="Ringkasan keuangan"
       className="-mx-[clamp(1.25rem,4vw,2.75rem)] -mt-4 min-[861px]:mx-0 min-[861px]:-mt-0"
     >
-      <div className="grid rounded-b-[.85rem] border border-border bg-surface px-[1rem] pb-[1rem] shadow-card min-[861px]:rounded-[.85rem] min-[861px]:px-[1.25rem] min-[861px]:py-[1.1rem]">
-        <div className="min-w-0">
-          <p className={`${eyebrowClass} hidden mb-[.3rem] min-[861px]:block`}>
+      <div className="min-w-0 px-[1.15rem] min-[861px]:rounded-[.85rem] min-[861px]:border min-[861px]:border-border min-[861px]:bg-surface min-[861px]:px-[1.25rem] min-[861px]:py-[1.1rem] min-[861px]:shadow-card">
+        <div className="min-w-0 max-[860px]:rounded-[.8rem] max-[860px]:border max-[860px]:border-border max-[860px]:bg-surface max-[860px]:p-[.8rem] max-[860px]:shadow-card">
+          <p className={`${eyebrowClass} hidden min-[861px]:block`}>
             Dashboard
           </p>
           <div className="flex items-center justify-between gap-[.5rem]">
-            <h1 className="m-0 min-w-0 truncate text-[clamp(1rem,3.5vw,1.2rem)] font-medium leading-[1.15] tracking-[-.02em] min-[861px]:text-[clamp(1.25rem,2.5vw,1.65rem)]">
+            <h1 className="m-0 min-w-0 truncate text-[clamp(1.05rem,4vw,1.3rem)] font-medium leading-[1.15] tracking-[-.02em] min-[861px]:text-[clamp(1.25rem,2.5vw,1.65rem)]">
               Halo,{" "}
               <span className="text-primary-600 dark:text-primary-700">{name}</span>
             </h1>
@@ -82,14 +88,12 @@ export function FinancialOverview({
           </div>
         </div>
 
-        <div className="mt-[.7rem] mb-[.65rem] h-px bg-border min-[861px]:hidden" aria-hidden="true" />
-
-        <div className="grid min-w-0 grid-cols-2 gap-x-3 min-[861px]:mt-[.85rem] min-[861px]:gap-x-5">
-          <div className="grid min-w-0 content-start gap-[.15rem]">
+        <div className="mt-[.75rem] grid min-w-0 grid-cols-2 gap-3 min-[861px]:mt-[.85rem] min-[861px]:gap-x-5">
+          <div className={tileClass}>
             <span className={metricLabelClass}>Pendapatan</span>
             <MetricValue hidden={hidden} tone="income" value={income} />
           </div>
-          <div className="grid min-w-0 content-start gap-[.15rem] border-l border-border pl-3">
+          <div className={`${tileClass} min-[861px]:border-l min-[861px]:border-border min-[861px]:pl-5`}>
             <span className={metricLabelClass}>Pengeluaran</span>
             <MetricValue hidden={hidden} tone="expense" value={expense} />
           </div>

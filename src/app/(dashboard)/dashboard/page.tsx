@@ -209,108 +209,114 @@ export default async function DashboardPage({
     : 0n;
 
   return (
-    <div className="dashboard-grid grid gap-3 min-[861px]:grid-cols-8 min-[1024px]:grid-cols-12">
-      <div className="min-w-0 min-[861px]:col-span-4 min-[1024px]:col-span-4">
-        <FinancialOverview
-          name={profile?.displayName ?? "Pengguna Spenles"}
-          income={overview.income.toString()}
-          expense={overview.expense.toString()}
-        />
-      </div>
-
-      <div className="min-w-0 min-[861px]:hidden">
-        {daily ? (
-          <MonthlyExpenseCard
-            currentMonth={cardMonth}
-            monthLabel={monthLabelFor(cardMonth)}
-            monthPoints={daily.points}
-            nextMonth={shiftMonthKey(cardMonth, 1)}
-            prevMonth={shiftMonthKey(cardMonth, -1)}
-            recentPoints={recent.points}
-            totalExpense={daily.totalExpense}
+    <div className="max-[860px]:flex max-[860px]:min-h-[calc(100svh-4.5rem)] max-[860px]:flex-col">
+      <div className="dashboard-grid grid gap-3 min-[861px]:grid-cols-8 min-[1024px]:grid-cols-12">
+        <div className="min-w-0 min-[861px]:col-span-4 min-[1024px]:col-span-4">
+          <FinancialOverview
+            name={profile?.displayName ?? "Pengguna Spenles"}
+            income={overview.income.toString()}
+            expense={overview.expense.toString()}
           />
-        ) : (
-          <DashboardSectionError title="Pengeluaran bulanan belum tersedia" />
-        )}
+        </div>
+
+        <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
+          {totals ? (
+            <IncomeVsExpenseComparison
+              income={totals.selected.income}
+              expense={totals.selected.expense}
+              incomeChangeBps={incomeComparison?.changeBps ?? null}
+              expenseChangeBps={expenseComparison?.changeBps ?? null}
+              previousLabel={prevCardInterval.label}
+            />
+          ) : (
+            <DashboardSectionError title="Perbandingan bulanan belum tersedia" />
+          )}
+        </div>
+
+        <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
+          {isFulfilled(savingsResult) && isFulfilled(savingsBalanceResult) ? (
+            <SavingsSummaryCard
+              balance={savingsBalance}
+              periodNet={savingsNet}
+            />
+          ) : (
+            <DashboardSectionError title="Ringkasan tabungan belum tersedia" />
+          )}
+        </div>
       </div>
 
-      <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
-        {totals ? (
-          <IncomeVsExpenseComparison
-            income={totals.selected.income}
-            expense={totals.selected.expense}
-            incomeChangeBps={incomeComparison?.changeBps ?? null}
-            expenseChangeBps={expenseComparison?.changeBps ?? null}
-            previousLabel={prevCardInterval.label}
-          />
-        ) : (
-          <DashboardSectionError title="Perbandingan bulanan belum tersedia" />
-        )}
-      </div>
+      <div className="-mx-[clamp(1.25rem,4vw,2.75rem)] mt-[1.55rem] max-[860px]:flex-1 max-[860px]:rounded-t-[3.5rem] max-[860px]:bg-primary-600 max-[860px]:pt-10 p-3 min-[861px]:mx-0 min-[861px]:mt-3 min-[861px]:rounded-none min-[861px]:bg-transparent min-[861px]:p-0">
+        <div className="dashboard-grid grid gap-3 min-[861px]:grid-cols-8 min-[1024px]:grid-cols-12">
+          <DashboardFeatureGrid />
 
-      <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
-        {isFulfilled(savingsResult) && isFulfilled(savingsBalanceResult) ? (
-          <SavingsSummaryCard
-            balance={savingsBalance}
-            periodNet={savingsNet}
-          />
-        ) : (
-          <DashboardSectionError title="Ringkasan tabungan belum tersedia" />
-        )}
-      </div>
+          <div className="min-w-0 min-[861px]:hidden">
+            {daily ? (
+              <MonthlyExpenseCard
+                currentMonth={cardMonth}
+                monthLabel={monthLabelFor(cardMonth)}
+                monthPoints={daily.points}
+                nextMonth={shiftMonthKey(cardMonth, 1)}
+                prevMonth={shiftMonthKey(cardMonth, -1)}
+                recentPoints={recent.points}
+                totalExpense={daily.totalExpense}
+              />
+            ) : (
+              <DashboardSectionError title="Pengeluaran bulanan belum tersedia" />
+            )}
+          </div>
 
-      <div className="hidden min-w-0 min-[861px]:col-span-8 min-[861px]:block min-[1024px]:col-span-8">
-        <CashFlowOverviewCard
-          daily={cashFlowDaily}
-          monthly={cashFlowMonthly}
-          weekly={cashFlowWeekly}
-        />
-      </div>
+          <div className="hidden min-w-0 min-[861px]:col-span-8 min-[861px]:block min-[1024px]:col-span-8">
+            <CashFlowOverviewCard
+              daily={cashFlowDaily}
+              monthly={cashFlowMonthly}
+              weekly={cashFlowWeekly}
+            />
+          </div>
 
-      <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
-        {isFulfilled(categoryResult) ? (
-          <CategoryExpenseCard
-            periodLabel={monthLabelFor(cardMonth)}
-            points={categoryContract.points}
-            totalExpense={categoryContract.totalExpense}
-          />
-        ) : (
-          <DashboardSectionError title="Pengeluaran per kategori belum tersedia" />
-        )}
-      </div>
+          <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
+            {isFulfilled(categoryResult) ? (
+              <CategoryExpenseCard
+                periodLabel={monthLabelFor(cardMonth)}
+                points={categoryContract.points}
+                totalExpense={categoryContract.totalExpense}
+              />
+            ) : (
+              <DashboardSectionError title="Pengeluaran per kategori belum tersedia" />
+            )}
+          </div>
 
-      <div className="min-w-0 min-[861px]:col-span-4 min-[1024px]:col-span-4">
-        {isFulfilled(rollingResult) ? (
-          <RollingThreeDayTransactions rows={rollingResult.value} />
-        ) : (
-          <DashboardSectionError title="Aktivitas terbaru belum tersedia" />
-        )}
-      </div>
+          <div className="min-w-0 min-[861px]:col-span-4 min-[1024px]:col-span-4">
+            {isFulfilled(rollingResult) ? (
+              <RollingThreeDayTransactions rows={rollingResult.value} />
+            ) : (
+              <DashboardSectionError title="Aktivitas terbaru belum tersedia" />
+            )}
+          </div>
 
-      <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
-        {isFulfilled(categoryResult) ? (
-          <TopSpendingCard
-            periodLabel={monthLabelFor(cardMonth)}
-            rows={categoryRows}
-          />
-        ) : (
-          <DashboardSectionError title="Kategori teratas belum tersedia" />
-        )}
-      </div>
+          <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
+            {isFulfilled(categoryResult) ? (
+              <TopSpendingCard
+                periodLabel={monthLabelFor(cardMonth)}
+                rows={categoryRows}
+              />
+            ) : (
+              <DashboardSectionError title="Kategori teratas belum tersedia" />
+            )}
+          </div>
 
-      <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
-        {totals ? (
-          <AverageSpendingCard
-            value={averageDaily}
-            changeBps={averageComparison.changeBps}
-            previousLabel={prevCardInterval.label}
-          />
-        ) : (
-          <DashboardSectionError title="Rata-rata harian belum tersedia" />
-        )}
+          <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
+            {totals ? (
+              <AverageSpendingCard
+                value={averageDaily}
+                changeBps={averageComparison.changeBps}
+                previousLabel={prevCardInterval.label}
+              />
+            ) : (
+              <DashboardSectionError title="Rata-rata harian belum tersedia" />
+            )}
+          </div>
+        </div>
       </div>
-
-      <DashboardFeatureGrid />
     </div>
   );
 }
