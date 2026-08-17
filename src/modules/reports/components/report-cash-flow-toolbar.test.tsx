@@ -43,11 +43,9 @@ describe("cash flow grouping", () => {
 });
 
 describe("report cash flow card", () => {
-  it("renders the chart and range", () => {
+  it("renders the chart card", () => {
     render(
       <ReportCashFlow
-        from="2026-08-01"
-        to="2026-08-07"
         points={buildCashFlowPoints([{ month: "2026-08", incomeIdr: "100", expenseIdr: "50" }])}
         incomeIdr="100"
         expenseIdr="50"
@@ -61,8 +59,6 @@ describe("report cash flow card", () => {
   it("shows a zero-data hint when every point is zero", () => {
     render(
       <ReportCashFlow
-        from="2026-08-01"
-        to="2026-08-07"
         points={buildCashFlowPoints([{ month: "2026-08", incomeIdr: "0", expenseIdr: "0" }])}
         incomeIdr="0"
         expenseIdr="0"

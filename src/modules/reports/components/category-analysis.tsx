@@ -1,12 +1,9 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { SlidersHorizontal, X } from "lucide-react";
-import { cardClass, eyebrowClass, iconButtonClass } from "@/components/ui/styles";
+import { cardClass, eyebrowClass } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import { formatIdr } from "@/lib/money/format-idr";
-import { formatReportRange } from "../lib/report-date";
 
 export type CategoryBreakdownItem = {
   categoryId: string;
@@ -18,6 +15,11 @@ export type CategoryBreakdownItem = {
 function percent(amount: string, total: bigint) {
   return total === 0n ? 0 : Number((BigInt(amount) * 10_000n) / total) / 100;
 }
+
+const toggleBase =
+  "flex-1 min-h-[2.6rem] cursor-pointer rounded-[.65rem] border border-border bg-surface-subtle px-[.8rem] font-medium text-muted transition-colors";
+
+const toggleActive = "border-primary-600 bg-primary-600 text-white";
 
 export function CategoryAnalysis({
   from,
@@ -32,15 +34,7 @@ export function CategoryAnalysis({
   totalIdr: string;
   categories: CategoryBreakdownItem[];
 }) {
-  const [open, setOpen] = useState(false);
-  const closeRef = useRef<HTMLButtonElement>(null);
   const total = BigInt(totalIdr);
-  const title =
-    type === "income" ? "Pemasukan per Kategori" : "Pengeluaran per Kategori";
-
-  useEffect(() => {
-    if (open) closeRef.current?.focus();
-  }, [open]);
 
   function select(nextType: "income" | "expense") {
     const url = new URL(window.location.href);
@@ -50,23 +44,29 @@ export function CategoryAnalysis({
 
   return (
     <section
-      aria-labelledby="report-categories-title"
+      aria-label={type === "income" ? "Pemasukan per Kategori" : "Pengeluaran per Kategori"}
       className={cn(cardClass, "shadow-none")}
     >
-      <div className="mb-4 flex items-start justify-between gap-4 max-[540px]:flex-col">
-        <div>
-          <p className={eyebrowClass}>{type === "income" ? "Pemasukan" : "Pengeluaran"}</p>
-          <h2 id="report-categories-title" className="m-0 text-[1.08rem] tracking-[-.02em]">{title}</h2>
+      <div className="mb-4 flex items-center justify-between gap-4 max-[540px]:flex-col max-[540px]:items-stretch">
+        <p className={`${eyebrowClass} mb-0`}>{type === "income" ? "Pemasukan" : "Pengeluaran"}</p>
+        <div className="flex gap-[.5rem] max-[540px]:w-full" role="group" aria-label="Jenis transaksi">
+          <button
+            aria-pressed={type === "expense"}
+            className={cn(toggleBase, type === "expense" && toggleActive)}
+            onClick={() => select("expense")}
+            type="button"
+          >
+            Pengeluaran
+          </button>
+          <button
+            aria-pressed={type === "income"}
+            className={cn(toggleBase, type === "income" && toggleActive)}
+            onClick={() => select("income")}
+            type="button"
+          >
+            Pemasukan
+          </button>
         </div>
-        <button
-          aria-haspopup="dialog"
-          aria-label="Buka filter kategori"
-          className={iconButtonClass}
-          onClick={() => setOpen(true)}
-          type="button"
-        >
-          <SlidersHorizontal aria-hidden="true" size={19} />
-        </button>
       </div>
 
       {categories.length ? (
@@ -94,61 +94,6 @@ export function CategoryAnalysis({
           Belum ada {type === "income" ? "pemasukan" : "pengeluaran"} pada periode ini.
         </div>
       )}
-
-      {open ? (
-        <div className="fixed inset-0 z-60 flex items-end justify-center bg-[rgb(15_17_21/55%)] p-4" onClick={() => setOpen(false)}>
-          <div
-            aria-labelledby="report-cf-title"
-            aria-modal="true"
-            className="w-full max-w-[30rem] max-h-[86vh] overflow-y-auto border border-border bg-surface p-[1.25rem] rounded-[1.1rem] shadow-card"
-            role="dialog"
-          >
-            <div className="mb-4 flex items-center justify-between gap-[.75rem]">
-              <h2 id="report-cf-title" className="m-0 text-[1.08rem]">Filter kategori</h2>
-              <button
-                aria-label="Tutup filter kategori"
-                className={iconButtonClass}
-                onClick={() => setOpen(false)}
-                ref={closeRef}
-                type="button"
-              >
-                <X aria-hidden="true" size={19} />
-              </button>
-            </div>
-            <div
-              className="flex gap-[.5rem]"
-              role="group"
-              aria-label="Jenis transaksi"
-            >
-              <button
-                aria-pressed={type === "expense"}
-                className={cn(
-                  "flex-1 min-h-[2.85rem] cursor-pointer rounded-[.7rem] border border-border bg-surface-subtle p-[.55rem_.7rem] font-medium text-muted",
-                  type === "expense" && "border-primary-600 bg-primary-600 text-white",
-                )}
-                onClick={() => select("expense")}
-                type="button"
-              >
-                Pengeluaran
-              </button>
-              <button
-                aria-pressed={type === "income"}
-                className={cn(
-                  "flex-1 min-h-[2.85rem] cursor-pointer rounded-[.7rem] border border-border bg-surface-subtle p-[.55rem_.7rem] font-medium text-muted",
-                  type === "income" && "border-primary-600 bg-primary-600 text-white",
-                )}
-                onClick={() => select("income")}
-                type="button"
-              >
-                Pemasukan
-              </button>
-            </div>
-            <p className="mt-4 rounded-[.7rem] bg-surface-subtle p-3 text-[.76rem] text-muted">
-              Periode mengikuti rentang utama laporan: {formatReportRange(from, to)}.
-            </p>
-          </div>
-        </div>
-      ) : null}
     </section>
   );
 }

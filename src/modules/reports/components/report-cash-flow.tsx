@@ -2,7 +2,6 @@ import { formatIdr } from "@/lib/money/format-idr";
 import { formatDateLongNoYear } from "@/lib/dates/format-id";
 import { cardClass, eyebrowClass } from "@/components/ui/styles";
 import { ChartShell, IncomeExpenseChart } from "@/modules/dashboard";
-import { formatReportRange } from "../lib/report-date";
 import type { ReportMonth } from "../types";
 
 export type CashFlowPoint = {
@@ -49,15 +48,11 @@ export function buildCashFlowPoints(series: ReportMonth[]): CashFlowPoint[] {
 }
 
 export function ReportCashFlow({
-  from,
-  to,
   points,
   incomeIdr,
   expenseIdr,
   daily,
 }: {
-  from: string;
-  to: string;
   points: CashFlowPoint[];
   incomeIdr: string;
   expenseIdr: string;
@@ -68,12 +63,7 @@ export function ReportCashFlow({
   );
   return (
     <section aria-labelledby="report-cash-flow-title" className={cardClass}>
-      <div className="mb-[.5rem] flex items-start justify-between gap-4 max-[540px]:flex-col">
-        <div>
-          <p className={eyebrowClass}>Arus Kas</p>
-        </div>
-        <p className="m-0 text-[.84rem] text-muted">{formatReportRange(from, to)}</p>
-      </div>
+      <p className={`${eyebrowClass} mb-[.5rem]`}>Arus Kas</p>
       {zero ? (
         <p className="m-0 mb-[.75rem] text-muted" role="status">
           Belum ada data pada periode ini.
@@ -81,13 +71,7 @@ export function ReportCashFlow({
       ) : null}
       <ChartShell
         chart={<IncomeExpenseChart points={points} />}
-        description={
-          daily
-            ? "Pemasukan dan pengeluaran per hari kalender Jakarta."
-            : "Pemasukan dan pengeluaran per bulan kalender Jakarta."
-        }
         summary={`Pemasukan ${formatIdr(incomeIdr)} · Pengeluaran ${formatIdr(expenseIdr)}`}
-        table={null}
         title={daily ? "Perbandingan harian" : "Perbandingan bulanan"}
       />
     </section>

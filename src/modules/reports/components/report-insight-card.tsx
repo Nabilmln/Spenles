@@ -14,11 +14,11 @@ export function ReportInsightCard({
   insight: ReportInsightData;
 }) {
   return (
-    <section aria-label="Wawasan keuangan" className={cn(cardClass, "grid grid-cols-[30%_70%] items-center gap-4 max-[720px]:grid-cols-[6.5rem_1fr]")}>
-      <div className="grid size-[3.2rem] place-items-center justify-self-center rounded-full bg-primary-50 text-primary-600" aria-hidden="true">
-        <TrendingDown size={22} />
-      </div>
-      <div>
+    <section aria-label="Wawasan keuangan" className={cn(cardClass, "flex items-center gap-4")}>
+      <span className="grid size-[2.5rem] shrink-0 place-items-center rounded-full bg-primary-50 text-primary-600" aria-hidden="true">
+        <TrendingDown size={18} />
+      </span>
+      <div className="min-w-0">
         <h2 className="m-0 mb-1 text-[1.02rem]">Wawasan</h2>
         <p className="m-0 text-[.9rem] leading-normal text-muted">
           Rata-rata pengeluaran per hari kamu adalah{" "}

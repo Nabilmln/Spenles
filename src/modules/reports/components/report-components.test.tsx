@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { CategoryAnalysis } from "./category-analysis";
 import { CompactReportSummary } from "./compact-report-summary";
@@ -84,7 +84,9 @@ describe("category analysis", () => {
   it("lists expense categories with percentage shares", () => {
     render(<CategoryAnalysis {...base} type="expense" totalIdr="50000" />);
 
-    expect(screen.getByRole("heading", { name: "Pengeluaran per Kategori" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("region", { name: "Pengeluaran per Kategori" }),
+    ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Makanan/ })).toHaveAttribute(
       "href",
       "/reports/categories/cat-1?from=2026-08-01&to=2026-08-07",
@@ -103,12 +105,11 @@ describe("category analysis", () => {
     expect(screen.getAllByText("0%")).toHaveLength(2);
   });
 
-  it("opens the filter sheet with the correct active type", () => {
+  it("shows an inline type toggle with the active type", () => {
     render(<CategoryAnalysis {...base} type="expense" totalIdr="50000" />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Buka filter kategori" }));
     expect(
-      screen.getByRole("dialog", { name: "Filter kategori" }),
+      screen.getByRole("group", { name: "Jenis transaksi" }),
     ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Pemasukan" })).toHaveAttribute(
       "aria-pressed",

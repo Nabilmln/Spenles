@@ -73,13 +73,13 @@ export default async function ReportsPage({
       <CompactReportSummary totals={totals} />
 
       <ReportCashFlow
-        from={from}
-        to={to}
         points={buildCashFlowPoints(analysis.series)}
         incomeIdr={analysis.summary.incomeIdr}
         expenseIdr={analysis.summary.expenseIdr}
         daily={analysis.daily}
       />
+
+      <ReportInsightCard insight={analysis.insight} />
 
       <CategoryAnalysis
         from={from}
@@ -88,8 +88,6 @@ export default async function ReportsPage({
         totalIdr={categoryBreakdown.totalIdr}
         categories={categoryBreakdown.categories}
       />
-
-      <ReportInsightCard insight={analysis.insight} />
     </div>
   );
 }

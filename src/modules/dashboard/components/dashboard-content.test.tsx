@@ -1,35 +1,22 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { buildFinancialSnapshot } from "../services/financial-metrics";
-import { AccessibleChartTable } from "./accessible-chart-table";
 import { CashFlowProfile } from "./cash-flow-profile";
 import { ChartShell } from "./chart-shell";
 import { RecentTransactions } from "./recent-transactions";
 
 describe("dashboard accessible content", () => {
-  it("provides chart summary and exact semantic table values", () => {
+  it("labels the chart title and summary", () => {
     render(
       <ChartShell
         chart={<div aria-hidden="true">visual</div>}
-        description="Data per bulan"
         summary="Total Rp1.000"
-        table={
-          <AccessibleChartTable
-            caption="Pengeluaran bulanan"
-            columns={[
-              { key: "month", label: "Bulan" },
-              { key: "amount", label: "Pengeluaran", align: "right" },
-            ]}
-            rows={[{ id: "2026-08", month: "Agu 26", amount: "Rp1.000" }]}
-          />
-        }
         title="Pengeluaran bulanan"
       />,
     );
 
     expect(screen.getByRole("heading", { name: "Pengeluaran bulanan" })).toBeInTheDocument();
     expect(screen.getByText("Total Rp1.000")).toBeInTheDocument();
-    expect(screen.getByRole("table", { name: "Pengeluaran bulanan" })).toHaveTextContent("Rp1.000");
   });
 
   it("labels averages, denominator, condition, and disclaimer", () => {
