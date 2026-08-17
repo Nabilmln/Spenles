@@ -209,7 +209,7 @@ export default async function DashboardPage({
     : 0n;
 
   return (
-    <div className="max-[860px]:flex max-[860px]:min-h-[calc(100svh-4.5rem)] max-[860px]:flex-col">
+    <div className="max-[870px]:flex max-[870px]:min-h-[calc(100svh-3.25rem)] max-[860px]:flex-col">
       <div className="dashboard-grid grid gap-3 min-[861px]:grid-cols-8 min-[1024px]:grid-cols-12">
         <div className="min-w-0 min-[861px]:col-span-4 min-[1024px]:col-span-4">
           <FinancialOverview
@@ -245,7 +245,7 @@ export default async function DashboardPage({
         </div>
       </div>
 
-      <div className="-mx-[clamp(1.25rem,4vw,2.75rem)] mt-[1.55rem] max-[860px]:flex-1 max-[860px]:rounded-t-[3.5rem] max-[860px]:bg-primary-600 max-[860px]:pt-10 p-3 min-[861px]:mx-0 min-[861px]:mt-3 min-[861px]:rounded-none min-[861px]:bg-transparent min-[861px]:p-0">
+      <div className="-mx-[clamp(1.25rem,4vw,2.75rem)] mt-[1.55rem] max-[860px]:flex-1 max-[860px]:rounded-t-[3.5rem] max-[860px]:bg-primary-600 max-[860px]:pt-10 px-7 min-[861px]:mx-0 min-[861px]:mt-3 min-[861px]:rounded-none min-[861px]:bg-transparent min-[861px]:p-0">
         <div className="dashboard-grid grid gap-3 min-[861px]:grid-cols-8 min-[1024px]:grid-cols-12">
           <DashboardFeatureGrid />
 
