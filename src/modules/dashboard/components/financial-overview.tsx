@@ -60,7 +60,7 @@ export function FinancialOverview({
   return (
     <section
       aria-label="Ringkasan keuangan"
-      className="-mx-[clamp(1.25rem,4vw,2.75rem)] -mt-4 min-[861px]:mx-0 min-[861px]:-mt-0"
+      className="-mx-[clamp(1.25rem,4vw,2.75rem)] mt-4 min-[861px]:mx-0 min-[861px]:-mt-0"
     >
       <div className="min-w-0 px-[1.15rem] min-[861px]:rounded-[.85rem] min-[861px]:border min-[861px]:border-border min-[861px]:bg-surface min-[861px]:px-[1.25rem] min-[861px]:py-[1.1rem] min-[861px]:shadow-card">
         <div className="min-w-0 max-[860px]:rounded-[.8rem] max-[860px]:border max-[860px]:border-border max-[860px]:bg-surface max-[860px]:p-[.8rem] max-[860px]:shadow-card">

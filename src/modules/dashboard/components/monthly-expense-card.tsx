@@ -1,7 +1,7 @@
 import {
   buttonClass,
   cardClass,
-  fieldHintClass,
+  eyebrowClass,
   iconButtonClass,
 } from "@/components/ui/styles";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -11,6 +11,7 @@ import { DailyExpenseChart } from "./daily-expense-chart";
 
 export function MonthlyExpenseCard({
   monthLabel,
+  totalIncome,
   totalExpense,
   monthPoints,
   recentPoints,
@@ -19,6 +20,7 @@ export function MonthlyExpenseCard({
   currentMonth,
 }: {
   monthLabel: string;
+  totalIncome: bigint;
   totalExpense: bigint;
   monthPoints: DailyExpensePoint[];
   recentPoints: DailyExpensePoint[];
@@ -26,9 +28,9 @@ export function MonthlyExpenseCard({
   nextMonth: string;
   currentMonth: string;
 }) {
-  const recentZero = recentPoints.every((point) => point.expenseIdr === "0");
   return (
     <section aria-label="Pengeluaran bulanan" className={`${cardClass} shadow-none`}>
+      <p className={`${eyebrowClass} pb-2 mb-[.4rem]`}>Arus Kas</p>
       <div className="flex justify-center">
         <div className="flex items-center gap-[.35rem]" role="group" aria-label="Pilih bulan">
           <form action="/dashboard" method="get">
@@ -59,21 +61,22 @@ export function MonthlyExpenseCard({
           </form>
         </div>
       </div>
-      <strong className="my-[.85rem_.15rem] block text-[clamp(1.35rem,3.5vw,2.1rem)] tracking-[-.04em] [overflow-wrap:anywhere]">{formatIdr(totalExpense)}</strong>
+      <div className="my-[.85rem_0] grid grid-cols-2 gap-3">
+        <div className="grid min-w-0 gap-[.15rem]">
+          <span className="text-[.72rem] font-semibold uppercase tracking-[.08em] text-muted">Pendapatan</span>
+          <strong className="min-w-0 text-income text-[clamp(1.05rem,3.5vw,1.5rem)] tracking-[-.03em] [overflow-wrap:anywhere]">{formatIdr(totalIncome)}</strong>
+        </div>
+        <div className="grid min-w-0 gap-[.15rem]">
+          <span className="text-[.72rem] font-semibold uppercase tracking-[.08em] text-muted">Pengeluaran</span>
+          <strong className="min-w-0 text-expense text-[clamp(1.05rem,3.5vw,1.5rem)] tracking-[-.03em] [overflow-wrap:anywhere]">{formatIdr(totalExpense)}</strong>
+        </div>
+      </div>
       <div className="max-[860px]:hidden">
         <DailyExpenseChart points={monthPoints} />
       </div>
       <div className="hidden max-[860px]:block">
         <DailyExpenseChart points={recentPoints} />
-        {recentZero ? (
-          <p className="mt-[.25rem] text-[.74rem] font-medium text-muted" role="status">
-            Belum ada pengeluaran dalam 4 hari terakhir.
-          </p>
-        ) : null}
       </div>
-      <p className={fieldHintClass}>
-        Grafik menampilkan pengeluaran per hari dalam zona Asia/Jakarta.
-      </p>
     </section>
   );
 }

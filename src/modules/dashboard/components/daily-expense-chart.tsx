@@ -1,9 +1,9 @@
 "use client";
 
 import {
+  Bar,
+  BarChart,
   CartesianGrid,
-  Line,
-  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -39,21 +39,20 @@ export function DailyExpenseChart({
   return (
     <div aria-hidden="true" className="mt-4 h-[15rem] w-full">
       <ResponsiveContainer height="100%" width="100%">
-        <LineChart data={points} margin={{ top: 12, right: 8, left: 0, bottom: 0 }}>
+        <BarChart data={points} margin={{ top: 12, right: 8, left: 0, bottom: 0 }}>
           <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" vertical={false} />
           <XAxis dataKey="label" fontSize={12} stroke="var(--muted)" tickLine={false} interval="preserveStartEnd" />
           <YAxis domain={[0, 1]} hide />
-          <Tooltip content={<ExactTooltip />} cursor={{ stroke: "var(--muted)" }} />
-          <Line
+          <Tooltip content={<ExactTooltip />} cursor={{ fill: "var(--surface-subtle)" }} />
+          <Bar
             dataKey="plot"
-            dot={false}
+            fill="var(--expense)"
             animationDuration={600}
             animationEasing="ease-out"
-            stroke="var(--primary-600)"
-            strokeWidth={2.5}
-            type="monotone"
+            maxBarSize={28}
+            radius={[6, 6, 0, 0]}
           />
-        </LineChart>
+        </BarChart>
       </ResponsiveContainer>
     </div>
   );

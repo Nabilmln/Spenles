@@ -30,7 +30,7 @@ describe("mobile dashboard cards", () => {
     expect(screen.queryByRole("link", { name: /Ekspor|Notifikasi/ })).not.toBeInTheDocument();
   });
 
-  it("renders both chart canvases and the monthly total without a mobile add button", () => {
+  it("renders both chart canvases and the income and expense totals without a mobile add button", () => {
     render(
       <MonthlyExpenseCard
         currentMonth="2026-08"
@@ -40,32 +40,18 @@ describe("mobile dashboard cards", () => {
         prevMonth="2026-07"
         recentPoints={[point("2026-08-03", "0", 0)]}
         totalExpense={50000n}
+        totalIncome={100000n}
       />,
     );
 
     expect(screen.getByRole("button", { name: "Agustus 2026" })).toBeInTheDocument();
+    expect(screen.getByText("Pendapatan")).toBeInTheDocument();
+    expect(screen.getByText("Pengeluaran")).toBeInTheDocument();
+    expect(screen.getByText(/Rp\s*100\.000/u)).toBeInTheDocument();
     expect(screen.getByText(/Rp\s*50\.000/u)).toBeInTheDocument();
     expect(screen.getAllByTestId("daily-chart")).toHaveLength(2);
     expect(screen.getByRole("group", { name: "Pilih bulan" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Tambah transaksi" })).not.toBeInTheDocument();
-  });
-
-  it("shows a subtle zero-data message when the recent four days have no expense", () => {
-    render(
-      <MonthlyExpenseCard
-        currentMonth="2026-08"
-        monthLabel="Agustus 2026"
-        monthPoints={[point("2026-08-01", "0", 0)]}
-        nextMonth="2026-09"
-        prevMonth="2026-07"
-        recentPoints={[point("2026-08-03", "0", 0)]}
-        totalExpense={0n}
-      />,
-    );
-
-    expect(
-      screen.getByText("Belum ada pengeluaran dalam 4 hari terakhir."),
-    ).toBeInTheDocument();
   });
 
   it("groups rolling three-day transactions and links to the list", () => {
