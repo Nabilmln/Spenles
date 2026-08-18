@@ -446,7 +446,7 @@ export function SplitBillEditor({
           <Button
             type="submit"
             form="split-bill-draft-form"
-            variant="secondary"
+            variant="blue"
             disabled={pending}
             className="flex-1"
           >

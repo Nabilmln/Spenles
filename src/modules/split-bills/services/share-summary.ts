@@ -9,6 +9,9 @@ const paymentLabel = {
 export function createSplitBillShareSummary(input: {
   merchantName: string;
   billDate: string;
+  subtotalAmount: string;
+  taxAmount: string;
+  taxBps: number;
   finalAmount: string;
   participants: {
     name: string;
@@ -42,7 +45,13 @@ export function createSplitBillShareSummary(input: {
       `${participant.name}:${paymentSuffix}\n${itemLines.join("\n")}\nTotal: ${formatIdr(participant.finalAmount)}`,
     );
   }
-  lines.push(`Total Tagihan: ${formatIdr(input.finalAmount)}`);
+  lines.push(
+    [
+      `Subtotal: ${formatIdr(input.subtotalAmount)}`,
+      `Pajak ${input.taxBps / 100}%: ${formatIdr(input.taxAmount)}`,
+      `Total: ${formatIdr(input.finalAmount)}`,
+    ].join("\n"),
+  );
   lines.push("Dihitung dengan Spenles.");
   return lines.join("\n\n");
 }

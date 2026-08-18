@@ -7,6 +7,9 @@ describe("split-bill share summary", () => {
     const text = createSplitBillShareSummary({
       merchantName: "Warung",
       billDate: "2026-08-05",
+      subtotalAmount: "20000",
+      taxAmount: "1600",
+      taxBps: 1000,
       finalAmount: "21600",
       participants: [
         {
@@ -34,7 +37,9 @@ describe("split-bill share summary", () => {
     expect(text).toContain("Bima: (Lunas)");
     expect(text).toContain("• Coto Makassar —");
     expect(text).toContain("• Es Teh —");
-    expect(text).toContain(`Total Tagihan: ${formatIdr("21600")}`);
+    expect(text).toContain(`Subtotal: ${formatIdr("20000")}`);
+    expect(text).toContain(`Pajak 10%: ${formatIdr("1600")}`);
+    expect(text).toContain(`Total: ${formatIdr("21600")}`);
     expect(text).not.toContain("user_id");
     expect(text).not.toContain("00000000-");
   });

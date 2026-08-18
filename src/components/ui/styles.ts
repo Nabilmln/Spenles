@@ -3,7 +3,7 @@ export const buttonBase =
 
 export const buttonVariant: Record<string, string> = {
   primary: "bg-primary-600 text-white hover:enabled:bg-primary-700 shadow-[0_2px_12px_rgb(240_90_36/25%)] hover:enabled:shadow-[0_4px_18px_rgb(240_90_36/35%)]",
-  secondary: "border-primary-100 bg-primary-50 text-primary-600 hover:enabled:bg-primary-100",
+  secondary: "border-primary-600 bg-primary-600 text-white hover:enabled:bg-primary-700",
   blue: "bg-blue-600 text-white hover:enabled:bg-blue-700 shadow-[0_2px_12px_rgb(37_99_235/25%)] hover:enabled:shadow-[0_4px_18px_rgb(37_99_235/35%)]",
   ghost: "bg-transparent text-foreground hover:enabled:bg-surface-subtle",
   danger: "bg-expense text-white hover:enabled:opacity-90",

@@ -328,6 +328,11 @@ export async function createShareSummaryAction(
     text: createSplitBillShareSummary({
       merchantName: detail.calculation.merchantNameSnapshot,
       billDate: detail.calculation.billDateSnapshot,
+      subtotalAmount: detail.calculation.subtotalAmount.toString(),
+      taxAmount: (
+        detail.calculation.itemTaxAmount + detail.calculation.billTaxAmount
+      ).toString(),
+      taxBps: detail.calculation.billTaxBps,
       finalAmount: detail.calculation.finalAmount.toString(),
       participants: detail.participantResults.map((participant) => ({
         name: participant.nameSnapshot,

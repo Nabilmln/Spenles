@@ -225,10 +225,10 @@ describe("split-bill history row deletion", () => {
     ).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Hapus Warung" }));
-    expect(screen.getByText("Hapus tagihan ini?")).toBeInTheDocument();
+    expect(screen.getByText("Hapus tagihan?")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Batal" }));
-    expect(screen.queryByText("Hapus tagihan ini?")).not.toBeInTheDocument();
+    expect(screen.queryByText("Hapus tagihan?")).not.toBeInTheDocument();
   });
 
   it("submits the owned bill id when deletion is confirmed from history", () => {
