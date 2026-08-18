@@ -298,7 +298,7 @@ export function SplitBillEditor({
                         required
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-[.7rem] max-[540px]:grid-cols-1">
+                    <div className="grid grid-cols-2 gap-[.7rem]">
                       <div className={fieldClass}>
                         <label htmlFor={`item-quantity-${item.id}`}>Jumlah</label>
                         <Input
