@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { ReceiptText } from "lucide-react";
+import { ChevronLeft, ChevronRight, ReceiptText } from "lucide-react";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { buttonClass, cardClass } from "@/components/ui/styles";
 import { formatDayDateLong } from "@/lib/dates/format-id";
 import { formatIdr } from "@/lib/money/format-idr";
+import { cn } from "@/lib/utils";
 import type { SplitBillFilters } from "../schemas/split-bill-filters";
 import { SplitBillDeleteButton } from "./split-bill-delete-button";
 
@@ -35,6 +36,26 @@ function pageHref(filters: SplitBillFilters, page: number) {
   });
   return `/split-bills?${params}`;
 }
+
+function pageItems(current: number, total: number) {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, index) => index + 1);
+  }
+  const items: (number | "ellipsis-start" | "ellipsis-end")[] = [1];
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+  if (start > 2) items.push("ellipsis-start");
+  for (let page = start; page <= end; page += 1) items.push(page);
+  if (end < total - 1) items.push("ellipsis-end");
+  items.push(total);
+  return items;
+}
+
+const pageLinkClass =
+  "grid h-[2.6rem] min-w-[2.6rem] place-items-center rounded-[.65rem] border border-border bg-surface text-foreground transition-colors hover:bg-surface-subtle";
+
+const pageLinkActive =
+  "border-primary-600 bg-primary-600 text-white hover:bg-primary-700";
 
 export function SplitBillList({
   rows,
@@ -116,24 +137,54 @@ export function SplitBillList({
           </article>
         ))}
       </div>
-      <nav className="flex items-center justify-between gap-4 text-muted max-[540px]:flex-col max-[540px]:items-stretch max-[540px]:text-center" aria-label="Paginasi tagihan patungan">
-        <Link
-          className={`${buttonClass("secondary")} ${filters.page <= 1 ? "pointer-events-none opacity-[.45]" : ""}`}
-          aria-disabled={filters.page <= 1}
-          href={pageHref(filters, Math.max(1, filters.page - 1))}
-        >
-          Sebelumnya
-        </Link>
-        <span>
+      <nav aria-label="Paginasi tagihan patungan" className="flex flex-col items-center gap-2">
+        <div className="flex items-center gap-1">
+          <Link
+            className={cn(
+              pageLinkClass,
+              filters.page <= 1 && "pointer-events-none opacity-[.45]",
+            )}
+            aria-disabled={filters.page <= 1}
+            aria-label="Halaman sebelumnya"
+            href={pageHref(filters, Math.max(1, filters.page - 1))}
+          >
+            <ChevronLeft size={18} aria-hidden="true" />
+          </Link>
+          {pageItems(filters.page, totalPages).map((item) =>
+            typeof item === "number" ? (
+              <Link
+                aria-current={item === filters.page ? "page" : undefined}
+                className={cn(pageLinkClass, item === filters.page && pageLinkActive)}
+                href={pageHref(filters, item)}
+                key={item}
+              >
+                {item}
+              </Link>
+            ) : (
+              <span
+                aria-hidden="true"
+                className="px-[.25rem] text-muted"
+                key={item}
+              >
+                …
+              </span>
+            ),
+          )}
+          <Link
+            className={cn(
+              pageLinkClass,
+              filters.page >= totalPages && "pointer-events-none opacity-[.45]",
+            )}
+            aria-disabled={filters.page >= totalPages}
+            aria-label="Halaman berikutnya"
+            href={pageHref(filters, Math.min(totalPages, filters.page + 1))}
+          >
+            <ChevronRight size={18} aria-hidden="true" />
+          </Link>
+        </div>
+        <p className="m-0 text-[.76rem] text-muted">
           Halaman {filters.page} dari {totalPages} · {total} tagihan
-        </span>
-        <Link
-          className={`${buttonClass("secondary")} ${filters.page >= totalPages ? "pointer-events-none opacity-[.45]" : ""}`}
-          aria-disabled={filters.page >= totalPages}
-          href={pageHref(filters, Math.min(totalPages, filters.page + 1))}
-        >
-          Berikutnya
-        </Link>
+        </p>
       </nav>
     </>
   );
