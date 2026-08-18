@@ -20,7 +20,7 @@ export function ShareSummaryButton({ billId }: { billId: string }) {
     if (!state.text) return;
     navigator.clipboard
       .writeText(state.text)
-      .then(() => setCopyStatus("Hasil Split Bill berhasil disalin."))
+      .then(() => setCopyStatus("Copied!"))
       .catch(() => setCopyStatus("Salin teks secara manual dari kotak ringkasan."));
   }, [state.text]);
 
@@ -32,7 +32,7 @@ export function ShareSummaryButton({ billId }: { billId: string }) {
         Sertakan status pembayaran
       </label>
       <Button type="submit" disabled={pending}>
-        {pending ? "Membuat..." : "Salin Hasil Split Bill"}
+        {pending ? "Menyalin..." : "Copy"}
       </Button>
       {copyStatus ? <p role="status">{copyStatus}</p> : null}
       {state.text ? (

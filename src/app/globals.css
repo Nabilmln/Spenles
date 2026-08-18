@@ -149,3 +149,7 @@ strong, b, h1, h2, h3, h4, h5, h6 { font-weight: 500; }
   to { opacity: 1; transform: translateX(0); }
 }
 .toast-in { animation: toast-in .25s ease-out both; }
+
+input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }

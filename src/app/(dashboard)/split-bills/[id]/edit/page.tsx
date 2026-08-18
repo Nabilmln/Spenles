@@ -2,8 +2,8 @@ import { notFound, redirect } from "next/navigation";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { entityHeadingClass, pageDescriptionClass, pageHeadingCopyClass, pageStackClass } from "@/components/ui/styles";
 import {
+  createAndFinalizeSplitBillAction,
   deleteSplitBillDraftAction,
-  finalizeSplitBillAction,
   getOwnedSplitBillSource,
   serializeOwnedSplitBillSource,
   SplitBillEditor,
@@ -32,7 +32,7 @@ export default async function EditSplitBillPage({
       </div>
       <SplitBillEditor
         action={updateSplitBillAction}
-        finalizeAction={finalizeSplitBillAction}
+        finalizeAction={createAndFinalizeSplitBillAction}
         deleteAction={deleteSplitBillDraftAction}
         initial={serializeOwnedSplitBillSource(source)}
       />

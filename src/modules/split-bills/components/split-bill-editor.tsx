@@ -1,19 +1,18 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
+import { Trash2, X } from "lucide-react";
 import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
 import {
   cardClass,
   eyebrowClass,
   fieldClass,
+  iconButtonClass,
   textareaClass,
 } from "@/components/ui/styles";
-import type {
-  SplitBillActionState,
-} from "../actions/split-bill-actions";
+import type { SplitBillActionState } from "../actions/split-bill-actions";
 import { calculateSplitBill } from "../services/calculator";
 import type { SplitBillDiscountMode } from "../types/split-bill";
 import { CalculationSummary } from "./calculation-summary";
@@ -45,6 +44,14 @@ type EditorAction = (
   formData: FormData,
 ) => Promise<SplitBillActionState>;
 
+type ItemDraft = {
+  id: string;
+  name: string;
+  quantity: number;
+  unitPrice: string;
+  participantIds: string[];
+};
+
 function createId() {
   return crypto.randomUUID();
 }
@@ -55,6 +62,11 @@ function percentageToBasisPoints(value: string) {
   const whole = Number(match[1] || "0");
   const fraction = Number((match[2] ?? "").padEnd(2, "0"));
   return whole * 100 + fraction;
+}
+
+function percentageLabel(bps: number) {
+  const value = bps / 100;
+  return Number.isInteger(value) ? String(value) : value.toFixed(2);
 }
 
 export function SplitBillEditor({
@@ -76,71 +88,63 @@ export function SplitBillEditor({
   const [merchantName, setMerchantName] = useState(initial.merchantName);
   const [billDate, setBillDate] = useState(initial.billDate);
   const [note, setNote] = useState(initial.note);
-  const [discountMode, setDiscountMode] = useState(initial.discountMode);
-  const [fixedDiscountAmount, setFixedDiscountAmount] = useState(
-    initial.fixedDiscountAmount,
-  );
-  const [discountBps, setDiscountBps] = useState(initial.discountBps);
-  const [billTaxBps, setBillTaxBps] = useState(initial.billTaxBps);
-  const [serviceChargeBps, setServiceChargeBps] = useState(
-    initial.serviceChargeBps,
+  const [taxPercent, setTaxPercent] = useState(
+    percentageLabel(initial.billTaxBps),
   );
   const [participants, setParticipants] = useState(initial.participants);
-  const [items, setItems] = useState(initial.items);
+  const [items, setItems] = useState<ItemDraft[]>(
+    initial.items.map(({ id, name, quantity, unitPrice, participantIds }) => ({
+      id,
+      name,
+      quantity,
+      unitPrice,
+      participantIds,
+    })),
+  );
   const revision = state.revision ?? initial.revision ?? 0;
+  const billTaxBps = percentageToBasisPoints(taxPercent);
 
   const payload = {
     merchantName,
     billDate,
     note,
-    discountMode,
-    fixedDiscountAmount:
-      discountMode === "fixed" ? fixedDiscountAmount || "0" : "0",
-    discountBps: discountMode === "percentage" ? discountBps : 0,
+    discountMode: "none" as SplitBillDiscountMode,
+    fixedDiscountAmount: "0",
+    discountBps: 0,
     billTaxBps,
-    serviceChargeBps,
+    serviceChargeBps: 0,
     participants,
-    items,
+    items: items.map((item) => ({ ...item, itemTaxBps: 0 })),
   };
 
-  const preview = useMemo(() => {
-    try {
-      return calculateSplitBill({
-        discountMode,
-        fixedDiscountAmount:
-          discountMode === "fixed" ? BigInt(fixedDiscountAmount || "0") : 0n,
-        discountBps: discountMode === "percentage" ? discountBps : 0,
-        billTaxBps,
-        serviceChargeBps,
-        participants: participants.map((participant, index) => ({
-          ...participant,
-          position: index + 1,
+  let preview: ReturnType<typeof calculateSplitBill> | null = null;
+  try {
+    preview = calculateSplitBill({
+      discountMode: "none",
+      fixedDiscountAmount: 0n,
+      discountBps: 0,
+      billTaxBps,
+      serviceChargeBps: 0,
+      participants: participants.map((participant, index) => ({
+        ...participant,
+        position: index + 1,
+      })),
+      items: items.map((item, index) => ({
+        id: item.id,
+        name: item.name,
+        position: index + 1,
+        quantity: Number(item.quantity),
+        unitPrice: BigInt(item.unitPrice || "0"),
+        itemTaxBps: 0,
+        assignments: item.participantIds.map((participantId) => ({
+          id: `${item.id}:${participantId}`,
+          participantId,
         })),
-        items: items.map((item, index) => ({
-          id: item.id,
-          name: item.name,
-          position: index + 1,
-          quantity: Number(item.quantity),
-          unitPrice: BigInt(item.unitPrice || "0"),
-          itemTaxBps: Number(item.itemTaxBps),
-          assignments: item.participantIds.map((participantId) => ({
-            id: `${item.id}:${participantId}`,
-            participantId,
-          })),
-        })),
-      });
-    } catch {
-      return null;
-    }
-  }, [
-    billTaxBps,
-    discountBps,
-    discountMode,
-    fixedDiscountAmount,
-    items,
-    participants,
-    serviceChargeBps,
-  ]);
+      })),
+    });
+  } catch {
+    preview = null;
+  }
 
   function addParticipant() {
     setParticipants((current) => [
@@ -170,10 +174,13 @@ export function SplitBillEditor({
         name: "",
         quantity: 1,
         unitPrice: "",
-        itemTaxBps: 0,
         participantIds: [],
       },
     ]);
+  }
+
+  function removeItem(id: string) {
+    setItems((current) => current.filter((row) => row.id !== id));
   }
 
   return (
@@ -182,6 +189,7 @@ export function SplitBillEditor({
         <form
           action={formAction}
           className={`${cardClass} grid gap-4`}
+          id="split-bill-draft-form"
         >
           <input type="hidden" name="payload" value={JSON.stringify(payload)} />
           {initial.id ? (
@@ -194,6 +202,209 @@ export function SplitBillEditor({
               />
             </>
           ) : null}
+
+          <fieldset className="m-0 grid min-w-0 gap-4 rounded-[.8rem] border border-border p-4">
+            <legend className="px-[.35rem] font-medium">Peserta</legend>
+            {participants.length === 0 ? (
+              <p
+                className="m-0 rounded-[.7rem] bg-surface-subtle p-[.75rem] text-[.82rem] text-muted"
+                role="status"
+              >
+                Tambahkan peserta terlebih dahulu untuk mulai memasukkan item.
+              </p>
+            ) : (
+              <div className="grid gap-[.8rem]">
+                {participants.map((participant, index) => (
+                  <div className="flex items-end gap-[.7rem]" key={participant.id}>
+                    <div className={`${fieldClass} min-w-0 flex-1`}>
+                      <label htmlFor={`participant-${participant.id}`}>
+                        Peserta {index + 1}
+                      </label>
+                      <Input
+                        id={`participant-${participant.id}`}
+                        value={participant.name}
+                        onChange={(event) =>
+                          setParticipants((current) =>
+                            current.map((row) =>
+                              row.id === participant.id
+                                ? { ...row, name: event.target.value }
+                                : row,
+                            ),
+                          )
+                        }
+                        maxLength={100}
+                        required
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      className={iconButtonClass}
+                      aria-label={`Hapus peserta ${index + 1}`}
+                      disabled={participants.length === 1}
+                      onClick={() => removeParticipant(participant.id)}
+                    >
+                      <X size={17} aria-hidden="true" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={addParticipant}
+              className="justify-self-start max-[540px]:w-full"
+            >
+              Tambah peserta
+            </Button>
+          </fieldset>
+
+          {participants.length > 0 ? (
+            <fieldset className="m-0 grid min-w-0 gap-4 rounded-[.8rem] border border-border p-4">
+              <legend className="px-[.35rem] font-medium">Item</legend>
+              <div className="grid gap-[.8rem]">
+                {items.map((item, itemIndex) => (
+                  <article
+                    className="grid gap-[.85rem] rounded-[.8rem] border border-border bg-surface-subtle p-4"
+                    key={item.id}
+                  >
+                    <div className="flex items-center justify-between gap-4">
+                      <h3 className="m-0 text-[.95rem]">Item {itemIndex + 1}</h3>
+                      <button
+                        type="button"
+                        className={`${iconButtonClass} text-expense hover:bg-[color-mix(in_srgb,var(--expense)_10%,transparent)]`}
+                        aria-label="Hapus item"
+                        disabled={items.length === 1}
+                        onClick={() => removeItem(item.id)}
+                      >
+                        <Trash2 size={17} aria-hidden="true" />
+                      </button>
+                    </div>
+                    <div className={`${fieldClass} min-w-0`}>
+                      <label htmlFor={`item-name-${item.id}`}>Nama item</label>
+                      <Input
+                        id={`item-name-${item.id}`}
+                        value={item.name}
+                        onChange={(event) =>
+                          setItems((current) =>
+                            current.map((row) =>
+                              row.id === item.id
+                                ? { ...row, name: event.target.value }
+                                : row,
+                            ),
+                          )
+                        }
+                        maxLength={120}
+                        required
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-[.7rem] max-[540px]:grid-cols-1">
+                      <div className={fieldClass}>
+                        <label htmlFor={`item-quantity-${item.id}`}>Jumlah</label>
+                        <Input
+                          id={`item-quantity-${item.id}`}
+                          type="number"
+                          min="1"
+                          max="10000"
+                          step="1"
+                          value={item.quantity}
+                          onChange={(event) =>
+                            setItems((current) =>
+                              current.map((row) =>
+                                row.id === item.id
+                                  ? { ...row, quantity: Number(event.target.value) }
+                                  : row,
+                              ),
+                            )
+                          }
+                          required
+                        />
+                      </div>
+                      <div className={fieldClass}>
+                        <label htmlFor={`item-price-${item.id}`}>
+                          Harga satuan
+                        </label>
+                        <Input
+                          id={`item-price-${item.id}`}
+                          type="number"
+                          min="1"
+                          step="1"
+                          inputMode="numeric"
+                          value={item.unitPrice}
+                          onChange={(event) =>
+                            setItems((current) =>
+                              current.map((row) =>
+                                row.id === item.id
+                                  ? { ...row, unitPrice: event.target.value }
+                                  : row,
+                              ),
+                            )
+                          }
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-x-4 gap-y-2">
+                      {participants.map((participant) => (
+                        <label
+                          key={participant.id}
+                          className="inline-flex items-center gap-[.4rem] text-[.82rem]"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={item.participantIds.includes(participant.id)}
+                            onChange={(event) =>
+                              setItems((current) =>
+                                current.map((row) =>
+                                  row.id !== item.id
+                                    ? row
+                                    : {
+                                        ...row,
+                                        participantIds: event.target.checked
+                                          ? [...row.participantIds, participant.id]
+                                          : row.participantIds.filter(
+                                              (id) => id !== participant.id,
+                                            ),
+                                      },
+                                ),
+                              )
+                            }
+                          />
+                          {participant.name || "Peserta tanpa nama"}
+                        </label>
+                      ))}
+                    </div>
+                  </article>
+                ))}
+              </div>
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={addItem}
+                className="justify-self-start max-[540px]:w-full"
+              >
+                Tambah item
+              </Button>
+            </fieldset>
+          ) : null}
+
+          <fieldset className="m-0 grid min-w-0 gap-4 rounded-[.8rem] border border-border p-4">
+            <legend className="px-[.35rem] font-medium">Pajak</legend>
+            <div className={`${fieldClass} max-w-[12rem]`}>
+              <label htmlFor="split-tax">Pajak (%)</label>
+              <Input
+                id="split-tax"
+                type="number"
+                min="0"
+                max="100"
+                step="any"
+                inputMode="decimal"
+                value={taxPercent}
+                onChange={(event) => setTaxPercent(event.target.value)}
+              />
+            </div>
+          </fieldset>
+
           <fieldset className="m-0 grid min-w-0 gap-4 rounded-[.8rem] border border-border p-4">
             <legend className="px-[.35rem] font-medium">Informasi tagihan</legend>
             <div className="grid grid-cols-2 gap-4 max-[540px]:grid-cols-1">
@@ -229,320 +440,41 @@ export function SplitBillEditor({
               />
             </div>
           </fieldset>
-
-          <fieldset className="m-0 grid min-w-0 gap-4 rounded-[.8rem] border border-border p-4">
-            <div className="flex items-center justify-between gap-4 max-[540px]:flex-col max-[540px]:items-stretch">
-              <legend className="px-[.35rem] font-medium">Peserta</legend>
-              <Button type="button" variant="secondary" onClick={addParticipant}>
-                Tambah peserta
-              </Button>
-            </div>
-            <div className="grid gap-[.8rem]">
-              {participants.map((participant, index) => (
-                <div className="grid grid-cols-[minmax(0,1fr)_auto] items-end gap-[.7rem] max-[540px]:grid-cols-1" key={participant.id}>
-                  <div className={fieldClass}>
-                    <label htmlFor={`participant-${participant.id}`}>
-                      Peserta {index + 1}
-                    </label>
-                    <Input
-                      id={`participant-${participant.id}`}
-                      value={participant.name}
-                      onChange={(event) =>
-                        setParticipants((current) =>
-                          current.map((row) =>
-                            row.id === participant.id
-                              ? { ...row, name: event.target.value }
-                              : row,
-                          ),
-                        )
-                      }
-                      maxLength={100}
-                      required
-                    />
-                  </div>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    disabled={participants.length === 1}
-                    onClick={() => removeParticipant(participant.id)}
-                    className="max-[540px]:justify-self-start"
-                  >
-                    Hapus
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </fieldset>
-
-          <fieldset className="m-0 grid min-w-0 gap-4 rounded-[.8rem] border border-border p-4">
-            <div className="flex items-center justify-between gap-4 max-[540px]:flex-col max-[540px]:items-stretch">
-              <legend className="px-[.35rem] font-medium">Item</legend>
-              <Button type="button" variant="secondary" onClick={addItem}>
-                Tambah item
-              </Button>
-            </div>
-            <div className="grid gap-[.8rem]">
-              {items.map((item, itemIndex) => (
-                <article className="grid gap-[.85rem] rounded-[.8rem] border border-border bg-surface-subtle p-4" key={item.id}>
-                  <div className="flex items-center justify-between gap-4 max-[540px]:flex-col max-[540px]:items-stretch">
-                    <h3 className="m-0 text-[.95rem]">Item {itemIndex + 1}</h3>
-                    <Button
-                      type="button"
-                      variant="secondary"
-                      disabled={items.length === 1}
-                      onClick={() =>
-                        setItems((current) =>
-                          current.filter((row) => row.id !== item.id),
-                        )
-                      }
-                      className="max-[540px]:justify-self-start"
-                    >
-                      Hapus
-                    </Button>
-                  </div>
-                  <div className="grid grid-cols-[minmax(10rem,1.5fr)_repeat(3,minmax(6.5rem,.7fr))] gap-[.7rem] max-[1100px]:grid-cols-2 max-[540px]:grid-cols-1">
-                    <div className={`${fieldClass} max-[1100px]:col-span-full max-[540px]:col-auto`}>
-                      <label htmlFor={`item-name-${item.id}`}>Nama item</label>
-                      <Input
-                        id={`item-name-${item.id}`}
-                        value={item.name}
-                        onChange={(event) =>
-                          setItems((current) =>
-                            current.map((row) =>
-                              row.id === item.id
-                                ? { ...row, name: event.target.value }
-                                : row,
-                            ),
-                          )
-                        }
-                        maxLength={120}
-                        required
-                      />
-                    </div>
-                    <div className={fieldClass}>
-                      <label htmlFor={`item-quantity-${item.id}`}>Jumlah</label>
-                      <Input
-                        id={`item-quantity-${item.id}`}
-                        type="number"
-                        min="1"
-                        max="10000"
-                        step="1"
-                        value={item.quantity}
-                        onChange={(event) =>
-                          setItems((current) =>
-                            current.map((row) =>
-                              row.id === item.id
-                                ? { ...row, quantity: Number(event.target.value) }
-                                : row,
-                            ),
-                          )
-                        }
-                        required
-                      />
-                    </div>
-                    <div className={fieldClass}>
-                      <label htmlFor={`item-price-${item.id}`}>
-                        Harga satuan
-                      </label>
-                      <Input
-                        id={`item-price-${item.id}`}
-                        type="number"
-                        min="1"
-                        step="1"
-                        inputMode="numeric"
-                        value={item.unitPrice}
-                        onChange={(event) =>
-                          setItems((current) =>
-                            current.map((row) =>
-                              row.id === item.id
-                                ? { ...row, unitPrice: event.target.value }
-                                : row,
-                            ),
-                          )
-                        }
-                        required
-                      />
-                    </div>
-                    <div className={fieldClass}>
-                      <label htmlFor={`item-tax-${item.id}`}>
-                        Pajak item (%)
-                      </label>
-                      <Input
-                        id={`item-tax-${item.id}`}
-                        type="number"
-                        min="0"
-                        max="100"
-                        step="0.01"
-                        value={item.itemTaxBps / 100}
-                        onChange={(event) =>
-                          setItems((current) =>
-                            current.map((row) =>
-                              row.id === item.id
-                                ? {
-                                    ...row,
-                                    itemTaxBps: percentageToBasisPoints(
-                                      event.target.value,
-                                    ),
-                                  }
-                                : row,
-                            ),
-                          )
-                        }
-                      />
-                    </div>
-                  </div>
-                  <fieldset className="m-0 flex flex-wrap gap-[.55rem_.9rem] rounded-[.7rem] border border-border p-[.75rem]">
-                    <legend className="px-[.35rem] text-[.78rem] font-medium text-muted">Dibebankan kepada</legend>
-                    {participants.map((participant) => (
-                      <label key={participant.id} className="inline-flex items-center gap-[.4rem] text-[.82rem]">
-                        <input
-                          type="checkbox"
-                          checked={item.participantIds.includes(participant.id)}
-                          onChange={(event) =>
-                            setItems((current) =>
-                              current.map((row) =>
-                                row.id !== item.id
-                                  ? row
-                                  : {
-                                      ...row,
-                                      participantIds: event.target.checked
-                                        ? [...row.participantIds, participant.id]
-                                        : row.participantIds.filter(
-                                            (id) => id !== participant.id,
-                                          ),
-                                    },
-                              ),
-                            )
-                          }
-                        />
-                        {participant.name || "Peserta tanpa nama"}
-                      </label>
-                    ))}
-                  </fieldset>
-                </article>
-              ))}
-            </div>
-          </fieldset>
-
-          <fieldset className="m-0 grid min-w-0 gap-4 rounded-[.8rem] border border-border p-4">
-            <legend className="px-[.35rem] font-medium">Diskon, pajak, dan layanan</legend>
-            <div className="grid grid-cols-2 gap-4 max-[540px]:grid-cols-1">
-              <div className={fieldClass}>
-                <label htmlFor="discount-mode">Mode diskon</label>
-                <Select
-                  id="discount-mode"
-                  value={discountMode}
-                  onChange={(event) =>
-                    setDiscountMode(
-                      event.target.value as SplitBillDiscountMode,
-                    )
-                  }
-                >
-                  <option value="none">Tanpa diskon</option>
-                  <option value="fixed">Diskon tetap</option>
-                  <option value="percentage">Diskon persentase</option>
-                </Select>
-              </div>
-              {discountMode === "fixed" ? (
-                <div className={fieldClass}>
-                  <label htmlFor="fixed-discount">Diskon tetap (IDR)</label>
-                  <Input
-                    id="fixed-discount"
-                    type="number"
-                    min="1"
-                    step="1"
-                    value={fixedDiscountAmount}
-                    onChange={(event) =>
-                      setFixedDiscountAmount(event.target.value)
-                    }
-                    required
-                  />
-                </div>
-              ) : null}
-              {discountMode === "percentage" ? (
-                <div className={fieldClass}>
-                  <label htmlFor="discount-percent">Diskon (%)</label>
-                  <Input
-                    id="discount-percent"
-                    type="number"
-                    min="0.01"
-                    max="100"
-                    step="0.01"
-                    value={discountBps / 100}
-                    onChange={(event) =>
-                      setDiscountBps(percentageToBasisPoints(event.target.value))
-                    }
-                    required
-                  />
-                </div>
-              ) : null}
-              <div className={fieldClass}>
-                <label htmlFor="bill-tax">Pajak tagihan (%)</label>
-                <Input
-                  id="bill-tax"
-                  type="number"
-                  min="0"
-                  max="100"
-                  step="0.01"
-                  value={billTaxBps / 100}
-                  onChange={(event) =>
-                    setBillTaxBps(percentageToBasisPoints(event.target.value))
-                  }
-                />
-              </div>
-              <div className={fieldClass}>
-                <label htmlFor="service-charge">Biaya layanan (%)</label>
-                <Input
-                  id="service-charge"
-                  type="number"
-                  min="0"
-                  max="100"
-                  step="0.01"
-                  value={serviceChargeBps / 100}
-                  onChange={(event) =>
-                    setServiceChargeBps(
-                      percentageToBasisPoints(event.target.value),
-                    )
-                  }
-                />
-              </div>
-            </div>
-            <small className="text-muted">
-              Pajak tagihan hanya berlaku pada item tanpa pajak item. Biaya
-              layanan dihitung dari subtotal setelah diskon.
-            </small>
-          </fieldset>
-
-          <Button type="submit" disabled={pending}>
-            {pending ? "Memverifikasi..." : initial.id ? "Simpan draft" : "Buat draft"}
-          </Button>
         </form>
 
-        {initial.id && finalizeAction ? (
-          <div className={`${cardClass} flex items-start justify-between gap-4 max-[540px]:flex-col max-[540px]:items-stretch`}>
-            <div>
-              <h2 className="m-0">Finalisasi tagihan</h2>
-              <p className="m-[.35rem_0_0] text-muted">
-                Setelah finalisasi, item dan perhitungan tidak dapat diedit atau
-                dibuka kembali.
-              </p>
-            </div>
-            <form action={finalizeFormAction} className="grid justify-items-end gap-[.4rem] max-[540px]:w-full max-[540px]:justify-items-stretch">
+        <div className="flex items-center gap-2">
+          <Button
+            type="submit"
+            form="split-bill-draft-form"
+            variant="secondary"
+            disabled={pending}
+            className="flex-1"
+          >
+            {pending ? "Menyimpan..." : "Draft"}
+          </Button>
+          <form action={finalizeFormAction} className="flex-1">
+            <input type="hidden" name="payload" value={JSON.stringify(payload)} />
+            {initial.id ? (
+              <>
+                <input type="hidden" name="id" value={initial.id} />
+                <input type="hidden" name="expectedRevision" value={revision} />
+              </>
+            ) : null}
+            <Button type="submit" disabled={finalizing} className="w-full">
+              {finalizing ? "Memfinalisasi..." : "Final"}
+            </Button>
+          </form>
+          {initial.id && deleteAction ? (
+            <form action={deleteAction} className="flex-1">
               <input type="hidden" name="id" value={initial.id} />
-              <input type="hidden" name="expectedRevision" value={revision} />
-              <Button type="submit" disabled={finalizing}>
-                {finalizing ? "Memfinalisasi..." : "Finalisasi"}
+              <Button type="submit" variant="danger" className="w-full">
+                Hapus
               </Button>
             </form>
-            {deleteAction ? (
-              <form action={deleteAction} className="grid justify-items-end gap-[.4rem] max-[540px]:w-full max-[540px]:justify-items-stretch">
-                <input type="hidden" name="id" value={initial.id} />
-                <Button type="submit" variant="danger">Hapus draft</Button>
-              </form>
-            ) : null}
-          </div>
-        ) : null}
+          ) : null}
+        </div>
       </div>
+
       {preview ? (
         <CalculationSummary result={preview} />
       ) : (
@@ -550,8 +482,8 @@ export function SplitBillEditor({
           <p className={eyebrowClass}>Pratinjau lokal</p>
           <h2 className="m-0">Lengkapi tagihan</h2>
           <p className="text-muted">
-            Isi nominal positif dan tetapkan setiap item ke setidaknya satu
-            peserta.
+            Tambahkan peserta, lalu isi item dan tetapkan setiap item ke
+            setidaknya satu peserta.
           </p>
         </aside>
       )}

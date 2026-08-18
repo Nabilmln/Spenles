@@ -80,6 +80,67 @@ export async function createSplitBillAction(
   redirect(`/split-bills/${createdId}/edit`);
 }
 
+export async function createAndFinalizeSplitBillAction(
+  _state: SplitBillActionState,
+  formData: FormData,
+): Promise<SplitBillActionState> {
+  const user = await requireSessionUser();
+  const id = splitBillIdSchema.safeParse(formData.get("id"));
+  const revision = splitBillRevisionSchema.safeParse(
+    formData.get("expectedRevision"),
+  );
+  const parsed = parseSplitBillPayload(formData.get("payload"));
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Data tagihan tidak valid." };
+  }
+  const prepared = prepareSplitBillDraft(parsed.data);
+  try {
+    calculateSplitBill(preparedCalculationInput(prepared));
+    let billId: string;
+    let billRevision: number;
+    let createdFresh = false;
+    if (id.success && revision.success) {
+      const updated = await replaceOwnedSplitBillDraft(
+        db,
+        user.id,
+        id.data,
+        revision.data,
+        prepared,
+      );
+      if (!updated) {
+        return {
+          error:
+            "Draft berubah di sesi lain atau sudah tidak dapat diedit. Muat ulang halaman.",
+        };
+      }
+      billId = id.data;
+      billRevision = updated.revision;
+    } else {
+      const created = await createOwnedSplitBillDraft(db, user.id, prepared);
+      if (!created) return { error: "Tagihan belum dapat diproses." };
+      billId = created.id;
+      billRevision = created.revision;
+      createdFresh = true;
+    }
+    const result = await finalizeOwnedSplitBill(
+      db,
+      user.id,
+      billId,
+      billRevision,
+    );
+    if (!result.ok) {
+      if (createdFresh) {
+        await deleteOwnedSplitBillDraft(db, user.id, billId).catch(() => {});
+      }
+      return { error: "Finalisasi tidak berhasil. Coba lagi." };
+    }
+    revalidatePath("/split-bills");
+    redirect(`/split-bills/${billId}`);
+  } catch (error) {
+    return { error: calculationMessage(error) };
+  }
+}
+
 export async function updateSplitBillAction(
   _state: SplitBillActionState,
   formData: FormData,
