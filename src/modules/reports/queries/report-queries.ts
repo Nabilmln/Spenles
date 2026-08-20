@@ -133,6 +133,19 @@ async function getTotals(
   };
 }
 
+async function getTransactionCount(
+  userId: string,
+  filters: ExportFilters,
+  database: Database,
+) {
+  const result = await database.execute<{ count: string }>(sql`
+    select count(*)::text as count
+    from transactions as owned_transaction
+    where ${transactionFilterSql(userId, filters)}
+  `);
+  return Number(result.rows[0]?.count ?? "0");
+}
+
 async function getMonths(
   userId: string,
   filters: ReportFilters,
@@ -451,17 +464,25 @@ export async function getFinancialReport(
   database: Database = db,
   generatedAt = new Date(),
 ): Promise<FinancialReport> {
-  const [summary, months, categories, accounts, budgets, detailRows] =
-    await Promise.all([
-      getTotals(userId, filters, database),
-      getMonths(userId, filters, database),
-      getCategories(userId, filters, database),
-      getAccounts(userId, filters, database),
-      getBudgets(userId, filters, database),
-      filters.includeDetails
-        ? getTransactions(userId, filters, REPORT_DETAIL_LIMIT + 1, database)
-        : Promise.resolve([]),
-    ]);
+  const [
+    summary,
+    months,
+    categories,
+    accounts,
+    budgets,
+    detailRows,
+    transactionCount,
+  ] = await Promise.all([
+    getTotals(userId, filters, database),
+    getMonths(userId, filters, database),
+    getCategories(userId, filters, database),
+    getAccounts(userId, filters, database),
+    getBudgets(userId, filters, database),
+    filters.includeDetails
+      ? getTransactions(userId, filters, REPORT_DETAIL_LIMIT + 1, database)
+      : Promise.resolve([]),
+    getTransactionCount(userId, filters, database),
+  ]);
 
   if (detailRows.length > REPORT_DETAIL_LIMIT) {
     throw new ExportLimitError(
@@ -478,6 +499,7 @@ export async function getFinancialReport(
     accounts,
     budgets,
     transactions: detailRows,
+    transactionCount,
   };
 }
 

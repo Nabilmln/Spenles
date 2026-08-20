@@ -39,16 +39,9 @@ export async function renderFinancialReportPdf(
   renderer: typeof renderToBuffer = renderToBuffer,
 ) {
   registerFonts();
-  let buffer: Buffer;
-  try {
-    buffer = await renderer(
-      <FinancialReportDocument report={report} includeCharts />,
-    );
-  } catch {
-    buffer = await renderer(
-      <FinancialReportDocument report={report} includeCharts={false} />,
-    );
-  }
+  const buffer = await renderer(
+    <FinancialReportDocument report={report} />,
+  );
   if (buffer.byteLength > EXPORT_MAX_BYTES) {
     throw new ExportLimitError("Ukuran laporan PDF melebihi batas 3,5 MB.");
   }

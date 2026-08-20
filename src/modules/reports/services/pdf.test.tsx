@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import type { FinancialReport } from "../types";
 import { renderFinancialReportPdf } from "./pdf";
 
@@ -38,6 +38,7 @@ function report(): FinancialReport {
     ],
     budgets: [],
     transactions: [],
+    transactionCount: 2,
   };
 }
 
@@ -54,17 +55,8 @@ describe("PDF report rendering", () => {
     value.months = [];
     value.categories = [];
     value.accounts = [];
+    value.transactionCount = 0;
     const result = await renderFinancialReportPdf(value);
     expect(result.subarray(0, 5).toString()).toBe("%PDF-");
   }, 20_000);
-
-  it("falls back to the table-only document when chart rendering fails", async () => {
-    const renderer = vi
-      .fn()
-      .mockRejectedValueOnce(new Error("chart failed"))
-      .mockResolvedValueOnce(Buffer.from("%PDF-fallback"));
-    const result = await renderFinancialReportPdf(report(), renderer);
-    expect(renderer).toHaveBeenCalledTimes(2);
-    expect(result.toString()).toBe("%PDF-fallback");
-  });
 });
