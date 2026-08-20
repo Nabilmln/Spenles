@@ -8,6 +8,7 @@ export * from "./components/category-expense-card";
 export * from "./components/category-expense-chart";
 export * from "./components/chart-shell";
 export * from "./components/daily-expense-chart";
+export * from "./components/dashboard-account-card";
 export * from "./components/dashboard-empty-state";
 export * from "./components/dashboard-feature-grid";
 export * from "./components/dashboard-section-error";

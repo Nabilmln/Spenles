@@ -14,6 +14,7 @@ import {
   compareFinancialValue,
   countCalendarDays,
   currentJakartaMonthKey,
+  DashboardAccountCard,
   DashboardFeatureGrid,
   DashboardSectionError,
   FinancialOverview,
@@ -39,7 +40,11 @@ import {
   type DashboardSearchParams,
   type IncomeExpensePoint,
 } from "@/modules/dashboard";
-import { getPeriodSavings, getSavingsBalanceTotal } from "@/modules/accounts";
+import {
+  getPeriodSavings,
+  getSavingsBalanceTotal,
+  listOwnedAccounts,
+} from "@/modules/accounts";
 import { getProfile } from "@/modules/profiles";
 
 export const dynamic = "force-dynamic";
@@ -116,6 +121,7 @@ export default async function DashboardPage({
     totalsResult,
     savingsResult,
     savingsBalanceResult,
+    accountsResult,
   ] = await Promise.allSettled([
     getDailyExpenseAggregates(user.id, cardInterval),
     getDailyExpenseAggregates(user.id, recentInterval),
@@ -128,6 +134,7 @@ export default async function DashboardPage({
     getSelectedAndPreviousTotals(user.id, cardInterval, prevCardInterval),
     getPeriodSavings(user.id, cardInterval.start, cardInterval.end),
     getSavingsBalanceTotal(user.id),
+    listOwnedAccounts(user.id),
   ]);
 
   const daily = isFulfilled(dailyResult)
@@ -207,6 +214,9 @@ export default async function DashboardPage({
   const savingsBalance = isFulfilled(savingsBalanceResult)
     ? savingsBalanceResult.value
     : 0n;
+  const activeAccounts = isFulfilled(accountsResult)
+    ? accountsResult.value.filter((account) => account.status === "active")
+    : [];
 
   return (
     <div>
@@ -306,15 +316,18 @@ export default async function DashboardPage({
           </div>
 
           <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
-            {totals ? (
-              <AverageSpendingCard
-                value={averageDaily}
-                changeBps={averageComparison.changeBps}
-                previousLabel={prevCardInterval.label}
-              />
-            ) : (
-              <DashboardSectionError title="Rata-rata harian belum tersedia" />
-            )}
+            <div className="grid gap-3">
+              {totals ? (
+                <AverageSpendingCard
+                  value={averageDaily}
+                  changeBps={averageComparison.changeBps}
+                  previousLabel={prevCardInterval.label}
+                />
+              ) : (
+                <DashboardSectionError title="Rata-rata harian belum tersedia" />
+              )}
+              <DashboardAccountCard rows={activeAccounts} />
+            </div>
           </div>
         </div>
       </div>
