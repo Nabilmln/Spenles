@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { DailyExpensePoint } from "../types/dashboard";
 import { DashboardFeatureGrid } from "./dashboard-feature-grid";
 import { MonthlyExpenseCard } from "./monthly-expense-card";
-import { RollingThreeDayTransactions } from "./rolling-three-day-transactions";
+import { RecentActivityCard } from "./recent-activity";
 
 afterEach(cleanup);
 
@@ -54,10 +54,10 @@ describe("mobile dashboard cards", () => {
     expect(screen.queryByRole("link", { name: "Tambah transaksi" })).not.toBeInTheDocument();
   });
 
-  it("groups rolling three-day transactions and links to the list", () => {
+  it("groups recent activity transactions and links to the list", () => {
     const now = new Date();
     render(
-      <RollingThreeDayTransactions
+      <RecentActivityCard
         rows={[
           {
             id: "t1",
@@ -81,7 +81,7 @@ describe("mobile dashboard cards", () => {
       />,
     );
 
-    expect(screen.getByRole("heading", { name: "3 hari terakhir" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Transaksi terbaru" })).toBeInTheDocument();
     expect(screen.getByText("Hari ini")).toBeInTheDocument();
     expect(screen.getByText("Kemarin")).toBeInTheDocument();
     expect(screen.getByText("Makan siang")).toBeInTheDocument();
@@ -92,10 +92,10 @@ describe("mobile dashboard cards", () => {
   });
 
   it("renders an empty state when there are no recent transactions", () => {
-    render(<RollingThreeDayTransactions rows={[]} />);
+    render(<RecentActivityCard rows={[]} />);
 
     expect(
-      screen.getByText("Belum ada transaksi dalam 3 hari terakhir."),
+      screen.getByText("Belum ada transaksi tercatat."),
     ).toBeInTheDocument();
   });
 });

@@ -22,7 +22,7 @@ import {
   getDailyExpenseAggregates,
   getDailyIncomeExpenseAggregates,
   getMonthlyAggregates,
-  getRollingThreeDayTransactions,
+  getRecentActivityTransactions,
   getSelectedAndPreviousTotals,
   getWeeklyIncomeExpenseAggregates,
   IncomeVsExpenseComparison,
@@ -31,7 +31,7 @@ import {
   lastWeeksJakartaInterval,
   MonthlyExpenseCard,
   monthIntervalForKey,
-  RollingThreeDayTransactions,
+  RecentActivityCard,
   safeParseDashboardFilters,
   SavingsSummaryCard,
   shiftMonthKey,
@@ -107,7 +107,7 @@ export default async function DashboardPage({
   const [
     dailyResult,
     recentResult,
-    rollingResult,
+    activityResult,
     monthlyResult,
     cashFlowDailyResult,
     cashFlowWeeklyResult,
@@ -119,7 +119,7 @@ export default async function DashboardPage({
   ] = await Promise.allSettled([
     getDailyExpenseAggregates(user.id, cardInterval),
     getDailyExpenseAggregates(user.id, recentInterval),
-    getRollingThreeDayTransactions(user.id),
+    getRecentActivityTransactions(user.id),
     getMonthlyAggregates(user.id, cardInterval),
     getDailyIncomeExpenseAggregates(user.id, cashFlowDaysInterval),
     getWeeklyIncomeExpenseAggregates(user.id, cashFlowWeeksInterval),
@@ -287,8 +287,8 @@ export default async function DashboardPage({
           </div>
 
           <div className="min-w-0 min-[861px]:col-span-4 min-[1024px]:col-span-4">
-            {isFulfilled(rollingResult) ? (
-              <RollingThreeDayTransactions rows={rollingResult.value} />
+            {isFulfilled(activityResult) ? (
+              <RecentActivityCard rows={activityResult.value} />
             ) : (
               <DashboardSectionError title="Aktivitas terbaru belum tersedia" />
             )}

@@ -358,25 +358,10 @@ export async function getWeeklyIncomeExpenseAggregates(
   }));
 }
 
-const ROLLING_JAKARTA_OFFSET_MS = 7 * 60 * 60 * 1000;
-
-function jakartaDayStart(daysAgo: number) {
-  const shifted = new Date(Date.now() + ROLLING_JAKARTA_OFFSET_MS);
-  return new Date(
-    Date.UTC(
-      shifted.getUTCFullYear(),
-      shifted.getUTCMonth(),
-      shifted.getUTCDate() - daysAgo,
-    ) - ROLLING_JAKARTA_OFFSET_MS,
-  );
-}
-
-export async function getRollingThreeDayTransactions(
+export async function getRecentActivityTransactions(
   authenticatedUserId: string,
   database: Database = db,
 ) {
-  const start = jakartaDayStart(2);
-  const end = jakartaDayStart(-1);
   const result = await database.execute<RecentRow>(sql`
     select
       owned_transaction.id,
@@ -395,11 +380,10 @@ export async function getRollingThreeDayTransactions(
       and owned_category.user_id = ${authenticatedUserId}
     where owned_transaction.user_id = ${authenticatedUserId}
       and owned_transaction.deleted_at is null
-      and owned_transaction.transaction_at >= ${start}
-      and owned_transaction.transaction_at < ${end}
     order by
       owned_transaction.transaction_at desc,
       owned_transaction.id desc
+    limit 5
   `);
 
   return result.rows.map(

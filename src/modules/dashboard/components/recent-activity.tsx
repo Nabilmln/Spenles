@@ -7,6 +7,7 @@ import type { RecentDashboardTransaction } from "../types/dashboard";
 
 const JAKARTA_OFFSET_MS = 7 * 60 * 60 * 1000;
 const DAY_MS = 86_400_000;
+const MAX_ITEMS = 5;
 const pad = (value: number) => String(value).padStart(2, "0");
 
 function jakartaDayKey(date: Date) {
@@ -37,14 +38,14 @@ function groupLabel(today: string, day: string) {
   }).format(new Date(`${day}T00:00:00Z`));
 }
 
-export function RollingThreeDayTransactions({
+export function RecentActivityCard({
   rows,
 }: {
   rows: RecentDashboardTransaction[];
 }) {
   const today = todayKey();
   const groups = new Map<string, RecentDashboardTransaction[]>();
-  for (const row of rows) {
+  for (const row of rows.slice(0, MAX_ITEMS)) {
     const day = jakartaDayKey(row.transactionAt);
     const bucket = groups.get(day) ?? [];
     bucket.push(row);
@@ -53,11 +54,11 @@ export function RollingThreeDayTransactions({
   const orderedDays = [...groups.keys()].sort().reverse();
 
   return (
-    <section aria-labelledby="rolling-three-day-title" className={`${cardClass} flex h-full flex-col shadow-none`}>
+    <section aria-labelledby="recent-activity-title" className={`${cardClass} flex h-full flex-col shadow-none`}>
       <div className="mb-[.65rem] flex items-start justify-between gap-3 max-[540px]:flex-col">
         <div>
           <p className={eyebrowClass}>Aktivitas terbaru</p>
-          <h2 id="rolling-three-day-title" className="m-0 text-[.95rem] tracking-[-.02em]">3 hari terakhir</h2>
+          <h2 id="recent-activity-title" className="m-0 text-[.95rem] tracking-[-.02em]">Transaksi terbaru</h2>
         </div>
         <Link className={`${textLinkClass} inline-flex items-center gap-[.3rem] text-[.76rem]`} href="/transactions">
           <List size={14} aria-hidden="true" />
@@ -112,7 +113,7 @@ export function RollingThreeDayTransactions({
           className="mt-3 grid min-h-[4rem] flex-1 place-items-center rounded-[.65rem] border border-dashed border-border bg-surface-subtle p-3 text-center text-[.8rem] text-muted"
           role="status"
         >
-          Belum ada transaksi dalam 3 hari terakhir.
+          Belum ada transaksi tercatat.
         </div>
       )}
     </section>
