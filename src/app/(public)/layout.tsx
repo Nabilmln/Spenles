@@ -1,16 +1,54 @@
+import { CircleCheck } from "lucide-react";
 import { Brand } from "@/components/layout/brand";
+
+const highlights = [
+  "Pencatatan pemasukan dan pengeluaran",
+  "Anggaran bulanan dan laporan otomatis",
+  "Data keuangan yang tersimpan aman",
+];
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   return (
-    <main className="mx-auto grid min-h-screen max-w-[76rem] grid-cols-[minmax(16rem,_.9fr)_minmax(22rem,_1.1fr)] items-center gap-[clamp(2rem,7vw,7rem)] p-12 max-[860px]:grid-cols-1 max-[860px]:gap-8 max-[860px]:px-5 max-[860px]:py-8 max-[540px]:items-start max-[540px]:pt-5">
-      <div className="self-center max-[860px]:text-center">
-        <Brand />
-        <p className="mx-auto mt-[1.4rem] max-w-[25rem] text-muted text-[clamp(1.1rem,2vw,1.45rem)] leading-[1.6] max-[540px]:hidden">
-          Catat lebih tenang. Pahami keuangan lebih jelas.
-        </p>
-      </div>
-      <section className="w-full max-w-[31rem] justify-self-end rounded-[1.5rem] border border-border bg-surface p-[clamp(1.6rem,4vw,2.5rem)] shadow-card max-[860px]:justify-self-center max-[540px]:rounded-[1.1rem] max-[540px]:p-[1.35rem]">
-        {children}
+    <main className="grid min-h-screen min-[861px]:grid-cols-[minmax(18rem,_1fr)_minmax(22rem,_1.05fr)]">
+      <section className="relative hidden overflow-hidden bg-gradient-to-br from-primary-600 to-primary-700 min-[861px]:flex">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -left-20 -top-20 size-72 rounded-full bg-white/10"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute -bottom-28 -right-20 size-96 rounded-full bg-white/10"
+        />
+        <div className="relative z-[1] flex w-full flex-col justify-between gap-12 p-12 xl:p-16">
+          <Brand showLabel tone="light" />
+          <div className="grid gap-5">
+            <h1 className="m-0 max-w-[26rem] text-[clamp(1.9rem,3vw,2.7rem)] leading-[1.12] tracking-[-.03em] text-white">
+              Catat lebih tenang. Pahami keuangan lebih jelas.
+            </h1>
+            <ul className="m-0 grid gap-3 p-0">
+              {highlights.map((item) => (
+                <li
+                  className="flex items-center gap-2.5 text-[.92rem] text-white/90"
+                  key={item}
+                >
+                  <CircleCheck aria-hidden="true" size={17} className="shrink-0" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section className="flex items-start justify-center px-5 py-10 min-[861px]:items-center min-[861px]:px-10">
+        <div className="w-full max-w-[26rem]">
+          <div className="mb-7 min-[861px]:hidden">
+            <Brand showLabel />
+          </div>
+          <div className="rounded-[1.25rem] border border-border bg-surface p-[clamp(1.4rem,3vw,2rem)] shadow-card">
+            {children}
+          </div>
+        </div>
       </section>
     </main>
   );

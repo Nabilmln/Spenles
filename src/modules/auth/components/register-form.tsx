@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Lock, Mail, User } from "lucide-react";
 import { useToastActionState } from "@/components/ui/toast";
 import { Input } from "@/components/ui/input";
 import { FormMessage } from "@/components/ui/form-message";
@@ -16,32 +17,46 @@ export function RegisterForm() {
   const [state, action] = useToastActionState(registerAction, initialState);
 
   return (
-    <form action={action} className="grid gap-[1.25rem]" noValidate>
+    <form action={action} className="grid gap-[1.05rem]" noValidate>
       <div className={fieldClass}>
         <label htmlFor="name">Nama</label>
-        <Input
-          id="name"
-          name="name"
-          autoComplete="name"
-          aria-describedby="name-error"
-          aria-invalid={Boolean(state.fieldErrors?.name)}
-          required
-        />
+        <div className="relative">
+          <User
+            aria-hidden="true"
+            className="pointer-events-none absolute left-3 top-1/2 size-[1.05rem] -translate-y-1/2 text-muted"
+          />
+          <Input
+            id="name"
+            name="name"
+            autoComplete="name"
+            aria-describedby="name-error"
+            aria-invalid={Boolean(state.fieldErrors?.name)}
+            className="pl-10"
+            required
+          />
+        </div>
         <FormMessage id="name-error">
           {state.fieldErrors?.name?.[0]}
         </FormMessage>
       </div>
       <div className={fieldClass}>
         <label htmlFor="email">Email</label>
-        <Input
-          id="email"
-          name="email"
-          type="email"
-          autoComplete="email"
-          aria-describedby="email-error"
-          aria-invalid={Boolean(state.fieldErrors?.email)}
-          required
-        />
+        <div className="relative">
+          <Mail
+            aria-hidden="true"
+            className="pointer-events-none absolute left-3 top-1/2 size-[1.05rem] -translate-y-1/2 text-muted"
+          />
+          <Input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            aria-describedby="email-error"
+            aria-invalid={Boolean(state.fieldErrors?.email)}
+            className="pl-10"
+            required
+          />
+        </div>
         <FormMessage id="email-error">
           {state.fieldErrors?.email?.[0]}
         </FormMessage>
@@ -54,6 +69,7 @@ export function RegisterForm() {
           autoComplete="new-password"
           describedBy="password-error"
           invalid={Boolean(state.fieldErrors?.password)}
+          leadingIcon={<Lock />}
         />
         <FormMessage id="password-error">
           {state.fieldErrors?.password?.[0]}
@@ -67,13 +83,14 @@ export function RegisterForm() {
           autoComplete="new-password"
           describedBy="confirmation-error"
           invalid={Boolean(state.fieldErrors?.passwordConfirmation)}
+          leadingIcon={<Lock />}
         />
         <FormMessage id="confirmation-error">
           {state.fieldErrors?.passwordConfirmation?.[0]}
         </FormMessage>
       </div>
       <SubmitButton idleLabel="Buat akun" pendingLabel="Mendaftarkan..." />
-      <p className="mt-[.3rem] text-center text-[.88rem] text-muted">
+      <p className="m-0 mt-[.2rem] text-center text-[.88rem] text-muted">
         Sudah punya akun? <Link className={textLinkClass} href="/login">Masuk</Link>
       </p>
     </form>
