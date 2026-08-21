@@ -20,7 +20,7 @@ export function searchCondition(q: string) {
   );
 }
 
-function monthBounds(month: string) {
+export function monthBounds(month: string) {
   const [year, monthNumber] = month.split("-").map(Number);
   const start = jakartaDateBoundary(`${month}-01`)!;
   const nextYear = monthNumber === 12 ? year + 1 : year;
@@ -29,7 +29,7 @@ function monthBounds(month: string) {
   return { start, end };
 }
 
-function dateInterval(filters: TransactionFilters) {
+export function dateInterval(filters: TransactionFilters) {
   if (filters.month) {
     return monthBounds(filters.month);
   }

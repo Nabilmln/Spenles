@@ -3,6 +3,7 @@ import "server-only";
 import { sql, type SQL } from "drizzle-orm";
 import { db } from "@/db";
 import type { Database } from "@/db/types";
+import { conditionalSumSql } from "@/db/sql-helpers";
 import { formatRangeLong } from "@/lib/dates/format-id";
 import { calculateBudgetMetrics } from "@/modules/budgets/services/budget-metrics";
 import { inclusiveDayCount } from "@/modules/reports/lib/report-date";
@@ -116,10 +117,14 @@ async function getTotals(
 ) {
   const result = await database.execute<TotalsRow>(sql`
     select
-      coalesce(sum(owned_transaction.amount)
-        filter (where owned_transaction.type = 'income'), 0)::text as income,
-      coalesce(sum(owned_transaction.amount)
-        filter (where owned_transaction.type = 'expense'), 0)::text as expense
+      ${conditionalSumSql(
+        sql`owned_transaction.amount`,
+        sql`owned_transaction.type = 'income'`,
+      )} as income,
+      ${conditionalSumSql(
+        sql`owned_transaction.amount`,
+        sql`owned_transaction.type = 'expense'`,
+      )} as expense
     from transactions as owned_transaction
     where ${transactionFilterSql(userId, filters)}
   `);
@@ -157,10 +162,14 @@ async function getMonths(
         date_trunc('month', timezone('Asia/Jakarta', owned_transaction.transaction_at)),
         'YYYY-MM'
       ) as month,
-      coalesce(sum(owned_transaction.amount)
-        filter (where owned_transaction.type = 'income'), 0)::text as income,
-      coalesce(sum(owned_transaction.amount)
-        filter (where owned_transaction.type = 'expense'), 0)::text as expense
+      ${conditionalSumSql(
+        sql`owned_transaction.amount`,
+        sql`owned_transaction.type = 'income'`,
+      )} as income,
+      ${conditionalSumSql(
+        sql`owned_transaction.amount`,
+        sql`owned_transaction.type = 'expense'`,
+      )} as expense
     from transactions as owned_transaction
     where ${transactionFilterSql(userId, filters)}
     group by date_trunc(
@@ -190,10 +199,14 @@ async function getDays(
         timezone('Asia/Jakarta', owned_transaction.transaction_at),
         'YYYY-MM-DD'
       ) as day,
-      coalesce(sum(owned_transaction.amount)
-        filter (where owned_transaction.type = 'income'), 0)::text as income,
-      coalesce(sum(owned_transaction.amount)
-        filter (where owned_transaction.type = 'expense'), 0)::text as expense
+      ${conditionalSumSql(
+        sql`owned_transaction.amount`,
+        sql`owned_transaction.type = 'income'`,
+      )} as income,
+      ${conditionalSumSql(
+        sql`owned_transaction.amount`,
+        sql`owned_transaction.type = 'expense'`,
+      )} as expense
     from transactions as owned_transaction
     where ${transactionFilterSql(userId, filters)}
     group by to_char(

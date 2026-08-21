@@ -14,32 +14,11 @@ import {
 } from "drizzle-orm";
 import { db } from "@/db";
 import type { Database } from "@/db/types";
+import { conditionalSumSql } from "@/db/sql-helpers";
 import { accounts, categories, transactions } from "@/db/schema";
-import { jakartaDateBoundary } from "@/lib/dates/jakarta";
 import { getPeriodSavings } from "@/modules/accounts";
 import type { TransactionFilters } from "../schemas/transaction-filters";
-import { categoryJoin, conditions } from "./transaction-search";
-
-function monthBounds(month: string) {
-  const [year, monthNumber] = month.split("-").map(Number);
-  const start = jakartaDateBoundary(`${month}-01`)!;
-  const nextYear = monthNumber === 12 ? year + 1 : year;
-  const nextMonth = monthNumber === 12 ? 1 : monthNumber + 1;
-  const end = jakartaDateBoundary(`${nextYear}-${String(nextMonth).padStart(2, "0")}-01`)!;
-  return { start, end };
-}
-
-function dateInterval(filters: TransactionFilters) {
-  if (filters.month) {
-    return monthBounds(filters.month);
-  }
-  if (filters.from && filters.to) {
-    const start = jakartaDateBoundary(filters.from)!;
-    const end = new Date(jakartaDateBoundary(filters.to)!.getTime() + 86_400_000);
-    return { start, end };
-  }
-  return null;
-}
+import { categoryJoin, conditions, dateInterval } from "./transaction-search";
 
 export async function listTransactions(
   userId: string,
@@ -123,8 +102,14 @@ export async function getTransactionSummary(
   const [totals, savings] = await Promise.all([
     database
       .select({
-        income: sql<string>`coalesce(sum(${transactions.amount}) filter (where ${transactions.type} = 'income'), 0)::text`,
-        expense: sql<string>`coalesce(sum(${transactions.amount}) filter (where ${transactions.type} = 'expense'), 0)::text`,
+        income: conditionalSumSql(
+          sql`${transactions.amount}`,
+          sql`${transactions.type} = 'income'`,
+        ),
+        expense: conditionalSumSql(
+          sql`${transactions.amount}`,
+          sql`${transactions.type} = 'expense'`,
+        ),
       })
       .from(transactions)
       .where(

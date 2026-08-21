@@ -3,6 +3,7 @@ import "server-only";
 import { sql } from "drizzle-orm";
 import { db } from "@/db";
 import type { Database } from "@/db/types";
+import { conditionalSumSql } from "@/db/sql-helpers";
 import type {
   CategoryAggregate,
   DailyExpenseAggregate,
@@ -51,38 +52,22 @@ export async function getSelectedAndPreviousTotals(
 ) {
   const result = await database.execute<TotalsRow>(sql`
     select
-      coalesce(
-        sum(amount) filter (
-          where type = 'income'
-            and transaction_at >= ${selected.start}
-            and transaction_at < ${selected.end}
-        ),
-        0
-      )::text as selected_income,
-      coalesce(
-        sum(amount) filter (
-          where type = 'expense'
-            and transaction_at >= ${selected.start}
-            and transaction_at < ${selected.end}
-        ),
-        0
-      )::text as selected_expense,
-      coalesce(
-        sum(amount) filter (
-          where type = 'income'
-            and transaction_at >= ${previous.start}
-            and transaction_at < ${previous.end}
-        ),
-        0
-      )::text as previous_income,
-      coalesce(
-        sum(amount) filter (
-          where type = 'expense'
-            and transaction_at >= ${previous.start}
-            and transaction_at < ${previous.end}
-        ),
-        0
-      )::text as previous_expense
+      ${conditionalSumSql(
+        sql`amount`,
+        sql`type = 'income' and transaction_at >= ${selected.start} and transaction_at < ${selected.end}`,
+      )} as selected_income,
+      ${conditionalSumSql(
+        sql`amount`,
+        sql`type = 'expense' and transaction_at >= ${selected.start} and transaction_at < ${selected.end}`,
+      )} as selected_expense,
+      ${conditionalSumSql(
+        sql`amount`,
+        sql`type = 'income' and transaction_at >= ${previous.start} and transaction_at < ${previous.end}`,
+      )} as previous_income,
+      ${conditionalSumSql(
+        sql`amount`,
+        sql`type = 'expense' and transaction_at >= ${previous.start} and transaction_at < ${previous.end}`,
+      )} as previous_expense
     from transactions
     where user_id = ${authenticatedUserId}
       and deleted_at is null
@@ -116,8 +101,14 @@ export async function getMonthlyAggregates(
         date_trunc('month', timezone('Asia/Jakarta', transaction_at)),
         'YYYY-MM'
       ) as period,
-      coalesce(sum(amount) filter (where type = 'income'), 0)::text as income,
-      coalesce(sum(amount) filter (where type = 'expense'), 0)::text as expense
+      ${conditionalSumSql(
+        sql`amount`,
+        sql`type = 'income'`,
+      )} as income,
+      ${conditionalSumSql(
+        sql`amount`,
+        sql`type = 'expense'`,
+      )} as expense
     from transactions
     where user_id = ${authenticatedUserId}
       and deleted_at is null
@@ -188,9 +179,9 @@ export async function getCategoryExpenseAggregates(
   );
 }
 
-export async function getRecentDashboardTransactions(
+export async function getRecentActivityTransactions(
   authenticatedUserId: string,
-  interval: DateInterval,
+  interval: DateInterval | null = null,
   database: Database = db,
 ) {
   const result = await database.execute<RecentRow>(sql`
@@ -211,8 +202,10 @@ export async function getRecentDashboardTransactions(
       and owned_category.user_id = ${authenticatedUserId}
     where owned_transaction.user_id = ${authenticatedUserId}
       and owned_transaction.deleted_at is null
-      and owned_transaction.transaction_at >= ${interval.start}
-      and owned_transaction.transaction_at < ${interval.end}
+      ${interval
+        ? sql`and owned_transaction.transaction_at >= ${interval.start}
+            and owned_transaction.transaction_at < ${interval.end}`
+        : sql``}
     order by
       owned_transaction.transaction_at desc,
       owned_transaction.id desc
@@ -287,14 +280,14 @@ export async function getDailyIncomeExpenseAggregates(
         timezone('Asia/Jakarta', transaction_at),
         'YYYY-MM-DD'
       ) as period,
-      coalesce(
-        sum(amount) filter (where type = 'income'),
-        0
-      )::text as income,
-      coalesce(
-        sum(amount) filter (where type = 'expense'),
-        0
-      )::text as expense
+      ${conditionalSumSql(
+        sql`amount`,
+        sql`type = 'income'`,
+      )} as income,
+      ${conditionalSumSql(
+        sql`amount`,
+        sql`type = 'expense'`,
+      )} as expense
     from transactions
     where user_id = ${authenticatedUserId}
       and deleted_at is null
@@ -328,14 +321,14 @@ export async function getWeeklyIncomeExpenseAggregates(
         date_trunc('week', timezone('Asia/Jakarta', transaction_at)),
         'YYYY-MM-DD'
       ) as period,
-      coalesce(
-        sum(amount) filter (where type = 'income'),
-        0
-      )::text as income,
-      coalesce(
-        sum(amount) filter (where type = 'expense'),
-        0
-      )::text as expense
+      ${conditionalSumSql(
+        sql`amount`,
+        sql`type = 'income'`,
+      )} as income,
+      ${conditionalSumSql(
+        sql`amount`,
+        sql`type = 'expense'`,
+      )} as expense
     from transactions
     where user_id = ${authenticatedUserId}
       and deleted_at is null
@@ -358,43 +351,10 @@ export async function getWeeklyIncomeExpenseAggregates(
   }));
 }
 
-export async function getRecentActivityTransactions(
+export async function getRecentDashboardTransactions(
   authenticatedUserId: string,
+  interval: DateInterval,
   database: Database = db,
 ) {
-  const result = await database.execute<RecentRow>(sql`
-    select
-      owned_transaction.id,
-      owned_transaction.type,
-      owned_transaction.amount::text as amount,
-      owned_transaction.transaction_at,
-      owned_transaction.note,
-      owned_account.name as account_name,
-      owned_category.name as category_name
-    from transactions as owned_transaction
-    inner join accounts as owned_account
-      on owned_account.id = owned_transaction.account_id
-      and owned_account.user_id = ${authenticatedUserId}
-    inner join categories as owned_category
-      on owned_category.id = owned_transaction.category_id
-      and owned_category.user_id = ${authenticatedUserId}
-    where owned_transaction.user_id = ${authenticatedUserId}
-      and owned_transaction.deleted_at is null
-    order by
-      owned_transaction.transaction_at desc,
-      owned_transaction.id desc
-    limit 5
-  `);
-
-  return result.rows.map(
-    (row): RecentDashboardTransaction => ({
-      id: row.id,
-      type: row.type,
-      amountIdr: row.amount,
-      transactionAt: new Date(row.transaction_at),
-      note: row.note,
-      accountName: row.account_name,
-      categoryName: row.category_name,
-    }),
-  );
+  return getRecentActivityTransactions(authenticatedUserId, interval, database);
 }
