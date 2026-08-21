@@ -26,9 +26,10 @@ import {
   createOwnedBudget,
   setOwnedBudgetStatus,
 } from "@/modules/budgets/services/budget-mutations";
-import { listOwnedBudgets } from "@/modules/budgets/queries/budgets";
+import { listOwnedBudgets, getOwnedBudget } from "@/modules/budgets/queries/budgets";
 import { createOwnedTransaction, softDeleteOwnedTransaction } from "@/modules/transactions/services/transaction-mutations";
 import { createOwnedRecurringRule } from "@/modules/recurring-transactions/services/recurring-mutations";
+import { getOwnedRecurringRule } from "@/modules/recurring-transactions/queries/recurring-rules";
 import { generateOccurrence } from "@/modules/recurring-transactions/services/generate-occurrence";
 import { getSelectedAndPreviousTotals } from "@/modules/dashboard/queries/dashboard-queries";
 import { getTestDatabase } from "@/test/database";
@@ -42,6 +43,7 @@ describe("Phase 04 financial domains", () => {
   let foreignAccount: string;
   let expenseCategory: string;
   let incomeCategory: string;
+  let foreignExpenseCategory: string;
 
   beforeAll(async () => {
     await ensureUserFoundationWithDatabase(database, {
@@ -68,6 +70,14 @@ describe("Phase 04 financial domains", () => {
       .where(eq(categories.userId, userA));
     expenseCategory = ownedCategories.find((item) => item.type === "expense")!.id;
     incomeCategory = ownedCategories.find((item) => item.type === "income")!.id;
+
+    const foreignCategories = await database
+      .select({ id: categories.id, type: categories.type })
+      .from(categories)
+      .where(eq(categories.userId, userB));
+    foreignExpenseCategory = foreignCategories.find(
+      (item) => item.type === "expense",
+    )!.id;
   });
 
   it("has the Phase 04 enums, indexes, and constraints", async () => {
@@ -308,6 +318,46 @@ describe("Phase 04 financial domains", () => {
     ).resolves.toEqual({ ok: false, reason: "duplicate" });
   });
 
+  it("returns only the requested budget owned by the user", async () => {
+    const month = "2029-03-01";
+    const owned = await createOwnedBudget(database, userA, {
+      categoryId: expenseCategory,
+      budgetMonth: month,
+      amount: 150_000n,
+      warningThresholdBps: 8000,
+    });
+    expect(owned.ok).toBe(true);
+
+    const own = await getOwnedBudget(userA, owned.ok ? owned.id : "", database);
+    expect(own?.id).toBe(owned.ok ? owned.id : "");
+    expect(own?.amount).toBe("150000");
+
+    const foreign = await createOwnedBudget(database, userB, {
+      categoryId: foreignExpenseCategory,
+      budgetMonth: month,
+      amount: 99_000n,
+      warningThresholdBps: 8000,
+    });
+    expect(foreign.ok).toBe(true);
+
+    const crossRead = await getOwnedBudget(
+      userA,
+      foreign.ok ? foreign.id : "",
+      database,
+    );
+    expect(crossRead).toBeNull();
+
+    const reverse = await getOwnedBudget(
+      userB,
+      owned.ok ? owned.id : "",
+      database,
+    );
+    expect(reverse).toBeNull();
+
+    expect(getOwnedBudget(userA, "00000000-0000-4000-8000-000000000000", database))
+      .resolves.toBeNull();
+  });
+
   it("rejects a recurring rule with another user's account", async () => {
     await expect(
       createOwnedRecurringRule(database, userA, {
@@ -321,6 +371,52 @@ describe("Phase 04 financial domains", () => {
         nextOccurrenceAt: new Date("2026-08-02T00:00:00Z"),
         note: null,
       }),
+    ).resolves.toBeNull();
+  });
+
+  it("returns only the requested recurring rule owned by the user", async () => {
+    const owned = await createOwnedRecurringRule(database, userA, {
+      type: "income",
+      amount: 444n,
+      accountId: accountA,
+      categoryId: incomeCategory,
+      frequency: "daily",
+      startAt: new Date("2026-09-01T00:00:00Z"),
+      endDate: null,
+      nextOccurrenceAt: new Date("2026-09-02T00:00:00Z"),
+      note: "Milik A",
+    });
+    expect(owned).not.toBeNull();
+
+    const own = await getOwnedRecurringRule(userA, owned!.id, database);
+    expect(own?.id).toBe(owned!.id);
+    expect(own?.amount).toBe("444");
+
+    const foreign = await createOwnedRecurringRule(database, userB, {
+      type: "expense",
+      amount: 55n,
+      accountId: foreignAccount,
+      categoryId: foreignExpenseCategory,
+      frequency: "weekly",
+      startAt: new Date("2026-09-01T00:00:00Z"),
+      endDate: null,
+      nextOccurrenceAt: new Date("2026-09-08T00:00:00Z"),
+      note: "Milik B",
+    });
+    expect(foreign).not.toBeNull();
+
+    const crossRead = await getOwnedRecurringRule(userA, foreign!.id, database);
+    expect(crossRead).toBeNull();
+
+    const reverse = await getOwnedRecurringRule(userB, owned!.id, database);
+    expect(reverse).toBeNull();
+
+    expect(
+      getOwnedRecurringRule(
+        userA,
+        "00000000-0000-4000-8000-000000000000",
+        database,
+      ),
     ).resolves.toBeNull();
   });
 

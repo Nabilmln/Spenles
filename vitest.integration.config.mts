@@ -10,6 +10,11 @@ export default defineConfig({
     fileParallelism: false,
     testTimeout: 30_000,
     hookTimeout: 30_000,
+    server: {
+      deps: {
+        inline: ["@neondatabase/auth"],
+      },
+    },
   },
   resolve: {
     alias: {
