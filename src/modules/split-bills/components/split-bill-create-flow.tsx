@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/styles";
 import type { SplitBillActionState } from "../actions/split-bill-actions";
 import { calculateSplitBill } from "../services/calculator";
+import { createId, percentageToBasisPoints } from "../services/draft-utils";
 import type {
   SplitBillCalculationResult,
   SplitBillDiscountMode,
@@ -25,18 +26,6 @@ type ParticipantDraft = {
   name: string;
   items: { id: string; name: string; unitPrice: string }[];
 };
-
-function createId() {
-  return crypto.randomUUID();
-}
-
-function percentageToBasisPoints(value: string) {
-  const match = /^(\d{0,3})(?:\.(\d{0,2}))?$/u.exec(value);
-  if (!match) return 0;
-  const whole = Number(match[1] || "0");
-  const fraction = Number((match[2] ?? "").padEnd(2, "0"));
-  return whole * 100 + fraction;
-}
 
 function emptyParticipant(): ParticipantDraft {
   return { id: createId(), name: "", items: [] };

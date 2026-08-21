@@ -98,8 +98,37 @@ export async function getOwnedBudget(
   budgetId: string,
   database: Database = db,
 ) {
-  const rows = await listOwnedBudgets(userId, database);
-  return rows.find((row) => row.id === budgetId) ?? null;
+  const result = await database.execute<RawBudget>(sql`
+    select
+      budget.id,
+      budget.category_id,
+      category.name as category_name,
+      budget.budget_month::text,
+      budget.amount::text,
+      budget.warning_threshold_bps,
+      budget.status,
+      coalesce((
+        select sum(transaction.amount)
+        from transactions as transaction
+        where transaction.user_id = ${userId}
+          and transaction.category_id = budget.category_id
+          and transaction.type = 'expense'
+          and transaction.deleted_at is null
+          and transaction.transaction_at >=
+            (budget.budget_month::timestamp at time zone 'Asia/Jakarta')
+          and transaction.transaction_at <
+            ((budget.budget_month + interval '1 month')::timestamp at time zone 'Asia/Jakarta')
+      ), 0)::text as usage
+    from budgets as budget
+    inner join categories as category
+      on category.id = budget.category_id
+      and category.user_id = ${userId}
+    where budget.user_id = ${userId}
+      and budget.id = ${budgetId}
+    limit 1
+  `);
+  const row = result.rows[0];
+  return row ? mapBudget(row) : null;
 }
 
 export async function listActiveExpenseCategoryOptions(

@@ -107,8 +107,36 @@ export async function getOwnedRecurringRule(
   ruleId: string,
   database: Database = db,
 ) {
-  const rows = await listOwnedRecurringRules(userId, database);
-  return rows.find((row) => row.id === ruleId) ?? null;
+  const result = await database.execute<RawRule>(sql`
+    select
+      rule.id,
+      rule.type,
+      rule.amount::text,
+      rule.account_id,
+      account.name as account_name,
+      rule.category_id,
+      category.name as category_name,
+      rule.frequency,
+      rule.start_at,
+      rule.end_date::text,
+      rule.next_occurrence_at,
+      rule.status,
+      rule.pause_reason,
+      rule.note,
+      rule.last_failure_code
+    from recurring_rules as rule
+    inner join accounts as account
+      on account.id = rule.account_id
+      and account.user_id = ${userId}
+    inner join categories as category
+      on category.id = rule.category_id
+      and category.user_id = ${userId}
+    where rule.user_id = ${userId}
+      and rule.id = ${ruleId}
+    limit 1
+  `);
+  const row = result.rows[0];
+  return row ? mapRule(row) : null;
 }
 
 export async function listRecurringOptions(
