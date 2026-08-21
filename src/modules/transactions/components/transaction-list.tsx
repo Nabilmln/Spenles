@@ -7,7 +7,7 @@ import { formatJakartaDateLong } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
 import { deleteTransactionAction } from "../actions/transaction-actions";
 
-export type TransactionRow = {
+type TransactionRow = {
   id: string;
   type: "income" | "expense";
   amount: string;

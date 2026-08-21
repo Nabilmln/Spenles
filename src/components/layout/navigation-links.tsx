@@ -41,7 +41,7 @@ const linkBase =
 const linkActive =
   "text-primary-600 bg-primary-50 dark:text-primary-700 dark:bg-primary-50";
 
-export function NavigationLinks({ mobile = false, collapsed = false }: { mobile?: boolean; collapsed?: boolean }) {
+export function NavigationLinks({ mobile = false }: { mobile?: boolean }) {
   const pathname = usePathname();
 
   if (mobile) {

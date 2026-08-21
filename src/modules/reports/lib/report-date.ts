@@ -1,19 +1,6 @@
-import {
-  formatDateLong,
-  formatDateLongNoYear,
-  formatMonthYearLabel,
-  formatRangeLong,
-} from "@/lib/dates/format-id";
+import { formatRangeLong } from "@/lib/dates/format-id";
 
 export * from "@/lib/dates/calendar";
-
-export function formatReportDay(value: string, includeYear: boolean) {
-  return includeYear ? formatDateLong(value) : formatDateLongNoYear(value);
-}
-
-export function formatReportMonthYear(year: number, month: number) {
-  return formatMonthYearLabel(year, month);
-}
 
 /**
  * Formats an inclusive ISO date range using full Indonesian month names.

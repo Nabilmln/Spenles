@@ -6,4 +6,3 @@ export {
   getReportCategoryBreakdown,
   listCategoryTransactions,
 } from "./queries/report-queries";
-export { ReportPeriodField } from "./components/report-period-field";

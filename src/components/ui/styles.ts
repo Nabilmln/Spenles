@@ -32,9 +32,6 @@ export const inputDisplayClass =
 
 export const formMessageClass = "m-0 text-[.82rem] text-expense";
 
-export const successMessageClass =
-  "m-0 rounded-[.65rem] bg-[color-mix(in_srgb,var(--income)_10%,transparent)] p-[.65rem_.8rem] text-[.84rem] font-medium text-income";
-
 export const emptyStateClass =
   "flex items-center gap-4 rounded-[.85rem] border border-dashed border-border bg-surface-subtle p-[clamp(1rem,3vw,1.75rem)] max-[540px]:items-start";
 

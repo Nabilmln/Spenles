@@ -186,39 +186,6 @@ export async function updateSplitBillAction(
   }
 }
 
-export async function finalizeSplitBillAction(
-  _state: SplitBillActionState,
-  formData: FormData,
-): Promise<SplitBillActionState> {
-  const user = await requireSessionUser();
-  const id = splitBillIdSchema.safeParse(formData.get("id"));
-  const revision = splitBillRevisionSchema.safeParse(
-    formData.get("expectedRevision"),
-  );
-  if (!id.success || !revision.success) {
-    return { error: "Identitas draft tidak valid." };
-  }
-  try {
-    const result = await finalizeOwnedSplitBill(
-      db,
-      user.id,
-      id.data,
-      revision.data,
-    );
-    if (!result.ok) {
-      return {
-        error:
-          "Draft berubah, sudah difinalisasi, atau tidak tersedia. Muat ulang halaman.",
-      };
-    }
-    revalidatePath("/split-bills");
-    revalidatePath(`/split-bills/${id.data}`);
-  } catch (error) {
-    return { error: calculationMessage(error) };
-  }
-  redirect(`/split-bills/${id.data}`);
-}
-
 export async function deleteSplitBillDraftAction(formData: FormData) {
   const user = await requireSessionUser();
   const id = splitBillIdSchema.safeParse(formData.get("id"));

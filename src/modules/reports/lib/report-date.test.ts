@@ -3,8 +3,6 @@ import {
   addCalendarDays,
   buildMonthGrid,
   daysInMonth,
-  formatReportDay,
-  formatReportMonthYear,
   formatReportRange,
   inclusiveDayCount,
   isReportDate,
@@ -40,12 +38,6 @@ describe("report date utilities", () => {
     expect(addCalendarDays("2026-01-31", 1)).toBe("2026-02-01");
     expect(addCalendarDays("2026-12-31", 1)).toBe("2027-01-01");
     expect(addCalendarDays("bad", 1)).toBeNull();
-  });
-
-  it("formats Indonesian short and long labels", () => {
-    expect(formatReportDay("2026-08-01", false)).toBe("1 Agustus");
-    expect(formatReportDay("2026-08-01", true)).toBe("1 Agustus 2026");
-    expect(formatReportMonthYear(2026, 8)).toBe("Agustus 2026");
   });
 
   it("formats compact ranges bilingual of year boundary", () => {

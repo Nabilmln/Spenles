@@ -6,7 +6,6 @@ import {
   SPLIT_BILL_MAX_PARTICIPANTS,
   SPLIT_BILL_MAX_QUANTITY,
 } from "../constants/limits";
-import type { SplitBillCalculationInput } from "../types/split-bill";
 
 const money = z
   .string()
@@ -146,34 +145,4 @@ export function parseSplitBillPayload(value: FormDataEntryValue | null) {
   } catch {
     return splitBillDraftSchema.safeParse(undefined);
   }
-}
-
-export function toCalculationInput(
-  draft: SplitBillDraftData,
-  assignmentIds: Map<string, string>,
-): SplitBillCalculationInput {
-  return {
-    discountMode: draft.discountMode,
-    fixedDiscountAmount: BigInt(draft.fixedDiscountAmount),
-    discountBps: draft.discountBps,
-    billTaxBps: draft.billTaxBps,
-    serviceChargeBps: draft.serviceChargeBps,
-    participants: draft.participants.map((participant, index) => ({
-      id: participant.id,
-      name: participant.name,
-      position: index + 1,
-    })),
-    items: draft.items.map((item, index) => ({
-      id: item.id,
-      name: item.name,
-      position: index + 1,
-      quantity: item.quantity,
-      unitPrice: BigInt(item.unitPrice),
-      itemTaxBps: item.itemTaxBps,
-      assignments: item.participantIds.map((participantId) => ({
-        id: assignmentIds.get(`${item.id}:${participantId}`)!,
-        participantId,
-      })),
-    })),
-  };
 }

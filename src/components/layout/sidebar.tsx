@@ -14,7 +14,7 @@ export function Sidebar() {
     >
       <div className="flex flex-col h-full p-[.75rem] pt-[1.1rem] overflow-hidden">
         <Brand />
-        <NavigationLinks collapsed />
+        <NavigationLinks />
         <div className="mt-auto pt-[.75rem] border-t border-border">
           <p className="m-0 text-[.72rem] text-muted opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-200 whitespace-nowrap px-[.5rem] pb-[.25rem]">
             Keuangan pribadi
