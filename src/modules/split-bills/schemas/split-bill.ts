@@ -1,4 +1,7 @@
 import { z } from "zod";
+import { isDateKey } from "@/lib/dates/calendar";
+import { moneyString } from "@/lib/money/schema";
+import { optionalNoteSchema } from "@/lib/validation/note";
 import {
   SPLIT_BILL_MAX_ASSIGNMENTS,
   SPLIT_BILL_MAX_ITEMS,
@@ -7,23 +10,14 @@ import {
   SPLIT_BILL_MAX_QUANTITY,
 } from "../constants/limits";
 
-const money = z
-  .string()
-  .trim()
-  .regex(/^\d+$/u, "Nominal harus berupa rupiah bulat.")
-  .refine((value) => BigInt(value) <= SPLIT_BILL_MAX_MONEY, {
-    message: "Nominal berada di luar rentang yang didukung.",
-  });
+const money = moneyString({
+  allowZero: true,
+  max: SPLIT_BILL_MAX_MONEY,
+  formatMessage: "Nominal harus berupa rupiah bulat.",
+  rangeMessage: "Nominal berada di luar rentang yang didukung.",
+});
 
 const basisPoints = z.coerce.number().int().min(0).max(10_000);
-
-function validDate(value: string) {
-  const parsed = new Date(`${value}T00:00:00.000Z`);
-  return (
-    !Number.isNaN(parsed.getTime()) &&
-    parsed.toISOString().slice(0, 10) === value
-  );
-}
 
 const participantSchema = z.object({
   id: z.uuid(),
@@ -47,12 +41,8 @@ export const splitBillDraftSchema = z
     billDate: z
       .string()
       .regex(/^\d{4}-\d{2}-\d{2}$/u)
-      .refine(validDate, "Tanggal tagihan tidak valid."),
-    note: z
-      .string()
-      .trim()
-      .max(500)
-      .transform((value) => value || null),
+      .refine(isDateKey, "Tanggal tagihan tidak valid."),
+    note: optionalNoteSchema,
     discountMode: z.enum(["none", "fixed", "percentage"]),
     fixedDiscountAmount: money,
     discountBps: basisPoints,

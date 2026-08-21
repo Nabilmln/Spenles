@@ -1,3 +1,6 @@
+export const JAKARTA_TIMEZONE = "Asia/Jakarta";
+export const JAKARTA_OFFSET_MS = 7 * 60 * 60 * 1000;
+
 const JAKARTA_OFFSET = "+07:00";
 
 export function parseJakartaDateTime(value: string) {
@@ -5,7 +8,7 @@ export function parseJakartaDateTime(value: string) {
   const result = new Date(`${value}:00${JAKARTA_OFFSET}`);
   if (Number.isNaN(result.getTime())) return null;
   const formatted = new Intl.DateTimeFormat("sv-SE", {
-    timeZone: "Asia/Jakarta",
+    timeZone: JAKARTA_TIMEZONE,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",
@@ -26,7 +29,7 @@ function pad(value: number) {
 }
 
 function jakartaClockParts() {
-  const shifted = new Date(Date.now() + 7 * 3_600_000);
+  const shifted = new Date(Date.now() + JAKARTA_OFFSET_MS);
   return {
     hour: pad(shifted.getUTCHours()),
     minute: pad(shifted.getUTCMinutes()),
@@ -40,7 +43,7 @@ export function formatJakartaDate(value: Date) {
 
 export function formatJakartaDateLong(value: Date) {
   return new Intl.DateTimeFormat("id-ID", {
-    timeZone: "Asia/Jakarta",
+    timeZone: JAKARTA_TIMEZONE,
     dateStyle: "long",
   }).format(value);
 }
@@ -62,7 +65,7 @@ export function preserveOrAttachNow(dateOnly: string, original?: Date): Date | n
 
 export function formatJakartaDateTime(value: Date) {
   return new Intl.DateTimeFormat("id-ID", {
-    timeZone: "Asia/Jakarta",
+    timeZone: JAKARTA_TIMEZONE,
     dateStyle: "long",
     timeStyle: "short",
   }).format(value);
@@ -70,7 +73,7 @@ export function formatJakartaDateTime(value: Date) {
 
 export function formatJakartaDateTimeInput(value: Date) {
   return new Intl.DateTimeFormat("sv-SE", {
-    timeZone: "Asia/Jakarta",
+    timeZone: JAKARTA_TIMEZONE,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",

@@ -3,7 +3,7 @@ import { ArrowDownLeft, ArrowUpRight, Pencil } from "lucide-react";
 import { notFound } from "next/navigation";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { buttonClass, cardClass, emptyStateClass, entityHeadingClass, iconButtonClass, narrowPageClass, pageDescriptionClass, pageHeadingCopyClass, pageHeadingRowClass, pageStackClass } from "@/components/ui/styles";
-import { formatJakartaDateLong } from "@/lib/dates/jakarta";
+import { formatJakartaDateLong, JAKARTA_OFFSET_MS } from "@/lib/dates/jakarta";
 import { formatRangeLong } from "@/lib/dates/format-id";
 import { formatIdr } from "@/lib/money/format-idr";
 import {
@@ -15,12 +15,12 @@ const DATE_KEY = /^\d{4}-\d{2}-\d{2}$/u;
 const CATEGORY_DETAIL_LIMIT = 200;
 
 function todayKey() {
-  const shifted = new Date(Date.now() + 7 * 60 * 60 * 1000);
+  const shifted = new Date(Date.now() + JAKARTA_OFFSET_MS);
   return `${shifted.getUTCFullYear()}-${String(shifted.getUTCMonth() + 1).padStart(2, "0")}-${String(shifted.getUTCDate()).padStart(2, "0")}`;
 }
 
 function currentMonthKey() {
-  const shifted = new Date(Date.now() + 7 * 60 * 60 * 1000);
+  const shifted = new Date(Date.now() + JAKARTA_OFFSET_MS);
   return `${shifted.getUTCFullYear()}-${String(shifted.getUTCMonth() + 1).padStart(2, "0")}`;
 }
 

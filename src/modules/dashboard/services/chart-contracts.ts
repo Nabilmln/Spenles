@@ -8,6 +8,7 @@ import type {
   MonthlyAggregate,
   MonthlyExpensePoint,
 } from "../types/dashboard";
+import { formatMonthYearLabel } from "@/lib/dates/format-id";
 import { fourDayJakartaInterval } from "./periods";
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -23,11 +24,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 function monthLabel(period: string) {
   const [year, month] = period.split("-").map(Number);
-  return new Intl.DateTimeFormat("id-ID", {
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(new Date(Date.UTC(year, month - 1, 1)));
+  return formatMonthYearLabel(year, month);
 }
 
 function normalizedPlot(value: bigint, maximum: bigint) {

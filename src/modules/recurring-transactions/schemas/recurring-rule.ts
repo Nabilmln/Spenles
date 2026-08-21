@@ -1,18 +1,16 @@
 import { z } from "zod";
-import { MAX_TRANSACTION_AMOUNT } from "@/lib/money/format-idr";
+import { moneyString } from "@/lib/money/schema";
+import { optionalNoteSchema } from "@/lib/validation/note";
 
 export const recurringRuleIdSchema = z.uuid();
 
 export const recurringRuleSchema = z
   .object({
     type: z.enum(["income", "expense"]),
-    amount: z
-      .string()
-      .trim()
-      .regex(/^[1-9]\d*$/u, "Jumlah harus berupa rupiah bulat positif.")
-      .refine((value) => /^[1-9]\d*$/u.test(value) && BigInt(value) <= MAX_TRANSACTION_AMOUNT, {
-        message: "Jumlah melewati batas yang didukung.",
-      }),
+    amount: moneyString({
+      formatMessage: "Jumlah harus berupa rupiah bulat positif.",
+      rangeMessage: "Jumlah melewati batas yang didukung.",
+    }),
     accountId: z.uuid("Akun tidak valid."),
     categoryId: z.uuid("Kategori tidak valid."),
     frequency: z.enum(["daily", "weekly", "monthly", "yearly"]),
@@ -25,11 +23,7 @@ export const recurringRuleSchema = z
         z.string().regex(/^\d{4}-\d{2}-\d{2}$/u, "Tanggal selesai tidak valid."),
       ])
       .transform((value) => value || null),
-    note: z
-      .string()
-      .trim()
-      .max(500, "Catatan maksimal 500 karakter.")
-      .transform((value) => value || null),
+    note: optionalNoteSchema,
   })
   .superRefine((value, context) => {
     if (value.endDate && value.endDate < value.startAt.slice(0, 10)) {

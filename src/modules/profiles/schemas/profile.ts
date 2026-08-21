@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { JAKARTA_TIMEZONE } from "@/lib/dates/jakarta";
 
 export const profileSchema = z.object({
   displayName: z
@@ -7,7 +8,7 @@ export const profileSchema = z.object({
     .min(2, "Nama minimal 2 karakter.")
     .max(100, "Nama maksimal 100 karakter."),
   defaultCurrency: z.literal("IDR"),
-  timezone: z.literal("Asia/Jakarta"),
+  timezone: z.literal(JAKARTA_TIMEZONE),
   theme: z.enum(["system", "light", "dark"]),
 });
 

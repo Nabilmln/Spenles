@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isDateKey } from "@/lib/dates/calendar";
 import type {
   DashboardFilters,
   DashboardSearchParams,
@@ -14,7 +15,7 @@ const presetSchema = z.enum([
 ]);
 
 const monthSchema = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/u);
-const dateSchema = z.string().refine(isValidDateKey, {
+const dateSchema = z.string().refine(isDateKey, {
   message: "Tanggal tidak valid.",
 });
 
@@ -72,17 +73,6 @@ function singleValue(value: string | string[] | undefined) {
   if (typeof value !== "string") return undefined;
   const trimmed = value.trim();
   return trimmed || undefined;
-}
-
-function isValidDateKey(value: string) {
-  if (!/^\d{4}-\d{2}-\d{2}$/u.test(value)) return false;
-  const [year, month, day] = value.split("-").map(Number);
-  const date = new Date(Date.UTC(year, month - 1, day));
-  return (
-    date.getUTCFullYear() === year &&
-    date.getUTCMonth() === month - 1 &&
-    date.getUTCDate() === day
-  );
 }
 
 function dateKeyToEpochDay(value: string) {

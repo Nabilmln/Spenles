@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { formatRangeLong } from "@/lib/dates/format-id";
+import { formatMonthYearLabel, formatRangeLong } from "@/lib/dates/format-id";
 import {
   REPORT_EARLIEST_DATE,
   REPORT_MAX_DAYS,
@@ -70,11 +70,7 @@ function buildInterval(
       `${nextYear}-${String(nextMonth).padStart(2, "0")}-01`,
       -1,
     )!;
-    label = new Intl.DateTimeFormat("id-ID", {
-      timeZone: REPORT_TIMEZONE,
-      month: "long",
-      year: "numeric",
-    }).format(jakartaDate(startDate)!);
+    label = formatMonthYearLabel(year, month);
     filePart = values.month;
   } else if (kind === "year" && yearSchema.safeParse(values.year).success) {
     const year = Number(values.year);

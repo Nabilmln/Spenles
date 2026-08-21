@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { jakartaDateBoundary, parseJakartaDateTime } from "@/lib/dates/jakarta";
-import { MAX_TRANSACTION_AMOUNT } from "@/lib/money/format-idr";
+import { moneyString } from "@/lib/money/schema";
+import { optionalNoteSchema } from "@/lib/validation/note";
 
 export const transferIdSchema = z.uuid();
 
@@ -14,19 +15,12 @@ export const transferSchema = z
   .object({
     sourceAccountId: z.uuid("Akun sumber tidak valid."),
     destinationAccountId: z.uuid("Akun tujuan tidak valid."),
-    amount: z
-      .string()
-      .trim()
-      .regex(/^[1-9]\d*$/u, "Jumlah transfer harus rupiah bulat positif.")
-      .refine((value) => /^[1-9]\d*$/u.test(value) && BigInt(value) <= MAX_TRANSACTION_AMOUNT, {
-        message: "Jumlah transfer melewati batas yang didukung.",
-      }),
+    amount: moneyString({
+      formatMessage: "Jumlah transfer harus rupiah bulat positif.",
+      rangeMessage: "Jumlah transfer melewati batas yang didukung.",
+    }),
     transferredAt: transferredAtSchema,
-    note: z
-      .string()
-      .trim()
-      .max(500, "Catatan maksimal 500 karakter.")
-      .transform((value) => value || null),
+    note: optionalNoteSchema,
   })
   .refine((value) => value.sourceAccountId !== value.destinationAccountId, {
     message: "Akun sumber dan tujuan harus berbeda.",

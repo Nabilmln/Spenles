@@ -1,11 +1,10 @@
 import Link from "next/link";
 import { ArrowDownLeft, ArrowUpRight, List } from "lucide-react";
-import { formatJakartaDateLong } from "@/lib/dates/jakarta";
+import { formatJakartaDateLong, JAKARTA_OFFSET_MS } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
 import { cardClass, eyebrowClass, textLinkClass } from "@/components/ui/styles";
 import type { RecentDashboardTransaction } from "../types/dashboard";
 
-const JAKARTA_OFFSET_MS = 7 * 60 * 60 * 1000;
 const DAY_MS = 86_400_000;
 const MAX_ITEMS = 5;
 const pad = (value: number) => String(value).padStart(2, "0");

@@ -1,5 +1,5 @@
 import { formatIdr } from "@/lib/money/format-idr";
-import { formatDateLongNoYear } from "@/lib/dates/format-id";
+import { formatDateLongNoYear, formatMonthYearLabel } from "@/lib/dates/format-id";
 import { cardClass, eyebrowClass } from "@/components/ui/styles";
 import { ChartShell, IncomeExpenseChart } from "@/modules/dashboard";
 import type { ReportMonth } from "../types";
@@ -15,11 +15,7 @@ export type CashFlowPoint = {
 
 function monthLabel(period: string) {
   const [year, month] = period.split("-").map(Number);
-  return new Intl.DateTimeFormat("id-ID", {
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(new Date(Date.UTC(year, month - 1, 1)));
+  return formatMonthYearLabel(year, month);
 }
 
 export function buildCashFlowPoints(series: ReportMonth[]): CashFlowPoint[] {

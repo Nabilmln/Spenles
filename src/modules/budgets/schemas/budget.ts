@@ -1,19 +1,16 @@
 import { z } from "zod";
 import { isCanonicalMonth } from "@/lib/dates/jakarta-month";
-import { MAX_TRANSACTION_AMOUNT } from "@/lib/money/format-idr";
+import { moneyString } from "@/lib/money/schema";
 
 export const budgetIdSchema = z.uuid();
 
 export const budgetSchema = z.object({
   categoryId: z.uuid("Kategori tidak valid."),
   month: z.string().refine(isCanonicalMonth, "Bulan anggaran tidak valid."),
-  amount: z
-    .string()
-    .trim()
-    .regex(/^[1-9]\d*$/u, "Anggaran harus berupa rupiah bulat positif.")
-    .refine((value) => /^[1-9]\d*$/u.test(value) && BigInt(value) <= MAX_TRANSACTION_AMOUNT, {
-      message: "Anggaran melewati batas yang didukung.",
-    }),
+  amount: moneyString({
+    formatMessage: "Anggaran harus berupa rupiah bulat positif.",
+    rangeMessage: "Anggaran melewati batas yang didukung.",
+  }),
   warningThresholdBps: z.coerce
     .number()
     .int()

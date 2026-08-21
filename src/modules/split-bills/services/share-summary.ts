@@ -1,3 +1,4 @@
+import { JAKARTA_TIMEZONE } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
 
 const paymentLabel = {
@@ -31,7 +32,7 @@ export function createSplitBillShareSummary(input: {
   lines.push(
     new Intl.DateTimeFormat("id-ID", {
       dateStyle: "long",
-      timeZone: "Asia/Jakarta",
+      timeZone: JAKARTA_TIMEZONE,
     }).format(new Date(`${input.billDate}T00:00:00+07:00`)),
   );
   for (const participant of input.participants) {

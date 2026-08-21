@@ -1,6 +1,6 @@
-import { jakartaDateBoundary } from "./jakarta";
+import { jakartaDateBoundary, JAKARTA_TIMEZONE } from "./jakarta";
 
-export const JAKARTA_TIMEZONE = "Asia/Jakarta";
+export { JAKARTA_TIMEZONE } from "./jakarta";
 
 export function isCanonicalMonth(value: string) {
   if (!/^\d{4}-(0[1-9]|1[0-2])$/u.test(value)) return false;

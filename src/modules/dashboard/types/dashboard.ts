@@ -1,4 +1,6 @@
-export const DASHBOARD_TIMEZONE = "Asia/Jakarta" as const;
+import { JAKARTA_TIMEZONE } from "@/lib/dates/jakarta";
+
+export const DASHBOARD_TIMEZONE = JAKARTA_TIMEZONE;
 
 export type DashboardPreset =
   | "current-month"

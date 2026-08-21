@@ -1,9 +1,11 @@
+import { JAKARTA_TIMEZONE } from "./jakarta";
+
 const DATE_KEY = /^(\d{4})-(\d{2})-(\d{2})$/u;
 const DAY_MS = 86_400_000;
 
-type DateParts = { year: number; month: number; day: number };
+export type DateParts = { year: number; month: number; day: number };
 
-function parseParts(value: string): DateParts | null {
+export function parseDateKey(value: string): DateParts | null {
   const match = DATE_KEY.exec(value);
   if (!match) return null;
   const year = Number(match[1]);
@@ -20,18 +22,22 @@ function parseParts(value: string): DateParts | null {
   return { year, month, day };
 }
 
+export function isDateKey(value: string) {
+  return parseDateKey(value) !== null;
+}
+
 function iso(parts: DateParts) {
   const pad = (value: number) => String(value).padStart(2, "0");
   return `${parts.year}-${pad(parts.month)}-${pad(parts.day)}`;
 }
 
 export function isReportDate(value: string) {
-  return parseParts(value) !== null;
+  return isDateKey(value);
 }
 
 export function isValidReportRange(from: string, to: string, maxDays = 366) {
-  const start = parseParts(from);
-  const end = parseParts(to);
+  const start = parseDateKey(from);
+  const end = parseDateKey(to);
   if (!start || !end) return false;
   const diff = Math.round(
     (Date.UTC(end.year, end.month - 1, end.day) -
@@ -42,8 +48,8 @@ export function isValidReportRange(from: string, to: string, maxDays = 366) {
 }
 
 export function inclusiveDayCount(from: string, to: string) {
-  const start = parseParts(from);
-  const end = parseParts(to);
+  const start = parseDateKey(from);
+  const end = parseDateKey(to);
   if (!start || !end) return 0;
   return (
     Math.round(
@@ -55,7 +61,7 @@ export function inclusiveDayCount(from: string, to: string) {
 }
 
 export function addCalendarDays(value: string, days: number) {
-  const parts = parseParts(value);
+  const parts = parseDateKey(value);
   if (!parts) return null;
   const date = new Date(Date.UTC(parts.year, parts.month - 1, parts.day + days));
   return iso({ year: date.getUTCFullYear(), month: date.getUTCMonth() + 1, day: date.getUTCDate() });
@@ -63,7 +69,7 @@ export function addCalendarDays(value: string, days: number) {
 
 export function todayJakartaDate(now: Date = new Date()) {
   return new Intl.DateTimeFormat("sv-SE", {
-    timeZone: "Asia/Jakarta",
+    timeZone: JAKARTA_TIMEZONE,
     year: "numeric",
     month: "2-digit",
     day: "2-digit",

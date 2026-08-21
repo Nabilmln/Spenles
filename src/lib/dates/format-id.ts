@@ -1,3 +1,5 @@
+import { parseDateKey } from "./calendar";
+
 export const MONTHS_LONG = [
   "Januari",
   "Februari",
@@ -23,33 +25,12 @@ const WEEKDAYS = [
   "Sabtu",
 ] as const;
 
-const DATE_KEY = /^(\d{4})-(\d{2})-(\d{2})$/u;
-
-type DateParts = { year: number; month: number; day: number };
-
-function parseDateParts(value: string): DateParts | null {
-  const match = DATE_KEY.exec(value);
-  if (!match) return null;
-  const year = Number(match[1]);
-  const month = Number(match[2]);
-  const day = Number(match[3]);
-  const date = new Date(Date.UTC(year, month - 1, day));
-  if (
-    date.getUTCFullYear() !== year ||
-    date.getUTCMonth() !== month - 1 ||
-    date.getUTCDate() !== day
-  ) {
-    return null;
-  }
-  return { year, month, day };
-}
-
 /**
  * Formats a calendar-only ISO date string as a full Indonesian date.
  * "2026-08-05" -> "5 Agustus 2026".
  */
 export function formatDateLong(value: string) {
-  const parts = parseDateParts(value);
+  const parts = parseDateKey(value);
   if (!parts) return value;
   return `${parts.day} ${MONTHS_LONG[parts.month - 1]} ${parts.year}`;
 }
@@ -59,7 +40,7 @@ export function formatDateLong(value: string) {
  * "2026-08-05" -> "Rabu, 5 Agustus 2026".
  */
 export function formatDayDateLong(value: string) {
-  const parts = parseDateParts(value);
+  const parts = parseDateKey(value);
   if (!parts) return value;
   const weekday = WEEKDAYS[
     new Date(Date.UTC(parts.year, parts.month - 1, parts.day)).getUTCDay()
@@ -72,7 +53,7 @@ export function formatDayDateLong(value: string) {
  * "2026-08-05" -> "5 Agustus".
  */
 export function formatDateLongNoYear(value: string) {
-  const parts = parseDateParts(value);
+  const parts = parseDateKey(value);
   if (!parts) return value;
   return `${parts.day} ${MONTHS_LONG[parts.month - 1]}`;
 }
@@ -83,8 +64,8 @@ export function formatDateLongNoYear(value: string) {
  * Cross year: "20 Desember 2026 – 10 Januari 2027"
  */
 export function formatRangeLong(from: string, to: string) {
-  const start = parseDateParts(from);
-  const end = parseDateParts(to);
+  const start = parseDateKey(from);
+  const end = parseDateKey(to);
   if (!start || !end) return `${from} – ${to}`;
   if (from === to) return formatDateLong(from);
   if (start.year === end.year) {

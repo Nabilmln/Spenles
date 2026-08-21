@@ -3,9 +3,10 @@ import type {
   DashboardPeriods,
   DateInterval,
 } from "../types/dashboard";
+import { JAKARTA_OFFSET_MS } from "@/lib/dates/jakarta";
+import { formatMonthYearLabel } from "@/lib/dates/format-id";
 
 const DAY_MS = 86_400_000;
-const JAKARTA_OFFSET_MS = 7 * 60 * 60 * 1000;
 
 type CalendarDate = { year: number; month: number; day: number };
 
@@ -73,11 +74,7 @@ function jakartaToday(now: Date): CalendarDate {
 }
 
 function monthLabel(value: CalendarDate) {
-  return new Intl.DateTimeFormat("id-ID", {
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(new Date(Date.UTC(value.year, value.month - 1, 1)));
+  return formatMonthYearLabel(value.year, value.month);
 }
 
 function dateLabel(value: CalendarDate) {

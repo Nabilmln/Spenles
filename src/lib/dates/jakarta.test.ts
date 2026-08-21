@@ -1,9 +1,22 @@
 import { describe, expect, it } from "vitest";
-import { formatJakartaDate, jakartaNowDate, preserveOrAttachNow } from "./jakarta";
+import {
+  formatJakartaDate,
+  jakartaNowDate,
+  JAKARTA_OFFSET_MS,
+  JAKARTA_TIMEZONE,
+  preserveOrAttachNow,
+} from "./jakarta";
 
 describe("formatJakartaDate", () => {
   it("formats a date as YYYY-MM-DD in Asia/Jakarta", () => {
     expect(formatJakartaDate(new Date("2026-08-04T13:00:00Z"))).toBe("2026-08-04");
+  });
+});
+
+describe("jakarta constants", () => {
+  it("uses Asia/Jakarta and a fixed UTC+7 offset", () => {
+    expect(JAKARTA_TIMEZONE).toBe("Asia/Jakarta");
+    expect(JAKARTA_OFFSET_MS).toBe(7 * 60 * 60 * 1000);
   });
 });
 

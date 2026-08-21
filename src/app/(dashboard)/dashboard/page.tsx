@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { requireSessionUser } from "@/lib/auth/require-session";
+import { formatMonthYearLabel } from "@/lib/dates/format-id";
 import { buttonClass, cardClass } from "@/components/ui/styles";
 import {
   AverageSpendingCard,
@@ -62,11 +63,7 @@ function isFulfilled<T>(
 
 function monthLabelFor(monthKey: string) {
   const [year, month] = monthKey.split("-").map(Number);
-  return new Intl.DateTimeFormat("id-ID", {
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(new Date(Date.UTC(year, month - 1, 1)));
+  return formatMonthYearLabel(year, month);
 }
 
 export default async function DashboardPage({

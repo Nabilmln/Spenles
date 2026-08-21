@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { formatDayDateLong, formatDateLong } from "./format-id";
+import { formatDayDateLong, formatDateLong, formatMonthYearLabel } from "./format-id";
 
 describe("format-id", () => {
   it("formats full Indonesian dates", () => {
@@ -14,5 +14,11 @@ describe("format-id", () => {
   it("falls back to the raw value for invalid keys", () => {
     expect(formatDayDateLong("not-a-date")).toBe("not-a-date");
     expect(formatDateLong("not-a-date")).toBe("not-a-date");
+  });
+
+  it("formats a calendar month as Indonesian month and year", () => {
+    expect(formatMonthYearLabel(2026, 8)).toBe("Agustus 2026");
+    expect(formatMonthYearLabel(2026, 1)).toBe("Januari 2026");
+    expect(formatMonthYearLabel(2026, 12)).toBe("Desember 2026");
   });
 });
