@@ -125,3 +125,5 @@ khusus; CSV transaksi; dan backup JSON versi 1.0. Semua unduhan dibuat
 server-side dari sesi terverifikasi, dibatasi ukurannya, dan memakai respons
 private/no-store. Backup mencakup data finansial pribadi tetapi tidak mencakup
 password, sesi, token, credential, atau secret.
+
+akjdnajwdnjwandaw
