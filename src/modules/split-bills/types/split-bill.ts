@@ -1,4 +1,5 @@
 export type SplitBillDiscountMode = "none" | "fixed" | "percentage";
+export type SplitBillTaxMode = "percentage" | "fixed";
 export type SplitBillRecordStatus = "draft" | "finalized" | "archived";
 export type SplitBillPaymentState = "unpaid" | "partially_paid" | "paid";
 
@@ -27,6 +28,8 @@ export type SplitBillCalculationInput = {
   discountMode: SplitBillDiscountMode;
   fixedDiscountAmount: bigint;
   discountBps: number;
+  billTaxMode: SplitBillTaxMode;
+  fixedBillTaxAmount: bigint;
   billTaxBps: number;
   serviceChargeBps: number;
   participants: CalculationParticipant[];

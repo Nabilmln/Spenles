@@ -84,6 +84,17 @@ function validate(input: SplitBillCalculationInput) {
       "Konfigurasi diskon tidak valid.",
     );
   }
+  if (
+    (input.billTaxMode === "percentage" &&
+      input.fixedBillTaxAmount !== 0n) ||
+    (input.billTaxMode === "fixed" && input.billTaxBps !== 0)
+  ) {
+    throw new SplitBillCalculationError(
+      "invalid",
+      "Konfigurasi pajak tidak valid.",
+    );
+  }
+  assertSafe(input.fixedBillTaxAmount);
 
   const participantIds = new Set(input.participants.map(({ id }) => id));
   if (participantIds.size !== input.participants.length) {
@@ -276,10 +287,11 @@ export function calculateSplitBill(
   const billTaxBase = sum(
     billTaxEligible.map((item) => itemResults.get(item.id)!.discountedAmount),
   );
-  const billTaxAmount = calculateBasisPointAmount(
-    billTaxBase,
-    input.billTaxBps,
-  );
+  const billTaxAmount =
+    input.billTaxMode === "fixed"
+      ? input.fixedBillTaxAmount
+      : calculateBasisPointAmount(billTaxBase, input.billTaxBps);
+  assertSafe(billTaxAmount);
   const billTaxByItem =
     billTaxEligible.length === 0
       ? new Map<string, bigint>()

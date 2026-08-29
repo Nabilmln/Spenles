@@ -12,6 +12,8 @@ function valid() {
     discountMode: "none",
     fixedDiscountAmount: "0",
     discountBps: 0,
+    billTaxMode: "percentage",
+    fixedBillTaxAmount: "0",
     billTaxBps: 0,
     serviceChargeBps: 0,
     participants: [{ id: participantId, name: "Ayu" }],
@@ -56,5 +58,24 @@ describe("split-bill schema", () => {
     input.items[0]!.quantity = 2;
     input.items[0]!.unitPrice = "9007199254740991";
     expect(splitBillDraftSchema.safeParse(input).success).toBe(false);
+  });
+
+  it("accepts a fixed nominal tax and rejects mixed tax modes", () => {
+    const fixed = valid();
+    fixed.billTaxMode = "fixed";
+    fixed.fixedBillTaxAmount = "5000";
+    fixed.billTaxBps = 0;
+    expect(splitBillDraftSchema.safeParse(fixed).success).toBe(true);
+
+    const mixed = valid();
+    mixed.billTaxMode = "fixed";
+    mixed.fixedBillTaxAmount = "5000";
+    mixed.billTaxBps = 1000;
+    expect(splitBillDraftSchema.safeParse(mixed).success).toBe(false);
+
+    const reversed = valid();
+    reversed.billTaxMode = "percentage";
+    reversed.fixedBillTaxAmount = "5000";
+    expect(splitBillDraftSchema.safeParse(reversed).success).toBe(false);
   });
 });

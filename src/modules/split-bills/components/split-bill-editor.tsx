@@ -5,6 +5,7 @@ import { Trash2, X } from "lucide-react";
 import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import {
   cardClass,
   eyebrowClass,
@@ -17,7 +18,7 @@ import { parseMoneyInput, unitPriceFromTotal } from "@/lib/money/input-format";
 import type { SplitBillActionState } from "../actions/split-bill-actions";
 import { calculateSplitBill } from "../services/calculator";
 import { createId, percentageToBasisPoints } from "../services/draft-utils";
-import type { SplitBillDiscountMode } from "../types/split-bill";
+import type { SplitBillDiscountMode, SplitBillTaxMode } from "../types/split-bill";
 import { CalculationSummary } from "./calculation-summary";
 import { QuantityInput, RupiahInput } from "./money-input";
 
@@ -30,6 +31,8 @@ export type SplitBillEditorData = {
   discountMode: SplitBillDiscountMode;
   fixedDiscountAmount: string;
   discountBps: number;
+  billTaxMode: SplitBillTaxMode;
+  fixedBillTaxAmount: string;
   billTaxBps: number;
   serviceChargeBps: number;
   participants: { id: string; name: string }[];
@@ -80,6 +83,12 @@ export function SplitBillEditor({
   const [merchantName, setMerchantName] = useState(initial.merchantName);
   const [billDate, setBillDate] = useState(initial.billDate);
   const [note, setNote] = useState(initial.note);
+  const [billTaxMode, setBillTaxMode] = useState<SplitBillTaxMode>(
+    initial.billTaxMode,
+  );
+  const [fixedBillTaxAmount, setFixedBillTaxAmount] = useState(
+    initial.fixedBillTaxAmount,
+  );
   const [taxPercent, setTaxPercent] = useState(
     percentageLabel(initial.billTaxBps),
   );
@@ -95,7 +104,8 @@ export function SplitBillEditor({
   );
   const [itemErrors, setItemErrors] = useState<Record<string, string>>({});
   const revision = state.revision ?? initial.revision ?? 0;
-  const billTaxBps = percentageToBasisPoints(taxPercent);
+  const billTaxBps =
+    billTaxMode === "percentage" ? percentageToBasisPoints(taxPercent) : 0;
 
   const payload = {
     merchantName,
@@ -104,6 +114,9 @@ export function SplitBillEditor({
     discountMode: "none" as SplitBillDiscountMode,
     fixedDiscountAmount: "0",
     discountBps: 0,
+    billTaxMode,
+    fixedBillTaxAmount:
+      billTaxMode === "fixed" ? fixedBillTaxAmount || "0" : "0",
     billTaxBps,
     serviceChargeBps: 0,
     participants,
@@ -116,6 +129,9 @@ export function SplitBillEditor({
       discountMode: "none",
       fixedDiscountAmount: 0n,
       discountBps: 0,
+      billTaxMode,
+      fixedBillTaxAmount:
+        billTaxMode === "fixed" ? BigInt(fixedBillTaxAmount || "0") : 0n,
       billTaxBps,
       serviceChargeBps: 0,
       participants: participants.map((participant, index) => ({
@@ -453,18 +469,44 @@ export function SplitBillEditor({
 
           <fieldset className="m-0 grid min-w-0 gap-4 rounded-[.8rem] border border-border p-4">
             <legend className="px-[.35rem] font-medium">Pajak</legend>
-            <div className={`${fieldClass} max-w-[12rem]`}>
-              <label htmlFor="split-tax">Pajak (%)</label>
-              <Input
-                id="split-tax"
-                type="number"
-                min="0"
-                max="100"
-                step="any"
-                inputMode="decimal"
-                value={taxPercent}
-                onChange={(event) => setTaxPercent(event.target.value)}
-              />
+            <div className="grid grid-cols-2 gap-4 max-[540px]:grid-cols-1">
+              <div className={fieldClass}>
+                <label htmlFor="split-tax-mode">Jenis pajak</label>
+                <Select
+                  id="split-tax-mode"
+                  value={billTaxMode}
+                  onChange={(event) =>
+                    setBillTaxMode(event.target.value as SplitBillTaxMode)
+                  }
+                >
+                  <option value="percentage">Persentase</option>
+                  <option value="fixed">Nominal</option>
+                </Select>
+              </div>
+              {billTaxMode === "percentage" ? (
+                <div className={fieldClass}>
+                  <label htmlFor="split-tax">Pajak (%)</label>
+                  <Input
+                    id="split-tax"
+                    type="number"
+                    min="0"
+                    max="100"
+                    step="any"
+                    inputMode="decimal"
+                    value={taxPercent}
+                    onChange={(event) => setTaxPercent(event.target.value)}
+                  />
+                </div>
+              ) : (
+                <div className={fieldClass}>
+                  <label htmlFor="split-tax-fixed">Pajak (Rp)</label>
+                  <RupiahInput
+                    id="split-tax-fixed"
+                    value={fixedBillTaxAmount}
+                    onChange={setFixedBillTaxAmount}
+                  />
+                </div>
+              )}
             </div>
           </fieldset>
 

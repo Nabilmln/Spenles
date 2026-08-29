@@ -19,6 +19,8 @@ function base(): SplitBillCalculationInput {
     discountMode: "none",
     fixedDiscountAmount: 0n,
     discountBps: 0,
+    billTaxMode: "percentage",
+    fixedBillTaxAmount: 0n,
     billTaxBps: 0,
     serviceChargeBps: 0,
     participants: [{ id: p1, name: "Ayu", position: 1 }],
@@ -130,6 +132,33 @@ describe("split-bill calculator", () => {
       10_800n,
       10_800n,
     ]);
+  });
+
+  it("applies a fixed nominal tax directly when the mode is fixed", () => {
+    const input = base();
+    input.billTaxMode = "fixed";
+    input.fixedBillTaxAmount = 2_500n;
+    input.billTaxBps = 0;
+    const result = calculateSplitBill(input);
+    expect(result.billTaxAmount).toBe(2_500n);
+    expect(result.finalAmount).toBe(12_500n);
+  });
+
+  it("rejects a fixed tax combined with a percentage value and vice versa", () => {
+    const fixedWithBps = base();
+    fixedWithBps.billTaxMode = "fixed";
+    fixedWithBps.fixedBillTaxAmount = 1_000n;
+    fixedWithBps.billTaxBps = 1_000;
+    expect(() => calculateSplitBill(fixedWithBps)).toThrow(
+      "Konfigurasi pajak tidak valid.",
+    );
+
+    const percentageWithFixed = base();
+    percentageWithFixed.billTaxMode = "percentage";
+    percentageWithFixed.fixedBillTaxAmount = 1_000n;
+    expect(() => calculateSplitBill(percentageWithFixed)).toThrow(
+      "Konfigurasi pajak tidak valid.",
+    );
   });
 
   it("allows a full discount without division by zero", () => {

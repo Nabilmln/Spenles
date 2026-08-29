@@ -15,6 +15,8 @@ function inputFromSource(
     discountMode: source.bill.discountMode,
     fixedDiscountAmount: source.bill.fixedDiscountAmount,
     discountBps: source.bill.discountBps,
+    billTaxMode: source.bill.billTaxMode,
+    fixedBillTaxAmount: source.bill.fixedBillTaxAmount,
     billTaxBps: source.bill.billTaxBps,
     serviceChargeBps: source.bill.serviceChargeBps,
     participants: source.participants.map((participant) => ({
@@ -150,7 +152,8 @@ export async function finalizeOwnedSplitBill(
         id, split_bill_id, user_id, calculation_version, source_revision,
         merchant_name_snapshot, bill_date_snapshot, note_snapshot,
         discount_mode, fixed_discount_amount, discount_bps,
-        bill_tax_bps, service_charge_bps, subtotal_amount, discount_amount,
+        bill_tax_mode, fixed_bill_tax_amount, bill_tax_bps,
+        service_charge_bps, subtotal_amount, discount_amount,
         discounted_subtotal_amount, item_tax_amount, bill_tax_amount,
         total_tax_amount, service_charge_amount, final_amount
       )
@@ -159,7 +162,8 @@ export async function finalizeOwnedSplitBill(
         ${calculated.calculationVersion}, bill.revision,
         bill.merchant_name, bill.bill_date, bill.note,
         bill.discount_mode, bill.fixed_discount_amount, bill.discount_bps,
-        bill.bill_tax_bps, bill.service_charge_bps,
+        bill.bill_tax_mode, bill.fixed_bill_tax_amount, bill.bill_tax_bps,
+        bill.service_charge_bps,
         ${calculated.subtotalAmount}::bigint,
         ${calculated.discountAmount}::bigint,
         ${calculated.discountedSubtotalAmount}::bigint,

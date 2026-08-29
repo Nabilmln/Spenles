@@ -159,6 +159,8 @@ export function SplitBillCreateFlow({
         fixedDiscountAmount:
           discountMode === "fixed" ? BigInt(fixedDiscountAmount || "0") : 0n,
         discountBps: discountMode === "percentage" ? discountBps : 0,
+        billTaxMode: "percentage",
+        fixedBillTaxAmount: 0n,
         billTaxBps,
         serviceChargeBps,
         participants: participants.map((participant, index) => ({
@@ -204,6 +206,8 @@ export function SplitBillCreateFlow({
     fixedDiscountAmount:
       discountMode === "fixed" ? fixedDiscountAmount || "0" : "0",
     discountBps: discountMode === "percentage" ? discountBps : 0,
+    billTaxMode: "percentage",
+    fixedBillTaxAmount: "0",
     billTaxBps,
     serviceChargeBps,
     participants: participants.map((participant) => ({

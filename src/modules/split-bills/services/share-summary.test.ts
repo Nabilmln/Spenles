@@ -10,6 +10,7 @@ describe("split-bill share summary", () => {
       subtotalAmount: "20000",
       taxAmount: "1600",
       taxBps: 1000,
+      taxMode: "percentage",
       finalAmount: "21600",
       participants: [
         {

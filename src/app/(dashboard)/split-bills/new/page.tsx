@@ -24,6 +24,8 @@ export default async function NewSplitBillPage() {
           discountMode: "none",
           fixedDiscountAmount: "0",
           discountBps: 0,
+          billTaxMode: "percentage",
+          fixedBillTaxAmount: "0",
           billTaxBps: 0,
           serviceChargeBps: 0,
           participants: [],

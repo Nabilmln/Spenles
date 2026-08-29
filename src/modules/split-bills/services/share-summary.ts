@@ -13,6 +13,7 @@ export function createSplitBillShareSummary(input: {
   subtotalAmount: string;
   taxAmount: string;
   taxBps: number;
+  taxMode: "percentage" | "fixed";
   finalAmount: string;
   participants: {
     name: string;
@@ -46,10 +47,14 @@ export function createSplitBillShareSummary(input: {
       `${participant.name}:${paymentSuffix}\n${itemLines.join("\n")}\nTotal: ${formatIdr(participant.finalAmount)}`,
     );
   }
+  const taxLine =
+    input.taxMode === "fixed"
+      ? `Pajak: ${formatIdr(input.taxAmount)}`
+      : `Pajak ${input.taxBps / 100}%: ${formatIdr(input.taxAmount)}`;
   lines.push(
     [
       `Subtotal: ${formatIdr(input.subtotalAmount)}`,
-      `Pajak ${input.taxBps / 100}%: ${formatIdr(input.taxAmount)}`,
+      taxLine,
       `Total: ${formatIdr(input.finalAmount)}`,
     ].join("\n"),
   );

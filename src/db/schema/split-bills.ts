@@ -30,6 +30,11 @@ export const splitBillDiscountMode = pgEnum("split_bill_discount_mode", [
   "percentage",
 ]);
 
+export const splitBillTaxMode = pgEnum("split_bill_tax_mode", [
+  "percentage",
+  "fixed",
+]);
+
 export const splitBillPaymentStatus = pgEnum("split_bill_payment_status", [
   "unpaid",
   "partially_paid",
@@ -54,6 +59,10 @@ export const splitBills = pgTable(
       .notNull()
       .default(sql`0`),
     discountBps: smallint("discount_bps").notNull().default(0),
+    billTaxMode: splitBillTaxMode("bill_tax_mode").notNull().default("percentage"),
+    fixedBillTaxAmount: bigint("fixed_bill_tax_amount", { mode: "bigint" })
+      .notNull()
+      .default(sql`0`),
     billTaxBps: smallint("bill_tax_bps").notNull().default(0),
     serviceChargeBps: smallint("service_charge_bps").notNull().default(0),
     revision: integer("revision").notNull().default(0),
@@ -96,6 +105,13 @@ export const splitBills = pgTable(
         or (${table.discountMode} = 'percentage'
           and ${table.fixedDiscountAmount} = 0
           and ${table.discountBps} between 1 and 10000)`,
+    ),
+    check(
+      "split_bills_tax_mode_valid",
+      sql`(${table.billTaxMode} = 'percentage'
+          and ${table.fixedBillTaxAmount} = 0)
+        or (${table.billTaxMode} = 'fixed'
+          and ${table.billTaxBps} = 0)`,
     ),
     check("split_bills_revision_valid", sql`${table.revision} >= 0`),
     check(
@@ -312,6 +328,10 @@ export const splitBillCalculations = pgTable(
       mode: "bigint",
     }).notNull(),
     discountBps: smallint("discount_bps").notNull(),
+    billTaxMode: splitBillTaxMode("bill_tax_mode").notNull(),
+    fixedBillTaxAmount: bigint("fixed_bill_tax_amount", {
+      mode: "bigint",
+    }).notNull(),
     billTaxBps: smallint("bill_tax_bps").notNull(),
     serviceChargeBps: smallint("service_charge_bps").notNull(),
     subtotalAmount: bigint("subtotal_amount", { mode: "bigint" }).notNull(),
@@ -351,6 +371,13 @@ export const splitBillCalculations = pgTable(
       sql`${table.discountBps} between 0 and 10000
         and ${table.billTaxBps} between 0 and 10000
         and ${table.serviceChargeBps} between 0 and 10000`,
+    ),
+    check(
+      "split_bill_calculations_tax_mode_valid",
+      sql`(${table.billTaxMode} = 'percentage'
+          and ${table.fixedBillTaxAmount} = 0)
+        or (${table.billTaxMode} = 'fixed'
+          and ${table.billTaxBps} = 0)`,
     ),
     check(
       "split_bill_calculations_amounts_valid",

@@ -45,6 +45,8 @@ function draft(merchantName = `Warung ${randomUUID()}`): SplitBillDraftData {
     discountMode: "fixed",
     fixedDiscountAmount: "2000",
     discountBps: 0,
+    billTaxMode: "percentage",
+    fixedBillTaxAmount: "0",
     billTaxBps: 1000,
     serviceChargeBps: 1000,
     participants: [
@@ -201,6 +203,33 @@ describe("Phase 05 split-bill database boundaries", () => {
     expect(
       calculations.filter((row) => row.splitBillId === created!.id),
     ).toHaveLength(1);
+  });
+
+  it("persists a fixed nominal tax in the finalized snapshot", async () => {
+    const input = draft();
+    input.billTaxMode = "fixed";
+    input.fixedBillTaxAmount = "5000";
+    input.billTaxBps = 0;
+    const created = await createOwnedSplitBillDraft(
+      database,
+      userA,
+      prepareSplitBillDraft(input),
+    );
+    const source = await getOwnedSplitBillSource(userA, created!.id, database);
+    expect(source?.bill.billTaxMode).toBe("fixed");
+    expect(source?.bill.fixedBillTaxAmount).toBe(5_000n);
+
+    const finalized = await finalizeOwnedSplitBill(
+      database,
+      userA,
+      created!.id,
+      0,
+    );
+    expect(finalized.ok).toBe(true);
+    const detail = await getOwnedSplitBillDetail(userA, created!.id, database);
+    expect(detail?.calculation?.billTaxMode).toBe("fixed");
+    expect(detail?.calculation?.fixedBillTaxAmount).toBe(5_000n);
+    expect(detail?.calculation?.billTaxAmount).toBe(5_000n);
   });
 
   it("marks zero-obligation participants paid without creating money", async () => {

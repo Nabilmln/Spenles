@@ -232,6 +232,8 @@ export function serializeOwnedSplitBillSource(
     discountMode: source.bill.discountMode,
     fixedDiscountAmount: source.bill.fixedDiscountAmount.toString(),
     discountBps: source.bill.discountBps,
+    billTaxMode: source.bill.billTaxMode,
+    fixedBillTaxAmount: source.bill.fixedBillTaxAmount.toString(),
     billTaxBps: source.bill.billTaxBps,
     serviceChargeBps: source.bill.serviceChargeBps,
     participants: source.participants.map((participant) => ({

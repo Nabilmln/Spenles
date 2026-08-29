@@ -37,6 +37,8 @@ function preparedCalculationInput(input: PreparedSplitBillDraft) {
     discountMode: input.discountMode,
     fixedDiscountAmount: input.fixedDiscountAmount,
     discountBps: input.discountBps,
+    billTaxMode: input.billTaxMode,
+    fixedBillTaxAmount: input.fixedBillTaxAmount,
     billTaxBps: input.billTaxBps,
     serviceChargeBps: input.serviceChargeBps,
     participants: input.participants,
@@ -300,6 +302,7 @@ export async function createShareSummaryAction(
         detail.calculation.itemTaxAmount + detail.calculation.billTaxAmount
       ).toString(),
       taxBps: detail.calculation.billTaxBps,
+      taxMode: detail.calculation.billTaxMode,
       finalAmount: detail.calculation.finalAmount.toString(),
       participants: detail.participantResults.map((participant) => ({
         name: participant.nameSnapshot,

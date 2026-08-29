@@ -11,6 +11,8 @@ const emptyInitial: SplitBillEditorData = {
   discountMode: "none",
   fixedDiscountAmount: "0",
   discountBps: 0,
+  billTaxMode: "percentage",
+  fixedBillTaxAmount: "0",
   billTaxBps: 0,
   serviceChargeBps: 0,
   participants: [],
@@ -201,5 +203,40 @@ describe("SplitBillEditor", () => {
     const quantity = screen.getByLabelText("Jumlah") as HTMLInputElement;
     fireEvent.change(quantity, { target: { value: "02" } });
     expect(quantity.value).toBe("2");
+  });
+
+  it("switches between percentage and fixed tax inputs", () => {
+    render(
+      <SplitBillEditor
+        action={action}
+        finalizeAction={finalizeAction}
+        initial={{
+          ...emptyInitial,
+          participants: [{ id: "p1", name: "Nabil" }],
+          items: [
+            {
+              id: "i1",
+              name: "Nasi Goreng",
+              quantity: 1,
+              unitPrice: "30000",
+              itemTaxBps: 0,
+              participantIds: ["p1"],
+            },
+          ],
+        }}
+      />,
+    );
+
+    expect(screen.getByLabelText("Pajak (%)")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Pajak (Rp)")).not.toBeInTheDocument();
+
+    fireEvent.change(screen.getByLabelText("Jenis pajak"), {
+      target: { value: "fixed" },
+    });
+
+    expect(screen.queryByLabelText("Pajak (%)")).not.toBeInTheDocument();
+    const fixed = screen.getByLabelText("Pajak (Rp)") as HTMLInputElement;
+    fireEvent.change(fixed, { target: { value: "Rp5.000" } });
+    expect(fixed.value).toBe("5.000");
   });
 });

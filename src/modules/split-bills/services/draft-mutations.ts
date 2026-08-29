@@ -12,6 +12,8 @@ export type PreparedSplitBillDraft = {
   discountMode: "none" | "fixed" | "percentage";
   fixedDiscountAmount: bigint;
   discountBps: number;
+  billTaxMode: "percentage" | "fixed";
+  fixedBillTaxAmount: bigint;
   billTaxBps: number;
   serviceChargeBps: number;
   participants: { id: string; name: string; position: number }[];
@@ -44,6 +46,8 @@ export function prepareSplitBillDraft(
     discountMode: input.discountMode,
     fixedDiscountAmount: BigInt(input.fixedDiscountAmount),
     discountBps: input.discountBps,
+    billTaxMode: input.billTaxMode,
+    fixedBillTaxAmount: BigInt(input.fixedBillTaxAmount),
     billTaxBps: input.billTaxBps,
     serviceChargeBps: input.serviceChargeBps,
     participants: input.participants.map((participant, index) => ({
@@ -99,14 +103,17 @@ export async function createOwnedSplitBillDraft(
       insert into split_bills (
         id, user_id, merchant_name, bill_date, note, status,
         discount_mode, fixed_discount_amount, discount_bps,
-        bill_tax_bps, service_charge_bps, revision
+        bill_tax_mode, fixed_bill_tax_amount, bill_tax_bps,
+        service_charge_bps, revision
       )
       values (
         ${billId}::uuid, ${userId}, ${input.merchantName},
         ${input.billDate}::date, ${input.note}, 'draft',
         ${input.discountMode}::split_bill_discount_mode,
         ${input.fixedDiscountAmount}::bigint, ${input.discountBps},
-        ${input.billTaxBps}, ${input.serviceChargeBps}, 0
+        ${input.billTaxMode}::split_bill_tax_mode,
+        ${input.fixedBillTaxAmount}::bigint, ${input.billTaxBps},
+        ${input.serviceChargeBps}, 0
       )
       returning id, user_id, revision
     ),
@@ -286,6 +293,8 @@ export async function replaceOwnedSplitBillDraft(
         discount_mode = ${input.discountMode}::split_bill_discount_mode,
         fixed_discount_amount = ${input.fixedDiscountAmount}::bigint,
         discount_bps = ${input.discountBps},
+        bill_tax_mode = ${input.billTaxMode}::split_bill_tax_mode,
+        fixed_bill_tax_amount = ${input.fixedBillTaxAmount}::bigint,
         bill_tax_bps = ${input.billTaxBps},
         service_charge_bps = ${input.serviceChargeBps},
         revision = bill.revision + 1,

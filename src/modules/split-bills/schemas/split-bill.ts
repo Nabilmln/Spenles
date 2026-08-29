@@ -46,6 +46,8 @@ export const splitBillDraftSchema = z
     discountMode: z.enum(["none", "fixed", "percentage"]),
     fixedDiscountAmount: money,
     discountBps: basisPoints,
+    billTaxMode: z.enum(["percentage", "fixed"]),
+    fixedBillTaxAmount: money,
     billTaxBps: basisPoints,
     serviceChargeBps: basisPoints,
     participants: z
@@ -110,6 +112,16 @@ export const splitBillDraftSchema = z
       context.addIssue({
         code: "custom",
         message: "Konfigurasi diskon tidak valid.",
+      });
+    }
+    if (
+      (value.billTaxMode === "percentage" &&
+        BigInt(value.fixedBillTaxAmount) !== 0n) ||
+      (value.billTaxMode === "fixed" && value.billTaxBps !== 0)
+    ) {
+      context.addIssue({
+        code: "custom",
+        message: "Konfigurasi pajak tidak valid.",
       });
     }
   });
