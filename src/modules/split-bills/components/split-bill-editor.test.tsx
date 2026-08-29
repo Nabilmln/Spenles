@@ -89,4 +89,117 @@ describe("SplitBillEditor", () => {
     expect(screen.getByRole("button", { name: "Final" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Hapus" })).toBeInTheDocument();
   });
+
+  it("formats the unit price with an Rp prefix", () => {
+    render(
+      <SplitBillEditor
+        action={action}
+        finalizeAction={finalizeAction}
+        initial={{
+          ...emptyInitial,
+          participants: [{ id: "p1", name: "Nabil" }],
+          items: [
+            {
+              id: "i1",
+              name: "Nasi Goreng",
+              quantity: 2,
+              unitPrice: "30000",
+              itemTaxBps: 0,
+              participantIds: ["p1"],
+            },
+          ],
+        }}
+      />,
+    );
+
+    const price = screen.getByLabelText("Harga satuan") as HTMLInputElement;
+    expect(price.value).toBe("30.000");
+  });
+
+  it("derives the unit price from a divisible total price", () => {
+    render(
+      <SplitBillEditor
+        action={action}
+        finalizeAction={finalizeAction}
+        initial={{
+          ...emptyInitial,
+          participants: [{ id: "p1", name: "Nabil" }],
+          items: [
+            {
+              id: "i1",
+              name: "Nasi Goreng",
+              quantity: 2,
+              unitPrice: "25000",
+              itemTaxBps: 0,
+              participantIds: ["p1"],
+            },
+          ],
+        }}
+      />,
+    );
+
+    const total = screen.getByLabelText("Harga total") as HTMLInputElement;
+    expect(total.value).toBe("50.000");
+
+    fireEvent.change(total, { target: { value: "Rp100.000" } });
+    const price = screen.getByLabelText("Harga satuan") as HTMLInputElement;
+    expect(price.value).toBe("50.000");
+  });
+
+  it("rejects a total price that is not divisible by the quantity", () => {
+    render(
+      <SplitBillEditor
+        action={action}
+        finalizeAction={finalizeAction}
+        initial={{
+          ...emptyInitial,
+          participants: [{ id: "p1", name: "Nabil" }],
+          items: [
+            {
+              id: "i1",
+              name: "Nasi Goreng",
+              quantity: 2,
+              unitPrice: "25000",
+              itemTaxBps: 0,
+              participantIds: ["p1"],
+            },
+          ],
+        }}
+      />,
+    );
+
+    const total = screen.getByLabelText("Harga total") as HTMLInputElement;
+    fireEvent.change(total, { target: { value: "Rp50.001" } });
+
+    expect(screen.getByRole("alert")).toHaveTextContent(/habis dibagi/i);
+    const price = screen.getByLabelText("Harga satuan") as HTMLInputElement;
+    expect(price.value).toBe("25.000");
+  });
+
+  it("does not keep a leading zero in the quantity input", () => {
+    render(
+      <SplitBillEditor
+        action={action}
+        finalizeAction={finalizeAction}
+        initial={{
+          ...emptyInitial,
+          participants: [{ id: "p1", name: "Nabil" }],
+          items: [
+            {
+              id: "i1",
+              name: "Nasi Goreng",
+              quantity: 1,
+              unitPrice: "1000",
+              itemTaxBps: 0,
+              participantIds: ["p1"],
+            },
+          ],
+        }}
+      />,
+    );
+
+    const quantity = screen.getByLabelText("Jumlah") as HTMLInputElement;
+    fireEvent.change(quantity, { target: { value: "02" } });
+    expect(quantity.value).toBe("2");
+  });
 });

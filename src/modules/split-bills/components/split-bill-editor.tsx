@@ -12,11 +12,14 @@ import {
   iconButtonClass,
   textareaClass,
 } from "@/components/ui/styles";
+import { formatIdr } from "@/lib/money/format-idr";
+import { parseMoneyInput, unitPriceFromTotal } from "@/lib/money/input-format";
 import type { SplitBillActionState } from "../actions/split-bill-actions";
 import { calculateSplitBill } from "../services/calculator";
 import { createId, percentageToBasisPoints } from "../services/draft-utils";
 import type { SplitBillDiscountMode } from "../types/split-bill";
 import { CalculationSummary } from "./calculation-summary";
+import { QuantityInput, RupiahInput } from "./money-input";
 
 export type SplitBillEditorData = {
   id?: string;
@@ -90,6 +93,7 @@ export function SplitBillEditor({
       participantIds,
     })),
   );
+  const [itemErrors, setItemErrors] = useState<Record<string, string>>({});
   const revision = state.revision ?? initial.revision ?? 0;
   const billTaxBps = percentageToBasisPoints(taxPercent);
 
@@ -170,6 +174,58 @@ export function SplitBillEditor({
 
   function removeItem(id: string) {
     setItems((current) => current.filter((row) => row.id !== id));
+  }
+
+  function updateUnitPrice(itemId: string, unitPrice: string) {
+    setItems((current) =>
+      current.map((row) =>
+        row.id === itemId ? { ...row, unitPrice } : row,
+      ),
+    );
+    setItemErrors((current) => {
+      const next = { ...current };
+      delete next[itemId];
+      return next;
+    });
+  }
+
+  function updateTotalPrice(itemId: string, total: string) {
+    const parsedTotal = parseMoneyInput(total);
+    const item = items.find((row) => row.id === itemId);
+    if (!item) return;
+    const quantity = item.quantity > 0 ? item.quantity : 1;
+    const unit = unitPriceFromTotal(BigInt(parsedTotal || "0"), quantity);
+    if (unit === null) {
+      setItemErrors((current) => ({
+        ...current,
+        [itemId]:
+          "Total harus habis dibagi jumlah item agar harga satuan tetap rupiah bulat.",
+      }));
+      return;
+    }
+    setItems((current) =>
+      current.map((row) =>
+        row.id === itemId ? { ...row, unitPrice: unit.toString() } : row,
+      ),
+    );
+    setItemErrors((current) => {
+      const next = { ...current };
+      delete next[itemId];
+      return next;
+    });
+  }
+
+  function updateQuantity(itemId: string, quantity: number) {
+    setItems((current) =>
+      current.map((row) =>
+        row.id === itemId ? { ...row, quantity } : row,
+      ),
+    );
+    setItemErrors((current) => {
+      const next = { ...current };
+      delete next[itemId];
+      return next;
+    });
   }
 
   return (
@@ -287,25 +343,15 @@ export function SplitBillEditor({
                         required
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-[.7rem]">
+                    <div className="grid grid-cols-2 gap-[.7rem] max-[540px]:grid-cols-1">
                       <div className={fieldClass}>
                         <label htmlFor={`item-quantity-${item.id}`}>Jumlah</label>
-                        <Input
+                        <QuantityInput
                           id={`item-quantity-${item.id}`}
-                          type="number"
                           min="1"
                           max="10000"
-                          step="1"
                           value={item.quantity}
-                          onChange={(event) =>
-                            setItems((current) =>
-                              current.map((row) =>
-                                row.id === item.id
-                                  ? { ...row, quantity: Number(event.target.value) }
-                                  : row,
-                              ),
-                            )
-                          }
+                          onChange={(value) => updateQuantity(item.id, value)}
                           required
                         />
                       </div>
@@ -313,25 +359,53 @@ export function SplitBillEditor({
                         <label htmlFor={`item-price-${item.id}`}>
                           Harga satuan
                         </label>
-                        <Input
+                        <RupiahInput
                           id={`item-price-${item.id}`}
-                          type="number"
                           min="1"
-                          step="1"
-                          inputMode="numeric"
                           value={item.unitPrice}
-                          onChange={(event) =>
-                            setItems((current) =>
-                              current.map((row) =>
-                                row.id === item.id
-                                  ? { ...row, unitPrice: event.target.value }
-                                  : row,
-                              ),
-                            )
-                          }
+                          onChange={(value) => updateUnitPrice(item.id, value)}
                           required
                         />
                       </div>
+                    </div>
+                    <div className={fieldClass}>
+                      <label htmlFor={`item-total-${item.id}`}>
+                        Harga total
+                      </label>
+                      <RupiahInput
+                        id={`item-total-${item.id}`}
+                        min="1"
+                        value={
+                          item.quantity > 0 && item.unitPrice
+                            ? (
+                                BigInt(item.quantity) * BigInt(item.unitPrice)
+                              ).toString()
+                            : ""
+                        }
+                        onChange={(value) => updateTotalPrice(item.id, value)}
+                        aria-describedby={
+                          itemErrors[item.id]
+                            ? `item-total-error-${item.id}`
+                            : undefined
+                        }
+                      />
+                      {itemErrors[item.id] ? (
+                        <p
+                          id={`item-total-error-${item.id}`}
+                          className="m-0 text-[.76rem] font-medium text-expense"
+                          role="alert"
+                        >
+                          {itemErrors[item.id]}
+                        </p>
+                      ) : (
+                        <p className="m-0 text-[.76rem] text-muted">
+                          {item.quantity > 0 && item.unitPrice
+                            ? `${item.quantity} × ${formatIdr(item.unitPrice)} = ${formatIdr(
+                                (BigInt(item.quantity) * BigInt(item.unitPrice)).toString(),
+                              )}`
+                            : "Isi harga satuan atau total."}
+                        </p>
+                      )}
                     </div>
                     <div className="flex flex-wrap gap-x-4 gap-y-2">
                       {participants.map((participant) => (
