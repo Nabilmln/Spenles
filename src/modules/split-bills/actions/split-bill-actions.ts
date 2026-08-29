@@ -96,11 +96,9 @@ export async function createAndFinalizeSplitBillAction(
     return { error: parsed.error.issues[0]?.message ?? "Data tagihan tidak valid." };
   }
   const prepared = prepareSplitBillDraft(parsed.data);
+  let finalizedBillId: string | null = null;
   try {
     calculateSplitBill(preparedCalculationInput(prepared));
-    let billId: string;
-    let billRevision: number;
-    let createdFresh = false;
     if (id.success && revision.success) {
       const updated = await replaceOwnedSplitBillDraft(
         db,
@@ -115,32 +113,39 @@ export async function createAndFinalizeSplitBillAction(
             "Draft berubah di sesi lain atau sudah tidak dapat diedit. Muat ulang halaman.",
         };
       }
-      billId = id.data;
-      billRevision = updated.revision;
+      const result = await finalizeOwnedSplitBill(
+        db,
+        user.id,
+        id.data,
+        updated.revision,
+      );
+      if (!result.ok) {
+        return { error: "Finalisasi tidak berhasil. Coba lagi." };
+      }
+      finalizedBillId = id.data;
     } else {
       const created = await createOwnedSplitBillDraft(db, user.id, prepared);
       if (!created) return { error: "Tagihan belum dapat diproses." };
-      billId = created.id;
-      billRevision = created.revision;
-      createdFresh = true;
-    }
-    const result = await finalizeOwnedSplitBill(
-      db,
-      user.id,
-      billId,
-      billRevision,
-    );
-    if (!result.ok) {
-      if (createdFresh) {
-        await deleteOwnedSplitBillDraft(db, user.id, billId).catch(() => {});
+      const result = await finalizeOwnedSplitBill(
+        db,
+        user.id,
+        created.id,
+        created.revision,
+      );
+      if (!result.ok) {
+        await deleteOwnedSplitBillDraft(db, user.id, created.id).catch(() => {});
+        return { error: "Finalisasi tidak berhasil. Coba lagi." };
       }
-      return { error: "Finalisasi tidak berhasil. Coba lagi." };
+      finalizedBillId = created.id;
     }
     revalidatePath("/split-bills");
-    redirect(`/split-bills/${billId}`);
   } catch (error) {
     return { error: calculationMessage(error) };
   }
+  if (finalizedBillId === null) {
+    return { error: "Finalisasi tidak berhasil. Coba lagi." };
+  }
+  redirect(`/split-bills/${finalizedBillId}`);
 }
 
 export async function updateSplitBillAction(
