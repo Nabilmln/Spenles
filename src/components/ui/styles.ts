@@ -20,7 +20,7 @@ export const cardClass =
   "card rounded-[.85rem] border border-border bg-surface p-[.9rem] shadow-card";
 
 export const inputClass =
-  "w-full min-h-[2.6rem] rounded-[.65rem] border border-border bg-surface-subtle px-[.8rem] py-[.6rem] text-[.88rem] text-foreground transition-[border,box-shadow] duration-150 focus:border-primary-500 focus:shadow-[0_0_0_3px_rgb(240_90_36/12%)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-65";
+  "w-full min-h-[2.6rem] rounded-[.65rem] border border-border bg-surface-subtle px-[.8rem] py-[.6rem] text-base text-foreground transition-[border,box-shadow] duration-150 focus:border-primary-500 focus:shadow-[0_0_0_3px_rgb(240_90_36/12%)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-65";
 
 export const textareaClass = `${inputClass} min-h-[7rem] resize-y`;
 

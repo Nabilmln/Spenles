@@ -160,13 +160,13 @@ export function TransactionForm({
               value={date}
               onChange={(event) => setDate(event.target.value)}
               required
-              className="min-h-[2.7rem] text-[.88rem]"
+              className="min-h-[2.7rem]"
             />
             <p className={cn(fieldHintClass, "text-[.72rem] mt-[.35rem]")}>Waktu pengisian otomatis mengikuti pukul saat ini di zona Asia/Jakarta.</p>
           </div>
           <div className={fieldClass}>
             <label htmlFor="note" className={cn(fieldLabelClass, "text-[.8rem]")}>Keterangan (opsional)</label>
-            <textarea className={cn(textareaClass, "min-h-[2.7rem] text-[.88rem]")} id="note" name="note" maxLength={500} defaultValue={initial?.note} />
+            <textarea className={cn(textareaClass, "min-h-[2.7rem]")} id="note" name="note" maxLength={500} defaultValue={initial?.note} />
           </div>
           <div className="flex items-center gap-2">
             <Button type="submit" disabled={pending} className="min-h-[2.6rem] p-[.55rem_.9rem] text-[.88rem]">
@@ -429,13 +429,13 @@ function SavingsFields({
           value={date}
           onChange={(event) => setDate(event.target.value)}
           required
-          className="min-h-[2.7rem] text-[.88rem]"
+          className="min-h-[2.7rem]"
         />
         <p className={cn(fieldHintClass, "text-[.72rem] mt-[.35rem]")}>Waktu pengisian diambil mengikuti pukul saat ini di zona Asia/Jakarta.</p>
       </div>
       <div className={fieldClass}>
         <label htmlFor="note" className={cn(fieldLabelClass, "text-[.8rem]")}>Keterangan (opsional)</label>
-        <textarea className={cn(textareaClass, "min-h-[2.7rem] text-[.88rem]")} id="note" name="note" maxLength={500} />
+        <textarea className={cn(textareaClass, "min-h-[2.7rem]")} id="note" name="note" maxLength={500} />
       </div>
       <div className="flex items-center gap-2">
         <Button type="submit" disabled={pending || !hasSavings} aria-describedby={errorId} className="min-h-[2.6rem] p-[.55rem_.9rem] text-[.88rem]">
