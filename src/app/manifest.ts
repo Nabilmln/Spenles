@@ -8,11 +8,24 @@ export default function manifest(): MetadataRoute.Manifest {
       "Aplikasi pencatatan keuangan, anggaran, arus kas, laporan, dan split bill personal.",
     start_url: "/",
     display: "standalone",
-    background_color: "#f5f5f7",
+    background_color: "#f05a24",
     theme_color: "#f05a24",
     icons: [
-      { src: "/icon-192.png", sizes: "192x192", type: "image/png" },
-      { src: "/icon-512.png", sizes: "512x512", type: "image/png" },
+      { src: "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+      {
+        src: "/icon-192.png",
+        sizes: "192x192",
+        type: "image/png",
+        purpose: "maskable",
+      },
+      { src: "/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+      {
+        src: "/icon-512.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "maskable",
+      },
+      { src: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
   };
 }

@@ -22,6 +22,9 @@ export const metadata: Metadata = {
     title: "Spenles",
     statusBarStyle: "default",
   },
+  icons: {
+    apple: "/apple-touch-icon.png",
+  },
 };
 
 export const viewport: Viewport = {
