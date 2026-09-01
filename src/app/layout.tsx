@@ -27,9 +27,18 @@ export const metadata: Metadata = {
   },
 };
 
-export const viewport: Viewport = {
-  themeColor: "#4f46e5",
-};
+export async function generateViewport(): Promise<Viewport> {
+  const cookieStore = await cookies();
+  const theme = cookieStore.get("spenles-theme")?.value;
+  if (theme === "light") return { themeColor: "#f5f5f7" };
+  if (theme === "dark") return { themeColor: "#08080a" };
+  return {
+    themeColor: [
+      { media: "(prefers-color-scheme: dark)", color: "#08080a" },
+      { color: "#f5f5f7" },
+    ],
+  };
+}
 
 export default async function RootLayout({
   children,
