@@ -14,6 +14,7 @@ export * from "./components/mobile-balance-card";
 export * from "./components/monthly-expense-card";
 export * from "./components/recent-activity";
 export * from "./components/savings-summary-card";
+export * from "./components/services-section";
 export * from "./components/top-spending-card";
 export * from "./queries/dashboard-queries";
 export * from "./schemas/dashboard-filters";

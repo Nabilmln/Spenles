@@ -102,7 +102,7 @@ function MobileLink({
     <Link
       aria-current={active ? "page" : undefined}
       className={cn(
-        "relative flex min-h-[3.1rem] items-center justify-center gap-[.3rem] rounded-full px-1 text-muted transition-[background,color,box-shadow] duration-200",
+        "relative flex min-h-[3.1rem] min-w-[3.1rem] items-center justify-center gap-[.3rem] rounded-full px-1 text-muted transition-[background,color,box-shadow] duration-200",
         active &&
           "bg-primary-50 font-medium text-primary-700 dark:bg-primary-50 dark:text-primary-700",
       )}

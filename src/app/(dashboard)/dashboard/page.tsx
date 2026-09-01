@@ -16,7 +16,6 @@ import {
   countCalendarDays,
   currentJakartaMonthKey,
   DashboardAccountCard,
-  DashboardFeatureGrid,
   DashboardSectionError,
   FinancialOverview,
   fourDayJakartaInterval,
@@ -37,6 +36,7 @@ import {
   RecentActivityCard,
   safeParseDashboardFilters,
   SavingsSummaryCard,
+  ServicesSection,
   shiftMonthKey,
   TopSpendingCard,
   type DashboardSearchParams,
@@ -270,10 +270,7 @@ export default async function DashboardPage({
       <div className="mx-0 mt-[1.55rem] grid gap-3 px-0">
         <div className="dashboard-grid grid gap-3 min-[861px]:grid-cols-8 min-[1024px]:grid-cols-12">
           <div className="min-w-0 min-[861px]:col-span-8 min-[1024px]:col-span-12">
-            <p className="mb-[.55rem] text-[.72rem] font-semibold uppercase tracking-[.12em] text-muted">
-              Services
-            </p>
-            <DashboardFeatureGrid />
+            <ServicesSection />
           </div>
 
           <div className="hidden min-w-0 min-[861px]:col-span-8 min-[861px]:block min-[1024px]:col-span-8">

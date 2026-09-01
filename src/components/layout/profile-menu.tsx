@@ -100,7 +100,7 @@ export function ProfileMenu({
               onClick={() => setOpen(false)}
             >
               <User size={18} aria-hidden="true" />
-              Profile settings
+              Edit profile
             </a>
             <div className="my-[.5rem] border-t border-border" role="separator" />
             <form action={logoutAction}>

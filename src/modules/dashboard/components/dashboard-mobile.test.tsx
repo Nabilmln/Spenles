@@ -19,14 +19,14 @@ const point = (day: string, expenseIdr: string, plot: number): DailyExpensePoint
 });
 
 describe("mobile dashboard cards", () => {
-  it("renders the horizontal feature navigation with real routes only", () => {
+  it("renders the quick services with real routes only", () => {
     render(<DashboardFeatureGrid />);
 
-    expect(screen.getByRole("navigation", { name: "Feature navigation" })).toBeInTheDocument();
+    expect(screen.getByRole("navigation", { name: "Quick services" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Add Expense" })).toHaveAttribute("href", "/transactions/new");
+    expect(screen.getByRole("link", { name: "Accounts" })).toHaveAttribute("href", "/accounts");
     expect(screen.getByRole("link", { name: "Split Bill" })).toHaveAttribute("href", "/split-bills");
     expect(screen.getByRole("link", { name: "Reports" })).toHaveAttribute("href", "/reports");
-    expect(screen.getByRole("link", { name: "Accounts" })).toHaveAttribute("href", "/accounts");
     expect(screen.queryByRole("link", { name: /Ekspor|Notifikasi/ })).not.toBeInTheDocument();
   });
 
