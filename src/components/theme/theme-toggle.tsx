@@ -13,7 +13,7 @@ export function ThemeToggle({ currentTheme }: { currentTheme: "system" | "light"
 
   const dark = theme === "dark";
   const Icon = dark ? Moon : Sun;
-  const label = dark ? "Aktifkan mode terang" : "Aktifkan mode gelap";
+  const label = dark ? "Enable light mode" : "Enable dark mode";
 
   function toggle() {
     const next = dark ? "light" : "dark";

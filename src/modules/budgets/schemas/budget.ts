@@ -5,15 +5,15 @@ import { moneyString } from "@/lib/money/schema";
 export const budgetIdSchema = z.uuid();
 
 export const budgetSchema = z.object({
-  categoryId: z.uuid("Kategori tidak valid."),
-  month: z.string().refine(isCanonicalMonth, "Bulan anggaran tidak valid."),
+  categoryId: z.uuid("Invalid category."),
+  month: z.string().refine(isCanonicalMonth, "Invalid budget month."),
   amount: moneyString({
-    formatMessage: "Anggaran harus berupa rupiah bulat positif.",
-    rangeMessage: "Anggaran melewati batas yang didukung.",
+    formatMessage: "Budget must be a positive whole number of rupiah.",
+    rangeMessage: "Budget exceeds the supported limit.",
   }),
   warningThresholdBps: z.coerce
     .number()
     .int()
-    .min(100, "Ambang minimum adalah 1%.")
-    .max(10_000, "Ambang maksimum adalah 100%."),
+    .min(100, "Minimum threshold is 1%.")
+    .max(10_000, "Maximum threshold is 100%."),
 });

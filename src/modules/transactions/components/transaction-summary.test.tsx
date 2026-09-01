@@ -14,22 +14,22 @@ describe("TransactionSummary", () => {
       />,
     );
 
-    const region = screen.getByRole("region", { name: "Ringkasan periode" });
+    const region = screen.getByRole("region", { name: "Period summary" });
     expect(region).toHaveClass("card");
     expect(region.querySelectorAll(":scope > div")).toHaveLength(3);
-    expect(screen.getByText("Pendapatan")).toBeInTheDocument();
-    expect(screen.getByText("Pengeluaran")).toBeInTheDocument();
-    expect(screen.getByText("Tabungan")).toBeInTheDocument();
+    expect(screen.getByText("Income")).toBeInTheDocument();
+    expect(screen.getByText("Expense")).toBeInTheDocument();
+    expect(screen.getByText("Savings")).toBeInTheDocument();
     expect(screen.getByText(/Rp\s*1\.000\.000/u)).toBeInTheDocument();
     expect(screen.getByText(/Rp\s*250\.000/u)).toBeInTheDocument();
     expect(screen.getByText(/Rp\s*125\.000/u)).toBeInTheDocument();
-    expect(screen.queryByText("Tambah transaksi")).not.toBeInTheDocument();
+    expect(screen.queryByText("Add transaction")).not.toBeInTheDocument();
   });
 
   it("keeps a negative savings value on its own signed line", () => {
     render(<TransactionSummary income={0n} expense={0n} savings={-25_000n} />);
 
     expect(screen.getByText(/\u2212\s*Rp\s*25\.000/u)).toBeInTheDocument();
-    expect(screen.getByText("Tabungan")).toBeInTheDocument();
+    expect(screen.getByText("Savings")).toBeInTheDocument();
   });
 });

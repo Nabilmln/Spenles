@@ -46,17 +46,17 @@ export function TransactionFilterBar({
       role="search"
     >
       <input
-        aria-label="Cari deskripsi atau kategori"
+        aria-label="Search description or category"
         className={cn(inputClass, "flex-1 min-w-0")}
         defaultValue={filters.q}
         name="q"
-        placeholder="Cari deskripsi atau kategori"
+        placeholder="Search description or category"
         type="search"
       />
       <button
         aria-expanded={open}
         aria-haspopup="dialog"
-        aria-label="Buka filter"
+        aria-label="Open filters"
         className={cn(iconButtonClass, "relative size-[2.9rem] min-h-[2.9rem]")}
         onClick={() => setOpen(true)}
         type="button"
@@ -91,9 +91,9 @@ export function TransactionFilterBar({
             role="dialog"
           >
             <div className="mb-4 flex items-center justify-between gap-4">
-              <h2 className="m-0 text-[1.05rem] tracking-[-.02em]" id="tx-filter-title">Filter transaksi</h2>
+              <h2 className="m-0 text-[1.05rem] tracking-[-.02em]" id="tx-filter-title">Filter transactions</h2>
               <button
-                aria-label="Tutup filter"
+                aria-label="Close filters"
                 className={iconButtonClass}
                 onClick={() => setOpen(false)}
                 type="button"
@@ -103,25 +103,25 @@ export function TransactionFilterBar({
             </div>
             <div className="grid gap-[.9rem]">
               <label className={fieldClass}>
-                <span className="text-[.86rem] font-medium">Jenis transaksi</span>
+                <span className="text-[.86rem] font-medium">Transaction type</span>
                 <Select
-                  aria-label="Jenis transaksi"
+                  aria-label="Transaction type"
                   onChange={(event) => setType(event.target.value)}
                   value={type}
                 >
-                  <option value="">Semua jenis</option>
-                  <option value="expense">Pengeluaran</option>
-                  <option value="income">Pemasukan</option>
+                  <option value="">All types</option>
+                  <option value="expense">Expense</option>
+                  <option value="income">Income</option>
                 </Select>
               </label>
               <label className={fieldClass}>
-                <span className="text-[.86rem] font-medium">Kategori</span>
+                <span className="text-[.86rem] font-medium">Category</span>
                 <Select
-                  aria-label="Kategori"
+                  aria-label="Category"
                   onChange={(event) => setCategory(event.target.value)}
                   value={category}
                 >
-                  <option value="">Semua kategori</option>
+                  <option value="">All categories</option>
                   {categories.map((item) => (
                     <option key={item.id} value={item.id}>
                       {item.name}
@@ -130,13 +130,13 @@ export function TransactionFilterBar({
                 </Select>
               </label>
               <label className={fieldClass}>
-                <span className="text-[.86rem] font-medium">Akun</span>
+                <span className="text-[.86rem] font-medium">Account</span>
                 <Select
-                  aria-label="Akun"
+                  aria-label="Account"
                   onChange={(event) => setAccount(event.target.value)}
                   value={account}
                 >
-                  <option value="">Semua akun</option>
+                  <option value="">All accounts</option>
                   {accounts.map((item) => (
                     <option key={item.id} value={item.id}>
                       {item.name}
@@ -145,31 +145,31 @@ export function TransactionFilterBar({
                 </Select>
               </label>
               <div className={fieldClass}>
-                <span className="text-[.86rem] font-medium">Periode</span>
+                <span className="text-[.86rem] font-medium">Period</span>
                 <DateRangeField month={filters.month} from={filters.from} to={filters.to} />
               </div>
               <label className={fieldClass}>
-                <span className="text-[.86rem] font-medium">Urutkan</span>
+                <span className="text-[.86rem] font-medium">Sort</span>
                 <select
-                  aria-label="Urutkan"
+                  aria-label="Sort"
                   className={inputClass}
                   onChange={(event) => setSort(event.target.value as TransactionFilters["sort"])}
                   value={sort}
                 >
-                  <option value="transactionAt">Tanggal</option>
-                  <option value="amount">Jumlah</option>
+                  <option value="transactionAt">Date</option>
+                  <option value="amount">Amount</option>
                 </select>
               </label>
               <label className={fieldClass}>
-                <span className="text-[.86rem] font-medium">Arah urutan</span>
+                <span className="text-[.86rem] font-medium">Sort direction</span>
                 <select
-                  aria-label="Arah urutan"
+                  aria-label="Sort direction"
                   className={inputClass}
                   onChange={(event) => setDirection(event.target.value as TransactionFilters["direction"])}
                   value={direction}
                 >
-                  <option value="desc">Terbaru dahulu</option>
-                  <option value="asc">Terlama dahulu</option>
+                  <option value="desc">Newest first</option>
+                  <option value="asc">Oldest first</option>
                 </select>
               </label>
             </div>
@@ -178,7 +178,7 @@ export function TransactionFilterBar({
                 Reset
               </Link>
               <button className={cn(buttonClass("primary"), "flex-1 justify-center")} type="submit">
-                Terapkan Filter
+                Apply Filters
               </button>
             </div>
           </div>

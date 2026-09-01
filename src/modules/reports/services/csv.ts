@@ -55,7 +55,7 @@ function formatDatePart(value: Date, part: "date" | "time") {
 export function serializeTransactionsCsv(rows: ReportTransaction[]) {
   if (rows.length > CSV_ROW_LIMIT) {
     throw new ExportLimitError(
-      `Ekspor melebihi batas ${CSV_ROW_LIMIT.toLocaleString("id-ID")} transaksi.`,
+      `Export exceeds the ${CSV_ROW_LIMIT.toLocaleString("en-US")}-transaction limit.`,
     );
   }
   const lines = [
@@ -79,7 +79,7 @@ export function serializeTransactionsCsv(rows: ReportTransaction[]) {
   ];
   const csv = `\uFEFF${lines.join("\r\n")}\r\n`;
   if (Buffer.byteLength(csv, "utf8") > EXPORT_MAX_BYTES) {
-    throw new ExportLimitError("Ukuran ekspor CSV melebihi batas 3,5 MB.");
+    throw new ExportLimitError("CSV export size exceeds the 3.5 MB limit.");
   }
   return csv;
 }

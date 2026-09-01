@@ -26,7 +26,7 @@ function ExactTooltip({
     <div className="grid gap-[.2rem] rounded-[.65rem] border border-border bg-surface p-[.65rem_.75rem] text-[.75rem] text-foreground shadow-card">
       <strong>{point.name}</strong>
       <span>{formatIdr(point.expenseIdr)}</span>
-      <span>{(point.shareBps / 100).toLocaleString("id-ID")}%</span>
+      <span>{(point.shareBps / 100).toLocaleString("en-US")}%</span>
     </div>
   );
 }

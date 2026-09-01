@@ -17,7 +17,7 @@ export function Sidebar() {
         <NavigationLinks />
         <div className="mt-auto pt-[.75rem] border-t border-border">
           <p className="m-0 text-[.72rem] text-muted opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-200 whitespace-nowrap px-[.5rem] pb-[.25rem]">
-            Keuangan pribadi
+            Personal finance
           </p>
         </div>
       </div>

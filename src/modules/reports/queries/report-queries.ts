@@ -499,7 +499,7 @@ export async function getFinancialReport(
 
   if (detailRows.length > REPORT_DETAIL_LIMIT) {
     throw new ExportLimitError(
-      `Detail laporan melebihi batas ${REPORT_DETAIL_LIMIT} transaksi.`,
+      `Report details exceed the ${REPORT_DETAIL_LIMIT}-transaction limit.`,
     );
   }
   return {

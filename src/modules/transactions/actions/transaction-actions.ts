@@ -34,7 +34,7 @@ export async function createTransactionAction(
   const parsed = transactionSchema.safeParse(input(formData));
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
   const transactionAt = preserveOrAttachNow(parsed.data.transactionAt);
-  if (!transactionAt) return { error: "Tanggal transaksi tidak valid." };
+  if (!transactionAt) return { error: "Invalid transaction date." };
   try {
     const created = await createOwnedTransaction(db, user.id, {
       type: parsed.data.type,
@@ -45,10 +45,10 @@ export async function createTransactionAction(
       note: parsed.data.note,
     });
     if (!created) {
-      return { error: "Akun atau kategori tidak tersedia untuk transaksi ini." };
+      return { error: "The account or category is not available for this transaction." };
     }
   } catch {
-    return { error: "Transaksi belum dapat disimpan." };
+    return { error: "Transaction could not be saved." };
   }
   revalidatePath("/transactions");
   revalidatePath("/accounts");
@@ -65,11 +65,11 @@ export async function updateTransactionAction(
   const id = transactionIdSchema.safeParse(formData.get("id"));
   const parsed = transactionSchema.safeParse(input(formData));
   if (!id.success || !parsed.success) {
-    return { error: parsed.success ? "Transaksi tidak ditemukan." : parsed.error.issues[0]?.message };
+    return { error: parsed.success ? "Transaction not found." : parsed.error.issues[0]?.message };
   }
   const existing = await getTransaction(user.id, id.data);
   const transactionAt = preserveOrAttachNow(parsed.data.transactionAt, existing?.transactionAt);
-  if (!transactionAt) return { error: "Tanggal transaksi tidak valid." };
+  if (!transactionAt) return { error: "Invalid transaction date." };
   try {
     const updated = await updateOwnedTransaction(db, user.id, id.data, {
       type: parsed.data.type,
@@ -80,10 +80,10 @@ export async function updateTransactionAction(
       note: parsed.data.note,
     });
     if (!updated) {
-      return { error: "Transaksi tidak ditemukan atau pilihan sudah tidak tersedia." };
+      return { error: "Transaction not found or the selections are no longer available." };
     }
   } catch {
-    return { error: "Transaksi belum dapat diperbarui." };
+    return { error: "Transaction could not be updated." };
   }
   revalidatePath("/transactions");
   revalidatePath("/accounts");

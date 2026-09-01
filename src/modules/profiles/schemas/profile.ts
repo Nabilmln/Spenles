@@ -5,8 +5,8 @@ export const profileSchema = z.object({
   displayName: z
     .string()
     .trim()
-    .min(2, "Nama minimal 2 karakter.")
-    .max(100, "Nama maksimal 100 karakter."),
+    .min(2, "Display name must be at least 2 characters.")
+    .max(100, "Display name must be at most 100 characters."),
   defaultCurrency: z.literal("IDR"),
   timezone: z.literal(JAKARTA_TIMEZONE),
   theme: z.enum(["system", "light", "dark"]),

@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
 });
 
 function formatGeneratedAt(value: Date) {
-  return new Intl.DateTimeFormat("id-ID", {
+  return new Intl.DateTimeFormat("en-US", {
     timeZone: REPORT_TIMEZONE,
     dateStyle: "long",
     timeStyle: "short",
@@ -99,7 +99,7 @@ function formatGeneratedAt(value: Date) {
 }
 
 function formatShortDate(value: Date) {
-  return new Intl.DateTimeFormat("id-ID", {
+  return new Intl.DateTimeFormat("en-US", {
     day: "2-digit",
     month: "2-digit",
     timeZone: REPORT_TIMEZONE,
@@ -124,14 +124,14 @@ function SummaryCard({ label, amount }: { label: string; amount: string }) {
 function AllocationChart({ report }: { report: FinancialReport }) {
   const income = BigInt(report.summary.incomeIdr);
   if (income <= 0n) {
-    return <Text style={styles.muted}>Belum ada pendapatan pada periode ini.</Text>;
+    return <Text style={styles.muted}>No income in this period yet.</Text>;
   }
   const expense = BigInt(report.summary.expenseIdr);
   const savings = BigInt(report.summary.netIdr);
   const rows = [
-    { label: "Pendapatan", value: income, color: INCOME_COLOR },
-    { label: "Pengeluaran", value: expense, color: EXPENSE_COLOR },
-    { label: "Tabungan", value: savings, color: SAVINGS_COLOR },
+    { label: "Income", value: income, color: INCOME_COLOR },
+    { label: "Expense", value: expense, color: EXPENSE_COLOR },
+    { label: "Savings", value: savings, color: SAVINGS_COLOR },
   ];
   return (
     <Svg style={styles.chart} viewBox="0 0 500 92">
@@ -172,42 +172,42 @@ export function FinancialReportDocument({ report }: { report: FinancialReport })
 
   return (
     <Document
-      title={`Laporan keuangan Spenles - ${report.filters.interval.label}`}
+      title={`Spenles Financial Report - ${report.filters.interval.label}`}
       author="Spenles"
-      subject="Laporan keuangan pribadi"
-      language="id-ID"
+      subject="Personal financial report"
+      language="en-US"
     >
       <Page size="A4" style={styles.page} wrap>
         <Text style={styles.brand}>SPENLES</Text>
-        <Text style={styles.title}>Laporan Keuangan Pribadi</Text>
+        <Text style={styles.title}>Personal Financial Report</Text>
         <Text style={styles.period}>
-          Periode {report.filters.interval.label}
+          Period {report.filters.interval.label}
         </Text>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>RINGKASAN KEUANGAN</Text>
+          <Text style={styles.sectionTitle}>FINANCIAL SUMMARY</Text>
           <View style={styles.summaryGrid}>
-            <SummaryCard label="Pendapatan" amount={report.summary.incomeIdr} />
-            <SummaryCard label="Pengeluaran" amount={report.summary.expenseIdr} />
-            <SummaryCard label="Selisih" amount={report.summary.netIdr} />
+            <SummaryCard label="Income" amount={report.summary.incomeIdr} />
+            <SummaryCard label="Expense" amount={report.summary.expenseIdr} />
+            <SummaryCard label="Net" amount={report.summary.netIdr} />
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>ALOKASI KEUANGAN</Text>
+          <Text style={styles.sectionTitle}>FINANCIAL ALLOCATION</Text>
           <AllocationChart report={report} />
         </View>
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>PENGELUARAN BERDASARKAN KATEGORI</Text>
+          <Text style={styles.sectionTitle}>EXPENSE BY CATEGORY</Text>
           {report.categories.length === 0 ? (
-            <Text style={styles.muted}>Tidak ada pengeluaran pada periode ini.</Text>
+            <Text style={styles.muted}>No expenses in this period.</Text>
           ) : (
             <View style={styles.table}>
               <View style={[styles.row, styles.header]} fixed>
-                <Text style={styles.cellWide}>Kategori</Text>
-                <Text style={styles.cellNumeric}>Jumlah</Text>
-                <Text style={styles.cellNumeric}>Persentase</Text>
+                <Text style={styles.cellWide}>Category</Text>
+                <Text style={styles.cellNumeric}>Amount</Text>
+                <Text style={styles.cellNumeric}>Percentage</Text>
               </View>
               {report.categories.map((row) => (
                 <View style={styles.row} key={row.categoryId} wrap={false}>
@@ -224,14 +224,14 @@ export function FinancialReportDocument({ report }: { report: FinancialReport })
 
         {report.filters.includeDetails ? (
           <View style={styles.section} break>
-            <Text style={styles.sectionTitle}>DETAIL TRANSAKSI</Text>
+            <Text style={styles.sectionTitle}>TRANSACTION DETAILS</Text>
             <View style={styles.table}>
               <View style={[styles.row, styles.header]} fixed>
-                <Text style={styles.cell}>Tanggal</Text>
-                <Text style={styles.cellWide}>Deskripsi</Text>
-                <Text style={styles.cellWide}>Kategori</Text>
-                <Text style={styles.cell}>Tipe</Text>
-                <Text style={styles.cellNumeric}>Nominal</Text>
+                <Text style={styles.cell}>Date</Text>
+                <Text style={styles.cellWide}>Description</Text>
+                <Text style={styles.cellWide}>Category</Text>
+                <Text style={styles.cell}>Type</Text>
+                <Text style={styles.cellNumeric}>Amount</Text>
               </View>
               {report.transactions.map((row) => (
                 <View style={styles.row} key={row.id} wrap={false}>
@@ -239,7 +239,7 @@ export function FinancialReportDocument({ report }: { report: FinancialReport })
                   <Text style={styles.cellWide}>{row.note || "—"}</Text>
                   <Text style={styles.cellWide}>{row.categoryName}</Text>
                   <Text style={styles.cell}>
-                    {row.type === "income" ? "Masuk" : "Keluar"}
+                    {row.type === "income" ? "In" : "Out"}
                   </Text>
                   <Text style={styles.cellNumeric}>{formatIdr(row.amountIdr)}</Text>
                 </View>
@@ -249,17 +249,17 @@ export function FinancialReportDocument({ report }: { report: FinancialReport })
         ) : null}
 
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>INFORMASI</Text>
+          <Text style={styles.sectionTitle}>INFORMATION</Text>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Total transaksi</Text>
+            <Text style={styles.infoLabel}>Total transactions</Text>
             <Text style={styles.infoValue}>{report.transactionCount}</Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Periode</Text>
+            <Text style={styles.infoLabel}>Period</Text>
             <Text style={styles.infoValue}>{report.filters.interval.label}</Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Dibuat pada</Text>
+            <Text style={styles.infoLabel}>Generated at</Text>
             <Text style={styles.infoValue}>{formatGeneratedAt(report.generatedAt)}</Text>
           </View>
         </View>
@@ -268,7 +268,7 @@ export function FinancialReportDocument({ report }: { report: FinancialReport })
           <Text>Generated by Spenles</Text>
           <Text
             render={({ pageNumber, totalPages }) =>
-              `Halaman ${pageNumber} dari ${totalPages}`
+              `Page ${pageNumber} of ${totalPages}`
             }
           />
         </View>

@@ -8,7 +8,7 @@ export default async function NewTransactionPage() {
   const options = await getTransactionOptions(user.id);
   return (
     <div className={`${pageStackClass} ${narrowPageClass}`}>
-      <p className={pageDescriptionClass}>Semua waktu ditampilkan dalam zona Asia/Jakarta.</p>
+      <p className={pageDescriptionClass}>All times are shown in the Asia/Jakarta timezone.</p>
       <div className={cardClass}>
         <TransactionForm
           action={createTransactionAction}

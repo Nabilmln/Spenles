@@ -20,7 +20,7 @@ export function SplitBillDeleteButton({
       <button
         type="button"
         className={iconButtonClass}
-        aria-label={`Hapus ${label}`}
+        aria-label={`Delete ${label}`}
         onClick={() => setConfirming(true)}
       >
         <Trash2 size={17} aria-hidden="true" />
@@ -40,20 +40,20 @@ export function SplitBillDeleteButton({
           >
             <div className="mb-4 flex items-center justify-between gap-4">
               <h2 id="delete-bill-title" className="m-0 text-[1.08rem]">
-                Hapus tagihan?
+                Delete bill?
               </h2>
               <button
                 type="button"
                 className={iconButtonClass}
-                aria-label="Tutup konfirmasi"
+                aria-label="Close confirmation"
                 onClick={() => setConfirming(false)}
               >
                 <X size={17} aria-hidden="true" />
               </button>
             </div>
             <p className="m-0 text-[.9rem] text-muted">
-              Tagihan &ldquo;{label}&rdquo; akan dihapus permanen dan tidak
-              dapat dipulihkan.
+              Bill &ldquo;{label}&rdquo; will be permanently deleted and cannot
+              be restored.
             </p>
             <div className="mt-[1.1rem] grid grid-cols-2 gap-2">
               <Button
@@ -61,12 +61,12 @@ export function SplitBillDeleteButton({
                 variant="secondary"
                 onClick={() => setConfirming(false)}
               >
-                Batal
+                Cancel
               </Button>
               <form action={deleteSplitBillAction}>
                 <input type="hidden" name="id" value={billId} />
                 <Button type="submit" variant="danger" className="w-full">
-                  Hapus
+                  Delete
                 </Button>
               </form>
             </div>

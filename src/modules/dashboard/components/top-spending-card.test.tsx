@@ -29,9 +29,9 @@ describe("TopSpendingCard", () => {
     render(<TopSpendingCard periodLabel="Agustus 2026" rows={rows} />);
 
     expect(
-      screen.getByRole("region", { name: "Kategori pengeluaran terbesar" }),
+      screen.getByRole("region", { name: "Top spending categories" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("TOP PENGELUARAN")).toBeInTheDocument();
+    expect(screen.getByText("TOP SPENDING")).toBeInTheDocument();
     expect(screen.getByText("Agustus 2026")).toBeInTheDocument();
     expect(screen.getByText("Makanan")).toBeInTheDocument();
     expect(screen.getByText("Transportasi")).toBeInTheDocument();
@@ -41,7 +41,7 @@ describe("TopSpendingCard", () => {
     expect(
       screen.getByRole("link", { name: /Transportasi/ }),
     ).toHaveAttribute("href", "/reports/categories/cat-2");
-    expect(screen.getByRole("link", { name: "Cek Laporan" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "View Reports" })).toHaveAttribute(
       "href",
       "/reports",
     );
@@ -51,7 +51,7 @@ describe("TopSpendingCard", () => {
     render(<TopSpendingCard periodLabel="Agustus 2026" rows={[]} />);
 
     expect(
-      screen.getByText("Belum ada pengeluaran pada periode ini."),
+      screen.getByText("No expenses yet for this period."),
     ).toBeInTheDocument();
   });
 });

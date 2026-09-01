@@ -24,7 +24,7 @@ describe("AccountList", () => {
         ]}
       />,
     );
-    expect(screen.getByText("Saldo akun negatif.")).toBeInTheDocument();
+    expect(screen.getByText("Account balance is negative.")).toBeInTheDocument();
     expect(screen.getByText("-Rp 1.000")).toBeInTheDocument();
   });
 });

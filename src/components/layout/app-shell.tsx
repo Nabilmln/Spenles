@@ -10,7 +10,7 @@ export function AppShell({ profile, email, children }: { profile: Profile; email
         className="absolute -left-[9999px] z-[100] inline-flex min-h-[2.5rem] items-center rounded-[.65rem] bg-primary-600 px-[1rem] py-[.55rem] text-[.88rem] font-medium text-white focus:left-[.75rem] focus:top-[.75rem]"
         href="#main-content"
       >
-        Lewati ke konten utama
+        Skip to main content
       </a>
       <Sidebar />
       <div className="min-w-0">

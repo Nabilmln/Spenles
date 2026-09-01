@@ -27,8 +27,8 @@ function ExactTooltip({
   return (
     <div className="grid gap-[.2rem] rounded-[.65rem] border border-border bg-surface p-[.65rem_.75rem] text-[.75rem] text-foreground shadow-card">
       <strong>{point.label}</strong>
-      <span>Pemasukan {formatIdr(point.incomeIdr)}</span>
-      <span>Pengeluaran {formatIdr(point.expenseIdr)}</span>
+      <span>Income {formatIdr(point.incomeIdr)}</span>
+      <span>Expense {formatIdr(point.expenseIdr)}</span>
     </div>
   );
 }
@@ -48,7 +48,7 @@ export function IncomeExpenseChart({
           <Tooltip content={<ExactTooltip />} cursor={{ fill: "var(--surface-subtle)" }} />
           <Legend
             formatter={(value) =>
-              value === "incomePlot" ? "Pemasukan" : "Pengeluaran"
+              value === "incomePlot" ? "Income" : "Expense"
             }
           />
           <Bar

@@ -24,7 +24,7 @@ export function TransferForm({
     <form action={action} className="grid gap-4">
       <div className="grid grid-cols-[1fr_1fr] gap-4 max-[540px]:grid-cols-1">
         <div className={fieldClass}>
-          <label htmlFor="transfer-source" className={fieldLabelClass}>Dari akun</label>
+          <label htmlFor="transfer-source" className={fieldLabelClass}>From account</label>
           <Select id="transfer-source" name="sourceAccountId" required>
             {accounts.map((account) => (
               <option key={account.id} value={account.id}>{account.name}</option>
@@ -32,7 +32,7 @@ export function TransferForm({
           </Select>
         </div>
         <div className={fieldClass}>
-          <label htmlFor="transfer-destination" className={fieldLabelClass}>Ke akun</label>
+          <label htmlFor="transfer-destination" className={fieldLabelClass}>To account</label>
           <Select id="transfer-destination" name="destinationAccountId" required>
             {accounts.map((account) => (
               <option key={account.id} value={account.id}>{account.name}</option>
@@ -41,11 +41,11 @@ export function TransferForm({
         </div>
       </div>
       <div className={fieldClass}>
-        <label htmlFor="transfer-amount" className={fieldLabelClass}>Jumlah (IDR)</label>
+        <label htmlFor="transfer-amount" className={fieldLabelClass}>Amount (IDR)</label>
         <Input id="transfer-amount" name="amount" type="number" min="1" step="1" required />
       </div>
       <div className={fieldClass}>
-        <label htmlFor="transfer-at" className={fieldLabelClass}>Waktu transfer</label>
+        <label htmlFor="transfer-at" className={fieldLabelClass}>Transfer time</label>
         <Input
           id="transfer-at"
           name="transferredAt"
@@ -55,11 +55,11 @@ export function TransferForm({
         />
       </div>
       <div className={fieldClass}>
-        <label htmlFor="transfer-note" className={fieldLabelClass}>Catatan (opsional)</label>
+        <label htmlFor="transfer-note" className={fieldLabelClass}>Note (optional)</label>
         <textarea className={textareaClass} id="transfer-note" name="note" maxLength={500} />
       </div>
       <Button type="submit" disabled={pending || accounts.length < 2}>
-        {pending ? "Menyimpan..." : "Catat transfer"}
+        {pending ? "Saving..." : "Record transfer"}
       </Button>
     </form>
   );

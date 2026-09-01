@@ -17,10 +17,10 @@ describe("IncomeVsExpenseComparison", () => {
     );
 
     expect(
-      screen.getByRole("heading", { name: "Pemasukan vs Pengeluaran" }),
+      screen.getByRole("heading", { name: "Income vs Expense" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText("Pemasukan bulan ini"),
+      screen.getByText("Income this month"),
     ).toBeInTheDocument();
     expect(
       screen.getByText(/Rp\s*5\.000\.000/u),
@@ -28,7 +28,7 @@ describe("IncomeVsExpenseComparison", () => {
     expect(
       screen.getByText(/Rp\s*2\.000\.000/u),
     ).toBeInTheDocument();
-    expect(screen.queryByText(/dibanding/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/vs September 2026/)).not.toBeInTheDocument();
   });
 
   it("shows directional change text when a baseline exists", () => {
@@ -43,10 +43,10 @@ describe("IncomeVsExpenseComparison", () => {
     );
 
     expect(
-      screen.getByText(/▲ 8,40% dibanding September 2026/),
+      screen.getByText(/▲ 8,40% vs September 2026/),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/▼ 12,34% dibanding September 2026/),
+      screen.getByText(/▼ 12,34% vs September 2026/),
     ).toBeInTheDocument();
   });
 
@@ -62,8 +62,8 @@ describe("IncomeVsExpenseComparison", () => {
     );
 
     expect(
-      screen.getByText(/Sama dengan September 2026/),
+      screen.getByText(/Same as September 2026/),
     ).toBeInTheDocument();
-    expect(screen.queryByText(/dibanding/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/vs September 2026/)).not.toBeInTheDocument();
   });
 });

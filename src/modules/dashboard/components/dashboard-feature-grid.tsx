@@ -1,17 +1,17 @@
 import Link from "next/link";
-import { FileBarChart, ListTree, Target, WalletCards } from "lucide-react";
+import { CirclePlus, FileBarChart, UsersRound, WalletCards } from "lucide-react";
 
 const features = [
-  { href: "/accounts", label: "Akun", icon: WalletCards },
-  { href: "/budgets", label: "Anggaran", icon: Target },
-  { href: "/categories", label: "Kategori", icon: ListTree },
-  { href: "/reports", label: "Laporan", icon: FileBarChart },
+  { href: "/transactions/new", label: "Add Expense", icon: CirclePlus },
+  { href: "/split-bills", label: "Split Bill", icon: UsersRound },
+  { href: "/reports", label: "Reports", icon: FileBarChart },
+  { href: "/accounts", label: "Accounts", icon: WalletCards },
 ];
 
 export function DashboardFeatureGrid() {
   return (
     <nav
-      aria-label="Navigasi fitur"
+      aria-label="Feature navigation"
       className="grid min-w-0 grid-cols-4 gap-2"
     >
       {features.map(({ href, label, icon: Icon }) => (

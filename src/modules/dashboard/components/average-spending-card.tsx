@@ -6,9 +6,9 @@ import { formatChangeBps } from "../services/financial-metrics";
 function comparisonLabel(changeBps: string | null, previousLabel: string) {
   if (changeBps === null) return null;
   const bps = BigInt(changeBps);
-  if (bps === 0n) return `Sama dengan ${previousLabel}`;
+  if (bps === 0n) return `Same as ${previousLabel}`;
   const arrow = bps > 0n ? "▲" : "▼";
-  return `${arrow} ${formatChangeBps(changeBps)} dibanding ${previousLabel}`;
+  return `${arrow} ${formatChangeBps(changeBps)} vs ${previousLabel}`;
 }
 
 export function AverageSpendingCard({
@@ -24,7 +24,7 @@ export function AverageSpendingCard({
 
   return (
     <section
-      aria-label="Rata-rata pengeluaran per hari"
+      aria-label="Average daily spending"
       className={`${cardClass} shadow-none`}
     >
       <div className="flex items-center gap-[.5rem]">
@@ -32,11 +32,11 @@ export function AverageSpendingCard({
           <CalendarDays aria-hidden="true" />
         </span>
         <div>
-          <p className={`${eyebrowClass} mb-0`}>Rata-rata pengeluaran</p>
+          <p className={`${eyebrowClass} mb-0`}>Average spending</p>
         </div>
       </div>
       <strong className="mt-[.7rem] block min-w-0 text-[clamp(1.2rem,2.5vw,1.65rem)] tracking-[-.04em] [overflow-wrap:anywhere]">
-      <p className="m-0 mt-[.1rem] text-[.72rem] text-muted">per hari</p>
+      <p className="m-0 mt-[.1rem] text-[.72rem] text-muted">per day</p>
         {formatIdr(value)}
       </strong>
       {comparison ? (

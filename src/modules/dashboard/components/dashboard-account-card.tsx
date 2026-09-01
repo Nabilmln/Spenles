@@ -32,9 +32,9 @@ export function DashboardAccountCard({ rows }: { rows: Row[] }) {
     >
       <div className="mb-[.65rem] flex items-start justify-between gap-3 max-[540px]:flex-col">
         <div>
-          <p className={eyebrowClass}>Akun</p>
+          <p className={eyebrowClass}>Accounts</p>
           <h2 id="dashboard-account-title" className="m-0 text-[.95rem] tracking-[-.02em]">
-            Akun yang digunakan
+            Accounts in use
           </h2>
         </div>
         <Link
@@ -42,7 +42,7 @@ export function DashboardAccountCard({ rows }: { rows: Row[] }) {
           href="/accounts"
         >
           <List size={14} aria-hidden="true" />
-          Lihat akun
+          View accounts
         </Link>
       </div>
 
@@ -71,7 +71,7 @@ export function DashboardAccountCard({ rows }: { rows: Row[] }) {
           })}
           {hiddenCount > 0 ? (
             <p className="m-0 pt-[.5rem] text-center text-[.72rem] text-muted">
-              +{hiddenCount} akun lainnya
+              +{hiddenCount} more accounts
             </p>
           ) : null}
         </div>
@@ -80,7 +80,7 @@ export function DashboardAccountCard({ rows }: { rows: Row[] }) {
           className="mt-3 grid min-h-[4rem] flex-1 place-items-center rounded-[.65rem] border border-dashed border-border bg-surface-subtle p-3 text-center text-[.8rem] text-muted"
           role="status"
         >
-          Belum ada akun. Buat akun di menu Akun.
+          No accounts yet. Create an account in the Accounts menu.
         </div>
       )}
     </section>

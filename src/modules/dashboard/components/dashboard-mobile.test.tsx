@@ -22,11 +22,11 @@ describe("mobile dashboard cards", () => {
   it("renders the horizontal feature navigation with real routes only", () => {
     render(<DashboardFeatureGrid />);
 
-    expect(screen.getByRole("navigation", { name: "Navigasi fitur" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Akun" })).toHaveAttribute("href", "/accounts");
-    expect(screen.getByRole("link", { name: "Anggaran" })).toHaveAttribute("href", "/budgets");
-    expect(screen.getByRole("link", { name: "Kategori" })).toHaveAttribute("href", "/categories");
-    expect(screen.getByRole("link", { name: "Laporan" })).toHaveAttribute("href", "/reports");
+    expect(screen.getByRole("navigation", { name: "Feature navigation" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Add Expense" })).toHaveAttribute("href", "/transactions/new");
+    expect(screen.getByRole("link", { name: "Split Bill" })).toHaveAttribute("href", "/split-bills");
+    expect(screen.getByRole("link", { name: "Reports" })).toHaveAttribute("href", "/reports");
+    expect(screen.getByRole("link", { name: "Accounts" })).toHaveAttribute("href", "/accounts");
     expect(screen.queryByRole("link", { name: /Ekspor|Notifikasi/ })).not.toBeInTheDocument();
   });
 
@@ -45,12 +45,12 @@ describe("mobile dashboard cards", () => {
     );
 
     expect(screen.getByRole("button", { name: "Agustus 2026" })).toBeInTheDocument();
-    expect(screen.getByText("Pendapatan")).toBeInTheDocument();
-    expect(screen.getByText("Pengeluaran")).toBeInTheDocument();
+    expect(screen.getByText("Income")).toBeInTheDocument();
+    expect(screen.getByText("Expenses")).toBeInTheDocument();
     expect(screen.getByText(/Rp\s*100\.000/u)).toBeInTheDocument();
     expect(screen.getByText(/Rp\s*50\.000/u)).toBeInTheDocument();
     expect(screen.getAllByTestId("daily-chart")).toHaveLength(2);
-    expect(screen.getByRole("group", { name: "Pilih bulan" })).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "Select month" })).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Tambah transaksi" })).not.toBeInTheDocument();
   });
 
@@ -81,11 +81,11 @@ describe("mobile dashboard cards", () => {
       />,
     );
 
-    expect(screen.getByRole("heading", { name: "Aktivitas terbaru" })).toBeInTheDocument();
-    expect(screen.getByText("Hari ini")).toBeInTheDocument();
-    expect(screen.getByText("Kemarin")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Recent activity" })).toBeInTheDocument();
+    expect(screen.getByText("Today")).toBeInTheDocument();
+    expect(screen.getByText("Yesterday")).toBeInTheDocument();
     expect(screen.getByText("Makan siang")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Lihat semua/ })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /View all/ })).toHaveAttribute(
       "href",
       "/transactions",
     );
@@ -95,10 +95,10 @@ describe("mobile dashboard cards", () => {
     render(<RecentActivityCard rows={[]} />);
 
     expect(
-      screen.getByText("Belum ada pengeluaran"),
+      screen.getByText("No expenses yet"),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Catat pengeluaran" }),
+      screen.getByRole("link", { name: "Record expense" }),
     ).toHaveAttribute("href", "/transactions/new");
   });
 });

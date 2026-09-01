@@ -20,8 +20,8 @@ export function BackButton({ fallback }: { fallback?: string }) {
       type="button"
       className={`${iconButtonClass}`}
       onClick={goBack}
-      aria-label="Kembali"
-      title="Kembali"
+      aria-label="Back"
+      title="Back"
     >
       <ArrowLeft size={20} aria-hidden="true" />
     </button>

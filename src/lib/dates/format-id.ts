@@ -1,28 +1,28 @@
 import { parseDateKey } from "./calendar";
 
 export const MONTHS_LONG = [
-  "Januari",
-  "Februari",
-  "Maret",
+  "January",
+  "February",
+  "March",
   "April",
-  "Mei",
-  "Juni",
-  "Juli",
-  "Agustus",
+  "May",
+  "June",
+  "July",
+  "August",
   "September",
-  "Oktober",
+  "October",
   "November",
-  "Desember",
+  "December",
 ] as const;
 
 const WEEKDAYS = [
-  "Minggu",
-  "Senin",
-  "Selasa",
-  "Rabu",
-  "Kamis",
-  "Jumat",
-  "Sabtu",
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
 ] as const;
 
 /**

@@ -46,7 +46,7 @@ export function PasswordField({
         className={passwordToggleClass}
         type="button"
         onClick={() => setVisible((value) => !value)}
-        aria-label={visible ? "Sembunyikan kata sandi" : "Tampilkan kata sandi"}
+        aria-label={visible ? "Hide password" : "Show password"}
       >
         {visible ? <EyeOff size={19} /> : <Eye size={19} />}
       </button>

@@ -8,19 +8,19 @@ export const recurringRuleSchema = z
   .object({
     type: z.enum(["income", "expense"]),
     amount: moneyString({
-      formatMessage: "Jumlah harus berupa rupiah bulat positif.",
-      rangeMessage: "Jumlah melewati batas yang didukung.",
+      formatMessage: "Amount must be a positive whole number of rupiah.",
+      rangeMessage: "Amount exceeds the supported limit.",
     }),
-    accountId: z.uuid("Akun tidak valid."),
-    categoryId: z.uuid("Kategori tidak valid."),
+    accountId: z.uuid("Invalid account."),
+    categoryId: z.uuid("Invalid category."),
     frequency: z.enum(["daily", "weekly", "monthly", "yearly"]),
     startAt: z
       .string()
-      .regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/u, "Waktu mulai tidak valid."),
+      .regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/u, "Invalid start time."),
     endDate: z
       .union([
         z.literal(""),
-        z.string().regex(/^\d{4}-\d{2}-\d{2}$/u, "Tanggal selesai tidak valid."),
+        z.string().regex(/^\d{4}-\d{2}-\d{2}$/u, "Invalid end date."),
       ])
       .transform((value) => value || null),
     note: optionalNoteSchema,
@@ -29,7 +29,7 @@ export const recurringRuleSchema = z
     if (value.endDate && value.endDate < value.startAt.slice(0, 10)) {
       context.addIssue({
         code: "custom",
-        message: "Tanggal selesai tidak boleh sebelum tanggal mulai.",
+        message: "End date cannot be before the start date.",
         path: ["endDate"],
       });
     }

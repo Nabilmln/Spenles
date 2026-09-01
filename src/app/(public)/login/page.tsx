@@ -10,12 +10,12 @@ export default async function LoginPage() {
   return (
     <>
       <div className="mb-7">
-        <p className={eyebrowClass}>Selamat datang kembali</p>
+        <p className={eyebrowClass}>Welcome back</p>
         <h1 className="mb-[.6rem] text-[clamp(1.45rem,2.5vw,1.85rem)] leading-[1.2] tracking-[-.02em]">
-          Masuk ke Spenles
+          Sign in to Spenles
         </h1>
         <p className="m-0 text-[.88rem] text-muted">
-          Gunakan akun Anda untuk membuka ruang keuangan pribadi.
+          Use your account to access your personal finance space.
         </p>
       </div>
       <LoginForm />

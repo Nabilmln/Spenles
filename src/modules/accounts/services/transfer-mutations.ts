@@ -73,7 +73,7 @@ export async function reverseOwnedTransfer(
         original.source_account_id,
         original.amount,
         now(),
-        'Pembalikan transfer',
+        'Transfer reversal',
         original.id
       from transfers as original
       inner join accounts as source

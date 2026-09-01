@@ -29,7 +29,7 @@ function fallbackCopy(text: string) {
   document.body.removeChild(textarea);
   return succeeded
     ? Promise.resolve()
-    : Promise.reject(new Error("Clipboard tidak tersedia."));
+    : Promise.reject(new Error("Clipboard not available."));
 }
 
 export function ShareSummaryButton({ billId }: { billId: string }) {
@@ -60,19 +60,19 @@ export function ShareSummaryButton({ billId }: { billId: string }) {
       <input type="hidden" name="id" value={billId} />
       <label className="inline-flex items-center gap-[.4rem] text-[.82rem]">
         <input type="checkbox" name="includePaymentStatus" defaultChecked />
-        Sertakan status pembayaran
+        Include payment status
       </label>
       <Button type="submit" disabled={pending}>
-        {pending ? "Menyalin..." : "Copy"}
+        {pending ? "Copying..." : "Copy"}
       </Button>
       {copyStatus === "copied" ? (
         <p className="m-0 text-[.78rem] font-medium text-income" role="status">
-          Ringkasan disalin ke clipboard.
+          Summary copied to clipboard.
         </p>
       ) : null}
       {copyStatus === "failed" ? (
         <p className="m-0 text-[.78rem] font-medium text-expense" role="alert">
-          Gagal menyalin otomatis. Salin teks dari kotak di bawah ini.
+          Automatic copy failed. Copy the text from the box below.
         </p>
       ) : null}
       {state.text ? (
@@ -82,7 +82,7 @@ export function ShareSummaryButton({ billId }: { billId: string }) {
             className={`${textareaClass} min-h-[11rem] text-[.78rem]`}
             readOnly
             value={state.text}
-            aria-label="Ringkasan tagihan siap disalin"
+            aria-label="Bill summary ready to copy"
           />
           <Button
             type="button"
@@ -94,7 +94,7 @@ export function ShareSummaryButton({ billId }: { billId: string }) {
                 .catch(() => setCopyStatus("failed"));
             }}
           >
-            Salin ulang
+            Copy again
           </Button>
         </>
       ) : null}

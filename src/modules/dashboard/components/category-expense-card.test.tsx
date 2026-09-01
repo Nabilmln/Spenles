@@ -35,12 +35,12 @@ describe("CategoryExpenseCard", () => {
     );
 
     expect(
-      screen.getByRole("region", { name: "Pengeluaran per Kategori" }),
+      screen.getByRole("region", { name: "Expense by Category" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Kategori")).toBeInTheDocument();
+    expect(screen.getByText("Category")).toBeInTheDocument();
     expect(screen.getByText("Agustus 2026")).toBeInTheDocument();
     expect(
-      screen.getByText(/Total pengeluaran Rp\s*2\.000\.000/u),
+      screen.getByText(/Total expense Rp\s*2\.000\.000/u),
     ).toBeInTheDocument();
     expect(screen.queryByRole("table")).not.toBeInTheDocument();
     expect(screen.queryByText(/Lihat data tabel/u)).not.toBeInTheDocument();
@@ -77,7 +77,7 @@ describe("CategoryExpenseCard", () => {
     );
 
     expect(
-      screen.getByText("Belum ada pengeluaran pada periode ini."),
+      screen.getByText("No expenses yet for this period."),
     ).toBeInTheDocument();
   });
 });

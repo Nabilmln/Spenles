@@ -11,7 +11,7 @@ export function DashboardSectionError({
       <CircleAlert aria-hidden="true" className="shrink-0 text-warning" />
       <div>
         <h2 className="m-0 mb-[.25rem] text-[1rem]">{title}</h2>
-        <p className="m-0 text-[.84rem] text-muted">Bagian ini belum dapat dimuat. Coba segarkan halaman beberapa saat lagi.</p>
+        <p className="m-0 text-[.84rem] text-muted">This section is not available yet. Try refreshing the page in a moment.</p>
       </div>
     </section>
   );

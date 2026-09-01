@@ -20,14 +20,14 @@ describe("split-bill filter bar", () => {
   it("opens the filter dialog and shows active filter count", () => {
     render(<SplitBillFilterBar filters={base} />);
     expect(
-      screen.getByRole("searchbox", { name: "Cari merchant" }),
+      screen.getByRole("searchbox", { name: "Search merchant" }),
     ).toBeInTheDocument();
-    const open = screen.getByRole("button", { name: "Buka filter" });
+    const open = screen.getByRole("button", { name: "Open filters" });
     expect(open).toHaveAttribute("aria-expanded", "false");
     fireEvent.click(open);
     expect(screen.getByRole("dialog")).toHaveAttribute("aria-modal", "true");
     expect(
-      screen.getByRole("button", { name: "Terapkan Filter" }),
+      screen.getByRole("button", { name: "Apply Filters" }),
     ).toBeInTheDocument();
     fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();

@@ -25,9 +25,9 @@ export function ReportDateRangePicker({
   return (
     <div>
       <div className="mb-4 flex items-center justify-between gap-[.75rem]">
-        <h2 id="report-range-title" className="m-0 text-[1.08rem]">Pilih rentang tanggal</h2>
+        <h2 id="report-range-title" className="m-0 text-[1.08rem]">Select date range</h2>
         <button
-          aria-label="Tutup pilihan rentang"
+          aria-label="Close range picker"
           className={iconButtonClass}
           onClick={onCancel}
           ref={closeRef}

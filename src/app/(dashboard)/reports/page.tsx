@@ -61,7 +61,7 @@ export default async function ReportsPage({
 
   return (
     <div className={`${pageStackClass} max-w-[78rem]`}>
-      <p className={pageDescriptionClass}>Pantau pemasukan dan pengeluaran per periode, lalu ekspor laporan bila diperlukan. Semua data privat dari sesi Anda.</p>
+      <p className={pageDescriptionClass}>Monitor income and expenses per period, then export a report when needed. All data is private to your session.</p>
 
       <ReportToolbar
         from={from}

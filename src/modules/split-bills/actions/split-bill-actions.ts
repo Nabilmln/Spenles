@@ -57,7 +57,7 @@ function preparedCalculationInput(input: PreparedSplitBillDraft) {
 function calculationMessage(error: unknown) {
   return error instanceof SplitBillCalculationError
     ? error.message
-    : "Tagihan belum dapat diproses.";
+    : "The bill could not be processed.";
 }
 
 export async function createSplitBillAction(
@@ -67,14 +67,14 @@ export async function createSplitBillAction(
   const user = await requireSessionUser();
   const parsed = parseSplitBillPayload(formData.get("payload"));
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Data tagihan tidak valid." };
+    return { error: parsed.error.issues[0]?.message ?? "Invalid bill data." };
   }
   const prepared = prepareSplitBillDraft(parsed.data);
   let createdId: string;
   try {
     calculateSplitBill(preparedCalculationInput(prepared));
     const created = await createOwnedSplitBillDraft(db, user.id, prepared);
-    if (!created) return { error: "Draft belum dapat dibuat." };
+    if (!created) return { error: "The draft could not be created." };
     createdId = created.id;
   } catch (error) {
     return { error: calculationMessage(error) };
@@ -93,7 +93,7 @@ export async function createAndFinalizeSplitBillAction(
   );
   const parsed = parseSplitBillPayload(formData.get("payload"));
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Data tagihan tidak valid." };
+    return { error: parsed.error.issues[0]?.message ?? "Invalid bill data." };
   }
   const prepared = prepareSplitBillDraft(parsed.data);
   let finalizedBillId: string | null = null;
@@ -110,7 +110,7 @@ export async function createAndFinalizeSplitBillAction(
       if (!updated) {
         return {
           error:
-            "Draft berubah di sesi lain atau sudah tidak dapat diedit. Muat ulang halaman.",
+            "The draft changed in another session or can no longer be edited. Reload the page.",
         };
       }
       const result = await finalizeOwnedSplitBill(
@@ -120,12 +120,12 @@ export async function createAndFinalizeSplitBillAction(
         updated.revision,
       );
       if (!result.ok) {
-        return { error: "Finalisasi tidak berhasil. Coba lagi." };
+        return { error: "Finalization failed. Please try again." };
       }
       finalizedBillId = id.data;
     } else {
       const created = await createOwnedSplitBillDraft(db, user.id, prepared);
-      if (!created) return { error: "Tagihan belum dapat diproses." };
+      if (!created) return { error: "The bill could not be processed." };
       const result = await finalizeOwnedSplitBill(
         db,
         user.id,
@@ -134,7 +134,7 @@ export async function createAndFinalizeSplitBillAction(
       );
       if (!result.ok) {
         await deleteOwnedSplitBillDraft(db, user.id, created.id).catch(() => {});
-        return { error: "Finalisasi tidak berhasil. Coba lagi." };
+        return { error: "Finalization failed. Please try again." };
       }
       finalizedBillId = created.id;
     }
@@ -143,7 +143,7 @@ export async function createAndFinalizeSplitBillAction(
     return { error: calculationMessage(error) };
   }
   if (finalizedBillId === null) {
-    return { error: "Finalisasi tidak berhasil. Coba lagi." };
+    return { error: "Finalization failed. Please try again." };
   }
   redirect(`/split-bills/${finalizedBillId}`);
 }
@@ -161,7 +161,7 @@ export async function updateSplitBillAction(
   if (!id.success || !revision.success || !parsed.success) {
     return {
       error: parsed.success
-        ? "Identitas draft tidak valid."
+        ? "Invalid draft identity."
         : parsed.error.issues[0]?.message,
     };
   }
@@ -178,14 +178,14 @@ export async function updateSplitBillAction(
     if (!updated) {
       return {
         error:
-          "Draft berubah di sesi lain atau sudah tidak dapat diedit. Muat ulang halaman.",
+          "The draft changed in another session or can no longer be edited. Reload the page.",
       };
     }
     revalidatePath("/split-bills");
     revalidatePath(`/split-bills/${id.data}`);
     revalidatePath(`/split-bills/${id.data}/edit`);
     return {
-      success: "Draft tersimpan dan terverifikasi di server.",
+      success: "Draft saved and verified on the server.",
       revision: updated.revision,
     };
   } catch (error) {
@@ -219,14 +219,14 @@ export async function archiveSplitBillAction(
 ): Promise<SplitBillActionState> {
   const user = await requireSessionUser();
   const id = splitBillIdSchema.safeParse(formData.get("id"));
-  if (!id.success) return { error: "Tagihan tidak valid." };
+  if (!id.success) return { error: "Invalid bill." };
   const archived = await archiveOwnedSplitBill(db, user.id, id.data);
   if (!archived) {
-    return { error: "Tagihan tidak ditemukan atau tidak dapat diarsipkan." };
+    return { error: "Bill not found or could not be archived." };
   }
   revalidatePath("/split-bills");
   revalidatePath(`/split-bills/${id.data}`);
-  return { success: "Tagihan diarsipkan." };
+  return { success: "Bill archived." };
 }
 
 export async function updateParticipantPaymentAction(
@@ -241,7 +241,7 @@ export async function updateParticipantPaymentAction(
     paidAmount: formData.get("paidAmount"),
   });
   if (!parsed.success) {
-    return { error: parsed.error.issues[0]?.message ?? "Status pembayaran tidak valid." };
+    return { error: parsed.error.issues[0]?.message ?? "Invalid payment status." };
   }
   const updated = await updateOwnedParticipantPayment(db, user.id, {
     ...parsed.data,
@@ -250,11 +250,11 @@ export async function updateParticipantPaymentAction(
   if (!updated) {
     return {
       error:
-        "Status tidak cocok dengan nominal kewajiban atau tagihan sudah diarsipkan.",
+        "Status does not match the obligation amount or the bill is already archived.",
     };
   }
   revalidatePath(`/split-bills/${parsed.data.billId}`);
-  return { success: "Status pembayaran diperbarui." };
+  return { success: "Payment status updated." };
 }
 
 export async function createShareSummaryAction(
@@ -263,14 +263,14 @@ export async function createShareSummaryAction(
 ): Promise<SplitBillActionState> {
   const user = await requireSessionUser();
   const id = splitBillIdSchema.safeParse(formData.get("id"));
-  if (!id.success) return { error: "Tagihan tidak valid." };
+  if (!id.success) return { error: "Invalid bill." };
   const detail = await getOwnedSplitBillDetail(user.id, id.data);
   if (
     !detail ||
     !detail.calculation ||
     (detail.bill.status !== "finalized" && detail.bill.status !== "archived")
   ) {
-    return { error: "Ringkasan belum tersedia." };
+    return { error: "Summary is not available yet." };
   }
   const statusByParticipant = new Map(
     detail.participants.map((participant) => [
@@ -318,6 +318,6 @@ export async function createShareSummaryAction(
       })),
       includePaymentStatus: formData.get("includePaymentStatus") === "on",
     }),
-    success: "Ringkasan siap disalin.",
+    success: "Summary ready to copy.",
   };
 }

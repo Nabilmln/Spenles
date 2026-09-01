@@ -44,19 +44,19 @@ export function CategoryAnalysis({
 
   return (
     <section
-      aria-label={type === "income" ? "Pemasukan per Kategori" : "Pengeluaran per Kategori"}
+      aria-label={type === "income" ? "Income by Category" : "Expense by Category"}
       className={cn(cardClass, "shadow-none")}
     >
       <div className="mb-4 flex items-center justify-between gap-4 max-[540px]:flex-col max-[540px]:items-stretch">
-        <p className={`${eyebrowClass} mb-0`}>{type === "income" ? "Pemasukan" : "Pengeluaran"}</p>
-        <div className="flex gap-[.5rem] max-[540px]:w-full" role="group" aria-label="Jenis transaksi">
+        <p className={`${eyebrowClass} mb-0`}>{type === "income" ? "Income" : "Expense"}</p>
+        <div className="flex gap-[.5rem] max-[540px]:w-full" role="group" aria-label="Transaction type">
           <button
             aria-pressed={type === "expense"}
             className={cn(toggleBase, type === "expense" && toggleActive)}
             onClick={() => select("expense")}
             type="button"
           >
-            Pengeluaran
+            Expense
           </button>
           <button
             aria-pressed={type === "income"}
@@ -64,7 +64,7 @@ export function CategoryAnalysis({
             onClick={() => select("income")}
             type="button"
           >
-            Pemasukan
+            Income
           </button>
         </div>
       </div>
@@ -84,14 +84,14 @@ export function CategoryAnalysis({
                   <i className="block h-full rounded-[inherit] bg-primary-600" style={{ width: `${Math.min(share, 100)}%` }} />
                 </span>
                 <strong>{formatIdr(category.amountIdr)}</strong>
-                <small className="text-[.78rem] text-muted">{share.toLocaleString("id-ID")}%</small>
+                <small className="text-[.78rem] text-muted">{share.toLocaleString("en-US")}%</small>
               </Link>
             );
           })}
         </div>
       ) : (
         <div className="mt-4 grid min-h-[10rem] place-items-center rounded-[.8rem] border border-dashed border-border bg-surface-subtle p-4 text-center text-[.84rem] text-muted" role="status">
-          Belum ada {type === "income" ? "pemasukan" : "pengeluaran"} pada periode ini.
+          No {type === "income" ? "income" : "expense"} in this period yet.
         </div>
       )}
     </section>

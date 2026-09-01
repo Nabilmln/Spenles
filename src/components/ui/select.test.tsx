@@ -31,11 +31,11 @@ describe("Select shared control", () => {
 
   it("disables the control together with its caret", () => {
     render(
-      <Select aria-label="Akun" disabled>
+      <Select aria-label="Account" disabled>
         <option value="a">Akun A</option>
       </Select>,
     );
-    expect(screen.getByRole("combobox", { name: "Akun" })).toBeDisabled();
+    expect(screen.getByRole("combobox", { name: "Account" })).toBeDisabled();
   });
 
   it("reflects user selection via onChange", () => {

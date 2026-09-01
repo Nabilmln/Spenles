@@ -43,7 +43,7 @@ export async function renderFinancialReportPdf(
     <FinancialReportDocument report={report} />,
   );
   if (buffer.byteLength > EXPORT_MAX_BYTES) {
-    throw new ExportLimitError("Ukuran laporan PDF melebihi batas 3,5 MB.");
+    throw new ExportLimitError("PDF report size exceeds the 3.5 MB limit.");
   }
   return buffer;
 }

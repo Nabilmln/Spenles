@@ -19,7 +19,7 @@ export function RegisterForm() {
   return (
     <form action={action} className="grid gap-[1.05rem]" noValidate>
       <div className={fieldClass}>
-        <label htmlFor="name">Nama</label>
+        <label htmlFor="name">Name</label>
         <div className="relative">
           <User
             aria-hidden="true"
@@ -62,7 +62,7 @@ export function RegisterForm() {
         </FormMessage>
       </div>
       <div className={fieldClass}>
-        <label htmlFor="password">Kata sandi</label>
+        <label htmlFor="password">Password</label>
         <PasswordField
           id="password"
           name="password"
@@ -76,7 +76,7 @@ export function RegisterForm() {
         </FormMessage>
       </div>
       <div className={fieldClass}>
-        <label htmlFor="passwordConfirmation">Konfirmasi kata sandi</label>
+        <label htmlFor="passwordConfirmation">Confirm password</label>
         <PasswordField
           id="passwordConfirmation"
           name="passwordConfirmation"
@@ -89,9 +89,9 @@ export function RegisterForm() {
           {state.fieldErrors?.passwordConfirmation?.[0]}
         </FormMessage>
       </div>
-      <SubmitButton idleLabel="Buat akun" pendingLabel="Mendaftarkan..." />
+      <SubmitButton idleLabel="Create account" pendingLabel="Creating account..." />
       <p className="m-0 mt-[.2rem] text-center text-[.88rem] text-muted">
-        Sudah punya akun? <Link className={textLinkClass} href="/login">Masuk</Link>
+        Already have an account? <Link className={textLinkClass} href="/login">Sign in</Link>
       </p>
     </form>
   );

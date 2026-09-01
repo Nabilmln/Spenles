@@ -28,7 +28,7 @@ export function AccountForm({
     <form action={formAction} className="grid gap-4">
       {initial ? <input type="hidden" name="id" value={initial.id} /> : null}
       <div className={fieldClass}>
-        <label htmlFor="account-name" className={fieldLabelClass}>Nama akun</label>
+        <label htmlFor="account-name" className={fieldLabelClass}>Account name</label>
         <Input
           id="account-name"
           name="name"
@@ -38,7 +38,7 @@ export function AccountForm({
         />
       </div>
       <div className={fieldClass}>
-        <label htmlFor="account-type" className={fieldLabelClass}>Jenis akun</label>
+        <label htmlFor="account-type" className={fieldLabelClass}>Account type</label>
         <Select
           id="account-type"
           name="type"
@@ -52,7 +52,7 @@ export function AccountForm({
         </Select>
       </div>
       <div className={fieldClass}>
-        <label htmlFor="opening-balance" className={fieldLabelClass}>Saldo awal (IDR)</label>
+        <label htmlFor="opening-balance" className={fieldLabelClass}>Opening balance (IDR)</label>
         <Input
           id="opening-balance"
           name="openingBalance"
@@ -64,11 +64,11 @@ export function AccountForm({
           required
         />
         {initial ? (
-          <small className="text-muted">Saldo awal hanya dapat diubah sebelum akun memiliki riwayat.</small>
+          <small className="text-muted">Opening balance can only be changed before the account has any history.</small>
         ) : null}
       </div>
       <Button type="submit" disabled={pending}>
-        {pending ? "Menyimpan..." : initial ? "Simpan perubahan" : "Buat akun"}
+        {pending ? "Saving..." : initial ? "Save changes" : "Create account"}
       </Button>
     </form>
   );

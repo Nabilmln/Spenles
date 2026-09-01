@@ -62,21 +62,21 @@ export function stableCategoryHash(id: string, name: string) {
   return Math.abs(hash);
 }
 
-/** Indonesian labels used for icon picker accessibility. */
+/** English labels used for icon picker accessibility. */
 export const CATEGORY_ICON_LABELS: Record<string, string> = {
-  circle: "Ikon lingkaran",
-  utensils: "Ikon peralatan makan",
-  car: "Ikon mobil",
-  "shopping-bag": "Ikon tas belanja",
-  receipt: "Ikon struk",
-  home: "Ikon rumah",
-  "heart-pulse": "Ikon kesehatan",
-  "graduation-cap": "Ikon pendidikan",
-  "gamepad-2": "Ikon hiburan",
-  users: "Ikon keluarga",
-  gift: "Ikon hadiah",
-  plane: "Ikon pesawat",
-  wallet: "Ikon dompet",
-  "briefcase-business": "Ikon bisnis",
-  "trending-up": "Ikon pertumbuhan",
+  circle: "Circle icon",
+  utensils: "Dining icon",
+  car: "Car icon",
+  "shopping-bag": "Shopping bag icon",
+  receipt: "Receipt icon",
+  home: "Home icon",
+  "heart-pulse": "Health icon",
+  "graduation-cap": "Education icon",
+  "gamepad-2": "Entertainment icon",
+  users: "Family icon",
+  gift: "Gift icon",
+  plane: "Plane icon",
+  wallet: "Wallet icon",
+  "briefcase-business": "Business icon",
+  "trending-up": "Growth icon",
 };

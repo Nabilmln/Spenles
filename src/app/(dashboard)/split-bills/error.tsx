@@ -9,8 +9,8 @@ export default function SplitBillsError({
 }) {
   return (
     <ErrorState
-      title="Split bill belum dapat dimuat"
-      message="Data privat tidak ditampilkan. Coba muat ulang."
+      title="Split bill could not be loaded"
+      message="Private data is not shown. Try reloading."
       retry={reset}
     />
   );

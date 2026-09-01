@@ -144,7 +144,7 @@ describe("cash-flow range intervals", () => {
 
     expect(interval.startDate).toBe("2026-07-13");
     expect(interval.endDateExclusive).toBe("2026-08-10");
-    expect(interval.label).toBe("4 minggu terakhir");
+    expect(interval.label).toBe("last 4 weeks");
   });
 
   it("covers the last twelve calendar months including the current month", () => {

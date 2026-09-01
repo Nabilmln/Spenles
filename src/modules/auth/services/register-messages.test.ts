@@ -4,40 +4,40 @@ import { toRegisterErrorMessage } from "./register-messages";
 describe("toRegisterErrorMessage", () => {
   it("maps known better-auth error codes to friendly messages", () => {
     expect(toRegisterErrorMessage({ code: "EMAIL_ALREADY_USED" })).toBe(
-      "Email sudah terdaftar. Silakan masuk.",
+      "This email is already registered. Please sign in.",
     );
     expect(toRegisterErrorMessage({ code: "INVALID_EMAIL" })).toBe(
-      "Format email tidak valid.",
+      "Invalid email format.",
     );
     expect(toRegisterErrorMessage({ code: "PASSWORD_TOO_SHORT" })).toBe(
-      "Kata sandi terlalu pendek.",
+      "Password is too short.",
     );
     expect(toRegisterErrorMessage({ code: "EMAIL_NOT_VERIFIED" })).toBe(
-      "Email belum diverifikasi. Periksa kotak masuk Anda untuk tautan verifikasi.",
+      "Email is not verified. Check your inbox for the verification link.",
     );
   });
 
   it("falls back to the code or message for unknown errors", () => {
     expect(toRegisterErrorMessage({ code: "SOME_CODE" })).toBe(
-      "Pendaftaran gagal (kode SOME_CODE). Periksa data atau coba lagi.",
+      "Registration failed (code SOME_CODE). Check your details or try again.",
     );
     expect(toRegisterErrorMessage({ message: "Boom" })).toBe(
-      "Pendaftaran gagal: Boom",
+      "Registration failed: Boom",
     );
   });
 
   it("returns a generic message for empty or non-object errors", () => {
     expect(toRegisterErrorMessage(undefined)).toBe(
-      "Pendaftaran belum berhasil. Periksa data Anda atau coba lagi.",
+      "Registration could not be completed. Check your details and try again.",
     );
     expect(toRegisterErrorMessage(null)).toBe(
-      "Pendaftaran belum berhasil. Periksa data Anda atau coba lagi.",
+      "Registration could not be completed. Check your details and try again.",
     );
     expect(toRegisterErrorMessage("oops")).toBe(
-      "Pendaftaran belum berhasil. Periksa data Anda atau coba lagi.",
+      "Registration could not be completed. Check your details and try again.",
     );
     expect(toRegisterErrorMessage({})).toBe(
-      "Pendaftaran belum berhasil. Periksa data Anda atau coba lagi.",
+      "Registration could not be completed. Check your details and try again.",
     );
   });
 });

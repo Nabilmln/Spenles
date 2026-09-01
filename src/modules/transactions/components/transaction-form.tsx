@@ -83,7 +83,7 @@ export function TransactionForm({
       {initial ? <input type="hidden" name="id" value={initial.id} /> : null}
 
       <fieldset className="flex flex-wrap gap-2 m-0 p-0 border-0">
-        <legend className="w-full mb-[.45rem] text-[.8rem] font-medium">Jenis transaksi</legend>
+        <legend className="w-full mb-[.45rem] text-[.8rem] font-medium">Transaction type</legend>
         {(["expense", "income"] as const).map((value) => (
           <label key={value} className={cn(modeLabelClass, type === value && modeActiveClass)}>
             <input
@@ -94,7 +94,7 @@ export function TransactionForm({
               onChange={() => setType(value)}
               className="absolute opacity-0 pointer-events-none"
             />
-            {value === "expense" ? "Pengeluaran" : "Pendapatan"}
+            {value === "expense" ? "Expense" : "Income"}
           </label>
         ))}
         {!initial ? (
@@ -107,7 +107,7 @@ export function TransactionForm({
               onChange={() => setType("savings")}
               className="absolute opacity-0 pointer-events-none"
             />
-            Tabungan
+            Savings
           </label>
         ) : null}
       </fieldset>
@@ -130,15 +130,15 @@ export function TransactionForm({
         <>
           <AmountField amount={amount} setAmount={setAmount} pending={pending} />
           <div className={fieldClass}>
-            <label htmlFor="accountId" className={cn(fieldLabelClass, "text-[.8rem]")}>Sumber keuangan</label>
+            <label htmlFor="accountId" className={cn(fieldLabelClass, "text-[.8rem]")}>Source of funds</label>
             <Select id="accountId" name="accountId" defaultValue={initial?.accountId} required>
-              <option value="">Pilih akun</option>
+              <option value="">Select account</option>
               {spendingAccounts.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
             </Select>
           </div>
           <div className={fieldClass}>
             <label htmlFor="categoryId" className={cn(fieldLabelClass, "text-[.8rem]")}>
-              {type === "expense" ? "Kategori pengeluaran" : "Kategori pendapatan"}
+              {type === "expense" ? "Expense category" : "Income category"}
             </label>
             <Select
               id="categoryId"
@@ -147,12 +147,12 @@ export function TransactionForm({
               key={`${type}-${initial?.categoryId}`}
               required
             >
-              <option value="">Pilih kategori</option>
+              <option value="">Select category</option>
               {matchingCategories.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
             </Select>
           </div>
           <div className={fieldClass}>
-            <label htmlFor="transactionAt" className={cn(fieldLabelClass, "text-[.8rem]")}>Tanggal</label>
+            <label htmlFor="transactionAt" className={cn(fieldLabelClass, "text-[.8rem]")}>Date</label>
             <Input
               id="transactionAt"
               name="transactionAt"
@@ -162,17 +162,17 @@ export function TransactionForm({
               required
               className="min-h-[2.7rem]"
             />
-            <p className={cn(fieldHintClass, "text-[.72rem] mt-[.35rem]")}>Waktu pengisian otomatis mengikuti pukul saat ini di zona Asia/Jakarta.</p>
+            <p className={cn(fieldHintClass, "text-[.72rem] mt-[.35rem]")}>Time is filled automatically using the current time in the Asia/Jakarta timezone.</p>
           </div>
           <div className={fieldClass}>
-            <label htmlFor="note" className={cn(fieldLabelClass, "text-[.8rem]")}>Keterangan (opsional)</label>
+            <label htmlFor="note" className={cn(fieldLabelClass, "text-[.8rem]")}>Note (optional)</label>
             <textarea className={cn(textareaClass, "min-h-[2.7rem]")} id="note" name="note" maxLength={500} defaultValue={initial?.note} />
           </div>
           <div className="flex items-center gap-2">
             <Button type="submit" disabled={pending} className="min-h-[2.6rem] p-[.55rem_.9rem] text-[.88rem]">
-              {pending ? "Menyimpan..." : "Konfirmasi"}
+              {pending ? "Saving..." : "Confirm"}
             </Button>
-            <Link className={cn(buttonClass("secondary"), "min-h-[2.6rem] p-[.55rem_.9rem] text-[.88rem]")} href="/transactions">Batal</Link>
+            <Link className={cn(buttonClass("secondary"), "min-h-[2.6rem] p-[.55rem_.9rem] text-[.88rem]")} href="/transactions">Cancel</Link>
           </div>
         </>
       )}
@@ -211,7 +211,7 @@ function AmountField({
 
   function commit() {
     if (!result) {
-      setCalculatorError(calculatorError || "Ketik jumlah melalui tombol angka agar bisa dihitung.");
+      setCalculatorError(calculatorError || "Enter the amount using the number buttons so it can be calculated.");
       return;
     }
     setAmount(result);
@@ -243,7 +243,7 @@ function AmountField({
 
   return (
     <div className={fieldClass}>
-      <label htmlFor="amount-control" className={cn(fieldLabelClass, "text-[.8rem]")}>Nominal</label>
+      <label htmlFor="amount-control" className={cn(fieldLabelClass, "text-[.8rem]")}>Amount</label>
       <button
         type="button"
         id="amount-control"
@@ -252,9 +252,9 @@ function AmountField({
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
         aria-expanded={open}
-        aria-label="Isi jumlah nominal menggunakan kalkulator"
+        aria-label="Enter the amount using the calculator"
       >
-        <span className={`${inputDisplayClass} text-foreground text-[1.05rem]`}>{amount ? formatIdr(amount) : "Ketik nominal"}</span>
+        <span className={`${inputDisplayClass} text-foreground text-[1.05rem]`}>{amount ? formatIdr(amount) : "Enter amount"}</span>
       </button>
       {amount ? (
         <input type="hidden" name="amount" value={amount} />
@@ -267,7 +267,7 @@ function AmountField({
           className="fixed inset-0 z-40 flex items-end justify-center bg-[rgb(15_23_42/45%)] p-4 min-[861px]:items-center"
           role="dialog"
           aria-modal="true"
-          aria-label="Kalkulator jumlah"
+          aria-label="Amount calculator"
           onMouseDown={(event) => {
             if (event.currentTarget === event.target) {
               setOpen(false);
@@ -277,24 +277,24 @@ function AmountField({
         >
           <div className="max-h-[90vh] w-full max-w-[30rem] overflow-y-auto rounded-t-[1.25rem] rounded-b-[1.1rem] border border-border bg-surface p-5 shadow-card min-[861px]:rounded-[1.25rem_1.25rem_1.1rem_1.1rem]">
             <div className="mb-4 flex items-center justify-between gap-4">
-              <strong className="text-[.95rem]">Kalkulator jumlah</strong>
+              <strong className="text-[.95rem]">Amount calculator</strong>
               <button
                 type="button"
                 className="cursor-pointer border-0 bg-transparent font-medium text-muted hover:text-foreground"
-                aria-label="Tutup kalkulator"
+                aria-label="Close calculator"
                 onClick={() => {
                   setOpen(false);
                   amountRef.current?.focus();
                 }}
               >
-                Tutup
+                Close
               </button>
             </div>
             <div className="mb-[.85rem] grid gap-[.3rem] rounded-[.8rem] border border-border bg-surface-subtle p-[.9rem]">
               <input
                 id="calc-expression"
                 className="w-full min-h-[1.6rem] border-0 bg-transparent p-0 text-[.85rem] font-medium text-muted outline-none"
-                aria-label="Ekspresi kalkulator"
+                aria-label="Calculator expression"
                 value={expression}
                 onChange={(event) => setExpression(event.target.value)}
                 placeholder="25000 + 18000 + 7500"
@@ -310,21 +310,21 @@ function AmountField({
               {["4", "5", "6", "*"].map((key) => <KeypadButton key={key} label={key} aria={key} onClick={() => append(key)} />)}
               {["1", "2", "3", "-"].map((key) => <KeypadButton key={key} label={key} aria={key} onClick={() => append(key)} />)}
               {["0"].map((key) => <KeypadButton key={key} label={key} aria={key} onClick={() => append(key)} />)}
-              <KeypadButton label="C" aria="Bersihkan" onClick={() => { setExpression(""); setCalculatorError(""); }} />
-              <KeypadButton label="⌫" aria="Hapus karakter terakhir" onClick={backspace} />
-              <KeypadButton label="+" aria="Tambah" onClick={() => append("+")} />
+              <KeypadButton label="C" aria="Clear" onClick={() => { setExpression(""); setCalculatorError(""); }} />
+              <KeypadButton label="⌫" aria="Delete last character" onClick={backspace} />
+              <KeypadButton label="+" aria="Add" onClick={() => append("+")} />
               <KeypadButton
                 label="("
-                aria="Kurung buka"
+                aria="Open parenthesis"
                 onClick={() => append("(")}
               />
               <KeypadButton
                 label=")"
-                aria="Kurung tutup"
+                aria="Close parenthesis"
                 onClick={() => append(")")}
               />
             </div>
-            <p className={cn(fieldHintClass, "text-[.72rem] mt-[.35rem]")}>Operator: +, −, ×, ÷, dan tanda kurung. Hasil dibulatkan ke rupiah terdekat.</p>
+            <p className={cn(fieldHintClass, "text-[.72rem] mt-[.35rem]")}>Operators: +, −, ×, ÷, and parentheses. The result is rounded to the nearest rupiah.</p>
             <Button
               type="button"
               variant="primary"
@@ -332,7 +332,7 @@ function AmountField({
               disabled={pending || !result}
               onClick={commit}
             >
-              Selesai
+              Done
             </Button>
           </div>
         </div>
@@ -385,7 +385,7 @@ function SavingsFields({
   return (
     <>
       <fieldset className="flex flex-wrap gap-2 m-0 p-0 border-0">
-        <legend className="w-full mb-[.45rem] text-[.8rem] font-medium">Arah dana</legend>
+        <legend className="w-full mb-[.45rem] text-[.8rem] font-medium">Fund direction</legend>
         {(["save", "withdraw"] as const).map((value) => (
           <label key={value} className={cn(directionLabelClass, direction === value && modeActiveClass)}>
             <input
@@ -396,32 +396,32 @@ function SavingsFields({
               onChange={() => setDirection(value)}
               className="absolute opacity-0 pointer-events-none"
             />
-            {value === "save" ? "Menabung" : "Tarik dana"}
+            {value === "save" ? "Save" : "Withdraw"}
           </label>
         ))}
       </fieldset>
       {!hasSavings ? (
         <p className={formMessageClass}>
-          Buat akun berjenis Tabungan terlebih dahulu di halaman Akun sebelum mencatat tabungan.
+          Create a Savings account on the Accounts page before recording savings.
         </p>
       ) : null}
       <AmountField amount={amount} setAmount={setAmount} pending={pending} />
       <div className={fieldClass}>
-        <label htmlFor="sourceAccountId" className={cn(fieldLabelClass, "text-[.8rem]")}>Dari akun</label>
+        <label htmlFor="sourceAccountId" className={cn(fieldLabelClass, "text-[.8rem]")}>From account</label>
         <Select id="sourceAccountId" name="sourceAccountId" defaultValue="" required disabled={!hasSavings}>
-          <option value="">Pilih akun</option>
+          <option value="">Select account</option>
           {sourceAccounts.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
         </Select>
       </div>
       <div className={fieldClass}>
-        <label htmlFor="destinationAccountId" className={cn(fieldLabelClass, "text-[.8rem]")}>Ke akun tabungan</label>
+        <label htmlFor="destinationAccountId" className={cn(fieldLabelClass, "text-[.8rem]")}>To savings account</label>
         <Select id="destinationAccountId" name="destinationAccountId" defaultValue="" required disabled={!hasSavings}>
-          <option value="">Pilih akun</option>
+          <option value="">Select account</option>
           {destinationAccounts.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
         </Select>
       </div>
       <div className={fieldClass}>
-        <label htmlFor="transferredAt" className={cn(fieldLabelClass, "text-[.8rem]")}>Tanggal</label>
+        <label htmlFor="transferredAt" className={cn(fieldLabelClass, "text-[.8rem]")}>Date</label>
         <Input
           id="transferredAt"
           name="transferredAt"
@@ -431,17 +431,17 @@ function SavingsFields({
           required
           className="min-h-[2.7rem]"
         />
-        <p className={cn(fieldHintClass, "text-[.72rem] mt-[.35rem]")}>Waktu pengisian diambil mengikuti pukul saat ini di zona Asia/Jakarta.</p>
+        <p className={cn(fieldHintClass, "text-[.72rem] mt-[.35rem]")}>Time is taken from the current time in the Asia/Jakarta timezone.</p>
       </div>
       <div className={fieldClass}>
-        <label htmlFor="note" className={cn(fieldLabelClass, "text-[.8rem]")}>Keterangan (opsional)</label>
+        <label htmlFor="note" className={cn(fieldLabelClass, "text-[.8rem]")}>Note (optional)</label>
         <textarea className={cn(textareaClass, "min-h-[2.7rem]")} id="note" name="note" maxLength={500} />
       </div>
       <div className="flex items-center gap-2">
         <Button type="submit" disabled={pending || !hasSavings} aria-describedby={errorId} className="min-h-[2.6rem] p-[.55rem_.9rem] text-[.88rem]">
-          {pending ? "Menyimpan..." : "Konfirmasi"}
+          {pending ? "Saving..." : "Confirm"}
         </Button>
-        <Link className={cn(buttonClass("secondary"), "min-h-[2.6rem] p-[.55rem_.9rem] text-[.88rem]")} href="/transactions">Batal</Link>
+        <Link className={cn(buttonClass("secondary"), "min-h-[2.6rem] p-[.55rem_.9rem] text-[.88rem]")} href="/transactions">Cancel</Link>
       </div>
     </>
   );

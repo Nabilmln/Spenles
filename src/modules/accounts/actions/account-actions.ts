@@ -41,9 +41,9 @@ export async function createAccountAction(
       ...parsed.data,
       openingBalance: BigInt(parsed.data.openingBalance),
     });
-    if (!created) return { error: "Akun belum dapat dibuat." };
+    if (!created) return { error: "Account could not be created." };
   } catch {
-    return { error: "Akun belum dapat dibuat." };
+    return { error: "Account could not be created." };
   }
   invalidateAccounts();
   redirect("/accounts");
@@ -58,7 +58,7 @@ export async function updateAccountAction(
   const parsed = accountSchema.safeParse(values(formData));
   if (!id.success || !parsed.success) {
     return {
-      error: parsed.success ? "Akun tidak ditemukan." : parsed.error.issues[0]?.message,
+      error: parsed.success ? "Account not found." : parsed.error.issues[0]?.message,
     };
   }
   try {
@@ -69,11 +69,11 @@ export async function updateAccountAction(
     if (!updated) {
       return {
         error:
-          "Akun tidak ditemukan atau saldo awal tidak dapat diubah setelah ada riwayat.",
+          "Account not found, or opening balance cannot be changed once the account has history.",
       };
     }
   } catch {
-    return { error: "Akun belum dapat diperbarui." };
+    return { error: "Account could not be updated." };
   }
   invalidateAccounts(id.data);
   redirect(`/accounts/${id.data}`);
@@ -85,19 +85,19 @@ async function setAccountStatus(
 ): Promise<AccountActionState> {
   const user = await requireSessionUser();
   const id = accountIdSchema.safeParse(formData.get("id"));
-  if (!id.success) return { error: "Akun tidak ditemukan." };
+  if (!id.success) return { error: "Account not found." };
   try {
     const result = await setOwnedAccountStatus(db, user.id, id.data, status);
     if (!result.ok) {
       return {
         error:
           status === "archived"
-            ? "Akun terakhir yang aktif tidak dapat diarsipkan."
-            : "Akun tidak ditemukan.",
+            ? "The last active account cannot be archived."
+            : "Account not found.",
       };
     }
   } catch {
-    return { error: "Status akun belum dapat diperbarui." };
+    return { error: "Account status could not be updated." };
   }
   invalidateAccounts(id.data);
   return {};

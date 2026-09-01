@@ -31,14 +31,14 @@ function AccountStatusForm({
         type="submit"
         variant="blue"
         disabled={pending}
-        aria-label={`${row.status === "active" ? "Arsipkan" : "Pulihkan"} ${row.name}`}
+        aria-label={`${row.status === "active" ? "Archive" : "Restore"} ${row.name}`}
         className="w-full"
       >
         {pending
-          ? "Memproses..."
+          ? "Processing..."
           : row.status === "active"
-            ? "Arsipkan"
-            : "Pulihkan"}
+            ? "Archive"
+            : "Restore"}
       </Button>
     </form>
   );
@@ -57,21 +57,21 @@ export function AccountList({ rows }: { rows: AccountBalanceRow[] }) {
                 <h2 className="m-0! truncate">{row.name}</h2>
               </div>
               <span className={`inline-flex min-h-[1.6rem] shrink-0 items-center rounded-full px-[.5rem] py-[.15rem] whitespace-nowrap text-[.7rem] font-medium ${row.status === "active" ? "text-income bg-[color-mix(in_srgb,var(--income)_10%,transparent)]" : "text-muted bg-surface-subtle"}`}>
-                {row.status === "active" ? "Aktif" : "Diarsipkan"}
+                {row.status === "active" ? "Active" : "Archived"}
               </span>
             </div>
             <div className="grid gap-[.15rem]">
-              <span className="text-[.78rem] text-muted">Saldo saat ini</span>
+              <span className="text-[.78rem] text-muted">Current balance</span>
               <strong className={`wrap-anywhere text-[clamp(1.25rem,2.4vw,1.8rem)] ${negative ? "text-expense" : ""}`}>
                 {formatIdr(row.balance)}
               </strong>
               {negative ? (
-                <p className="m-0 font-medium text-expense!">Saldo akun negatif.</p>
+                <p className="m-0 font-medium text-expense!">Account balance is negative.</p>
               ) : null}
             </div>
             <div className="flex items-center gap-2 border-t border-border pt-[.75rem]">
               <Link className={buttonClass("blue", "flex-1 justify-center")} href={`/accounts/${row.id}`}>
-                Detail
+                Details
               </Link>
               <AccountStatusForm row={row} />
             </div>

@@ -11,8 +11,8 @@ export default async function BudgetsPage() {
   return (
     <div className={pageStackClass}>
       <div className={pageHeadingRowClass}>
-        <p className={pageDescriptionClass}>Pemakaian dihitung dari transaksi pengeluaran aktif dalam bulan Jakarta.</p>
-        <Link className={buttonClass("primary")} href="/budgets/new">Buat anggaran</Link>
+        <p className={pageDescriptionClass}>Usage is calculated from active expense transactions in the Jakarta month.</p>
+        <Link className={buttonClass("primary")} href="/budgets/new">Create budget</Link>
       </div>
       <BudgetList rows={rows} />
     </div>

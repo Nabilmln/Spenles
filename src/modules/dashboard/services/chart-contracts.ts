@@ -106,7 +106,7 @@ function roundedShares(values: bigint[], total: bigint) {
 
 function dayLabel(day: string) {
   const [year, month, date] = day.split("-").map(Number);
-  return new Intl.DateTimeFormat("id-ID", {
+  return new Intl.DateTimeFormat("en-US", {
     day: "numeric",
     month: "long",
     timeZone: "UTC",
@@ -158,7 +158,7 @@ type IncomeExpensePeriod = {
 
 function compactDayLabel(day: string) {
   const [year, month, date] = day.split("-").map(Number);
-  return new Intl.DateTimeFormat("id-ID", {
+  return new Intl.DateTimeFormat("en-US", {
     weekday: "short",
     day: "numeric",
   }).format(new Date(Date.UTC(year, month - 1, date)));
@@ -166,7 +166,7 @@ function compactDayLabel(day: string) {
 
 function weekStartLabel(day: string) {
   const [year, month, date] = day.split("-").map(Number);
-  return new Intl.DateTimeFormat("id-ID", {
+  return new Intl.DateTimeFormat("en-US", {
     day: "numeric",
     month: "short",
   }).format(new Date(Date.UTC(year, month - 1, date)));
@@ -174,7 +174,7 @@ function weekStartLabel(day: string) {
 
 function compactMonthLabel(period: string) {
   const [year, month] = period.split("-").map(Number);
-  const monthName = new Intl.DateTimeFormat("id-ID", {
+  const monthName = new Intl.DateTimeFormat("en-US", {
     month: "short",
     timeZone: "UTC",
   }).format(new Date(Date.UTC(year, month - 1, 1)));
@@ -279,7 +279,7 @@ export function buildCategoryChartContract(rows: CategoryAggregate[]) {
     }
     const byName = left.normalizedName.localeCompare(
       right.normalizedName,
-      "id-ID",
+      "en-US",
     );
     return byName || left.categoryId.localeCompare(right.categoryId);
   });
@@ -315,7 +315,7 @@ export function buildCategoryVisualPoints(points: CategoryExpensePoint[]) {
     ...visible,
     {
       categoryId: "__other__",
-      name: "Kategori lainnya",
+      name: "Other categories",
       color: CATEGORY_COLORS.slate,
       icon: null,
       expenseIdr: remainder

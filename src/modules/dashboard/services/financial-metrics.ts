@@ -65,7 +65,7 @@ export function calculateExpenseRatioBps(income: bigint, expense: bigint) {
 export function formatChangeBps(value: string) {
   const bps = BigInt(value);
   const absolute = bps < 0n ? -bps : bps;
-  return `${(absolute / 100n).toLocaleString("id-ID")},${String(
+  return `${(absolute / 100n).toLocaleString("en-US")},${String(
     absolute % 100n,
   ).padStart(2, "0")}%`;
 }
@@ -90,7 +90,7 @@ function selectLargestCategory(categories: CategoryAggregate[]) {
     }
     const byName = left.normalizedName.localeCompare(
       right.normalizedName,
-      "id-ID",
+      "en-US",
     );
     return byName || left.categoryId.localeCompare(right.categoryId);
   })[0] ?? null;

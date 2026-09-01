@@ -6,20 +6,20 @@ import { LoadingState } from "./loading-state";
 describe("foundational feedback components", () => {
   it("renders an honest Phase 01 empty state", () => {
     render(<EmptyState />);
-    expect(screen.getByRole("heading", { name: "Belum ada aktivitas keuangan" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "No financial activity yet" })).toBeInTheDocument();
     expect(screen.queryByText(/Rp\s?\d/)).not.toBeInTheDocument();
   });
 
   it("renders a customized empty state with action", () => {
     render(
       <EmptyState
-        title="Belum ada riwayat Split Bill"
+        title="No Split Bill history yet"
         description="Buat Split Bill pertamamu."
         action={<button type="button">Buat Split Bill</button>}
       />,
     );
     expect(
-      screen.getByRole("heading", { name: "Belum ada riwayat Split Bill" }),
+      screen.getByRole("heading", { name: "No Split Bill history yet" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Buat Split Bill" }),

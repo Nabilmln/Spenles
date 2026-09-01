@@ -155,19 +155,19 @@ describe("createAndFinalizeSplitBillAction", () => {
 
     const result = await createAndFinalizeSplitBillAction({}, formData());
 
-    expect(result.error).toBe("Finalisasi tidak berhasil. Coba lagi.");
+    expect(result.error).toBe("Finalization failed. Please try again.");
     expect(mocks.deleteOwnedSplitBillDraft).toHaveBeenCalled();
     expect(mocks.redirect).not.toHaveBeenCalled();
   });
 
   it("does not redirect when calculation validation throws", async () => {
     mocks.calculateSplitBill.mockImplementation(() => {
-      throw new Error("kalkulasi gagal");
+      throw new Error("calculation failed");
     });
 
     const result = await createAndFinalizeSplitBillAction({}, formData());
 
-    expect(result.error).toBe("Tagihan belum dapat diproses.");
+    expect(result.error).toBe("The bill could not be processed.");
     expect(mocks.createOwnedSplitBillDraft).not.toHaveBeenCalled();
     expect(mocks.redirect).not.toHaveBeenCalled();
   });

@@ -23,7 +23,7 @@ export default async function CategoriesPage() {
   }));
   return (
     <div className={pageStackClass}>
-      <p className={pageDescriptionClass}>Kategori diarsipkan tetap tersimpan pada transaksi lama.</p>
+      <p className={pageDescriptionClass}>Archived categories remain attached to past transactions.</p>
       <CategoryManager categories={categories} deletableIds={deletableIds} />
     </div>
   );

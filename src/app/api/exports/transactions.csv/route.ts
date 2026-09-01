@@ -20,15 +20,15 @@ export const maxDuration = 30;
 
 export async function GET(request: Request) {
   const user = await getSessionUser();
-  if (!user) return safeExportError(401, "Autentikasi diperlukan.");
+  if (!user) return safeExportError(401, "Authentication is required.");
 
   const filters = parseCsvParams(new URL(request.url).searchParams);
-  if (!filters) return safeExportError(400, "Parameter ekspor tidak valid.");
+  if (!filters) return safeExportError(400, "Invalid export parameters.");
 
   try {
     const filtersOwned = await validateOwnedReportFilters(user.id, filters);
     if (!filtersOwned) {
-      return safeExportError(400, "Parameter ekspor tidak valid.");
+      return safeExportError(400, "Invalid export parameters.");
     }
     const rows = await listCsvTransactions(
       user.id,
@@ -47,6 +47,6 @@ export async function GET(request: Request) {
     if (error instanceof ExportLimitError) {
       return safeExportError(422, error.message);
     }
-    return safeExportError(500, "Ekspor transaksi belum dapat dibuat.");
+    return safeExportError(500, "Transaction export could not be created.");
   }
 }

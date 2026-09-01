@@ -215,7 +215,7 @@ export function SplitBillEditor({
       setItemErrors((current) => ({
         ...current,
         [itemId]:
-          "Total harus habis dibagi jumlah item agar harga satuan tetap rupiah bulat.",
+          "Total must divide evenly by the quantity so the unit price stays a whole rupiah.",
       }));
       return;
     }
@@ -265,13 +265,13 @@ export function SplitBillEditor({
           ) : null}
 
           <fieldset className="m-0 grid min-w-0 gap-4 rounded-[.8rem] border border-border p-4">
-            <legend className="px-[.35rem] font-medium">Peserta</legend>
+            <legend className="px-[.35rem] font-medium">Participants</legend>
             {participants.length === 0 ? (
               <p
                 className="m-0 rounded-[.7rem] bg-surface-subtle p-[.75rem] text-[.82rem] text-muted"
                 role="status"
               >
-                Tambahkan peserta terlebih dahulu untuk mulai memasukkan item.
+                Add a participant first to start entering items.
               </p>
             ) : (
               <div className="grid gap-[.8rem]">
@@ -279,7 +279,7 @@ export function SplitBillEditor({
                   <div className="flex items-end gap-[.7rem]" key={participant.id}>
                     <div className={`${fieldClass} min-w-0 flex-1`}>
                       <label htmlFor={`participant-${participant.id}`}>
-                        Peserta {index + 1}
+                        Participant {index + 1}
                       </label>
                       <Input
                         id={`participant-${participant.id}`}
@@ -300,7 +300,7 @@ export function SplitBillEditor({
                     <button
                       type="button"
                       className={iconButtonClass}
-                      aria-label={`Hapus peserta ${index + 1}`}
+                      aria-label={`Delete participant ${index + 1}`}
                       disabled={participants.length === 1}
                       onClick={() => removeParticipant(participant.id)}
                     >
@@ -316,13 +316,13 @@ export function SplitBillEditor({
               onClick={addParticipant}
               className="justify-self-start max-[540px]:w-full"
             >
-              Tambah peserta
+              Add participant
             </Button>
           </fieldset>
 
           {participants.length > 0 ? (
             <fieldset className="m-0 grid min-w-0 gap-4 rounded-[.8rem] border border-border p-4">
-              <legend className="px-[.35rem] font-medium">Item</legend>
+              <legend className="px-[.35rem] font-medium">Items</legend>
               <div className="grid gap-[.8rem]">
                 {items.map((item, itemIndex) => (
                   <article
@@ -334,7 +334,7 @@ export function SplitBillEditor({
                       <button
                         type="button"
                         className={`${iconButtonClass} text-expense hover:bg-[color-mix(in_srgb,var(--expense)_10%,transparent)]`}
-                        aria-label="Hapus item"
+                        aria-label="Delete item"
                         disabled={items.length === 1}
                         onClick={() => removeItem(item.id)}
                       >
@@ -342,7 +342,7 @@ export function SplitBillEditor({
                       </button>
                     </div>
                     <div className={`${fieldClass} min-w-0`}>
-                      <label htmlFor={`item-name-${item.id}`}>Nama item</label>
+                      <label htmlFor={`item-name-${item.id}`}>Item name</label>
                       <Input
                         id={`item-name-${item.id}`}
                         value={item.name}
@@ -361,7 +361,7 @@ export function SplitBillEditor({
                     </div>
                     <div className="grid grid-cols-2 gap-[.7rem] max-[540px]:grid-cols-1">
                       <div className={fieldClass}>
-                        <label htmlFor={`item-quantity-${item.id}`}>Jumlah</label>
+                        <label htmlFor={`item-quantity-${item.id}`}>Quantity</label>
                         <QuantityInput
                           id={`item-quantity-${item.id}`}
                           min="1"
@@ -373,7 +373,7 @@ export function SplitBillEditor({
                       </div>
                       <div className={fieldClass}>
                         <label htmlFor={`item-price-${item.id}`}>
-                          Harga satuan
+                          Unit price
                         </label>
                         <RupiahInput
                           id={`item-price-${item.id}`}
@@ -386,7 +386,7 @@ export function SplitBillEditor({
                     </div>
                     <div className={fieldClass}>
                       <label htmlFor={`item-total-${item.id}`}>
-                        Harga total
+                        Total price
                       </label>
                       <RupiahInput
                         id={`item-total-${item.id}`}
@@ -419,7 +419,7 @@ export function SplitBillEditor({
                             ? `${item.quantity} × ${formatIdr(item.unitPrice)} = ${formatIdr(
                                 (BigInt(item.quantity) * BigInt(item.unitPrice)).toString(),
                               )}`
-                            : "Isi harga satuan atau total."}
+                            : "Enter a unit price or total."}
                         </p>
                       )}
                     </div>
@@ -449,7 +449,7 @@ export function SplitBillEditor({
                               )
                             }
                           />
-                          {participant.name || "Peserta tanpa nama"}
+                          {participant.name || "Unnamed participant"}
                         </label>
                       ))}
                     </div>
@@ -462,16 +462,16 @@ export function SplitBillEditor({
                 onClick={addItem}
                 className="justify-self-start max-[540px]:w-full"
               >
-                Tambah item
+                Add item
               </Button>
             </fieldset>
           ) : null}
 
           <fieldset className="m-0 grid min-w-0 gap-4 rounded-[.8rem] border border-border p-4">
-            <legend className="px-[.35rem] font-medium">Pajak</legend>
+            <legend className="px-[.35rem] font-medium">Tax</legend>
             <div className="grid grid-cols-2 gap-4 max-[540px]:grid-cols-1">
               <div className={fieldClass}>
-                <label htmlFor="split-tax-mode">Jenis pajak</label>
+                <label htmlFor="split-tax-mode">Tax type</label>
                 <Select
                   id="split-tax-mode"
                   value={billTaxMode}
@@ -479,13 +479,13 @@ export function SplitBillEditor({
                     setBillTaxMode(event.target.value as SplitBillTaxMode)
                   }
                 >
-                  <option value="percentage">Persentase</option>
-                  <option value="fixed">Nominal</option>
+                  <option value="percentage">Percentage</option>
+                  <option value="fixed">Fixed amount</option>
                 </Select>
               </div>
               {billTaxMode === "percentage" ? (
                 <div className={fieldClass}>
-                  <label htmlFor="split-tax">Pajak (%)</label>
+                  <label htmlFor="split-tax">Tax (%)</label>
                   <Input
                     id="split-tax"
                     type="number"
@@ -499,7 +499,7 @@ export function SplitBillEditor({
                 </div>
               ) : (
                 <div className={fieldClass}>
-                  <label htmlFor="split-tax-fixed">Pajak (Rp)</label>
+                  <label htmlFor="split-tax-fixed">Tax (Rp)</label>
                   <RupiahInput
                     id="split-tax-fixed"
                     value={fixedBillTaxAmount}
@@ -511,10 +511,10 @@ export function SplitBillEditor({
           </fieldset>
 
           <fieldset className="m-0 grid min-w-0 gap-4 rounded-[.8rem] border border-border p-4">
-            <legend className="px-[.35rem] font-medium">Informasi tagihan</legend>
+            <legend className="px-[.35rem] font-medium">Bill information</legend>
             <div className="grid grid-cols-2 gap-4 max-[540px]:grid-cols-1">
               <div className={fieldClass}>
-                <label htmlFor="split-merchant">Nama merchant</label>
+                <label htmlFor="split-merchant">Merchant name</label>
                 <Input
                   id="split-merchant"
                   value={merchantName}
@@ -524,7 +524,7 @@ export function SplitBillEditor({
                 />
               </div>
               <div className={fieldClass}>
-                <label htmlFor="split-date">Tanggal tagihan</label>
+                <label htmlFor="split-date">Bill date</label>
                 <Input
                   id="split-date"
                   type="date"
@@ -535,7 +535,7 @@ export function SplitBillEditor({
               </div>
             </div>
             <div className={fieldClass}>
-              <label htmlFor="split-note">Catatan (opsional)</label>
+              <label htmlFor="split-note">Note (optional)</label>
               <textarea
                 id="split-note"
                 className={textareaClass}
@@ -555,7 +555,7 @@ export function SplitBillEditor({
             disabled={pending}
             className="flex-1"
           >
-            {pending ? "Menyimpan..." : "Draft"}
+            {pending ? "Saving..." : "Save draft"}
           </Button>
           <form action={finalizeFormAction} className="flex-1">
             <input type="hidden" name="payload" value={JSON.stringify(payload)} />
@@ -566,14 +566,14 @@ export function SplitBillEditor({
               </>
             ) : null}
             <Button type="submit" disabled={finalizing} className="w-full">
-              {finalizing ? "Memfinalisasi..." : "Final"}
+              {finalizing ? "Finalizing..." : "Finalize"}
             </Button>
           </form>
           {initial.id && deleteAction ? (
             <form action={deleteAction} className="flex-1">
               <input type="hidden" name="id" value={initial.id} />
               <Button type="submit" variant="danger" className="w-full">
-                Hapus
+                Delete
               </Button>
             </form>
           ) : null}
@@ -584,11 +584,11 @@ export function SplitBillEditor({
         <CalculationSummary result={preview} />
       ) : (
         <aside className={`${cardClass} grid min-w-0 gap-4`}>
-          <p className={eyebrowClass}>Pratinjau lokal</p>
-          <h2 className="m-0">Lengkapi tagihan</h2>
+          <p className={eyebrowClass}>Local preview</p>
+          <h2 className="m-0">Complete the bill</h2>
           <p className="text-muted">
-            Tambahkan peserta, lalu isi item dan tetapkan setiap item ke
-            setidaknya satu peserta.
+            Add participants, then fill in items and assign each item to at
+            least one participant.
           </p>
         </aside>
       )}

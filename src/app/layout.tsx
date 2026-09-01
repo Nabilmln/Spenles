@@ -15,7 +15,7 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Spenles",
   description:
-    "Aplikasi pencatatan keuangan, anggaran, arus kas, laporan, dan split bill personal.",
+    "A personal finance app for income, expenses, budgets, cash flow, reports, and split bills.",
   applicationName: "Spenles",
   appleWebApp: {
     capable: true,

@@ -14,10 +14,10 @@ describe("compact report summary", () => {
       />,
     );
 
-    expect(screen.getByRole("region", { name: "Ikhtisar periode" })).toBeInTheDocument();
-    expect(screen.getByText("Pendapatan")).toBeInTheDocument();
-    expect(screen.getByText("Pengeluaran")).toBeInTheDocument();
-    expect(screen.getByText("Selisih")).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Period overview" })).toBeInTheDocument();
+    expect(screen.getByText("Income")).toBeInTheDocument();
+    expect(screen.getByText("Expense")).toBeInTheDocument();
+    expect(screen.getByText("Net")).toBeInTheDocument();
     expect(screen.getAllByText(/Rp\s*150\.000/u)).toHaveLength(1);
     expect(screen.getAllByText(/Rp\s*40\.000/u)).toHaveLength(1);
     expect(screen.getByText(/Rp\s*110\.000/u)).toBeInTheDocument();
@@ -54,9 +54,9 @@ describe("report insight card", () => {
       />,
     );
     expect(
-      screen.getByRole("region", { name: "Wawasan keuangan" }),
+      screen.getByRole("region", { name: "Financial insight" }),
     ).toBeInTheDocument();
-    expect(screen.getByText(/Rata-rata pengeluaran per hari kamu adalah/u)).toBeInTheDocument();
+    expect(screen.getByText(/Your average daily expense is/u)).toBeInTheDocument();
     expect(screen.getByText(/Rp\s*25\.000/u)).toBeInTheDocument();
   });
 });
@@ -85,7 +85,7 @@ describe("category analysis", () => {
     render(<CategoryAnalysis {...base} type="expense" totalIdr="50000" />);
 
     expect(
-      screen.getByRole("region", { name: "Pengeluaran per Kategori" }),
+      screen.getByRole("region", { name: "Expense by Category" }),
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Makanan/ })).toHaveAttribute(
       "href",
@@ -109,13 +109,13 @@ describe("category analysis", () => {
     render(<CategoryAnalysis {...base} type="expense" totalIdr="50000" />);
 
     expect(
-      screen.getByRole("group", { name: "Jenis transaksi" }),
+      screen.getByRole("group", { name: "Transaction type" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Pemasukan" })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: "Income" })).toHaveAttribute(
       "aria-pressed",
       "false",
     );
-    expect(screen.getByRole("button", { name: "Pengeluaran" })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: "Expense" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
@@ -132,7 +132,7 @@ describe("category analysis", () => {
       />,
     );
     expect(
-      screen.getByText("Belum ada pengeluaran pada periode ini."),
+      screen.getByText("No expense in this period yet."),
     ).toBeInTheDocument();
   });
 });

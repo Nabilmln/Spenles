@@ -5,7 +5,7 @@ export default function manifest(): MetadataRoute.Manifest {
     name: "Spenles",
     short_name: "Spenles",
     description:
-      "Aplikasi pencatatan keuangan, anggaran, arus kas, laporan, dan split bill personal.",
+      "A personal finance app for income, expenses, budgets, cash flow, reports, and split bills.",
     start_url: "/",
     display: "standalone",
     background_color: "#4f46e5",

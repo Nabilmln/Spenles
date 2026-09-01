@@ -2,9 +2,9 @@ import { CircleCheck } from "lucide-react";
 import { Brand } from "@/components/layout/brand";
 
 const highlights = [
-  "Pencatatan pemasukan dan pengeluaran",
-  "Anggaran bulanan dan laporan otomatis",
-  "Data keuangan yang tersimpan aman",
+  "Track income and expenses easily",
+  "Monthly budgets and automatic reports",
+  "Your financial data stays secure",
 ];
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
@@ -23,7 +23,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           <Brand showLabel tone="light" />
           <div className="grid gap-5">
             <h1 className="m-0 max-w-[26rem] text-[clamp(1.9rem,3vw,2.7rem)] leading-[1.12] tracking-[-.03em] text-white">
-              Catat lebih tenang. Pahami keuangan lebih jelas.
+              Track calmly. Understand your finances more clearly.
             </h1>
             <ul className="m-0 grid gap-3 p-0">
               {highlights.map((item) => (

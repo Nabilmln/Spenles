@@ -21,12 +21,12 @@ export function TopSpendingCard({
 
   return (
     <section
-      aria-label="Kategori pengeluaran terbesar"
+      aria-label="Top spending categories"
       className={`${cardClass} flex h-full flex-col shadow-none`}
     >
       <div className="mb-[.65rem] flex items-start justify-between gap-3">
         <div>
-          <p className={eyebrowClass}>TOP PENGELUARAN</p>
+          <p className={eyebrowClass}>TOP SPENDING</p>
           <p className="m-0 mt-[.15rem] text-[.72rem] text-muted">
             {periodLabel}
           </p>
@@ -35,13 +35,13 @@ export function TopSpendingCard({
           className={`${textLinkClass} text-[.78rem] border-1 p-2 rounded-[.7rem]`}
           href="/reports"
         >
-          Cek Laporan
+          View Reports
         </Link>
       </div>
 
       {top.length === 0 ? (
         <div className="rounded-[.65rem] border border-dashed border-border bg-surface-subtle p-[.85rem] text-center text-[.76rem] text-muted">
-          Belum ada pengeluaran pada periode ini.
+          No expenses yet for this period.
         </div>
       ) : (
         <ol className="m-0 flex-1 list-none p-0">

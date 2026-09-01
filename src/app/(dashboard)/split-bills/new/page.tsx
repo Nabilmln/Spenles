@@ -13,7 +13,7 @@ export default async function NewSplitBillPage() {
   await requireSessionUser();
   return (
     <div className={`${pageStackClass} ${narrowPageClass}`}>
-      <p className={pageDescriptionClass}>Tambah peserta lalu isi barang masing-masing. Pratinjau bersifat lokal; server memverifikasi ulang seluruh nominal.</p>
+      <p className={pageDescriptionClass}>Add participants and fill in each of their items. The preview is local; the server re-verifies all amounts.</p>
       <SplitBillEditor
         action={createSplitBillAction}
         finalizeAction={createAndFinalizeSplitBillAction}

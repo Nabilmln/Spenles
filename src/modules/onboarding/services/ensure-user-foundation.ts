@@ -115,7 +115,7 @@ export async function ensureUserFoundationWithDatabase(
 
   const verifiedCounts = await readFoundationCounts(database, user.id, categoryKeys);
   if (!isFoundationComplete(verifiedCounts)) {
-    throw new Error("Inisialisasi akun belum lengkap.");
+    throw new Error("Account initialization is not complete.");
   }
 
   return {

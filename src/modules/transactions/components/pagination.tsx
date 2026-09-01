@@ -43,7 +43,7 @@ export function Pagination({
   }
 
   return (
-    <nav aria-label="Paginasi transaksi" className="flex flex-col items-center gap-2">
+    <nav aria-label="Transaction pagination" className="flex flex-col items-center gap-2">
       <div className="flex items-center gap-1">
         <Link
           className={cn(
@@ -51,7 +51,7 @@ export function Pagination({
             filters.page <= 1 && "pointer-events-none opacity-[.45]",
           )}
           aria-disabled={filters.page <= 1}
-          aria-label="Halaman sebelumnya"
+          aria-label="Previous page"
           href={href(Math.max(1, filters.page - 1))}
         >
           <ChevronLeft size={18} aria-hidden="true" />
@@ -82,14 +82,14 @@ export function Pagination({
             filters.page >= totalPages && "pointer-events-none opacity-[.45]",
           )}
           aria-disabled={filters.page >= totalPages}
-          aria-label="Halaman berikutnya"
+          aria-label="Next page"
           href={href(Math.min(totalPages, filters.page + 1))}
         >
           <ChevronRight size={18} aria-hidden="true" />
         </Link>
       </div>
       <p className="m-0 text-[.76rem] text-muted">
-        Halaman {filters.page} dari {Math.max(totalPages, 1)} · {total} transaksi
+        Page {filters.page} of {Math.max(totalPages, 1)} · {total} transactions
       </p>
     </nav>
   );

@@ -17,8 +17,8 @@ export function PrivateDataError({
   }, [error]);
   return (
     <ErrorState
-      title={`${subject} belum dapat dimuat`}
-      message="Data pribadi Anda tetap aman. Silakan coba kembali."
+      title={`${subject} could not be loaded`}
+      message="Your private data remains safe. Please try again."
       retry={reset}
     />
   );

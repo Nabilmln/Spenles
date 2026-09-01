@@ -232,10 +232,10 @@ export function SplitBillCreateFlow({
         <input type="hidden" name="payload" value={JSON.stringify(payload)} />
 
         <fieldset className="m-0 grid min-w-0 gap-4 rounded-[.8rem] border border-border p-4">
-          <legend className="px-[.35rem] font-medium">Informasi tagihan</legend>
+          <legend className="px-[.35rem] font-medium">Bill information</legend>
           <div className="grid grid-cols-2 gap-4 max-[540px]:grid-cols-1">
             <div className={fieldClass}>
-              <label htmlFor="split-merchant">Nama merchant</label>
+              <label htmlFor="split-merchant">Merchant name</label>
               <Input
                 id="split-merchant"
                 value={merchantName}
@@ -245,7 +245,7 @@ export function SplitBillCreateFlow({
               />
             </div>
             <div className={fieldClass}>
-              <label htmlFor="split-date">Tanggal tagihan</label>
+              <label htmlFor="split-date">Bill date</label>
               <Input
                 id="split-date"
                 type="date"
@@ -259,14 +259,14 @@ export function SplitBillCreateFlow({
 
         <fieldset className="m-0 grid min-w-0 gap-4 rounded-[.8rem] border border-border p-4">
           <div className="flex items-center justify-between gap-4 max-[540px]:flex-col max-[540px]:items-stretch">
-            <legend className="px-[.35rem] font-medium">Peserta</legend>
+            <legend className="px-[.35rem] font-medium">Participants</legend>
             <Button
               type="button"
               variant="secondary"
               onClick={addParticipant}
-              aria-label="Tambah peserta"
+              aria-label="Add participant"
             >
-              <Plus size={16} aria-hidden="true" /> Tambah Peserta
+              <Plus size={16} aria-hidden="true" /> Add Participant
             </Button>
           </div>
           <div className="grid gap-[.8rem]">
@@ -278,7 +278,7 @@ export function SplitBillCreateFlow({
                 <div className="flex items-end gap-[.7rem]">
                   <div className={`${fieldClass} flex-auto min-w-0`}>
                     <label htmlFor={`participant-${participant.id}`}>
-                      Peserta {participantIndex + 1}
+                      Participant {participantIndex + 1}
                     </label>
                     <Input
                       id={`participant-${participant.id}`}
@@ -295,7 +295,7 @@ export function SplitBillCreateFlow({
                     variant="ghost"
                     disabled={participants.length <= 1}
                     onClick={() => removeParticipant(participant.id)}
-                    aria-label={`Hapus peserta ${participantIndex + 1}`}
+                    aria-label={`Delete participant ${participantIndex + 1}`}
                   >
                     <Trash2 size={16} aria-hidden="true" />
                   </Button>
@@ -307,7 +307,7 @@ export function SplitBillCreateFlow({
                       <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(6.5rem,.6fr)_auto] items-end gap-[.5rem] max-[540px]:grid-cols-2" key={item.id}>
                         <div className={fieldClass}>
                           <label htmlFor={`item-name-${item.id}`}>
-                            Nama item
+                            Item name
                           </label>
                           <Input
                             id={`item-name-${item.id}`}
@@ -322,7 +322,7 @@ export function SplitBillCreateFlow({
                           />
                         </div>
                         <div className={fieldClass}>
-                          <label htmlFor={`item-price-${item.id}`}>Harga</label>
+                          <label htmlFor={`item-price-${item.id}`}>Price</label>
                           <Input
                             id={`item-price-${item.id}`}
                             type="number"
@@ -342,7 +342,7 @@ export function SplitBillCreateFlow({
                           type="button"
                           variant="ghost"
                           onClick={() => removeItem(participant.id, item.id)}
-                          aria-label={`Hapus item ${itemIndex + 1} peserta ${participantIndex + 1}`}
+                          aria-label={`Delete item ${itemIndex + 1} of participant ${participantIndex + 1}`}
                           className="max-[540px]:col-span-full max-[540px]:justify-self-start"
                         >
                           <Trash2 size={16} aria-hidden="true" />
@@ -351,16 +351,16 @@ export function SplitBillCreateFlow({
                     ))
                   ) : (
                     <p className="m-[.1rem_0] text-[.82rem] text-muted">
-                      Belum ada barang untuk peserta ini.
+                      No items for this participant yet.
                     </p>
                   )}
                   <Button
                     type="button"
                     variant="secondary"
                     onClick={() => addItem(participant.id)}
-                    aria-label={`Tambah barang untuk peserta ${participantIndex + 1}`}
+                    aria-label={`Add item for participant ${participantIndex + 1}`}
                   >
-                    <Plus size={16} aria-hidden="true" /> Tambah Barang
+                    <Plus size={16} aria-hidden="true" /> Add Item
                   </Button>
                 </div>
               </article>
@@ -370,10 +370,10 @@ export function SplitBillCreateFlow({
 
         {hasItems ? (
           <fieldset className="m-0 grid min-w-0 gap-4 rounded-[.8rem] border border-border p-4">
-            <legend className="px-[.35rem] font-medium">Diskon, pajak, dan layanan</legend>
+            <legend className="px-[.35rem] font-medium">Discount, tax, and service</legend>
             <div className="grid grid-cols-2 gap-4 max-[540px]:grid-cols-1">
               <div className={fieldClass}>
-                <label htmlFor="bill-tax">Pajak tagihan (%)</label>
+                <label htmlFor="bill-tax">Bill tax (%)</label>
                 <Input
                   id="bill-tax"
                   type="number"
@@ -387,7 +387,7 @@ export function SplitBillCreateFlow({
                 />
               </div>
               <div className={fieldClass}>
-                <label htmlFor="discount-mode">Diskon</label>
+                <label htmlFor="discount-mode">Discount</label>
                 <Select
                   id="discount-mode"
                   value={discountMode}
@@ -397,14 +397,14 @@ export function SplitBillCreateFlow({
                     )
                   }
                 >
-                  <option value="none">Tanpa diskon</option>
-                  <option value="fixed">Diskon tetap</option>
-                  <option value="percentage">Diskon persentase</option>
+                  <option value="none">No discount</option>
+                  <option value="fixed">Fixed discount</option>
+                  <option value="percentage">Percentage discount</option>
                 </Select>
               </div>
               {discountMode === "fixed" ? (
                 <div className={fieldClass}>
-                  <label htmlFor="fixed-discount">Diskon tetap (IDR)</label>
+                  <label htmlFor="fixed-discount">Fixed discount (IDR)</label>
                   <Input
                     id="fixed-discount"
                     type="number"
@@ -420,7 +420,7 @@ export function SplitBillCreateFlow({
               ) : null}
               {discountMode === "percentage" ? (
                 <div className={fieldClass}>
-                  <label htmlFor="discount-percent">Diskon (%)</label>
+                  <label htmlFor="discount-percent">Discount (%)</label>
                   <Input
                     id="discount-percent"
                     type="number"
@@ -438,7 +438,7 @@ export function SplitBillCreateFlow({
                 </div>
               ) : null}
               <div className={fieldClass}>
-                <label htmlFor="service-charge">Biaya layanan (%)</label>
+                <label htmlFor="service-charge">Service charge (%)</label>
                 <Input
                   id="service-charge"
                   type="number"
@@ -455,7 +455,7 @@ export function SplitBillCreateFlow({
               </div>
             </div>
             <div className={fieldClass}>
-              <label htmlFor="split-note">Catatan (opsional)</label>
+              <label htmlFor="split-note">Note (optional)</label>
               <textarea
                 id="split-note"
                 className={textareaClass}
@@ -468,7 +468,7 @@ export function SplitBillCreateFlow({
         ) : null}
 
         <Button type="submit" disabled={pending}>
-          {pending ? "Memverifikasi..." : "Buat draft"}
+          {pending ? "Verifying..." : "Create draft"}
         </Button>
       </form>
 
@@ -476,11 +476,11 @@ export function SplitBillCreateFlow({
         <CalculationSummary result={preview} />
       ) : (
         <aside className={`${cardClass} grid min-w-0 gap-4`}>
-          <p className={eyebrowClass}>Pratinjau lokal</p>
-          <h2 className="m-0">Lengkapi tagihan</h2>
+          <p className={eyebrowClass}>Local preview</p>
+          <h2 className="m-0">Complete the bill</h2>
           <p className="text-muted">
-            Tambahkan setidaknya satu item berharga positif pada peserta untuk
-            melihat pratinjau.
+            Add at least one item with a positive price on a participant to
+            see the preview.
           </p>
         </aside>
       )}

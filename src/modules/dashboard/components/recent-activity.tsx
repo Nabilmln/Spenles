@@ -26,10 +26,10 @@ function dayOffset(today: string, day: string) {
 
 function groupLabel(today: string, day: string) {
   const offset = dayOffset(today, day);
-  if (offset === 0) return "Hari ini";
-  if (offset === 1) return "Kemarin";
-  if (offset === 2) return "2 hari lalu";
-  return new Intl.DateTimeFormat("id-ID", {
+  if (offset === 0) return "Today";
+  if (offset === 1) return "Yesterday";
+  if (offset === 2) return "2 days ago";
+  return new Intl.DateTimeFormat("en-US", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -56,14 +56,14 @@ export function RecentActivityCard({
     <section aria-labelledby="recent-activity-title" className={`${cardClass} flex h-full flex-col shadow-none`}>
       <div className="mb-[.65rem] flex items-end justify-between gap-3">
         <div>
-          <p className={eyebrowClass}>Transaksi terbaru</p>
-          <h2 id="recent-activity-title" className="m-0 text-[1.05rem] tracking-[-.02em]">Aktivitas terbaru</h2>
+          <p className={eyebrowClass}>Recent transactions</p>
+          <h2 id="recent-activity-title" className="m-0 text-[1.05rem] tracking-[-.02em]">Recent activity</h2>
         </div>
         <Link
           className="inline-flex items-center gap-[.25rem] whitespace-nowrap text-[.76rem] font-medium text-primary-600 hover:text-primary-700"
           href="/transactions"
         >
-          Lihat semua
+          View all
           <ArrowRight size={13} aria-hidden="true" />
         </Link>
       </div>
@@ -116,10 +116,10 @@ export function RecentActivityCard({
           role="status"
         >
           <div className="grid gap-[.2rem]">
-            <p className="m-0 text-[.85rem] font-medium text-foreground">Belum ada pengeluaran</p>
-            <p className="m-0 text-[.78rem] text-muted">Mulai catat pengeluaran pertamamu.</p>
+            <p className="m-0 text-[.85rem] font-medium text-foreground">No expenses yet</p>
+            <p className="m-0 text-[.78rem] text-muted">Start recording your first expense.</p>
             <Link className="mx-auto mt-[.6rem] text-[.78rem] font-medium text-primary-600 hover:text-primary-700" href="/transactions/new">
-              Catat pengeluaran
+              Record expense
             </Link>
           </div>
         </div>

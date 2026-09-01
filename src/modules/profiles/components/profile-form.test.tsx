@@ -22,9 +22,9 @@ const profile = {
 describe("ProfileForm theme field", () => {
   it("does not expose a system/laptop theme option in the visible UI", () => {
     render(<ProfileForm profile={profile} email="budi@example.com" />);
-    const options = screen.getByLabelText("Tema").children;
+    const options = screen.getByLabelText("Theme").children;
     const labels = Array.from(options).map((option) => option.textContent);
-    expect(labels).toEqual(["Terang", "Gelap"]);
+    expect(labels).toEqual(["Light", "Dark"]);
     expect(labels).not.toContain("Ikuti sistem");
   });
 });

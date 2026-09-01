@@ -21,9 +21,9 @@ export function MobileBalanceCard({
   const [hidden, setHidden] = useState(false);
 
   return (
-    <section aria-label="Total saldo" className="grid min-w-0 gap-[.5rem]">
+    <section aria-label="Total balance" className="grid min-w-0 gap-[.5rem]">
       <p className="m-0 text-[.7rem] font-semibold uppercase tracking-[.14em] text-muted">
-        Total saldo
+        Total balance
       </p>
       <div className="flex items-center gap-[.6rem]">
         <h2
@@ -37,7 +37,7 @@ export function MobileBalanceCard({
         <button
           type="button"
           className="grid size-[2.2rem] shrink-0 place-items-center rounded-full bg-surface-subtle text-muted transition-colors hover:text-foreground"
-          aria-label={hidden ? "Tampilkan nominal" : "Sembunyikan nominal"}
+          aria-label={hidden ? "Show amount" : "Hide amount"}
           aria-pressed={hidden}
           onClick={() => setHidden((value) => !value)}
         >
@@ -57,7 +57,7 @@ export function MobileBalanceCard({
       <div className="mt-[1.1rem] grid grid-cols-2 gap-[.6rem]">
         <div className="rounded-[.85rem] bg-surface-subtle/70 p-[.7rem_.8rem]">
           <p className="m-0 text-[.68rem] font-semibold uppercase tracking-[.08em] text-muted">
-            Pendapatan
+            Income
           </p>
           <strong className="block text-[.95rem] leading-[1.2] text-income [overflow-wrap:anywhere]">
             {hidden ? PRIVACY_MASK : formatIdr(income)}
@@ -65,7 +65,7 @@ export function MobileBalanceCard({
         </div>
         <div className="rounded-[.85rem] bg-surface-subtle/70 p-[.7rem_.8rem]">
           <p className="m-0 text-[.68rem] font-semibold uppercase tracking-[.08em] text-muted">
-            Pengeluaran
+            Expense
           </p>
           <strong className="block text-[.95rem] leading-[1.2] text-expense [overflow-wrap:anywhere]">
             {hidden ? PRIVACY_MASK : formatIdr(expense)}

@@ -14,8 +14,8 @@ export default async function RecurringTransactionsPage() {
   return (
     <div className={pageStackClass}>
       <div className={pageHeadingRowClass}>
-        <p className={pageDescriptionClass}>Jadwal menggunakan Asia/Jakarta dan setiap kejadian hanya dibuat sekali.</p>
-        <Link className={buttonClass("primary")} href="/recurring-transactions/new">Buat aturan</Link>
+        <p className={pageDescriptionClass}>Scheduling uses Asia/Jakarta and each occurrence is only created once.</p>
+        <Link className={buttonClass("primary")} href="/recurring-transactions/new">Create rule</Link>
       </div>
       <RecurringRuleList rows={rows} />
     </div>

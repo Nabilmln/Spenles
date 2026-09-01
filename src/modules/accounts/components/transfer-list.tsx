@@ -23,7 +23,7 @@ function ReversalForm({ id }: { id: string }) {
     <form action={action} className="max-[540px]:col-span-full max-[540px]:justify-self-start">
       <input type="hidden" name="id" value={id} />
       <Button type="submit" variant="ghost" disabled={pending}>
-        {pending ? "Membalik..." : "Balikkan"}
+        {pending ? "Reversing..." : "Reverse"}
       </Button>
     </form>
   );
@@ -31,7 +31,7 @@ function ReversalForm({ id }: { id: string }) {
 
 export function TransferList({ rows }: { rows: TransferListRow[] }) {
   if (rows.length === 0) {
-    return <div className={emptyStateClass}><p className="m-0 text-muted">Belum ada riwayat transfer.</p></div>;
+    return <div className={emptyStateClass}><p className="m-0 text-muted">No transfer history yet.</p></div>;
   }
   return (
     <div className="grid gap-3">
@@ -44,9 +44,9 @@ export function TransferList({ rows }: { rows: TransferListRow[] }) {
           </div>
           <strong>{formatIdr(row.amount)}</strong>
           {row.reversalOfId ? (
-            <span className={archivedBadgeClass}>Pembalikan</span>
+            <span className={archivedBadgeClass}>Reversal</span>
           ) : row.reversed ? (
-            <span className={archivedBadgeClass}>Sudah dibalik</span>
+            <span className={archivedBadgeClass}>Reversed</span>
           ) : (
             <ReversalForm id={row.id} />
           )}

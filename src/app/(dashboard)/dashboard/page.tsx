@@ -82,11 +82,11 @@ export default async function DashboardPage({
       <div className="grid gap-[1.75rem]">
         <section className={`${cardClass} flex items-center gap-[.8rem] shadow-none`} role="alert">
           <div>
-            <h2 className="m-[0_0_.25rem]! text-base!">Periksa pilihan periode</h2>
+            <h2 className="m-[0_0_.25rem]! text-base!">Check your period selection</h2>
             <p className="m-0 text-muted text-[.84rem]">{filtersResult.error}</p>
           </div>
           <Link className={buttonClass("primary")} href="/dashboard">
-            Kembali ke bulan ini
+            Back to this month
           </Link>
         </section>
       </div>
@@ -251,7 +251,7 @@ export default async function DashboardPage({
               previousLabel={prevCardInterval.label}
             />
           ) : (
-            <DashboardSectionError title="Perbandingan bulanan belum tersedia" />
+            <DashboardSectionError title="Monthly comparison not available yet" />
           )}
         </div>
 
@@ -262,7 +262,7 @@ export default async function DashboardPage({
               periodNet={savingsNet}
             />
           ) : (
-            <DashboardSectionError title="Ringkasan tabungan belum tersedia" />
+            <DashboardSectionError title="Savings summary not available yet" />
           )}
         </div>
       </div>
@@ -289,7 +289,7 @@ export default async function DashboardPage({
                 totalIncome={overview.income}
               />
             ) : (
-              <DashboardSectionError title="Pengeluaran bulanan belum tersedia" />
+              <DashboardSectionError title="Monthly expenses not available yet" />
             )}
           </div>
 
@@ -309,7 +309,7 @@ export default async function DashboardPage({
                 totalExpense={categoryContract.totalExpense}
               />
             ) : (
-              <DashboardSectionError title="Pengeluaran per kategori belum tersedia" />
+              <DashboardSectionError title="Category expenses not available yet" />
             )}
           </div>
 
@@ -317,7 +317,7 @@ export default async function DashboardPage({
             {isFulfilled(activityResult) ? (
               <RecentActivityCard rows={activityResult.value} />
             ) : (
-              <DashboardSectionError title="Aktivitas terbaru belum tersedia" />
+              <DashboardSectionError title="Recent activity not available yet" />
             )}
           </div>
 
@@ -328,7 +328,7 @@ export default async function DashboardPage({
                 rows={categoryRows}
               />
             ) : (
-              <DashboardSectionError title="Kategori teratas belum tersedia" />
+              <DashboardSectionError title="Top categories not available yet" />
             )}
           </div>
 
@@ -341,7 +341,7 @@ export default async function DashboardPage({
                   previousLabel={prevCardInterval.label}
                 />
               ) : (
-                <DashboardSectionError title="Rata-rata harian belum tersedia" />
+                <DashboardSectionError title="Daily average not available yet" />
               )}
               <DashboardAccountCard rows={activeAccounts} />
             </div>

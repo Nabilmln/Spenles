@@ -20,7 +20,7 @@ describe("MobileBalanceCard", () => {
       />,
     );
 
-    expect(screen.getByText("Total saldo")).toBeInTheDocument();
+    expect(screen.getByText("Total balance")).toBeInTheDocument();
     expect(findAmount("Rp5.487.508")).toBe(true);
     expect(findAmount("Rp2.000.000")).toBe(true);
     expect(findAmount("Rp800.000")).toBe(true);
@@ -37,11 +37,11 @@ describe("MobileBalanceCard", () => {
     );
 
     const button = screen.getByRole("button", {
-      name: "Sembunyikan nominal",
+      name: "Hide amount",
     });
     fireEvent.click(button);
 
-    expect(screen.getByRole("button", { name: "Tampilkan nominal" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Show amount" })).toBeInTheDocument();
     expect(screen.getAllByText(/•+$/u).length).toBeGreaterThanOrEqual(1);
   });
 });

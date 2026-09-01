@@ -42,7 +42,7 @@ export function formatJakartaDate(value: Date) {
 }
 
 export function formatJakartaDateLong(value: Date) {
-  return new Intl.DateTimeFormat("id-ID", {
+  return new Intl.DateTimeFormat("en-US", {
     timeZone: JAKARTA_TIMEZONE,
     dateStyle: "long",
   }).format(value);
@@ -64,7 +64,7 @@ export function preserveOrAttachNow(dateOnly: string, original?: Date): Date | n
 }
 
 export function formatJakartaDateTime(value: Date) {
-  return new Intl.DateTimeFormat("id-ID", {
+  return new Intl.DateTimeFormat("en-US", {
     timeZone: JAKARTA_TIMEZONE,
     dateStyle: "long",
     timeStyle: "short",

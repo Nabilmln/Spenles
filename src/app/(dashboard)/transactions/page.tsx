@@ -23,7 +23,7 @@ export default async function TransactionsPage({
   if (!parsed.success) {
     return (
       <div className={pageStackClass}>
-        <div className={cardClass}><p className="m-0 text-muted">Parameter pencarian atau filter tidak dapat digunakan.</p><Link className={buttonClass("primary")} href="/transactions">Reset filter</Link></div>
+        <div className={cardClass}><p className="m-0 text-muted">The search or filter parameters could not be applied.</p><Link className={buttonClass("primary")} href="/transactions">Reset filters</Link></div>
       </div>
     );
   }
@@ -34,11 +34,11 @@ export default async function TransactionsPage({
   ]);
   return (
     <div className={pageStackClass}>
-      <p className={pageDescriptionClass}>Catat dan temukan pemasukan, pengeluaran, maupun tabungan Anda.</p>
+      <p className={pageDescriptionClass}>Record and find your income, expenses, and savings.</p>
       <TransactionSummary income={summary.income} expense={summary.expense} savings={summary.savings} />
       <div className="flex items-center justify-end">
         <Link className={buttonClass("primary")} href="/transactions/new">
-          Tambah transaksi
+          Add transaction
         </Link>
       </div>
       <TransactionFilterBar filters={parsed.data} {...options} />

@@ -76,7 +76,7 @@ function buildInterval(
     const year = Number(values.year);
     startDate = `${values.year}-01-01`;
     inclusiveEndDate = `${values.year}-12-31`;
-    label = `Tahun ${values.year}`;
+    label = `Year ${values.year}`;
     filePart = values.year;
     if (year < 2000) return null;
   } else if (
@@ -99,7 +99,7 @@ function buildInterval(
     inclusiveEndDate > today
   ) {
     inclusiveEndDate = today;
-    label = `${label} (hingga ${today})`;
+    label = `${label} (through ${today})`;
   }
 
   const start = jakartaDate(startDate);
