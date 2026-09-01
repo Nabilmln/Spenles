@@ -75,9 +75,24 @@ export function formatRangeLong(from: string, to: string) {
 }
 
 /**
- * Formats a calendar month as a full Indonesian month and year.
- * (2026, 8) -> "Agustus 2026".
+ * Formats a calendar month as a full English month and year.
+ * (2026, 8) -> "August 2026".
  */
 export function formatMonthYearLabel(year: number, month: number) {
   return `${MONTHS_LONG[month - 1]} ${year}`;
+}
+
+/**
+ * Formats a UTC calendar day as a long English date.
+ * "2026-08-05" -> "August 5, 2026".
+ */
+export function formatLongDateUtc(value: string) {
+  const parts = parseDateKey(value);
+  if (!parts) return value;
+  return new Intl.DateTimeFormat("en-US", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(Date.UTC(parts.year, parts.month - 1, parts.day)));
 }

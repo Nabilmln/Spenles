@@ -4,7 +4,7 @@ import type {
   DateInterval,
 } from "../types/dashboard";
 import { JAKARTA_OFFSET_MS } from "@/lib/dates/jakarta";
-import { formatMonthYearLabel } from "@/lib/dates/format-id";
+import { formatLongDateUtc, formatMonthYearLabel } from "@/lib/dates/format-id";
 
 const DAY_MS = 86_400_000;
 
@@ -78,12 +78,7 @@ function monthLabel(value: CalendarDate) {
 }
 
 function dateLabel(value: CalendarDate) {
-  return new Intl.DateTimeFormat("en-US", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(new Date(Date.UTC(value.year, value.month - 1, value.day)));
+  return formatLongDateUtc(dateKey(value));
 }
 
 function interval(

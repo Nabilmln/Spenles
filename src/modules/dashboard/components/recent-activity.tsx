@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowDownLeft, ArrowUpRight } from "lucide-react";
 import { formatJakartaDateLong, JAKARTA_OFFSET_MS } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
+import { formatLongDateUtc } from "@/lib/dates/format-id";
 import { cardClass } from "@/components/ui/styles";
 import type { RecentDashboardTransaction } from "../types/dashboard";
 
@@ -29,12 +30,7 @@ function groupLabel(today: string, day: string) {
   if (offset === 0) return "Today";
   if (offset === 1) return "Yesterday";
   if (offset === 2) return "2 days ago";
-  return new Intl.DateTimeFormat("en-US", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(new Date(`${day}T00:00:00Z`));
+  return formatLongDateUtc(day);
 }
 
 export function RecentActivityCard({
