@@ -62,4 +62,22 @@ describe("ProfileMenu", () => {
     fireEvent.keyDown(document, { key: "Escape" });
     expect(screen.queryByRole("menu")).not.toBeInTheDocument();
   });
+
+  it("keeps the Edit profile link clickable after opening", () => {
+    renderMenu();
+    fireEvent.click(screen.getByRole("button", { name: "Open profile" }));
+    const editLinks = screen.getAllByRole("link", { name: "Edit profile" });
+    expect(editLinks.length).toBeGreaterThanOrEqual(1);
+    expect(editLinks[0]).toHaveAttribute("href", "/settings/profile");
+  });
+
+  it("submits logout from the opened panel", () => {
+    renderMenu();
+    fireEvent.click(screen.getByRole("button", { name: "Open profile" }));
+    const logout = screen
+      .getAllByText("Log out")[0]
+      .closest("button") as HTMLButtonElement;
+    fireEvent.click(logout);
+    expect(logoutAction).toHaveBeenCalledTimes(1);
+  });
 });

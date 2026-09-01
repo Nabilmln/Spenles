@@ -56,9 +56,7 @@ export function RecentActivityCard({
     <section aria-labelledby="recent-activity-title" className={`${cardClass} flex h-full flex-col shadow-none`}>
       <div className="mb-[.65rem] flex items-end justify-between gap-3">
         <div>
-          <p className={eyebrowClass}>Recent transactions</p>
           <h2 id="recent-activity-title" className="m-0 text-[1.05rem] tracking-[-.02em]">Recent activity</h2>
-        </div>
         <Link
           className="inline-flex items-center gap-[.25rem] whitespace-nowrap text-[.76rem] font-medium text-primary-600 hover:text-primary-700"
           href="/transactions"
@@ -66,6 +64,7 @@ export function RecentActivityCard({
           View all
           <ArrowRight size={13} aria-hidden="true" />
         </Link>
+        </div>
       </div>
 
       {orderedDays.length ? (

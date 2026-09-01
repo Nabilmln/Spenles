@@ -3,7 +3,7 @@
 import Link from "next/link";
 import {
   FileBarChart,
-  LayoutDashboard,
+  Home,
   ListTree,
   Plus,
   ReceiptText,
@@ -17,7 +17,7 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/dashboard", label: "Home", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Home", icon: Home },
   { href: "/transactions", label: "Transactions", icon: ReceiptText },
   { href: "/accounts", label: "Accounts", icon: WalletCards },
   { href: "/categories", label: "Categories", icon: ListTree },
@@ -29,7 +29,7 @@ const links = [
 ];
 
 const mobileLinks = [
-  { href: "/dashboard", label: "Home", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Home", icon: Home },
   { href: "/accounts", label: "Accounts", icon: WalletCards },
   { href: "/transactions", label: "Transactions", icon: ReceiptText },
 ];
@@ -51,10 +51,12 @@ export function NavigationLinks({ mobile = false }: { mobile?: boolean }) {
         ))}
         <Link
           aria-label="Add transaction"
-          className="grid size-[3.1rem] place-items-center self-center rounded-full bg-primary-600 text-white shadow-[0_6px_20px_rgb(79_70_229/45%)]"
+          className="grid min-h-[2.9rem] min-w-[2.9rem] place-items-center self-center rounded-full"
           href="/transactions/new"
         >
-          <Plus size={22} strokeWidth={2.75} aria-hidden="true" />
+          <span className="grid size-[2.2rem] place-items-center rounded-full bg-primary-600 text-white shadow-[0_6px_20px_rgb(79_70_229/45%)] transition-transform duration-150 active:scale-95">
+            <Plus size={18} strokeWidth={2.75} aria-hidden="true" />
+          </span>
           <span className="sr-only">Add transaction</span>
         </Link>
       </>
@@ -96,13 +98,13 @@ function MobileLink({
   active: boolean;
   href: string;
   label: string;
-  icon: typeof LayoutDashboard;
+  icon: typeof Home;
 }) {
   return (
     <Link
       aria-current={active ? "page" : undefined}
       className={cn(
-        "relative flex min-h-[3.1rem] min-w-[3.1rem] items-center justify-center gap-[.3rem] rounded-full px-1 text-muted transition-[background,color,box-shadow] duration-200",
+        "relative flex min-h-[2.9rem] min-w-[2.9rem] items-center justify-center gap-[.35rem] rounded-full px-1.5 text-muted transition-[background,color,box-shadow,width] duration-200",
         active &&
           "bg-primary-50 font-medium text-primary-700 dark:bg-primary-50 dark:text-primary-700",
       )}
@@ -112,7 +114,7 @@ function MobileLink({
       <span
         className={cn(
           "overflow-hidden whitespace-nowrap text-[.72rem] transition-[max-width,opacity] duration-200",
-          active ? "max-w-[5rem] opacity-100" : "max-w-0 opacity-0",
+          active ? "max-w-[5.5rem] opacity-100" : "max-w-0 opacity-0",
         )}
       >
         {label}
