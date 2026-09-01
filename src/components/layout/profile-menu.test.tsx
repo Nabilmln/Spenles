@@ -13,7 +13,7 @@ afterEach(cleanup);
 describe("ProfileMenu", () => {
   it("shows the avatar trigger and opens an internal menu", () => {
     render(<ProfileMenu displayName="Budi" email="budi@example.com" />);
-    const trigger = screen.getByRole("button", { name: "Profile menu" });
+    const trigger = screen.getByRole("button", { name: "Open profile" });
     expect(trigger).toBeInTheDocument();
     expect(screen.queryByRole("menu")).not.toBeInTheDocument();
 
@@ -25,9 +25,9 @@ describe("ProfileMenu", () => {
 
   it("places logout inside the menu, styled as destructive and not a header button", () => {
     render(<ProfileMenu displayName="Budi" email="budi@example.com" />);
-    fireEvent.click(screen.getByRole("button", { name: "Profile menu" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open profile" }));
     const logout = screen
-      .getByText("Log out")
+      .getAllByText("Log out")[0]
       .closest("button") as HTMLButtonElement;
     expect(logout).toHaveClass("text-expense");
     expect(logout).toHaveAttribute("type", "submit");
@@ -35,7 +35,7 @@ describe("ProfileMenu", () => {
 
   it("closes the menu with the Escape key", () => {
     render(<ProfileMenu displayName="Budi" email="budi@example.com" />);
-    fireEvent.click(screen.getByRole("button", { name: "Profile menu" }));
+    fireEvent.click(screen.getByRole("button", { name: "Open profile" }));
     expect(screen.getByRole("menu")).toBeInTheDocument();
     fireEvent.keyDown(document, { key: "Escape" });
     expect(screen.queryByRole("menu")).not.toBeInTheDocument();

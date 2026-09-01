@@ -63,19 +63,28 @@ export function HeaderContent({
   return (
     <>
       {showBack ? (
-        <BackButton fallback={meta.back} />
+        <>
+          <BackButton fallback={meta.back} />
+          {meta.title ? (
+            <h1 className="m-0 min-w-0 truncate text-[1.05rem] font-medium max-[540px]:text-[.95rem]">{meta.title}</h1>
+          ) : null}
+          <div className="flex-1" />
+          <ThemeToggle currentTheme={profile.theme} />
+          <ProfileMenu displayName={profile.displayName} email={email} />
+        </>
       ) : (
-        <div className="hidden max-[860px]:block max-[860px]:flex-1 max-[860px]:[&_a>:last-child]:hidden"><Brand /></div>
+        <>
+          <div className="hidden min-[861px]:block"><Brand /></div>
+          <div className="min-[861px]:hidden">
+            <ProfileMenu displayName={profile.displayName} email={email} />
+          </div>
+          <div className="flex-1" />
+          <ThemeToggle currentTheme={profile.theme} />
+          <div className="hidden min-[861px]:block">
+            <ProfileMenu displayName={profile.displayName} email={email} />
+          </div>
+        </>
       )}
-      {showBack && meta.title ? (
-        <h1 className="m-0 min-w-0 truncate text-[1.05rem] font-medium max-[540px]:text-[.95rem]">{meta.title}</h1>
-      ) : null}
-      <div className="flex-1" />
-      <ThemeToggle currentTheme={profile.theme} />
-      <ProfileMenu
-        displayName={profile.displayName}
-        email={email}
-      />
     </>
   );
 }

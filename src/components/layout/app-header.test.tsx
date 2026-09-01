@@ -56,7 +56,7 @@ describe("HeaderContent shared mobile header", () => {
     expect(
       screen.getByRole("button", { name: "Enable dark mode" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Profile menu" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Open profile" })).toBeInTheDocument();
   });
 
   it("exposes no system/laptop theme control", () => {

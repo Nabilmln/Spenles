@@ -152,6 +152,12 @@ body {
 }
 .toast-in { animation: toast-in .25s ease-out both; }
 
+@keyframes profile-curtain-in {
+  from { opacity: 0; transform: translateY(100%); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.profile-curtain-in { animation: profile-curtain-in .3s cubic-bezier(.22,.61,.36,1) both; }
+
 input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }

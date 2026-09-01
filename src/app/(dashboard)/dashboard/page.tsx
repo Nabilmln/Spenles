@@ -271,12 +271,12 @@ export default async function DashboardPage({
         <div className="dashboard-grid grid gap-3 min-[861px]:grid-cols-8 min-[1024px]:grid-cols-12">
           <div className="min-w-0 min-[861px]:col-span-8 min-[1024px]:col-span-12">
             <p className="mb-[.55rem] text-[.72rem] font-semibold uppercase tracking-[.12em] text-muted">
-              Layanan
+              Services
             </p>
             <DashboardFeatureGrid />
           </div>
 
-          <div className="min-w-0 min-[861px]:hidden">
+          <div className="hidden min-w-0 min-[861px]:col-span-8 min-[861px]:block min-[1024px]:col-span-8">
             {daily ? (
               <MonthlyExpenseCard
                 currentMonth={cardMonth}
@@ -301,7 +301,7 @@ export default async function DashboardPage({
             />
           </div>
 
-          <div className="min-w-0 min-[861px]:col-span-4 min-[1024px]:col-span-4">
+          <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
             {isFulfilled(categoryResult) ? (
               <CategoryExpenseCard
                 periodLabel={monthLabelFor(cardMonth)}

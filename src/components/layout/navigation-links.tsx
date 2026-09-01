@@ -30,9 +30,8 @@ const links = [
 
 const mobileLinks = [
   { href: "/dashboard", label: "Home", icon: LayoutDashboard },
+  { href: "/accounts", label: "Accounts", icon: WalletCards },
   { href: "/transactions", label: "Transactions", icon: ReceiptText },
-  { href: "/reports", label: "Reports", icon: FileBarChart },
-  { href: "/settings/profile", label: "Profile", icon: UserRound },
 ];
 
 const linkBase =
@@ -47,20 +46,17 @@ export function NavigationLinks({ mobile = false }: { mobile?: boolean }) {
   if (mobile) {
     return (
       <>
-        {mobileLinks.slice(0, 2).map(({ href, label, icon: Icon }) => (
+        {mobileLinks.map(({ href, label, icon: Icon }) => (
           <MobileLink active={pathname === href} href={href} icon={Icon} key={href} label={label} />
         ))}
         <Link
           aria-label="Add transaction"
-          className="relative z-[1] grid size-[3.1rem] place-items-center self-center rounded-full before:absolute before:z-[-1] before:inset-0 before:rounded-full before:bg-primary-600 before:shadow-[0_6px_20px_rgb(79_70_229/45%)] [&_svg]:text-white"
+          className="grid size-[3.1rem] place-items-center self-center rounded-full bg-primary-600 text-white shadow-[0_6px_20px_rgb(79_70_229/45%)]"
           href="/transactions/new"
         >
           <Plus size={22} strokeWidth={2.75} aria-hidden="true" />
           <span className="sr-only">Add transaction</span>
         </Link>
-        {mobileLinks.slice(2).map(({ href, label, icon: Icon }) => (
-          <MobileLink active={pathname === href} href={href} icon={Icon} key={href} label={label} />
-        ))}
       </>
     );
   }
