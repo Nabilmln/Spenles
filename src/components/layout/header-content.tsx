@@ -70,18 +70,18 @@ export function HeaderContent({
           ) : null}
           <div className="flex-1" />
           <ThemeToggle currentTheme={profile.theme} />
-          <ProfileMenu displayName={profile.displayName} email={email} />
+          <ProfileMenu displayName={profile.displayName} email={email} defaultCurrency={profile.defaultCurrency} timezone={profile.timezone} />
         </>
       ) : (
         <>
           <div className="hidden min-[861px]:block"><Brand /></div>
           <div className="min-[861px]:hidden">
-            <ProfileMenu displayName={profile.displayName} email={email} />
+            <ProfileMenu displayName={profile.displayName} email={email} defaultCurrency={profile.defaultCurrency} timezone={profile.timezone} />
           </div>
           <div className="flex-1" />
           <ThemeToggle currentTheme={profile.theme} />
           <div className="hidden min-[861px]:block">
-            <ProfileMenu displayName={profile.displayName} email={email} />
+            <ProfileMenu displayName={profile.displayName} email={email} defaultCurrency={profile.defaultCurrency} timezone={profile.timezone} />
           </div>
         </>
       )}

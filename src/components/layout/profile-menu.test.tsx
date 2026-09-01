@@ -10,9 +10,20 @@ const { logoutAction } = await import("@/modules/auth/actions/logout");
 
 afterEach(cleanup);
 
+function renderMenu() {
+  return render(
+    <ProfileMenu
+      displayName="Budi"
+      email="budi@example.com"
+      defaultCurrency="IDR"
+      timezone="Asia/Jakarta"
+    />,
+  );
+}
+
 describe("ProfileMenu", () => {
   it("shows the avatar trigger and opens an internal menu", () => {
-    render(<ProfileMenu displayName="Budi" email="budi@example.com" />);
+    renderMenu();
     const trigger = screen.getByRole("button", { name: "Open profile" });
     expect(trigger).toBeInTheDocument();
     expect(screen.queryByRole("menu")).not.toBeInTheDocument();
@@ -23,8 +34,19 @@ describe("ProfileMenu", () => {
     expect(logoutAction).toHaveBeenCalledTimes(0);
   });
 
+  it("shows profile data directly when opened", () => {
+    renderMenu();
+    fireEvent.click(screen.getByRole("button", { name: "Open profile" }));
+
+    expect(screen.getByRole("dialog", { name: "Profile" })).toBeInTheDocument();
+    expect(screen.getAllByText("Budi").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText("budi@example.com").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText("IDR")).toBeInTheDocument();
+    expect(screen.getByText("Asia/Jakarta")).toBeInTheDocument();
+  });
+
   it("places logout inside the menu, styled as destructive and not a header button", () => {
-    render(<ProfileMenu displayName="Budi" email="budi@example.com" />);
+    renderMenu();
     fireEvent.click(screen.getByRole("button", { name: "Open profile" }));
     const logout = screen
       .getAllByText("Log out")[0]
@@ -34,7 +56,7 @@ describe("ProfileMenu", () => {
   });
 
   it("closes the menu with the Escape key", () => {
-    render(<ProfileMenu displayName="Budi" email="budi@example.com" />);
+    renderMenu();
     fireEvent.click(screen.getByRole("button", { name: "Open profile" }));
     expect(screen.getByRole("menu")).toBeInTheDocument();
     fireEvent.keyDown(document, { key: "Escape" });
