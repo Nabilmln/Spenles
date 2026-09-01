@@ -8,17 +8,23 @@ import { cn } from "@/lib/utils";
 const PRIVACY_MASK = "••••••";
 
 export function MobileBalanceCard({
-  name,
+  accounts,
   balance,
   income,
   expense,
 }: {
-  name: string;
+  accounts: { name: string; type: string }[];
   balance: bigint;
   income: bigint;
   expense: bigint;
 }) {
   const [hidden, setHidden] = useState(false);
+  const accountLabel =
+    accounts.length === 1
+      ? accounts[0]!.name
+      : accounts.length > 1
+        ? `${accounts[0]!.name} +${accounts.length - 1} more`
+        : "No accounts yet";
 
   return (
     <section
@@ -64,7 +70,7 @@ export function MobileBalanceCard({
 
       <div className="relative z-[1] flex items-center gap-[.5rem] text-[.82rem] text-white/75">
         <Wallet size={15} aria-hidden="true" />
-        <span className="min-w-0 truncate">{name}</span>
+        <span className="min-w-0 truncate">{accountLabel}</span>
       </div>
 
       <div className="relative z-[1] grid grid-cols-2 gap-[.7rem] border-t border-white/15 pt-[1rem]">

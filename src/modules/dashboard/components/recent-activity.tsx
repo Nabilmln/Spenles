@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { ArrowDownLeft, ArrowRight, ArrowUpRight } from "lucide-react";
+import { ArrowDownLeft, ArrowUpRight } from "lucide-react";
 import { formatJakartaDateLong, JAKARTA_OFFSET_MS } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
-import { cardClass, eyebrowClass } from "@/components/ui/styles";
+import { cardClass } from "@/components/ui/styles";
 import type { RecentDashboardTransaction } from "../types/dashboard";
 
 const DAY_MS = 86_400_000;
@@ -54,17 +54,15 @@ export function RecentActivityCard({
 
   return (
     <section aria-labelledby="recent-activity-title" className={`${cardClass} flex h-full flex-col shadow-none`}>
-      <div className="mb-[.65rem] flex items-end justify-between gap-3">
-        <div>
-          <h2 id="recent-activity-title" className="m-0 text-[1.05rem] tracking-[-.02em]">Recent activity</h2>
+      <div className="mb-[.65rem] flex items-center justify-between gap-3">
+        <h2 id="recent-activity-title" className="m-0 text-[1.05rem] tracking-[-.02em]">Recent activity</h2>
         <Link
-          className="inline-flex items-center gap-[.25rem] whitespace-nowrap text-[.76rem] font-medium text-primary-600 hover:text-primary-700"
+          className="inline-flex items-center whitespace-nowrap text-[.76rem] font-medium text-primary-600 hover:text-primary-700"
           href="/transactions"
         >
           View all
-          <ArrowRight size={13} aria-hidden="true" />
+          <span aria-hidden="true" className="ml-[.2rem] text-[0.95rem] leading-none">&gt;</span>
         </Link>
-        </div>
       </div>
 
       {orderedDays.length ? (

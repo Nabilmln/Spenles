@@ -82,7 +82,10 @@ export function ProfileMenu({
                 className="absolute inset-0 cursor-default bg-[rgb(15_15_18/45%)]"
                 onClick={() => setOpen(false)}
               />
-              <div className="relative w-full rounded-t-[1.6rem] border-t border-border bg-surface p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-[0_-10px_40px_rgb(15_15_18/20%)] profile-curtain-in">
+              <div
+                className="relative w-full rounded-t-[1.6rem] border-t border-border bg-surface p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-[0_-10px_40px_rgb(15_15_18/20%)] profile-curtain-in"
+                onClick={(event) => event.stopPropagation()}
+              >
                 <div className="mb-[1.1rem] flex items-center justify-between">
                   <h2 className="m-0 text-[1.05rem] font-semibold tracking-[-.02em]">Profile</h2>
                   <button
@@ -135,7 +138,11 @@ export function ProfileMenu({
 
       {/* Desktop dropdown */}
       {open ? (
-        <div className="absolute right-0 top-[calc(100%+.5rem)] z-40 hidden w-56 rounded-[.9rem] border border-border bg-surface p-2 shadow-card min-[861px]:block" role="menu">
+        <div
+          className="absolute right-0 top-[calc(100%+.5rem)] z-40 hidden w-56 rounded-[.9rem] border border-border bg-surface p-2 shadow-card min-[861px]:block"
+          role="menu"
+          onClick={(event) => event.stopPropagation()}
+        >
           <div className="grid gap-[.05rem] border-b border-border px-[.7rem] pb-[.75rem] pt-[.5rem]">
             <strong className="text-[.9rem]">{displayName}</strong>
             <small className="truncate text-muted text-[.76rem]">{email}</small>

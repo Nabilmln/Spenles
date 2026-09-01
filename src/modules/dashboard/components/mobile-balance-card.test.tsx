@@ -13,7 +13,7 @@ describe("MobileBalanceCard", () => {
   it("renders the total balance with income and expense", () => {
     render(
       <MobileBalanceCard
-        name="Pengguna Spenles"
+        accounts={[{ name: "Kas Utama", type: "cash" }]}
         balance={5_487_508n}
         income={2_000_000n}
         expense={800_000n}
@@ -21,15 +21,32 @@ describe("MobileBalanceCard", () => {
     );
 
     expect(screen.getByText("Total balance")).toBeInTheDocument();
+    expect(screen.getByText("Kas Utama")).toBeInTheDocument();
     expect(findAmount("Rp5.487.508")).toBe(true);
     expect(findAmount("Rp2.000.000")).toBe(true);
     expect(findAmount("Rp800.000")).toBe(true);
   });
 
+  it("summarizes multiple accounts in the account row", () => {
+    render(
+      <MobileBalanceCard
+        accounts={[
+          { name: "Kas Utama", type: "cash" },
+          { name: "Rekening BCA", type: "bank" },
+        ]}
+        balance={1n}
+        income={1n}
+        expense={1n}
+      />,
+    );
+
+    expect(screen.getByText("Kas Utama +1 more")).toBeInTheDocument();
+  });
+
   it("toggles the nominal visibility", () => {
     render(
       <MobileBalanceCard
-        name="Pengguna Spenles"
+        accounts={[{ name: "Kas Utama", type: "cash" }]}
         balance={5_487_508n}
         income={2_000_000n}
         expense={800_000n}

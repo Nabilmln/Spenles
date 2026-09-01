@@ -233,7 +233,7 @@ export default async function DashboardPage({
           </div>
           <div className="min-[861px]:hidden">
             <MobileBalanceCard
-              name={profile?.displayName ?? "Pengguna Spenles"}
+              accounts={activeAccounts}
               balance={totalBalance}
               income={overview.income}
               expense={overview.expense}
