@@ -47,12 +47,12 @@ export async function createBudgetAction(
       return {
         error:
           result.reason === "duplicate"
-            ? "Anggaran aktif untuk kategori dan bulan tersebut sudah ada."
-            : "Kategori pengeluaran tidak tersedia.",
+            ? "An active budget for that category and month already exists."
+            : "Expense category is not available.",
       };
     }
   } catch {
-    return { error: "Anggaran belum dapat dibuat." };
+    return { error: "Budget could not be created." };
   }
   invalidateBudgets();
   redirect("/budgets");
@@ -67,7 +67,7 @@ export async function updateBudgetAction(
   const parsed = parse(formData);
   if (!id.success || !parsed.success) {
     return {
-      error: parsed.success ? "Anggaran tidak ditemukan." : parsed.error.issues[0]?.message,
+      error: parsed.success ? "Budget not found." : parsed.error.issues[0]?.message,
     };
   }
   try {
@@ -75,9 +75,9 @@ export async function updateBudgetAction(
       amount: BigInt(parsed.data.amount),
       warningThresholdBps: parsed.data.warningThresholdBps,
     });
-    if (!updated) return { error: "Anggaran aktif tidak ditemukan." };
+    if (!updated) return { error: "Active budget not found." };
   } catch {
-    return { error: "Anggaran belum dapat diperbarui." };
+    return { error: "Budget could not be updated." };
   }
   invalidateBudgets();
   redirect("/budgets");
@@ -89,19 +89,19 @@ async function setBudgetStatus(
 ): Promise<BudgetActionState> {
   const user = await requireSessionUser();
   const id = budgetIdSchema.safeParse(formData.get("id"));
-  if (!id.success) return { error: "Anggaran tidak ditemukan." };
+  if (!id.success) return { error: "Budget not found." };
   try {
     const result = await setOwnedBudgetStatus(db, user.id, id.data, status);
     if (!result.ok) {
       return {
         error:
           result.reason === "duplicate"
-            ? "Anggaran tidak dapat dipulihkan karena anggaran aktif sudah ada."
-            : "Anggaran atau kategori aktif tidak tersedia.",
+            ? "Budget cannot be restored because an active budget already exists."
+            : "Budget or active category is not available.",
       };
     }
   } catch {
-    return { error: "Status anggaran belum dapat diperbarui." };
+    return { error: "Budget status could not be updated." };
   }
   invalidateBudgets();
   return {};

@@ -28,9 +28,9 @@ describe("BudgetList", () => {
         ]}
       />,
     );
-    expect(screen.getByText("Peringatan")).toBeInTheDocument();
+    expect(screen.getByText("Near limit")).toBeInTheDocument();
     expect(
-      screen.getByRole("progressbar", { name: "Pemakaian anggaran Makanan" }),
-    ).toHaveAttribute("aria-valuetext", "80% digunakan");
+      screen.getByRole("progressbar", { name: "Budget usage for Makanan" }),
+    ).toHaveAttribute("aria-valuetext", "80% used");
   });
 });

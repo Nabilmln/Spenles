@@ -16,7 +16,7 @@ const presetSchema = z.enum([
 
 const monthSchema = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/u);
 const dateSchema = z.string().refine(isDateKey, {
-  message: "Tanggal tidak valid.",
+  message: "Invalid date.",
 });
 
 const recognizedSchema = z
@@ -30,7 +30,7 @@ const recognizedSchema = z
     if (value.month && (value.period || value.from || value.to)) {
       context.addIssue({
         code: "custom",
-        message: "Bulan spesifik tidak boleh digabungkan dengan periode lain.",
+        message: "A specific month cannot be combined with another period.",
       });
       return;
     }
@@ -49,12 +49,12 @@ const recognizedSchema = z
       if (startDay > endDay) {
         context.addIssue({
           code: "custom",
-          message: "Tanggal awal tidak boleh setelah tanggal akhir.",
+          message: "The start date cannot be after the end date.",
         });
       } else if (endDay - startDay + 1 > 366) {
         context.addIssue({
           code: "custom",
-          message: "Rentang khusus maksimal 366 hari.",
+          message: "Custom range is limited to 366 days.",
         });
       }
       return;
@@ -63,7 +63,7 @@ const recognizedSchema = z
     if (value.from || value.to) {
       context.addIssue({
         code: "custom",
-        message: "Tanggal awal dan akhir hanya berlaku untuk rentang khusus.",
+        message: "Start and end dates only apply to a custom range.",
       });
     }
   });
@@ -93,7 +93,7 @@ export function safeParseDashboardFilters(
   if (Object.values(recognized).some((value) => value === null)) {
     return {
       success: false as const,
-      error: "Parameter dashboard tidak boleh diulang.",
+      error: "Dashboard parameters cannot be repeated.",
     };
   }
 
@@ -101,7 +101,7 @@ export function safeParseDashboardFilters(
   if (!parsed.success) {
     return {
       success: false as const,
-      error: parsed.error.issues[0]?.message ?? "Periode dashboard tidak valid.",
+      error: parsed.error.issues[0]?.message ?? "Invalid dashboard period.",
     };
   }
 

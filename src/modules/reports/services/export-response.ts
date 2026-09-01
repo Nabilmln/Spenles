@@ -13,7 +13,7 @@ export function assertExportSize(value: string | Uint8Array) {
   const bytes =
     typeof value === "string" ? Buffer.byteLength(value, "utf8") : value.byteLength;
   if (bytes > EXPORT_MAX_BYTES) {
-    throw new ExportLimitError("Ukuran hasil ekspor melebihi batas 3,5 MB.");
+    throw new ExportLimitError("Export result size exceeds the 3.5 MB limit.");
   }
 }
 

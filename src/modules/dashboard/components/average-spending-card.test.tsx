@@ -15,11 +15,11 @@ describe("AverageSpendingCard", () => {
     );
 
     expect(
-      screen.getByRole("region", { name: "Rata-rata pengeluaran per hari" }),
+      screen.getByRole("region", { name: "Average daily spending" }),
     ).toBeInTheDocument();
-    expect(screen.getByText("Rata-rata pengeluaran")).toBeInTheDocument();
+    expect(screen.getByText("Average spending")).toBeInTheDocument();
     expect(screen.getByText(/Rp\s*50\.000/u)).toBeInTheDocument();
-    expect(screen.getByText("per hari")).toBeInTheDocument();
+    expect(screen.getByText("per day")).toBeInTheDocument();
   });
 
   it("shows a comparison when the previous baseline exists", () => {
@@ -32,7 +32,7 @@ describe("AverageSpendingCard", () => {
     );
 
     expect(
-      screen.getByText(/▲ 8,40% dibanding Juli 2026/),
+      screen.getByText(/▲ 8,40% vs Juli 2026/),
     ).toBeInTheDocument();
   });
 
@@ -45,6 +45,6 @@ describe("AverageSpendingCard", () => {
       />,
     );
 
-    expect(screen.queryByText(/dibanding/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/vs/)).not.toBeInTheDocument();
   });
 });

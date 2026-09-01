@@ -40,7 +40,7 @@ function assertSafe(...values: bigint[]) {
   if (values.some((value) => value < 0n || value > SPLIT_BILL_MAX_MONEY)) {
     throw new SplitBillCalculationError(
       "overflow",
-      "Nilai tagihan berada di luar rentang yang didukung.",
+      "Bill amount is outside the supported range.",
     );
   }
 }
@@ -54,7 +54,7 @@ function validate(input: SplitBillCalculationInput) {
   ) {
     throw new SplitBillCalculationError(
       "invalid",
-      "Jumlah peserta atau item tidak valid.",
+      "Invalid number of participants or items.",
     );
   }
   for (const bps of [
@@ -65,7 +65,7 @@ function validate(input: SplitBillCalculationInput) {
     if (!Number.isInteger(bps) || bps < 0 || bps > 10_000) {
       throw new SplitBillCalculationError(
         "invalid",
-        "Persentase tagihan tidak valid.",
+        "Invalid bill percentage.",
       );
     }
   }
@@ -81,7 +81,7 @@ function validate(input: SplitBillCalculationInput) {
   ) {
     throw new SplitBillCalculationError(
       "invalid",
-      "Konfigurasi diskon tidak valid.",
+      "Invalid discount configuration.",
     );
   }
   if (
@@ -91,14 +91,14 @@ function validate(input: SplitBillCalculationInput) {
   ) {
     throw new SplitBillCalculationError(
       "invalid",
-      "Konfigurasi pajak tidak valid.",
+      "Invalid tax configuration.",
     );
   }
   assertSafe(input.fixedBillTaxAmount);
 
   const participantIds = new Set(input.participants.map(({ id }) => id));
   if (participantIds.size !== input.participants.length) {
-    throw new SplitBillCalculationError("invalid", "Peserta tidak unik.");
+    throw new SplitBillCalculationError("invalid", "Participants are not unique.");
   }
   const itemIds = new Set<string>();
   const assignmentIds = new Set<string>();
@@ -114,13 +114,13 @@ function validate(input: SplitBillCalculationInput) {
       item.itemTaxBps < 0 ||
       item.itemTaxBps > 10_000
     ) {
-      throw new SplitBillCalculationError("invalid", "Item tidak valid.");
+      throw new SplitBillCalculationError("invalid", "Invalid item.");
     }
     itemIds.add(item.id);
     if (item.assignments.length === 0) {
       throw new SplitBillCalculationError(
         "unassigned",
-        `Item ${item.name} belum memiliki peserta.`,
+        `Item ${item.name} has no participants.`,
       );
     }
     const itemParticipantIds = new Set<string>();
@@ -133,7 +133,7 @@ function validate(input: SplitBillCalculationInput) {
       ) {
         throw new SplitBillCalculationError(
           "invalid",
-          "Penetapan peserta item tidak valid.",
+          "Invalid item participant assignment.",
         );
       }
       assignmentIds.add(assignment.id);
@@ -143,7 +143,7 @@ function validate(input: SplitBillCalculationInput) {
   if (assignmentCount > SPLIT_BILL_MAX_ASSIGNMENTS) {
     throw new SplitBillCalculationError(
       "invalid",
-      "Jumlah penetapan peserta terlalu banyak.",
+      "Too many participant assignments.",
     );
   }
 }
@@ -201,7 +201,7 @@ export function calculateSplitBill(
   if (subtotalAmount === 0n) {
     throw new SplitBillCalculationError(
       "invalid",
-      "Tagihan tanpa subtotal tidak dapat dihitung.",
+      "A bill without a subtotal cannot be calculated.",
     );
   }
 
@@ -214,7 +214,7 @@ export function calculateSplitBill(
   if (discountAmount > subtotalAmount) {
     throw new SplitBillCalculationError(
       "discount_exceeds_subtotal",
-      "Diskon tidak boleh melebihi subtotal.",
+      "Discount cannot exceed the subtotal.",
     );
   }
   assertSafe(discountAmount);
@@ -434,7 +434,7 @@ export function calculateSplitBill(
   if (!invariant) {
     throw new SplitBillCalculationError(
       "reconciliation",
-      "Kalkulasi tagihan tidak dapat direkonsiliasi.",
+      "The bill calculation could not be reconciled.",
     );
   }
 

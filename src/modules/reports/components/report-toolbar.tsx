@@ -36,7 +36,7 @@ export function ReportToolbar({
     <div>
       <div className="flex gap-[.6rem]">
         <button
-          aria-label={`Pilih rentang tanggal: ${rangeLabel}`}
+          aria-label={`Select date range: ${rangeLabel}`}
           className="inline-flex min-h-[2.85rem] flex-[1_1_auto] cursor-pointer items-center justify-center gap-[.5rem] rounded-[.72rem] border border-border bg-surface p-[.65rem_1rem] font-medium text-foreground"
           onClick={() => setSheet("range")}
           type="button"
@@ -46,7 +46,7 @@ export function ReportToolbar({
         </button>
         <button
           aria-haspopup="menu"
-          aria-label="Ekspor laporan"
+          aria-label="Export report"
           className="inline-flex min-h-[2.85rem] shrink-0 cursor-pointer items-center justify-center gap-[.5rem] rounded-[.72rem] border border-border bg-surface p-[.65rem_1rem] font-medium text-foreground"
           onClick={() => setSheet("export")}
           type="button"
@@ -85,9 +85,9 @@ export function ReportToolbar({
             role="dialog"
           >
             <div className="mb-4 flex items-center justify-between gap-[.75rem]">
-              <h2 id="report-export-title" className="m-0 text-[1.08rem]">Ekspor laporan</h2>
+              <h2 id="report-export-title" className="m-0 text-[1.08rem]">Export report</h2>
               <button
-                aria-label="Tutup menu ekspor"
+                aria-label="Close export menu"
                 className={iconButtonClass}
                 onClick={() => setSheet("none")}
                 ref={exportCloseRef}
@@ -97,7 +97,7 @@ export function ReportToolbar({
               </button>
             </div>
             <p className="m-0 mb-4 text-muted">
-              Rentang {rangeLabel} akan dipakai untuk ekspor.
+              The {rangeLabel} range will be used for the export.
             </p>
             <div className="grid gap-[.65rem]">
               <a className={cn(buttonClass("secondary"), "w-full justify-start")} href={pdfHref}>
@@ -110,8 +110,8 @@ export function ReportToolbar({
               </a>
             </div>
             <p className="mt-4 rounded-[.7rem] bg-surface-subtle p-3 text-[.76rem] text-muted">
-              Data tetap pribadi. PDF mendukung hingga 366 hari dan detail maks. 500
-              transaksi; CSV maks. 10.000 transaksi.
+              Your data stays private. PDF supports up to 366 days and max. 500
+              detail transactions; CSV max. 10,000 transactions.
             </p>
           </div>
         </div>

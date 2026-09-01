@@ -25,7 +25,7 @@ export async function loginAction(
   const { error } = await auth.signIn.email(parsed.data);
 
   if (error) {
-    return { error: "Email atau kata sandi tidak valid." };
+    return { error: "Email or password is invalid." };
   }
 
   redirect("/dashboard");

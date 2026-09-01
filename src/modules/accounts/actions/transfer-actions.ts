@@ -35,7 +35,7 @@ export async function createTransferAction(
     ? preserveOrAttachNow(parsed.data.transferredAt)
     : parseJakartaDateTime(parsed.data.transferredAt);
   if (!transferredAt || transferredAt.getTime() > Date.now()) {
-    return { error: "Waktu transfer tidak valid atau berada di masa depan." };
+    return { error: "Transfer time is invalid or in the future." };
   }
   try {
     const created = await createOwnedTransfer(db, user.id, {
@@ -44,13 +44,13 @@ export async function createTransferAction(
       transferredAt,
     });
     if (!created) {
-      return { error: "Kedua akun harus aktif, berbeda, dan milik Anda." };
+      return { error: "Both accounts must be active, different, and owned by you." };
     }
   } catch {
-    return { error: "Transfer belum dapat disimpan." };
+    return { error: "Transfer could not be saved." };
   }
   invalidateTransfers();
-  return { success: "Transfer berhasil dicatat." };
+  return { success: "Transfer recorded successfully." };
 }
 
 export async function reverseTransferAction(
@@ -59,15 +59,15 @@ export async function reverseTransferAction(
 ): Promise<TransferActionState> {
   const user = await requireSessionUser();
   const id = transferIdSchema.safeParse(formData.get("id"));
-  if (!id.success) return { error: "Transfer tidak ditemukan." };
+  if (!id.success) return { error: "Transfer not found." };
   try {
     const result = await reverseOwnedTransfer(db, user.id, id.data);
     if (!result.ok) {
-      return { error: "Transfer tidak tersedia atau sudah pernah dibalik." };
+      return { error: "Transfer is unavailable or has already been reversed." };
     }
   } catch {
-    return { error: "Transfer belum dapat dibalik." };
+    return { error: "Transfer could not be reversed." };
   }
   invalidateTransfers();
-  return { success: "Pembalikan transfer berhasil dicatat." };
+  return { success: "Transfer reversal recorded successfully." };
 }

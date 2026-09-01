@@ -19,9 +19,9 @@ import type { BudgetListRow } from "../queries/budgets";
 import { formatPercentageBps } from "../services/budget-metrics";
 
 const statusLabel = {
-  safe: "Aman",
-  warning: "Peringatan",
-  exceeded: "Terlewati",
+  safe: "Safe",
+  warning: "Near limit",
+  exceeded: "Exceeded",
 };
 
 const statusBadgeClass = {
@@ -42,10 +42,10 @@ function BudgetStatusForm({ row }: { row: BudgetListRow }) {
       <input type="hidden" name="id" value={row.id} />
       <Button type="submit" variant="ghost" disabled={pending}>
         {pending
-          ? "Memproses..."
+          ? "Processing..."
           : row.recordStatus === "active"
-            ? "Arsipkan"
-            : "Pulihkan"}
+            ? "Archive"
+            : "Restore"}
       </Button>
     </form>
   );
@@ -53,7 +53,7 @@ function BudgetStatusForm({ row }: { row: BudgetListRow }) {
 
 export function BudgetList({ rows }: { rows: BudgetListRow[] }) {
   if (rows.length === 0) {
-    return <div className={emptyStateClass}><p className="m-0 text-muted">Belum ada anggaran bulanan.</p></div>;
+    return <div className={emptyStateClass}><p className="m-0 text-muted">No monthly budgets yet.</p></div>;
   }
   return (
     <div className="grid grid-cols-[repeat(3,minmax(0,1fr))] gap-4 max-[1100px]:grid-cols-[repeat(2,minmax(0,1fr))] max-[540px]:grid-cols-1">
@@ -74,19 +74,19 @@ export function BudgetList({ rows }: { rows: BudgetListRow[] }) {
             <div
               className="h-[.7rem] overflow-hidden rounded-full bg-surface-subtle"
               role="progressbar"
-              aria-label={`Pemakaian anggaran ${row.categoryName}`}
+              aria-label={`Budget usage for ${row.categoryName}`}
               aria-valuemin={0}
               aria-valuemax={100}
               aria-valuenow={progress}
-              aria-valuetext={`${formatPercentageBps(percent)} digunakan`}
+              aria-valuetext={`${formatPercentageBps(percent)} used`}
             >
               <span className="block h-full rounded-[inherit] bg-primary-600" style={{ width: `${progress}%` }} />
             </div>
             <dl className="m-0 grid grid-cols-2 gap-[.65rem]">
-              <div className="grid gap-[.15rem]"><dt className="text-[.72rem] text-muted">Anggaran</dt><dd className="m-0 font-medium">{formatIdr(row.amount)}</dd></div>
-              <div className="grid gap-[.15rem]"><dt className="text-[.72rem] text-muted">Terpakai</dt><dd className="m-0 font-medium">{formatIdr(row.usage)}</dd></div>
-              <div className="grid gap-[.15rem]"><dt className="text-[.72rem] text-muted">Sisa</dt><dd className="m-0 font-medium">{formatIdr(row.remaining)}</dd></div>
-              <div className="grid gap-[.15rem]"><dt className="text-[.72rem] text-muted">Persentase</dt><dd className="m-0 font-medium">{formatPercentageBps(percent)}</dd></div>
+              <div className="grid gap-[.15rem]"><dt className="text-[.72rem] text-muted">Budget</dt><dd className="m-0 font-medium">{formatIdr(row.amount)}</dd></div>
+              <div className="grid gap-[.15rem]"><dt className="text-[.72rem] text-muted">Used</dt><dd className="m-0 font-medium">{formatIdr(row.usage)}</dd></div>
+              <div className="grid gap-[.15rem]"><dt className="text-[.72rem] text-muted">Remaining</dt><dd className="m-0 font-medium">{formatIdr(row.remaining)}</dd></div>
+              <div className="grid gap-[.15rem]"><dt className="text-[.72rem] text-muted">Percentage</dt><dd className="m-0 font-medium">{formatPercentageBps(percent)}</dd></div>
             </dl>
             <div className="flex items-center gap-2">
               {row.recordStatus === "active" ? (

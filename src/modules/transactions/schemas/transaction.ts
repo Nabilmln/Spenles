@@ -7,16 +7,16 @@ export const transactionSchema = z.object({
   type: z.enum(["income", "expense"]),
   amount: moneyString({
     allowLeadingZeros: true,
-    formatMessage: "Jumlah harus berupa rupiah bulat.",
-    rangeMessage: "Jumlah harus lebih dari nol dan berada dalam batas yang didukung.",
+    formatMessage: "Amount must be a whole rupiah.",
+    rangeMessage: "Amount must be greater than zero and within the supported range.",
   }),
-  accountId: z.uuid("Akun tidak valid."),
-  categoryId: z.uuid("Kategori tidak valid."),
+  accountId: z.uuid("Invalid account."),
+  categoryId: z.uuid("Invalid category."),
   transactionAt: z.string().refine((value) => {
     if (!/^\d{4}-\d{2}-\d{2}$/u.test(value)) return false;
     if (!jakartaDateBoundary(value)) return false;
     return value <= jakartaNowDate();
-  }, "Tanggal transaksi tidak valid atau berada di masa depan."),
+  }, "Transaction date is invalid or in the future."),
   note: optionalNoteSchema,
 });
 

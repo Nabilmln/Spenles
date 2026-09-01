@@ -35,11 +35,11 @@ describe("SplitBillEditor", () => {
 
     expect(
       screen.getByText(
-        "Tambahkan peserta terlebih dahulu untuk mulai memasukkan item.",
+        "Add a participant first to start entering items.",
       ),
     ).toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Tambah item" })).not.toBeInTheDocument();
-    expect(screen.getByLabelText("Pajak (%)")).toHaveValue(0);
+    expect(screen.queryByRole("button", { name: "Add item" })).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Tax (%)")).toHaveValue(0);
   });
 
   it("reveals the item section once a participant is added", () => {
@@ -51,18 +51,18 @@ describe("SplitBillEditor", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Tambah peserta" }));
+    fireEvent.click(screen.getByRole("button", { name: "Add participant" }));
 
     expect(
       screen.queryByText(
-        "Tambahkan peserta terlebih dahulu untuk mulai memasukkan item.",
+        "Add a participant first to start entering items.",
       ),
     ).not.toBeInTheDocument();
-    expect(screen.getByText("Peserta 1")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Tambah item" })).toBeInTheDocument();
+    expect(screen.getByText("Participant 1")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Add item" })).toBeInTheDocument();
   });
 
-  it("offers Draft, Finalisasi, and Hapus for an existing draft", () => {
+  it("offers Save draft, Finalize, and Delete for an existing draft", () => {
     render(
       <SplitBillEditor
         action={action}
@@ -87,9 +87,9 @@ describe("SplitBillEditor", () => {
       />,
     );
 
-    expect(screen.getByRole("button", { name: "Draft" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Final" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Hapus" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Save draft" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Finalize" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Delete" })).toBeInTheDocument();
   });
 
   it("formats the unit price with an Rp prefix", () => {
@@ -114,7 +114,7 @@ describe("SplitBillEditor", () => {
       />,
     );
 
-    const price = screen.getByLabelText("Harga satuan") as HTMLInputElement;
+    const price = screen.getByLabelText("Unit price") as HTMLInputElement;
     expect(price.value).toBe("30.000");
   });
 
@@ -140,11 +140,11 @@ describe("SplitBillEditor", () => {
       />,
     );
 
-    const total = screen.getByLabelText("Harga total") as HTMLInputElement;
+    const total = screen.getByLabelText("Total price") as HTMLInputElement;
     expect(total.value).toBe("50.000");
 
     fireEvent.change(total, { target: { value: "Rp100.000" } });
-    const price = screen.getByLabelText("Harga satuan") as HTMLInputElement;
+    const price = screen.getByLabelText("Unit price") as HTMLInputElement;
     expect(price.value).toBe("50.000");
   });
 
@@ -170,11 +170,11 @@ describe("SplitBillEditor", () => {
       />,
     );
 
-    const total = screen.getByLabelText("Harga total") as HTMLInputElement;
+    const total = screen.getByLabelText("Total price") as HTMLInputElement;
     fireEvent.change(total, { target: { value: "Rp50.001" } });
 
-    expect(screen.getByRole("alert")).toHaveTextContent(/habis dibagi/i);
-    const price = screen.getByLabelText("Harga satuan") as HTMLInputElement;
+    expect(screen.getByRole("alert")).toHaveTextContent(/divide evenly/i);
+    const price = screen.getByLabelText("Unit price") as HTMLInputElement;
     expect(price.value).toBe("25.000");
   });
 
@@ -200,7 +200,7 @@ describe("SplitBillEditor", () => {
       />,
     );
 
-    const quantity = screen.getByLabelText("Jumlah") as HTMLInputElement;
+    const quantity = screen.getByLabelText("Quantity") as HTMLInputElement;
     fireEvent.change(quantity, { target: { value: "02" } });
     expect(quantity.value).toBe("2");
   });
@@ -227,15 +227,15 @@ describe("SplitBillEditor", () => {
       />,
     );
 
-    expect(screen.getByLabelText("Pajak (%)")).toBeInTheDocument();
-    expect(screen.queryByLabelText("Pajak (Rp)")).not.toBeInTheDocument();
+    expect(screen.getByLabelText("Tax (%)")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Tax (Rp)")).not.toBeInTheDocument();
 
-    fireEvent.change(screen.getByLabelText("Jenis pajak"), {
+    fireEvent.change(screen.getByLabelText("Tax type"), {
       target: { value: "fixed" },
     });
 
-    expect(screen.queryByLabelText("Pajak (%)")).not.toBeInTheDocument();
-    const fixed = screen.getByLabelText("Pajak (Rp)") as HTMLInputElement;
+    expect(screen.queryByLabelText("Tax (%)")).not.toBeInTheDocument();
+    const fixed = screen.getByLabelText("Tax (Rp)") as HTMLInputElement;
     fireEvent.change(fixed, { target: { value: "Rp5.000" } });
     expect(fixed.value).toBe("5.000");
   });

@@ -15,7 +15,7 @@ import {
 import { formatDateLong, formatMonthYearLabel } from "@/lib/dates/format-id";
 import { iconButtonClass } from "./styles";
 
-const WEEK_DAYS = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
+const WEEK_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export function MonthSelector({
   month,
@@ -35,7 +35,7 @@ export function MonthSelector({
 
   const label = month
     ? formatMonthYearLabel(Number(month.slice(0, 4)), Number(month.slice(5, 7)))
-    : "Semua bulan";
+    : "All months";
 
   const grid = buildMonthGrid(view.year, view.month);
 
@@ -51,16 +51,16 @@ export function MonthSelector({
         onToggle={(event) => setOpen(event.currentTarget.open)}
         open={open}
       >
-        <summary aria-label="Pilih bulan tagihan" className="flex min-h-[2.9rem] cursor-pointer list-none items-center justify-between gap-[.5rem] rounded-[.72rem] border border-border bg-surface-subtle px-[.85rem] py-[.72rem] font-medium text-foreground [&::-webkit-details-marker]:hidden">
+        <summary aria-label="Select billing month" className="flex min-h-[2.9rem] cursor-pointer list-none items-center justify-between gap-[.5rem] rounded-[.72rem] border border-border bg-surface-subtle px-[.85rem] py-[.72rem] font-medium text-foreground [&::-webkit-details-marker]:hidden">
           <CalendarRange aria-hidden="true" size={18} />
           <span className="min-w-0 flex-1 truncate text-[.85rem]">{label}</span>
           <ChevronDown aria-hidden="true" className="shrink-0 text-muted" size={18} />
         </summary>
         <div className="absolute left-1/2 top-[calc(100%+.45rem)] z-[15] grid w-max min-w-full max-w-[calc(100vw-1.5rem)] gap-[.3rem] -translate-x-1/2 rounded-[.8rem] border border-border bg-surface p-[.5rem] shadow-card">
           <div className="min-w-[19rem]">
-            <div className="mb-[.65rem] flex items-center justify-between gap-[.5rem]" role="group" aria-label="Navigasi bulan">
+            <div className="mb-[.65rem] flex items-center justify-between gap-[.5rem]" role="group" aria-label="Month navigation">
               <button
-                aria-label="Bulan sebelumnya"
+                aria-label="Previous month"
                 className={`${iconButtonClass} size-10`}
                 onClick={() =>
                   setView((current) => monthShift(current.year, current.month, -1))
@@ -73,7 +73,7 @@ export function MonthSelector({
                 {formatMonthYearLabel(view.year, view.month)}
               </strong>
               <button
-                aria-label="Bulan berikutnya"
+                aria-label="Next month"
                 className={`${iconButtonClass} size-10`}
                 onClick={() =>
                   setView((current) => monthShift(current.year, current.month, 1))
@@ -90,7 +90,7 @@ export function MonthSelector({
               ))}
             </div>
 
-            <div className="grid grid-cols-7 gap-1" role="grid" aria-label="Kalender bulan">
+            <div className="grid grid-cols-7 gap-1" role="grid" aria-label="Month calendar">
               {grid.map((cell, index) => {
                 if (!cell) {
                   return (
@@ -127,7 +127,7 @@ export function MonthSelector({
 
             <div className="mt-[.9rem] min-h-[1.4rem] text-[.88rem]" aria-live="polite">
               <span className="text-muted">
-                Klik salah satu tanggal untuk memilih bulannya.
+                Click a date to select its month.
               </span>
             </div>
           </div>

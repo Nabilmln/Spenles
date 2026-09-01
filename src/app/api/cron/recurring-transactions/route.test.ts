@@ -53,7 +53,7 @@ describe("recurring scheduler route", () => {
     expect(response.status).toBe(401);
     expect(await response.json()).toEqual({
       ok: false,
-      error: "Tidak diizinkan.",
+      error: "Not allowed.",
     });
     expect(runRecurringScheduler).not.toHaveBeenCalled();
   });

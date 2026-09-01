@@ -59,16 +59,16 @@ export function ReportCashFlow({
   );
   return (
     <section aria-labelledby="report-cash-flow-title" className={cardClass}>
-      <p className={`${eyebrowClass} mb-[.5rem]`}>Arus Kas</p>
+      <p className={`${eyebrowClass} mb-[.5rem]`}>Cash Flow</p>
       {zero ? (
         <p className="m-0 mb-[.75rem] text-muted" role="status">
-          Belum ada data pada periode ini.
+          No data available for this period.
         </p>
       ) : null}
       <ChartShell
         chart={<IncomeExpenseChart points={points} />}
-        summary={`Pemasukan ${formatIdr(incomeIdr)} · Pengeluaran ${formatIdr(expenseIdr)}`}
-        title={daily ? "Perbandingan harian" : "Perbandingan bulanan"}
+        summary={`Income ${formatIdr(incomeIdr)} · Expense ${formatIdr(expenseIdr)}`}
+        title={daily ? "Daily comparison" : "Monthly comparison"}
       />
     </section>
   );

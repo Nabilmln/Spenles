@@ -56,15 +56,15 @@ export function PaymentStatusForm({
             )
           }
         >
-          <option value="unpaid">Belum dibayar</option>
-          <option value="partially_paid">Dibayar sebagian</option>
-          <option value="paid">Lunas</option>
+          <option value="unpaid">Unpaid</option>
+          <option value="partially_paid">Partially paid</option>
+          <option value="paid">Paid</option>
         </Select>
       </div>
       {status === "partially_paid" ? (
         <div className={fieldClass}>
           <label htmlFor={`paid-amount-${participantId}`}>
-            Nominal dibayar
+            Amount paid
           </label>
           <Input
             id={`paid-amount-${participantId}`}
@@ -81,7 +81,7 @@ export function PaymentStatusForm({
         <input type="hidden" name="paidAmount" value={paidAmount} />
       )}
       <Button type="submit" variant="secondary" disabled={pending}>
-        {pending ? "Menyimpan..." : "Simpan status"}
+        {pending ? "Saving..." : "Save status"}
       </Button>
     </form>
   );

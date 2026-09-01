@@ -33,14 +33,15 @@ describe("split-bill share summary", () => {
       includePaymentStatus: true,
     });
     expect(text).toContain("Split Bill — Warung");
-    expect(text).toContain("5 Agustus 2026");
-    expect(text).toContain("Ayu: (Dibayar sebagian)");
-    expect(text).toContain("Bima: (Lunas)");
+    expect(text).toContain("August 5, 2026");
+    expect(text).toContain("Ayu: (Partially paid)");
+    expect(text).toContain("Bima: (Paid)");
     expect(text).toContain("• Coto Makassar —");
     expect(text).toContain("• Es Teh —");
     expect(text).toContain(`Subtotal: ${formatIdr("20000")}`);
-    expect(text).toContain(`Pajak 10%: ${formatIdr("1600")}`);
+    expect(text).toContain(`Tax 10%: ${formatIdr("1600")}`);
     expect(text).toContain(`Total: ${formatIdr("21600")}`);
+    expect(text).toContain("Calculated with Spenles.");
     expect(text).not.toContain("user_id");
     expect(text).not.toContain("00000000-");
   });

@@ -4,8 +4,8 @@ import { cn } from "@/lib/utils";
 import { emptyActionClass, emptyIconClass, emptyStateClass } from "../ui/styles";
 
 export function EmptyState({
-  title = "Belum ada aktivitas keuangan",
-  description = "Mulai dengan mencatat pemasukan atau pengeluaran pertama Anda.",
+  title = "No financial activity yet",
+  description = "Start by recording your first income or expense.",
   icon,
   action,
   className,

@@ -11,12 +11,12 @@ export default async function NewBudgetPage() {
   const categories = await listActiveExpenseCategoryOptions(user.id);
   return (
     <div className={`${pageStackClass} ${narrowPageClass}`}>
-      <p className={pageDescriptionClass}>Satu anggaran aktif per kategori dan bulan.</p>
+      <p className={pageDescriptionClass}>One active budget per category and month.</p>
       <section className={cardClass}>
         {categories.length > 0 ? (
           <BudgetForm action={createBudgetAction} categories={categories} />
         ) : (
-          <p>Tidak ada kategori pengeluaran aktif.</p>
+          <p>No active expense categories.</p>
         )}
       </section>
     </div>

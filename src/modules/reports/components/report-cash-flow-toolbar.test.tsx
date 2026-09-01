@@ -32,7 +32,7 @@ describe("cash flow grouping", () => {
       { month: "2026-08", incomeIdr: "0", expenseIdr: "5000" },
     ];
     const points = buildCashFlowPoints(series);
-    expect(points[0].label).toMatch(/^Agustus/u);
+    expect(points[0].label).toMatch(/^August/u);
   });
 
   it("handles an all-zero series without dividing by zero", () => {
@@ -52,7 +52,7 @@ describe("report cash flow card", () => {
         daily={false}
       />,
     );
-    expect(screen.getByText("Arus Kas")).toBeInTheDocument();
+    expect(screen.getByText("Cash Flow")).toBeInTheDocument();
     expect(screen.getByTestId("cash-flow-chart")).toBeInTheDocument();
   });
 
@@ -65,7 +65,7 @@ describe("report cash flow card", () => {
         daily={false}
       />,
     );
-    expect(screen.getByText("Belum ada data pada periode ini.")).toBeInTheDocument();
+    expect(screen.getByText("No data available for this period.")).toBeInTheDocument();
   });
 });
 
@@ -73,21 +73,21 @@ describe("report toolbar", () => {
   it("shows the current range and opens the range sheet", () => {
     render(<ReportToolbar from="2026-08-01" to="2026-08-07" pdfHref="/pdf" csvHref="/csv" />);
 
-    expect(screen.getByText("1 Agustus – 7 Agustus 2026")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: /Pilih rentang tanggal/ }));
-    expect(screen.getByRole("dialog", { name: "Pilih rentang tanggal" })).toBeInTheDocument();
+    expect(screen.getByText("1 August – 7 August 2026")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /Select date range/ }));
+    expect(screen.getByRole("dialog", { name: "Select date range" })).toBeInTheDocument();
   });
 
   it("keeps the range sheet open while picking calendar days", () => {
     render(<ReportToolbar from="2026-08-01" to="2026-08-07" pdfHref="/pdf" csvHref="/csv" />);
 
-    fireEvent.click(screen.getByRole("button", { name: /Pilih rentang tanggal/ }));
-    const dialog = screen.getByRole("dialog", { name: "Pilih rentang tanggal" });
-    const day = within(dialog).getByRole("button", { name: "3 Agustus 2026" });
+    fireEvent.click(screen.getByRole("button", { name: /Select date range/ }));
+    const dialog = screen.getByRole("dialog", { name: "Select date range" });
+    const day = within(dialog).getByRole("button", { name: "3 August 2026" });
     fireEvent.click(day);
 
     expect(day).toHaveAttribute("aria-pressed", "true");
-    expect(screen.getByRole("dialog", { name: "Pilih rentang tanggal" })).toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Select date range" })).toBeInTheDocument();
   });
 
   it("opens the export sheet with PDF and CSV links", () => {
@@ -100,8 +100,8 @@ describe("report toolbar", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Ekspor laporan" }));
-    expect(screen.getByRole("dialog", { name: "Ekspor laporan" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Export report" }));
+    expect(screen.getByRole("dialog", { name: "Export report" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Export PDF" })).toHaveAttribute("href", "/pdf");
     expect(screen.getByRole("link", { name: "Export CSV" })).toHaveAttribute("href", "/csv");
   });

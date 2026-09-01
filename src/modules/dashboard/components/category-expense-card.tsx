@@ -18,15 +18,15 @@ export function CategoryExpenseCard({
 
   return (
     <section
-      aria-label="Pengeluaran per Kategori"
+      aria-label="Expense by Category"
       className={`${cardClass} flex h-full flex-col shadow-none`}
     >
       <div>
-        <p className={eyebrowClass}>Kategori</p>
+        <p className={eyebrowClass}>Category</p>
         <p className="m-0 mt-[.35rem] text-[.84rem] text-muted">{periodLabel}</p>
       </div>
       <strong className="mt-[.35rem] text-[.88rem]">
-        Total pengeluaran {formatIdr(totalExpense)}
+        Total expense {formatIdr(totalExpense)}
       </strong>
 
       <CategoryExpenseChart points={visualPoints} />
@@ -36,7 +36,7 @@ export function CategoryExpenseCard({
           className="m-0 -mt-[.25rem] rounded-[.7rem] bg-surface-subtle p-[.75rem] text-[.78rem] text-muted"
           role="status"
         >
-          Belum ada pengeluaran pada periode ini.
+          No expenses yet for this period.
         </p>
       ) : null}
 
@@ -46,7 +46,7 @@ export function CategoryExpenseCard({
             (point) =>
               `${point.name}: ${formatIdr(point.expenseIdr)} (${(
                 point.shareBps / 100
-              ).toLocaleString("id-ID")}%)`,
+              ).toLocaleString("en-US")}%)`,
           )
           .join(". ")}
       </p>

@@ -13,8 +13,8 @@ import {
 const money = moneyString({
   allowZero: true,
   max: SPLIT_BILL_MAX_MONEY,
-  formatMessage: "Nominal harus berupa rupiah bulat.",
-  rangeMessage: "Nominal berada di luar rentang yang didukung.",
+  formatMessage: "Amount must be a whole rupiah.",
+  rangeMessage: "Amount is outside the supported range.",
 });
 
 const basisPoints = z.coerce.number().int().min(0).max(10_000);
@@ -29,7 +29,7 @@ const itemSchema = z.object({
   name: z.string().trim().min(1).max(120),
   quantity: z.coerce.number().int().min(1).max(SPLIT_BILL_MAX_QUANTITY),
   unitPrice: money.refine((value) => BigInt(value) > 0n, {
-    message: "Harga satuan harus positif.",
+    message: "Unit price must be positive.",
   }),
   itemTaxBps: basisPoints,
   participantIds: z.array(z.uuid()).min(1).max(SPLIT_BILL_MAX_PARTICIPANTS),
@@ -41,7 +41,7 @@ export const splitBillDraftSchema = z
     billDate: z
       .string()
       .regex(/^\d{4}-\d{2}-\d{2}$/u)
-      .refine(isDateKey, "Tanggal tagihan tidak valid."),
+      .refine(isDateKey, "Invalid bill date."),
     note: optionalNoteSchema,
     discountMode: z.enum(["none", "fixed", "percentage"]),
     fixedDiscountAmount: money,
@@ -59,11 +59,11 @@ export const splitBillDraftSchema = z
   .superRefine((value, context) => {
     const participantIds = new Set(value.participants.map(({ id }) => id));
     if (participantIds.size !== value.participants.length) {
-      context.addIssue({ code: "custom", message: "Peserta harus unik." });
+      context.addIssue({ code: "custom", message: "Participants must be unique." });
     }
     const itemIds = new Set(value.items.map(({ id }) => id));
     if (itemIds.size !== value.items.length) {
-      context.addIssue({ code: "custom", message: "Item harus unik." });
+      context.addIssue({ code: "custom", message: "Items must be unique." });
     }
     const assignmentCount = value.items.reduce(
       (total, item) => total + item.participantIds.length,
@@ -72,20 +72,20 @@ export const splitBillDraftSchema = z
     if (assignmentCount > SPLIT_BILL_MAX_ASSIGNMENTS) {
       context.addIssue({
         code: "custom",
-        message: "Jumlah penetapan peserta terlalu banyak.",
+        message: "Too many participant assignments.",
       });
     }
     for (const item of value.items) {
       if (new Set(item.participantIds).size !== item.participantIds.length) {
         context.addIssue({
           code: "custom",
-          message: `Peserta pada item ${item.name} harus unik.`,
+          message: `Participants on item ${item.name} must be unique.`,
         });
       }
       if (item.participantIds.some((id) => !participantIds.has(id))) {
         context.addIssue({
           code: "custom",
-          message: `Peserta pada item ${item.name} tidak valid.`,
+          message: `Participants on item ${item.name} are invalid.`,
         });
       }
       if (
@@ -94,7 +94,7 @@ export const splitBillDraftSchema = z
       ) {
         context.addIssue({
           code: "custom",
-          message: `Subtotal item ${item.name} terlalu besar.`,
+          message: `Subtotal for item ${item.name} is too large.`,
         });
       }
     }
@@ -111,7 +111,7 @@ export const splitBillDraftSchema = z
     ) {
       context.addIssue({
         code: "custom",
-        message: "Konfigurasi diskon tidak valid.",
+        message: "Invalid discount configuration.",
       });
     }
     if (
@@ -121,7 +121,7 @@ export const splitBillDraftSchema = z
     ) {
       context.addIssue({
         code: "custom",
-        message: "Konfigurasi pajak tidak valid.",
+        message: "Invalid tax configuration.",
       });
     }
   });

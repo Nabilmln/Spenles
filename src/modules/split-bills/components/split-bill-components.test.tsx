@@ -54,8 +54,8 @@ const result: SplitBillCalculationResult = {
 describe("split-bill components", () => {
   it("labels browser calculation as a non-authoritative preview", () => {
     render(<CalculationSummary result={result} />);
-    expect(screen.getByText("Pratinjau lokal")).toBeInTheDocument();
-    expect(screen.getByText(/bukan nilai final/i)).toBeInTheDocument();
+    expect(screen.getByText("Local preview")).toBeInTheDocument();
+    expect(screen.getByText(/not the final value/i)).toBeInTheDocument();
     expect(screen.getByText(/21\.600/u)).toBeInTheDocument();
     expect(screen.getAllByText(/10\.800/u)).toHaveLength(2);
   });
@@ -79,13 +79,13 @@ describe("split-bill components", () => {
       />,
     );
     expect(screen.getByText("Final")).toBeInTheDocument();
-    expect(screen.getByText("2 peserta")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Lihat hasil" })).toHaveAttribute(
+    expect(screen.getByText("2 participants")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "View results" })).toHaveAttribute(
       "href",
       "/split-bills/00000000-0000-4000-8000-000000000001",
     );
     expect(
-      screen.getByRole("navigation", { name: "Paginasi tagihan patungan" }),
+      screen.getByRole("navigation", { name: "Split bill pagination" }),
     ).toBeInTheDocument();
   });
 
@@ -99,9 +99,9 @@ describe("split-bill components", () => {
       />,
     );
     expect(
-      screen.getByRole("heading", { name: "Belum ada riwayat Split Bill" }),
+      screen.getByRole("heading", { name: "No Split Bill history yet" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Buat Split Bill" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Create Split Bill" })).toHaveAttribute(
       "href",
       "/split-bills/new",
     );
@@ -117,9 +117,9 @@ describe("split-bill components", () => {
       />,
     );
     expect(
-      screen.getByRole("heading", { name: "Tidak ada tagihan untuk filter ini" }),
+      screen.getByRole("heading", { name: "No bills for these filters" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Reset filter" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Reset filters" })).toHaveAttribute(
       "href",
       "/split-bills",
     );
@@ -151,28 +151,28 @@ describe("split-bill detail deletion", () => {
   it("requires a two-step confirmation before deleting a finalized bill", () => {
     render(<SplitBillDetail detail={detailData} />);
 
-    expect(screen.getByRole("heading", { name: "Hapus" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Delete" })).toBeInTheDocument();
     expect(
-      screen.queryByRole("button", { name: "Hapus permanen" }),
+      screen.queryByRole("button", { name: "Delete permanently" }),
     ).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Hapus tagihan" }));
-    expect(screen.getByRole("alert")).toHaveTextContent(/permanen/i);
+    fireEvent.click(screen.getByRole("button", { name: "Delete bill" }));
+    expect(screen.getByRole("alert")).toHaveTextContent(/permanent/i);
     expect(
-      screen.getByRole("button", { name: "Hapus permanen" }),
+      screen.getByRole("button", { name: "Delete permanently" }),
     ).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Batal" }));
+    fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
     expect(
-      screen.queryByRole("button", { name: "Hapus permanen" }),
+      screen.queryByRole("button", { name: "Delete permanently" }),
     ).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Hapus tagihan" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Delete bill" })).toBeInTheDocument();
   });
 
   it("submits the owned bill id when deletion is confirmed", () => {
     render(<SplitBillDetail detail={detailData} />);
-    fireEvent.click(screen.getByRole("button", { name: "Hapus tagihan" }));
-    fireEvent.click(screen.getByRole("button", { name: "Hapus permanen" }));
+    fireEvent.click(screen.getByRole("button", { name: "Delete bill" }));
+    fireEvent.click(screen.getByRole("button", { name: "Delete permanently" }));
 
     expect(deleteSplitBillAction).toHaveBeenCalledTimes(1);
     const formData = vi.mocked(deleteSplitBillAction).mock.calls[0][0];
@@ -182,8 +182,8 @@ describe("split-bill detail deletion", () => {
   it("offers deletion for archived bills without the archive card", () => {
     render(<SplitBillDetail detail={{ ...detailData, status: "archived" }} />);
 
-    expect(screen.queryByRole("button", { name: "Arsipkan tagihan" })).not.toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Hapus tagihan" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Archive bill" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Delete bill" })).toBeInTheDocument();
   });
 });
 
@@ -221,14 +221,14 @@ describe("split-bill history row deletion", () => {
     );
 
     expect(
-      screen.queryByRole("button", { name: "Hapus permanen" }),
+      screen.queryByRole("button", { name: "Delete permanently" }),
     ).not.toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Hapus Warung" }));
-    expect(screen.getByText("Hapus tagihan?")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Delete Warung" }));
+    expect(screen.getByText("Delete bill?")).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole("button", { name: "Batal" }));
-    expect(screen.queryByText("Hapus tagihan?")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
+    expect(screen.queryByText("Delete bill?")).not.toBeInTheDocument();
   });
 
   it("submits the owned bill id when deletion is confirmed from history", () => {
@@ -241,8 +241,8 @@ describe("split-bill history row deletion", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Hapus Warung" }));
-    fireEvent.click(screen.getByRole("button", { name: "Hapus" }));
+    fireEvent.click(screen.getByRole("button", { name: "Delete Warung" }));
+    fireEvent.click(screen.getByRole("button", { name: "Delete" }));
 
     expect(deleteSplitBillAction).toHaveBeenCalledTimes(1);
     const formData = vi.mocked(deleteSplitBillAction).mock.calls[0][0];

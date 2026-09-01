@@ -33,7 +33,7 @@ describe("RecurringRuleList", () => {
         ]}
       />,
     );
-    expect(screen.getByText("Akun tidak aktif")).toBeInTheDocument();
-    expect(screen.getByText("Dijeda")).toBeInTheDocument();
+    expect(screen.getByText("Account inactive")).toBeInTheDocument();
+    expect(screen.getByText("Paused")).toBeInTheDocument();
   });
 });

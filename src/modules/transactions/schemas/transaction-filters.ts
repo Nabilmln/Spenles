@@ -17,16 +17,16 @@ export const transactionFilterSchema = z
   })
   .superRefine((value, context) => {
     if (value.month && (value.from || value.to)) {
-      context.addIssue({ code: "custom", message: "Pilih bulan atau rentang tanggal, bukan keduanya." });
+      context.addIssue({ code: "custom", message: "Choose a month or a date range, not both." });
     }
     if (!!value.from !== !!value.to) {
-      context.addIssue({ code: "custom", message: "Tanggal awal dan akhir harus diisi bersama." });
+      context.addIssue({ code: "custom", message: "Start and end dates must be provided together." });
     }
     if (value.from && value.to) {
       const from = jakartaDateBoundary(value.from);
       const to = jakartaDateBoundary(value.to);
       if (!from || !to || from > to || to.getTime() - from.getTime() >= 366 * 86_400_000) {
-        context.addIssue({ code: "custom", message: "Rentang tanggal tidak valid atau melebihi 366 hari." });
+        context.addIssue({ code: "custom", message: "Date range is invalid or exceeds 366 days." });
       }
     }
   });

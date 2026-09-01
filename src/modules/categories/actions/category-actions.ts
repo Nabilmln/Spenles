@@ -45,16 +45,16 @@ export async function createCategoryAction(
       color: parsed.data.color,
       isDefault: false,
     }).returning({ id: categories.id });
-    if (!rows[0]) return { error: "Kategori belum dapat dibuat." };
+    if (!rows[0]) return { error: "Category could not be created." };
   } catch (error) {
-    return { error: hasPostgresErrorCode(error, "23505") ? "Kategori aktif dengan nama tersebut sudah ada." : "Kategori belum dapat dibuat." };
+    return { error: hasPostgresErrorCode(error, "23505") ? "An active category with that name already exists." : "Category could not be created." };
   }
   revalidatePath("/categories");
   revalidatePath("/transactions");
   revalidatePath("/budgets");
   revalidatePath("/recurring-transactions");
   revalidatePath("/dashboard");
-  return { success: "Kategori berhasil dibuat." };
+  return { success: "Category created successfully." };
 }
 
 export async function updateCategoryAction(
@@ -63,11 +63,11 @@ export async function updateCategoryAction(
 ): Promise<CategoryActionState> {
   const user = await requireSessionUser();
   const id = categoryIdSchema.safeParse(formData.get("id"));
-  if (!id.success) return { error: "Kategori tidak ditemukan." };
+  if (!id.success) return { error: "Category not found." };
   const existing = await db.query.categories.findFirst({
     where: and(eq(categories.id, id.data), eq(categories.userId, user.id)),
   });
-  if (!existing) return { error: "Kategori tidak ditemukan." };
+  if (!existing) return { error: "Category not found." };
   const parsed = categorySchema.safeParse({
     name: formData.get("name"),
     type: existing.type,
@@ -82,16 +82,16 @@ export async function updateCategoryAction(
       icon: parsed.data.icon,
       color: parsed.data.color,
     });
-    if (!updated) return { error: "Kategori tidak ditemukan." };
+    if (!updated) return { error: "Category not found." };
   } catch (error) {
-    return { error: hasPostgresErrorCode(error, "23505") ? "Kategori aktif dengan nama tersebut sudah ada." : "Kategori belum dapat diperbarui." };
+    return { error: hasPostgresErrorCode(error, "23505") ? "An active category with that name already exists." : "Category could not be updated." };
   }
   revalidatePath("/categories");
   revalidatePath("/transactions");
   revalidatePath("/budgets");
   revalidatePath("/recurring-transactions");
   revalidatePath("/dashboard");
-  return { success: "Kategori berhasil diperbarui." };
+  return { success: "Category updated successfully." };
 }
 
 async function setCategoryStatus(
@@ -100,15 +100,15 @@ async function setCategoryStatus(
 ): Promise<CategoryStatusActionState> {
   const user = await requireSessionUser();
   const id = categoryIdSchema.safeParse(formData.get("id"));
-  if (!id.success) return { error: "Kategori tidak ditemukan." };
+  if (!id.success) return { error: "Category not found." };
   try {
     const result = await setOwnedCategoryStatus(db, user.id, id.data, status);
     if (!result.ok && result.reason === "duplicate") {
-      return { error: "Kategori tidak dapat dipulihkan karena nama aktif yang sama sudah ada." };
+      return { error: "Category cannot be restored because an active category with that name already exists." };
     }
-    if (!result.ok) return { error: "Kategori tidak ditemukan." };
+    if (!result.ok) return { error: "Category not found." };
   } catch {
-    return { error: "Status kategori belum dapat diperbarui." };
+    return { error: "Category status could not be updated." };
   }
   revalidatePath("/categories");
   revalidatePath("/transactions");
@@ -138,19 +138,19 @@ export async function deleteCategoryAction(
 ): Promise<CategoryActionState> {
   const user = await requireSessionUser();
   const id = categoryIdSchema.safeParse(formData.get("id"));
-  if (!id.success) return { error: "Kategori tidak ditemukan." };
+  if (!id.success) return { error: "Category not found." };
   const referenced = await isOwnedCategoryReferenced(db, user.id, id.data);
   if (referenced) {
     return {
-      error: "Kategori tidak dapat dihapus karena masih dipakai transaksi, anggaran, atau aturan berulang. Arsipkan saja.",
+      error: "Category cannot be deleted because it is still used by transactions, budgets, or recurring rules. Archive it instead.",
     };
   }
   const deleted = await deleteOwnedCategory(db, user.id, id.data);
-  if (!deleted) return { error: "Kategori tidak ditemukan." };
+  if (!deleted) return { error: "Category not found." };
   revalidatePath("/categories");
   revalidatePath("/transactions");
   revalidatePath("/budgets");
   revalidatePath("/recurring-transactions");
   revalidatePath("/dashboard");
-  return { success: "Kategori berhasil dihapus." };
+  return { success: "Category deleted successfully." };
 }

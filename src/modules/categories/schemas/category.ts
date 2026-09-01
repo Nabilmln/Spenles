@@ -4,7 +4,7 @@ import { normalizeCategoryDisplayName } from "../services/normalize-category-nam
 
 export const categorySchema = z.object({
   name: z.string().transform(normalizeCategoryDisplayName).pipe(
-    z.string().min(2, "Nama minimal 2 karakter.").max(80, "Nama maksimal 80 karakter."),
+    z.string().min(2, "Name must be at least 2 characters.").max(80, "Name must be at most 80 characters."),
   ),
   type: z.enum(["income", "expense"]),
   icon: z.enum(CATEGORY_ICONS).nullable(),

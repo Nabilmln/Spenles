@@ -16,10 +16,10 @@ import { recurringFrequencyLabel } from "../constants/frequencies";
 import type { RecurringRuleListRow } from "../queries/recurring-rules";
 
 const reasonLabel = {
-  user: "Dijeda pengguna",
-  blocked_account: "Akun tidak aktif",
-  blocked_category: "Kategori tidak aktif",
-  generation_failure: "Generasi terakhir gagal",
+  user: "Paused by user",
+  blocked_account: "Account inactive",
+  blocked_category: "Category inactive",
+  generation_failure: "Last generation failed",
 };
 
 const statusBadgeClass: Record<RecurringRuleListRow["status"], string> = {
@@ -52,14 +52,14 @@ function StatusForm({
     <form action={formAction}>
       <input type="hidden" name="id" value={row.id} />
       <Button type="submit" variant="ghost" disabled={pending}>
-        {pending ? "Memproses..." : operation === "pause" ? "Jeda" : operation === "resume" ? "Lanjutkan" : "Arsipkan"}
+        {pending ? "Processing..." : operation === "pause" ? "Pause" : operation === "resume" ? "Resume" : "Archive"}
       </Button>
     </form>
   );
 }
 
 export function RecurringRuleList({ rows }: { rows: RecurringRuleListRow[] }) {
-  if (rows.length === 0) return <div className={emptyStateClass}><p className="m-0 text-muted">Belum ada aturan transaksi berulang.</p></div>;
+  if (rows.length === 0) return <div className={emptyStateClass}><p className="m-0 text-muted">No recurring transaction rules yet.</p></div>;
   return (
     <div className="grid grid-cols-3 gap-4 max-[1100px]:grid-cols-2 max-[540px]:grid-cols-1">
       {rows.map((row) => (
@@ -70,15 +70,15 @@ export function RecurringRuleList({ rows }: { rows: RecurringRuleListRow[] }) {
               <h2>{row.categoryName}</h2>
             </div>
             <span className={statusBadgeClass[row.status]}>
-              {row.status === "active" ? "Aktif" : row.status === "paused" ? "Dijeda" : "Diarsipkan"}
+              {row.status === "active" ? "Active" : row.status === "paused" ? "Paused" : "Archived"}
             </span>
           </div>
           <strong className={`[overflow-wrap:anywhere] text-[clamp(1.35rem,2.7vw,2rem)] ${row.type === "income" ? "text-income" : "text-expense"}`}>
             {formatIdr(row.amount)}
           </strong>
-          <p>{row.accountName} · {row.type === "income" ? "Pemasukan" : "Pengeluaran"}</p>
+          <p>{row.accountName} · {row.type === "income" ? "Income" : "Expense"}</p>
           <p>
-            Berikutnya: {row.nextOccurrenceAt ? formatJakartaDateLong(row.nextOccurrenceAt) : "Tidak ada"}
+            Next: {row.nextOccurrenceAt ? formatJakartaDateLong(row.nextOccurrenceAt) : "None"}
           </p>
           {row.pauseReason ? (
             <p className="text-expense! font-medium">{reasonLabel[row.pauseReason]}</p>

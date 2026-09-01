@@ -2,9 +2,9 @@ import { JAKARTA_TIMEZONE } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
 
 const paymentLabel = {
-  unpaid: "Belum dibayar",
-  partially_paid: "Dibayar sebagian",
-  paid: "Lunas",
+  unpaid: "Unpaid",
+  partially_paid: "Partially paid",
+  paid: "Paid",
 } as const;
 
 export function createSplitBillShareSummary(input: {
@@ -31,7 +31,7 @@ export function createSplitBillShareSummary(input: {
   const lines: string[] = [];
   lines.push(`Split Bill — ${input.merchantName}`);
   lines.push(
-    new Intl.DateTimeFormat("id-ID", {
+    new Intl.DateTimeFormat("en-US", {
       dateStyle: "long",
       timeZone: JAKARTA_TIMEZONE,
     }).format(new Date(`${input.billDate}T00:00:00+07:00`)),
@@ -49,8 +49,8 @@ export function createSplitBillShareSummary(input: {
   }
   const taxLine =
     input.taxMode === "fixed"
-      ? `Pajak: ${formatIdr(input.taxAmount)}`
-      : `Pajak ${input.taxBps / 100}%: ${formatIdr(input.taxAmount)}`;
+      ? `Tax: ${formatIdr(input.taxAmount)}`
+      : `Tax ${input.taxBps / 100}%: ${formatIdr(input.taxAmount)}`;
   lines.push(
     [
       `Subtotal: ${formatIdr(input.subtotalAmount)}`,
@@ -58,6 +58,6 @@ export function createSplitBillShareSummary(input: {
       `Total: ${formatIdr(input.finalAmount)}`,
     ].join("\n"),
   );
-  lines.push("Dihitung dengan Spenles.");
+  lines.push("Calculated with Spenles.");
   return lines.join("\n\n");
 }

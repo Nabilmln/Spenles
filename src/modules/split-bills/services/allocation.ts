@@ -12,7 +12,7 @@ export type AllocationResult = AllocationEntry & {
 
 export function divideHalfUp(numerator: bigint, denominator: bigint) {
   if (numerator < 0n || denominator <= 0n) {
-    throw new Error("Pembagian finansial tidak valid.");
+    throw new Error("Invalid financial division.");
   }
   return (numerator + denominator / 2n) / denominator;
 }
@@ -24,7 +24,7 @@ export function calculateBasisPointAmount(amount: bigint, basisPoints: number) {
     basisPoints < 0 ||
     basisPoints > 10_000
   ) {
-    throw new Error("Nilai persentase tidak valid.");
+    throw new Error("Invalid percentage value.");
   }
   return divideHalfUp(amount * BigInt(basisPoints), 10_000n);
 }
@@ -34,7 +34,7 @@ export function allocateLargestRemainder(
   entries: AllocationEntry[],
 ): AllocationResult[] {
   if (target < 0n || entries.length === 0) {
-    throw new Error("Target alokasi tidak valid.");
+    throw new Error("Invalid allocation target.");
   }
   const ids = new Set<string>();
   for (const entry of entries) {
@@ -44,14 +44,14 @@ export function allocateLargestRemainder(
       entry.position < 1 ||
       entry.weight < 0n
     ) {
-      throw new Error("Bobot atau kunci alokasi tidak valid.");
+      throw new Error("Invalid allocation weight or key.");
     }
     ids.add(entry.id);
   }
 
   const totalWeight = entries.reduce((sum, entry) => sum + entry.weight, 0n);
   if (target > 0n && totalWeight === 0n) {
-    throw new Error("Target positif memerlukan bobot positif.");
+    throw new Error("A positive target requires positive weight.");
   }
   if (totalWeight === 0n) {
     return entries.map((entry) => ({
@@ -90,7 +90,7 @@ export function allocateLargestRemainder(
     remaining -= 1n;
   }
   if (remaining !== 0n) {
-    throw new Error("Alokasi tidak dapat direkonsiliasi.");
+    throw new Error("Allocation could not be reconciled.");
   }
   return initial;
 }

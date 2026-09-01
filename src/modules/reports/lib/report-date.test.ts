@@ -40,12 +40,12 @@ describe("report date utilities", () => {
     expect(addCalendarDays("bad", 1)).toBeNull();
   });
 
-  it("formats compact ranges bilingual of year boundary", () => {
+it("formats compact ranges across year boundaries", () => {
     expect(formatReportRange("2026-08-01", "2026-09-01")).toBe(
-      "1 Agustus – 1 September 2026",
+      "1 August – 1 September 2026",
     );
     expect(formatReportRange("2026-12-20", "2027-01-10")).toBe(
-      "20 Desember 2026 – 10 Januari 2027",
+      "20 December 2026 – 10 January 2027",
     );
   });
 

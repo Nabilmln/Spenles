@@ -32,6 +32,6 @@ describe("split-bill allocation", () => {
       allocateLargestRemainder(1n, [
         { id: "a", position: 1, weight: 0n },
       ]),
-    ).toThrow("bobot positif");
+    ).toThrow("positive weight");
   });
 });

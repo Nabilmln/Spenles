@@ -14,8 +14,8 @@ export function moneyString(options: MoneyStringOptions = {}) {
     allowZero = false,
     allowLeadingZeros = false,
     max = MAX_TRANSACTION_AMOUNT,
-    formatMessage = "Nominal harus berupa rupiah bulat.",
-    rangeMessage = "Nominal melewati batas yang didukung.",
+    formatMessage = "Amount must be a whole rupiah.",
+    rangeMessage = "Amount is outside the supported range.",
   } = options;
   const digits = allowZero || allowLeadingZeros ? /^\d+$/u : /^[1-9]\d*$/u;
   return z

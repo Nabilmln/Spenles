@@ -30,7 +30,7 @@ export function BudgetForm({
     <form action={formAction} className="grid gap-4">
       {initial ? <input type="hidden" name="id" value={initial.id} /> : null}
       <div className={fieldClass}>
-        <label htmlFor="budget-category" className={fieldLabelClass}>Kategori pengeluaran</label>
+        <label htmlFor="budget-category" className={fieldLabelClass}>Expense category</label>
         <Select
           id="budget-category"
           name="categoryId"
@@ -45,7 +45,7 @@ export function BudgetForm({
         {initial ? <input type="hidden" name="categoryId" value={initial.categoryId} /> : null}
       </div>
       <div className={fieldClass}>
-        <label htmlFor="budget-month" className={fieldLabelClass}>Bulan</label>
+        <label htmlFor="budget-month" className={fieldLabelClass}>Month</label>
         <Input
           id="budget-month"
           name="month"
@@ -57,7 +57,7 @@ export function BudgetForm({
         {initial ? <input type="hidden" name="month" value={initial.month} /> : null}
       </div>
       <div className={fieldClass}>
-        <label htmlFor="budget-amount" className={fieldLabelClass}>Jumlah anggaran (IDR)</label>
+        <label htmlFor="budget-amount" className={fieldLabelClass}>Budget amount (IDR)</label>
         <Input
           id="budget-amount"
           name="amount"
@@ -69,7 +69,7 @@ export function BudgetForm({
         />
       </div>
       <div className={fieldClass}>
-        <label htmlFor="budget-threshold" className={fieldLabelClass}>Ambang peringatan</label>
+        <label htmlFor="budget-threshold" className={fieldLabelClass}>Warning threshold</label>
         <Select
           id="budget-threshold"
           name="warningThresholdBps"
@@ -83,7 +83,7 @@ export function BudgetForm({
         </Select>
       </div>
       <Button type="submit" disabled={pending || categories.length === 0}>
-        {pending ? "Menyimpan..." : initial ? "Simpan perubahan" : "Buat anggaran"}
+        {pending ? "Saving..." : initial ? "Save changes" : "Create budget"}
       </Button>
     </form>
   );

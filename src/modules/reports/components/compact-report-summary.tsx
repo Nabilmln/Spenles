@@ -22,17 +22,17 @@ export function CompactReportSummary({
   const netClass =
     net > 0n ? "text-income" : net < 0n ? "text-expense" : "";
   return (
-    <section aria-label="Ikhtisar periode" className="grid grid-cols-3 rounded-2xl border border-border bg-surface shadow-card">
+    <section aria-label="Period overview" className="grid grid-cols-3 rounded-2xl border border-border bg-surface shadow-card">
       <div className={cellClass}>
-        <span className={labelClass}>Pendapatan</span>
+        <span className={labelClass}>Income</span>
         <strong className={cn(valueClass, "text-income")}>+{formatIdr(totals.incomeIdr)}</strong>
       </div>
       <div className={cellClass}>
-        <span className={labelClass}>Pengeluaran</span>
+        <span className={labelClass}>Expense</span>
         <strong className={cn(valueClass, "text-expense")}>−{formatIdr(totals.expenseIdr)}</strong>
       </div>
       <div className={cellClass}>
-        <span className={labelClass}>Selisih</span>
+        <span className={labelClass}>Net</span>
         <strong className={cn(valueClass, netClass)}>{formatIdr(net)}</strong>
       </div>
     </section>

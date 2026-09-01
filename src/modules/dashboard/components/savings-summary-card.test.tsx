@@ -9,7 +9,7 @@ describe("SavingsSummaryCard", () => {
     render(<SavingsSummaryCard balance={1500000n} periodNet={250000n} />);
 
     expect(
-      screen.getByRole("region", { name: "Ringkasan tabungan" }),
+      screen.getByRole("region", { name: "Savings summary" }),
     ).toBeInTheDocument();
     expect(screen.getByText(/Rp\s*1\.500\.000/u)).toBeInTheDocument();
     expect(screen.getByText(/\+ Rp\s*250\.000/u)).toBeInTheDocument();
@@ -24,6 +24,6 @@ describe("SavingsSummaryCard", () => {
   it("shows an empty state when there is no savings activity", () => {
     render(<SavingsSummaryCard balance={0n} periodNet={0n} />);
 
-    expect(screen.getByText("Belum ada tabungan.")).toBeInTheDocument();
+    expect(screen.getByText("No savings yet.")).toBeInTheDocument();
   });
 });

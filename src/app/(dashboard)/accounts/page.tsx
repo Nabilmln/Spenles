@@ -11,10 +11,10 @@ export default async function AccountsPage() {
   return (
     <div className={pageStackClass}>
       <div className={pageHeadingRowClass}>
-        <p className={pageDescriptionClass}>Saldo dihitung di server dari transaksi aktif dan transfer.</p>
+        <p className={pageDescriptionClass}>Balances are calculated on the server from active transactions and transfers.</p>
         <div className={pageActionsClass}>
           <Link className={buttonClass("secondary")} href="/transfers">Transfer</Link>
-          <Link className={buttonClass("primary")} href="/accounts/new">Tambah akun</Link>
+          <Link className={buttonClass("primary")} href="/accounts/new">Add account</Link>
         </div>
       </div>
       <AccountList rows={rows} />

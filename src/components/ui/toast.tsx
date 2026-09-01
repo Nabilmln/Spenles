@@ -84,7 +84,7 @@ function ToastCard({
         type="button"
         className="grid size-[1.6rem] shrink-0 place-items-center rounded-[.45rem] text-muted transition-colors hover:bg-surface-subtle hover:text-foreground"
         onClick={() => onDismiss(toast.id)}
-        aria-label="Tutup notifikasi"
+        aria-label="Close notification"
       >
         <X size={15} aria-hidden="true" />
       </button>

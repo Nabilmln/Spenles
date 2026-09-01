@@ -53,22 +53,22 @@ describe("CashFlowOverviewCard", () => {
     );
 
     expect(
-      screen.getByRole("region", { name: "Arus Kas" }),
+      screen.getByRole("region", { name: "Cash flow" }),
     ).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Harian" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Mingguan" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Bulanan" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Bulanan" })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: "Daily" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Weekly" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Monthly" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Monthly" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
     expect(
-      screen.getByText(/Total pemasukan Rp\s*20\.000\.000/u),
+      screen.getByText(/Total income Rp\s*20\.000\.000/u),
     ).toBeInTheDocument();
     expect(screen.queryByText(/Lihat data tabel/u)).not.toBeInTheDocument();
   });
 
-  it("switches to the last seven days when Harian is selected", () => {
+  it("switches to the last seven days when Daily is selected", () => {
     render(
       <CashFlowOverviewCard
         daily={daily}
@@ -77,21 +77,21 @@ describe("CashFlowOverviewCard", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Harian" }));
+    fireEvent.click(screen.getByRole("button", { name: "Daily" }));
 
-    expect(screen.getByRole("button", { name: "Harian" })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: "Daily" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
     expect(
-      screen.getByText(/Total pemasukan Rp\s*500\.000/u),
+      screen.getByText(/Total income Rp\s*500\.000/u),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/7 hari terakhir/u),
+      screen.getByText(/last 7 days/u),
     ).toBeInTheDocument();
   });
 
-  it("switches to the last four weeks when Mingguan is selected", () => {
+  it("switches to the last four weeks when Weekly is selected", () => {
     render(
       <CashFlowOverviewCard
         daily={daily}
@@ -100,13 +100,13 @@ describe("CashFlowOverviewCard", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Mingguan" }));
+    fireEvent.click(screen.getByRole("button", { name: "Weekly" }));
 
     expect(
-      screen.getByText(/Total pemasukan Rp\s*3\.000\.000/u),
+      screen.getByText(/Total income Rp\s*3\.000\.000/u),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/4 minggu terakhir/u),
+      screen.getByText(/last 4 weeks/u),
     ).toBeInTheDocument();
   });
 
@@ -123,10 +123,10 @@ describe("CashFlowOverviewCard", () => {
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Harian" }));
+    fireEvent.click(screen.getByRole("button", { name: "Daily" }));
 
     expect(
-      screen.getByText("Belum ada transaksi pada periode ini."),
+      screen.getByText("No transactions yet for this period."),
     ).toBeInTheDocument();
   });
 });

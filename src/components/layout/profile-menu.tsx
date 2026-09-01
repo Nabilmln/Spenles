@@ -14,7 +14,7 @@ function LogoutButton() {
       disabled={pending}
     >
       <LogOut size={17} aria-hidden="true" />
-      {pending ? "Keluar..." : "Keluar"}
+      {pending ? "Logging out..." : "Log out"}
     </button>
   );
 }
@@ -57,9 +57,9 @@ export function ProfileMenu({
         onClick={() => setOpen((v) => !v)}
         aria-haspopup="menu"
         aria-expanded={open}
-        aria-label="Menu profil"
+        aria-label="Profile menu"
       >
-        <span className="grid size-[2.1rem] place-items-center rounded-full bg-primary-600 font-medium text-white shadow-[0_2px_10px_rgb(240_90_36/35%)]" aria-hidden="true">{initial}</span>
+        <span className="grid size-[2.1rem] place-items-center rounded-full bg-primary-600 font-medium text-white shadow-[0_2px_10px_rgb(79_70_229/35%)]" aria-hidden="true">{initial}</span>
         <span className="hidden min-[861px]:block">
           <strong className="block max-w-[10rem] truncate text-left text-[.85rem] leading-[1.2]">{displayName}</strong>
           <small className="block max-w-[10rem] truncate text-left text-[.7rem] text-muted">{email}</small>
@@ -73,7 +73,7 @@ export function ProfileMenu({
           </div>
           <a className="flex w-full min-h-[2.7rem] items-center gap-[.6rem] rounded-[.65rem] border-0 bg-transparent px-[.7rem] py-[.55rem] text-left text-[.88rem] font-medium text-foreground hover:bg-surface-subtle focus-visible:bg-surface-subtle" role="menuitem" href="/settings/profile" onClick={() => setOpen(false)}>
             <User size={17} aria-hidden="true" />
-            Profil
+            Profile
           </a>
           <div className="my-[.35rem] border-t border-border" role="separator" />
           <form action={logoutAction}>

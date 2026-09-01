@@ -305,7 +305,7 @@ export async function getPersonalDataBackupJson(
     where owned_profile.user_id = ${userId}
   `);
   const backup = result.rows[0]?.backup_json;
-  if (!backup) throw new Error("Profil pengguna tidak ditemukan.");
+  if (!backup) throw new Error("User profile not found.");
   return backup;
 }
 

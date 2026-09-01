@@ -2,13 +2,13 @@ import { describe, expect, it } from "vitest";
 import { formatDayDateLong, formatDateLong, formatMonthYearLabel } from "./format-id";
 
 describe("format-id", () => {
-  it("formats full Indonesian dates", () => {
-    expect(formatDateLong("2026-08-05")).toBe("5 Agustus 2026");
+  it("formats full English dates", () => {
+    expect(formatDateLong("2026-08-05")).toBe("5 August 2026");
   });
 
-  it("prepends the Indonesian weekday", () => {
-    expect(formatDayDateLong("2026-08-05")).toBe("Rabu, 5 Agustus 2026");
-    expect(formatDayDateLong("2026-08-10")).toBe("Senin, 10 Agustus 2026");
+  it("prepends the English weekday", () => {
+    expect(formatDayDateLong("2026-08-05")).toBe("Wednesday, 5 August 2026");
+    expect(formatDayDateLong("2026-08-10")).toBe("Monday, 10 August 2026");
   });
 
   it("falls back to the raw value for invalid keys", () => {
@@ -16,9 +16,9 @@ describe("format-id", () => {
     expect(formatDateLong("not-a-date")).toBe("not-a-date");
   });
 
-  it("formats a calendar month as Indonesian month and year", () => {
-    expect(formatMonthYearLabel(2026, 8)).toBe("Agustus 2026");
-    expect(formatMonthYearLabel(2026, 1)).toBe("Januari 2026");
-    expect(formatMonthYearLabel(2026, 12)).toBe("Desember 2026");
+  it("formats a calendar month as English month and year", () => {
+    expect(formatMonthYearLabel(2026, 8)).toBe("August 2026");
+    expect(formatMonthYearLabel(2026, 1)).toBe("January 2026");
+    expect(formatMonthYearLabel(2026, 12)).toBe("December 2026");
   });
 });

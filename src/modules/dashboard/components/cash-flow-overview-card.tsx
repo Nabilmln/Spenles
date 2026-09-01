@@ -16,15 +16,15 @@ export type CashFlowSeries = {
 type CashFlowView = "daily" | "weekly" | "monthly";
 
 const VIEWS: Array<{ id: CashFlowView; label: string }> = [
-  { id: "daily", label: "Harian" },
-  { id: "weekly", label: "Mingguan" },
-  { id: "monthly", label: "Bulanan" },
+  { id: "daily", label: "Daily" },
+  { id: "weekly", label: "Weekly" },
+  { id: "monthly", label: "Monthly" },
 ];
 
 const VIEW_DESCRIPTIONS: Record<CashFlowView, string> = {
-  daily: "Pemasukan dan pengeluaran dalam 7 hari terakhir.",
-  weekly: "Pemasukan dan pengeluaran dalam 4 minggu terakhir.",
-  monthly: "Pemasukan dan pengeluaran dalam 12 bulan terakhir.",
+  daily: "Income and expenses in the last 7 days.",
+  weekly: "Income and expenses in the last 4 weeks.",
+  monthly: "Income and expenses in the last 12 months.",
 };
 
 export function CashFlowOverviewCard({
@@ -44,15 +44,15 @@ export function CashFlowOverviewCard({
 
   return (
     <section
-      aria-label="Arus Kas"
+      aria-label="Cash flow"
       className={`${cardClass} flex h-full flex-col shadow-none`}
     >
       <div className="flex items-start justify-between gap-4">
         <div>
-          <p className={eyebrowClass}>Arus kas</p>
+          <p className={eyebrowClass}>Cash flow</p>
         </div>
         <div
-          aria-label="Rentang arus kas"
+          aria-label="Cash flow range"
           className="inline-flex shrink-0 rounded-[.7rem] bg-surface-subtle p-[.25rem]"
           role="group"
         >
@@ -77,7 +77,7 @@ export function CashFlowOverviewCard({
         {VIEW_DESCRIPTIONS[view]}
       </p>
       <strong className="mt-[.35rem] text-[.88rem]">
-        Total pemasukan {formatIdr(series.totalIncome)} · Total pengeluaran{" "}
+        Total income {formatIdr(series.totalIncome)} · Total expenses{" "}
         {formatIdr(series.totalExpense)}
       </strong>
 
@@ -88,7 +88,7 @@ export function CashFlowOverviewCard({
           className="m-0 -mt-[.25rem] rounded-[.7rem] bg-surface-subtle p-[.75rem] text-[.78rem] text-muted"
           role="status"
         >
-          Belum ada transaksi pada periode ini.
+          No transactions yet for this period.
         </p>
       ) : null}
 
@@ -96,7 +96,7 @@ export function CashFlowOverviewCard({
         {series.points
           .map(
             (point) =>
-              `${point.label}: Pemasukan ${formatIdr(point.incomeIdr)}, Pengeluaran ${formatIdr(point.expenseIdr)}`,
+              `${point.label}: Income ${formatIdr(point.incomeIdr)}, Expense ${formatIdr(point.expenseIdr)}`,
           )
           .join(". ")}
       </p>

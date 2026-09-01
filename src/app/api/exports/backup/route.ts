@@ -29,9 +29,9 @@ function jakartaDate(value: Date) {
 
 export async function GET(request: Request) {
   const user = await getSessionUser();
-  if (!user) return safeExportError(401, "Autentikasi diperlukan.");
+  if (!user) return safeExportError(401, "Authentication is required.");
   if ([...new URL(request.url).searchParams].length > 0) {
-    return safeExportError(400, "Parameter ekspor tidak valid.");
+    return safeExportError(400, "Invalid export parameters.");
   }
 
   try {
@@ -39,7 +39,7 @@ export async function GET(request: Request) {
     const recordCount = await getPersonalDataBackupRecordCount(user.id);
     if (recordCount > BACKUP_RECORD_LIMIT) {
       throw new ExportLimitError(
-        `Backup melebihi batas ${BACKUP_RECORD_LIMIT.toLocaleString("id-ID")} rekaman.`,
+        `Backup exceeds the ${BACKUP_RECORD_LIMIT.toLocaleString("en-US")} record limit.`,
       );
     }
     const backup = await getPersonalDataBackupJson(user.id, exportedAt);
@@ -55,6 +55,6 @@ export async function GET(request: Request) {
     if (error instanceof ExportLimitError) {
       return safeExportError(422, error.message);
     }
-    return safeExportError(500, "Backup belum dapat dibuat.");
+    return safeExportError(500, "Backup could not be created.");
   }
 }

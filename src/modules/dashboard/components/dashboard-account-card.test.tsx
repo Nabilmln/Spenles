@@ -21,13 +21,13 @@ describe("DashboardAccountCard", () => {
       />,
     );
 
-    expect(screen.getByRole("heading", { name: "Akun yang digunakan" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Accounts in use" })).toBeInTheDocument();
     expect(screen.getByText("Kas Utama")).toBeInTheDocument();
     expect(screen.getByText("Rekening BCA")).toBeInTheDocument();
-    expect(screen.getByText("Tunai")).toBeInTheDocument();
-    expect(screen.getByText("Rekening bank")).toBeInTheDocument();
+    expect(screen.getByText("Cash")).toBeInTheDocument();
+    expect(screen.getByText("Bank")).toBeInTheDocument();
     expect(screen.getByText(/Rp\s*12\.500/u)).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Lihat akun/u })).toHaveAttribute("href", "/accounts");
+    expect(screen.getByRole("link", { name: /View accounts/u })).toHaveAttribute("href", "/accounts");
   });
 
   it("caps displayed accounts at five and reports the rest", () => {
@@ -37,7 +37,7 @@ describe("DashboardAccountCard", () => {
       />,
     );
 
-    expect(screen.getByText("+1 akun lainnya")).toBeInTheDocument();
+    expect(screen.getByText("+1 more accounts")).toBeInTheDocument();
     expect(screen.queryByText("Akun a6")).not.toBeInTheDocument();
   });
 
@@ -45,7 +45,7 @@ describe("DashboardAccountCard", () => {
     render(<DashboardAccountCard rows={[]} />);
 
     expect(
-      screen.getByText("Belum ada akun. Buat akun di menu Akun."),
+      screen.getByText("No accounts yet. Create an account in the Accounts menu."),
     ).toBeInTheDocument();
   });
 });

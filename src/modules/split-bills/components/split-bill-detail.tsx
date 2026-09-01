@@ -16,7 +16,7 @@ import { ShareSummaryButton } from "./share-summary-button";
 
 const statusLabel = {
   finalized: "Final",
-  archived: "Diarsipkan",
+  archived: "Archived",
 } as const;
 
 const statusBadgeClass = {
@@ -83,13 +83,13 @@ export function SplitBillDetail({ detail }: { detail: SplitBillDetailData }) {
           </div>
           {detail.note ? <p>{detail.note}</p> : null}
           <p className="mt-4 rounded-[.7rem] bg-surface-subtle p-[.75rem] text-[.76rem] text-muted">
-            Snapshot kalkulasi versi {detail.calculationVersion}. Hasil final
-            tidak dihitung ulang ketika aturan aplikasi berubah.
+            Calculation snapshot version {detail.calculationVersion}. Final
+            results are not recalculated when application rules change.
           </p>
         </article>
 
         <section className={cardClass}>
-          <h2 className="m-0">Item</h2>
+          <h2 className="m-0">Items</h2>
           <div className="grid gap-[.8rem]">
             {detail.items.map((item) => (
               <article key={item.id} className="grid grid-cols-[minmax(0,1fr)_minmax(13rem,auto)] gap-4 border-b border-border p-[.85rem_0] last:border-0 max-[540px]:grid-cols-1">
@@ -100,8 +100,8 @@ export function SplitBillDetail({ detail }: { detail: SplitBillDetailData }) {
                   </small>
                 </div>
                 <dl className="m-0 grid gap-[.25rem]">
-                  <div className="flex justify-between gap-4"><dt className="text-[.75rem] text-muted">Setelah diskon</dt><dd className="m-0 font-medium">{formatIdr(item.discountedAmount)}</dd></div>
-                  <div className="flex justify-between gap-4"><dt className="text-[.75rem] text-muted">Pajak</dt><dd className="m-0 font-medium">{formatIdr(BigInt(item.itemTaxAmount) + BigInt(item.billTaxAmount))}</dd></div>
+                  <div className="flex justify-between gap-4"><dt className="text-[.75rem] text-muted">After discount</dt><dd className="m-0 font-medium">{formatIdr(item.discountedAmount)}</dd></div>
+                  <div className="flex justify-between gap-4"><dt className="text-[.75rem] text-muted">Tax</dt><dd className="m-0 font-medium">{formatIdr(BigInt(item.itemTaxAmount) + BigInt(item.billTaxAmount))}</dd></div>
                 </dl>
               </article>
             ))}
@@ -109,7 +109,7 @@ export function SplitBillDetail({ detail }: { detail: SplitBillDetailData }) {
         </section>
 
         <section className={cardClass}>
-          <h2 className="m-0">Kewajiban peserta</h2>
+          <h2 className="m-0">Participant obligations</h2>
           <div className="grid gap-[.8rem]">
             {detail.participants.map((participant) => (
               <article className="grid gap-[.85rem] rounded-[.8rem] border border-border bg-surface-subtle p-4" key={participant.id}>
@@ -119,8 +119,8 @@ export function SplitBillDetail({ detail }: { detail: SplitBillDetailData }) {
                 </div>
                 <dl className="m-0 grid grid-cols-[repeat(3,minmax(0,1fr))] gap-[.55rem] max-[540px]:grid-cols-1">
                   <div className="grid gap-[.15rem]"><dt className="text-muted">Item</dt><dd className="m-0 font-medium text-right wrap-anywhere">{formatIdr(participant.itemAmount)}</dd></div>
-                  <div className="grid gap-[.15rem]"><dt className="text-muted">Pajak</dt><dd className="m-0 font-medium text-right wrap-anywhere">{formatIdr(BigInt(participant.itemTaxAmount) + BigInt(participant.billTaxAmount))}</dd></div>
-                  <div className="grid gap-[.15rem]"><dt className="text-muted">Layanan</dt><dd className="m-0 font-medium text-right wrap-anywhere">{formatIdr(participant.serviceChargeAmount)}</dd></div>
+                  <div className="grid gap-[.15rem]"><dt className="text-muted">Tax</dt><dd className="m-0 font-medium text-right wrap-anywhere">{formatIdr(BigInt(participant.itemTaxAmount) + BigInt(participant.billTaxAmount))}</dd></div>
+                  <div className="grid gap-[.15rem]"><dt className="text-muted">Service</dt><dd className="m-0 font-medium text-right wrap-anywhere">{formatIdr(participant.serviceChargeAmount)}</dd></div>
                 </dl>
                 {detail.status === "finalized" ? (
                   <PaymentStatusForm
@@ -132,7 +132,7 @@ export function SplitBillDetail({ detail }: { detail: SplitBillDetailData }) {
                   />
                 ) : (
                   <p className="mt-4 rounded-[.7rem] bg-surface-subtle p-[.75rem] text-[.76rem] text-muted">
-                    Status pembayaran dibekukan setelah arsip.
+                    Payment status is frozen after archiving.
                   </p>
                 )}
               </article>
@@ -143,41 +143,41 @@ export function SplitBillDetail({ detail }: { detail: SplitBillDetailData }) {
 
       <aside className="grid min-w-0 gap-4">
         <article className={`${cardClass} grid min-w-0 gap-4`}>
-          <p className={eyebrowClass}>Snapshot final</p>
-          <h2 className="m-0">Ringkasan</h2>
+          <p className={eyebrowClass}>Final snapshot</p>
+          <h2 className="m-0">Summary</h2>
           <dl className="m-0 grid gap-[.55rem]">
             <div className="flex justify-between gap-4"><dt className="text-muted">Subtotal</dt><dd className="m-0 font-medium text-right wrap-anywhere">{formatIdr(detail.subtotalAmount)}</dd></div>
-            <div className="flex justify-between gap-4"><dt className="text-muted">Diskon</dt><dd className="m-0 font-medium text-right wrap-anywhere">-{formatIdr(detail.discountAmount)}</dd></div>
-            <div className="flex justify-between gap-4"><dt className="text-muted">Pajak item</dt><dd className="m-0 font-medium text-right wrap-anywhere">{formatIdr(detail.itemTaxAmount)}</dd></div>
-            <div className="flex justify-between gap-4"><dt className="text-muted">Pajak tagihan</dt><dd className="m-0 font-medium text-right wrap-anywhere">{formatIdr(detail.billTaxAmount)}</dd></div>
-            <div className="flex justify-between gap-4"><dt className="text-muted">Biaya layanan</dt><dd className="m-0 font-medium text-right wrap-anywhere">{formatIdr(detail.serviceChargeAmount)}</dd></div>
+            <div className="flex justify-between gap-4"><dt className="text-muted">Discount</dt><dd className="m-0 font-medium text-right wrap-anywhere">-{formatIdr(detail.discountAmount)}</dd></div>
+            <div className="flex justify-between gap-4"><dt className="text-muted">Item tax</dt><dd className="m-0 font-medium text-right wrap-anywhere">{formatIdr(detail.itemTaxAmount)}</dd></div>
+            <div className="flex justify-between gap-4"><dt className="text-muted">Bill tax</dt><dd className="m-0 font-medium text-right wrap-anywhere">{formatIdr(detail.billTaxAmount)}</dd></div>
+            <div className="flex justify-between gap-4"><dt className="text-muted">Service charge</dt><dd className="m-0 font-medium text-right wrap-anywhere">{formatIdr(detail.serviceChargeAmount)}</dd></div>
             <div className="mt-[.35rem] flex justify-between gap-4 border-t border-border pt-[.75rem] text-[1.08rem]"><dt className="text-muted">Total</dt><dd className="m-0 font-medium text-right wrap-anywhere">{formatIdr(detail.finalAmount)}</dd></div>
           </dl>
         </article>
         <article className={cardClass}>
-          <h2 className="m-0">Bagikan</h2>
-          <p>Ringkasan tetap privat dan tidak membuat tautan publik.</p>
+          <h2 className="m-0">Share</h2>
+          <p>The summary stays private and does not create a public link.</p>
           <ShareSummaryButton billId={detail.id} />
         </article>
         {detail.status === "finalized" ? (
           <article className={cardClass}>
-            <h2 className="m-0">Arsip</h2>
-            <p>Arsip mempertahankan snapshot dan membekukan status pembayaran.</p>
+            <h2 className="m-0">Archive</h2>
+            <p>Archiving keeps the snapshot and freezes payment status.</p>
             <form action={archiveAction} className="mt-[.75rem] grid gap-[.6rem]">
               <input type="hidden" name="id" value={detail.id} />
               <Button type="submit" variant="secondary" disabled={pending} className="w-full">
-                {pending ? "Mengarsipkan..." : "Arsipkan tagihan"}
+                {pending ? "Archiving..." : "Archive bill"}
               </Button>
             </form>
           </article>
         ) : null}
         {detail.status === "finalized" || detail.status === "archived" ? (
           <article className={cardClass}>
-            <h2 className="m-0">Hapus</h2>
-            <p>Menghapus tagihan permanen menghilangkan seluruh item dan riwayat pembayaran.</p>
+            <h2 className="m-0">Delete</h2>
+            <p>Permanently deleting a bill removes all items and payment history.</p>
             {confirmDelete ? (
               <div className="mt-[.75rem] grid gap-[.7rem]">
-                <p role="alert" className="m-0 rounded-[.7rem] bg-surface-subtle p-[.75rem] text-[.76rem] text-muted">Yakin? Tindakan ini permanen dan tidak dapat dibatalkan.</p>
+                <p role="alert" className="m-0 rounded-[.7rem] bg-surface-subtle p-[.75rem] text-[.76rem] text-muted">Are you sure? This action is permanent and cannot be undone.</p>
                 <div className="grid grid-cols-2 gap-[.6rem]">
                   <Button
                     type="button"
@@ -185,17 +185,17 @@ export function SplitBillDetail({ detail }: { detail: SplitBillDetailData }) {
                     onClick={() => setConfirmDelete(false)}
                     className="w-full"
                   >
-                    Batal
+                    Cancel
                   </Button>
                   <form action={deleteSplitBillAction}>
                     <input type="hidden" name="id" value={detail.id} />
-                    <Button type="submit" variant="danger" className="w-full">Hapus permanen</Button>
+                    <Button type="submit" variant="danger" className="w-full">Delete permanently</Button>
                   </form>
                 </div>
               </div>
             ) : (
               <Button type="button" variant="danger" onClick={() => setConfirmDelete(true)} className="mt-[.75rem] w-full">
-                Hapus tagihan
+                Delete bill
               </Button>
             )}
           </article>

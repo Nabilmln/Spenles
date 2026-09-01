@@ -18,20 +18,20 @@ export const maxDuration = 30;
 
 export async function GET(request: Request) {
   const user = await getSessionUser();
-  if (!user) return safeExportError(401, "Autentikasi diperlukan.");
+  if (!user) return safeExportError(401, "Authentication is required.");
 
   const filters = parseReportParams(new URL(request.url).searchParams);
   if (!filters) {
-    return safeExportError(400, "Parameter laporan tidak valid.");
+    return safeExportError(400, "Invalid report parameters.");
   }
 
   try {
     const filtersOwned = await validateOwnedReportFilters(user.id, filters);
     if (!filtersOwned) {
-      return safeExportError(400, "Parameter laporan tidak valid.");
+      return safeExportError(400, "Invalid report parameters.");
     }
     const profile = await getProfile(user.id);
-    if (!profile) return safeExportError(500, "Laporan belum dapat dibuat.");
+    if (!profile) return safeExportError(500, "Report could not be created.");
     const report = await getFinancialReport(
       user.id,
       profile.displayName,
@@ -49,6 +49,6 @@ export async function GET(request: Request) {
     if (error instanceof ExportLimitError) {
       return safeExportError(422, error.message);
     }
-    return safeExportError(500, "Laporan belum dapat dibuat.");
+    return safeExportError(500, "Report could not be created.");
   }
 }

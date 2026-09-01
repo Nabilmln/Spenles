@@ -8,10 +8,10 @@ export const dynamic = "force-dynamic";
 export default async function ProfilePage() {
   const user = await requireSessionUser();
   const profile = await getProfile(user.id);
-  if (!profile) throw new Error("Profil tidak ditemukan.");
+  if (!profile) throw new Error("Profile not found.");
   return (
     <div className={`${pageStackClass} ${narrowPageClass}`}>
-      <p className={pageDescriptionClass}>Atur identitas tampilan dan preferensi dasar aplikasi.</p>
+      <p className={pageDescriptionClass}>Set your display identity and basic app preferences.</p>
       <Card><ProfileForm profile={profile} email={user.email ?? ""} /></Card>
     </div>
   );

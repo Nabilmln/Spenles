@@ -41,9 +41,9 @@ export function LoginForm() {
       </div>
       <div className={fieldClass}>
         <div className={fieldLabelRowClass}>
-          <label htmlFor="password">Kata sandi</label>
-          <span className={mutedLinkClass} aria-label="Pemulihan kata sandi belum tersedia">
-            Lupa kata sandi?
+          <label htmlFor="password">Password</label>
+          <span className={mutedLinkClass} aria-label="Password recovery is not yet available">
+            Forgot password?
           </span>
         </div>
         <PasswordField
@@ -58,9 +58,9 @@ export function LoginForm() {
           {state.fieldErrors?.password?.[0]}
         </FormMessage>
       </div>
-      <SubmitButton idleLabel="Masuk" pendingLabel="Memproses..." />
+      <SubmitButton idleLabel="Sign in" pendingLabel="Signing in..." />
       <p className="m-0 mt-[.2rem] text-center text-[.88rem] text-muted">
-        Belum punya akun? <Link className={textLinkClass} href="/register">Daftar sekarang</Link>
+        Don&apos;t have an account? <Link className={textLinkClass} href="/register">Create one</Link>
       </p>
     </form>
   );

@@ -10,12 +10,12 @@ export default async function RegisterPage() {
   return (
     <>
       <div className="mb-7">
-        <p className={eyebrowClass}>Mulai dengan fondasi yang rapi</p>
+        <p className={eyebrowClass}>Start with a clean foundation</p>
         <h1 className="mb-[.6rem] text-[clamp(1.45rem,2.5vw,1.85rem)] leading-[1.2] tracking-[-.02em]">
-          Buat akun Spenles
+          Create your Spenles account
         </h1>
         <p className="m-0 text-[.88rem] text-muted">
-          Profil, kategori awal, dan Kas Utama akan disiapkan otomatis.
+          Your profile, default categories, and main wallet will be set up automatically.
         </p>
       </div>
       <RegisterForm />

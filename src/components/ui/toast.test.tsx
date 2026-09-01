@@ -8,7 +8,7 @@ function Trigger() {
   const toast = useToast();
   return (
     <div>
-      <button onClick={() => toast.success("Berhasil disimpan")}>ok</button>
+      <button onClick={() => toast.success("Saved successfully")}>ok</button>
       <button onClick={() => toast.error("Terjadi kesalahan")}>err</button>
       <button onClick={() => toast.info("Informasi terbaru")}>info</button>
     </div>
@@ -24,9 +24,9 @@ describe("ToastProvider", () => {
     );
 
     fireEvent.click(screen.getByRole("button", { name: "ok" }));
-    expect(screen.getByRole("status")).toHaveTextContent("Berhasil disimpan");
+    expect(screen.getByRole("status")).toHaveTextContent("Saved successfully");
 
-    fireEvent.click(screen.getByRole("button", { name: "Tutup notifikasi" }));
+    fireEvent.click(screen.getByRole("button", { name: "Close notification" }));
     expect(screen.queryByRole("status")).not.toBeInTheDocument();
   });
 

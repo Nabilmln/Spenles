@@ -43,7 +43,7 @@ export async function updateProfileAction(
     .returning({ id: profiles.id });
 
   if (updated.length !== 1) {
-    return { error: "Profil tidak ditemukan atau tidak dapat diperbarui." };
+    return { error: "Profile not found or could not be updated." };
   }
 
   const cookieStore = await cookies();
@@ -55,7 +55,7 @@ export async function updateProfileAction(
     maxAge: 60 * 60 * 24 * 365,
   });
   revalidatePath("/", "layout");
-  return { success: "Pengaturan profil tersimpan." };
+  return { success: "Profile settings saved." };
 }
 
 export async function setThemeAction(theme: string) {

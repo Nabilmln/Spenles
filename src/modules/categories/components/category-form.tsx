@@ -30,27 +30,27 @@ export function CategoryForm({
     <form action={formAction} className="grid gap-4" id={formId}>
       {initial ? <input type="hidden" name="id" value={initial.id} /> : null}
       <div className={fieldClass}>
-        <label htmlFor={`category-name-${key}`} className={fieldLabelClass}>Nama kategori</label>
+        <label htmlFor={`category-name-${key}`} className={fieldLabelClass}>Category name</label>
         <Input id={`category-name-${key}`} name="name" defaultValue={initial?.name} maxLength={80} required />
       </div>
       {!initial ? (
         <div className={fieldClass}>
-          <label htmlFor={`category-type-${key}`} className={fieldLabelClass}>Jenis</label>
+          <label htmlFor={`category-type-${key}`} className={fieldLabelClass}>Type</label>
           <Select id={`category-type-${key}`} name="type" defaultValue="expense">
-            <option value="expense">Pengeluaran</option>
-            <option value="income">Pendapatan</option>
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
           </Select>
         </div>
       ) : null}
       <CategoryIconPicker value={initial?.icon ?? null} />
       <div className={fieldClass}>
-        <label htmlFor={`category-color-${key}`} className={fieldLabelClass}>Warna</label>
+        <label htmlFor={`category-color-${key}`} className={fieldLabelClass}>Color</label>
         <Select id={`category-color-${key}`} name="color" defaultValue={initial?.color ?? ""}>
-          <option value="">Warna standar</option>
+          <option value="">Default color</option>
           {CATEGORY_COLORS.map((value) => <option key={value} value={value}>{value}</option>)}
         </Select>
       </div>
-      <Button className="w-full justify-center" type="submit" disabled={pending}>{pending ? "Menyimpan..." : initial ? "Simpan perubahan" : "Tambah Kategori"}</Button>
+      <Button className="w-full justify-center" type="submit" disabled={pending}>{pending ? "Saving..." : initial ? "Save changes" : "Add Category"}</Button>
     </form>
   );
 }

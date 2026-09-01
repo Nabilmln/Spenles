@@ -83,20 +83,20 @@ describe("GET /api/reports/pdf", () => {
     );
     expect(response.status).toBe(400);
     await expect(response.json()).resolves.toEqual({
-      error: "Parameter laporan tidak valid.",
+      error: "Invalid report parameters.",
     });
   });
 
   it("rejects a report with too many detail rows at the 500-row limit", async () => {
     mocks.getFinancialReport.mockRejectedValue(
-      new ExportLimitError("Detail laporan melebihi batas 500 transaksi."),
+      new ExportLimitError("Report details exceed the 500-transaction limit."),
     );
     const response = await GET(
       new Request("http://localhost/api/reports/pdf?period=month&month=2026-08"),
     );
     expect(response.status).toBe(422);
     await expect(response.json()).resolves.toEqual({
-      error: "Detail laporan melebihi batas 500 transaksi.",
+      error: "Report details exceed the 500-transaction limit.",
     });
   });
 });

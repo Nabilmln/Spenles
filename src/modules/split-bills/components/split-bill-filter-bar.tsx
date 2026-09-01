@@ -44,17 +44,17 @@ export function SplitBillFilterBar({
       role="search"
     >
       <input
-        aria-label="Cari merchant"
+        aria-label="Search merchant"
         className={`${inputClass} flex-1 min-w-0`}
         defaultValue={filters.q}
         name="q"
-        placeholder="Cari merchant"
+        placeholder="Search merchant"
         type="search"
       />
       <button
         aria-expanded={open}
         aria-haspopup="dialog"
-        aria-label="Buka filter"
+        aria-label="Open filters"
         className={`${iconButtonClass} relative w-[2.9rem] min-h-[2.9rem] shrink-0`}
         onClick={() => setOpen(true)}
         type="button"
@@ -83,7 +83,7 @@ export function SplitBillFilterBar({
             <div className="mb-4 flex items-center justify-between gap-4">
               <h2 id="split-filter-title">Filter Split Bill</h2>
               <button
-                aria-label="Tutup filter"
+                aria-label="Close filters"
                 className={iconButtonClass}
                 onClick={() => setOpen(false)}
                 ref={closeButtonRef}
@@ -100,34 +100,34 @@ export function SplitBillFilterBar({
                   onChange={(event) => setStatus(event.target.value)}
                   value={status}
                 >
-                  <option value="">Aktif</option>
+                  <option value="">Active</option>
                   <option value="draft">Draft</option>
                   <option value="finalized">Final</option>
-                  <option value="archived">Arsip</option>
-                  <option value="all">Semua</option>
+                  <option value="archived">Archived</option>
+                  <option value="all">All</option>
                 </Select>
               </label>
               <div className={fieldClass}>
-                <span className="text-[.86rem] font-medium">Bulan tagihan</span>
+                <span className="text-[.86rem] font-medium">Bill month</span>
                 <MonthSelector month={month} onChange={setMonth} />
               </div>
               <label className={fieldClass}>
-                <span className="text-[.86rem] font-medium">Urutkan</span>
+                <span className="text-[.86rem] font-medium">Sort by</span>
                 <Select
-                  aria-label="Urutkan"
+                  aria-label="Sort by"
                   onChange={(event) =>
                     setSort(event.target.value as SplitBillFilters["sort"])
                   }
                   value={sort}
                 >
-                  <option value="billDate">Tanggal</option>
-                  <option value="amount">Nominal</option>
+                  <option value="billDate">Date</option>
+                  <option value="amount">Amount</option>
                 </Select>
               </label>
               <label className={fieldClass}>
-                <span className="text-[.86rem] font-medium">Arah urutan</span>
+                <span className="text-[.86rem] font-medium">Sort order</span>
                 <Select
-                  aria-label="Arah urutan"
+                  aria-label="Sort order"
                   onChange={(event) =>
                     setDirection(
                       event.target.value as SplitBillFilters["direction"],
@@ -135,8 +135,8 @@ export function SplitBillFilterBar({
                   }
                   value={direction}
                 >
-                  <option value="desc">Terbaru dahulu</option>
-                  <option value="asc">Terlama dahulu</option>
+                  <option value="desc">Newest first</option>
+                  <option value="asc">Oldest first</option>
                 </Select>
               </label>
             </div>
@@ -145,7 +145,7 @@ export function SplitBillFilterBar({
                 Reset
               </Link>
               <button className={buttonClass("primary", "flex-1 justify-center")} type="submit">
-                Terapkan Filter
+                Apply Filters
               </button>
             </div>
           </div>

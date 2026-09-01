@@ -29,6 +29,6 @@ describe("calculateExpression", () => {
   });
 
   it("limits nesting depth", () => {
-    expect(() => calculateExpression("(((((((((((1)))))))))))")).toThrow("Kurung terlalu dalam");
+    expect(() => calculateExpression("(((((((((((1)))))))))))")).toThrow("Parentheses are too deeply nested");
   });
 });

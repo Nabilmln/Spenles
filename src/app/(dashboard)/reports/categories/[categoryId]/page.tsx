@@ -54,16 +54,16 @@ export default async function CategoryDetailPage({
       <div className={pageHeadingRowClass}>
         <div className={pageHeadingCopyClass}>
           <h2 className={entityHeadingClass}>{category.name}</h2>
-          <p className={pageDescriptionClass}>{`Rincian ${category.type === "income" ? "pemasukan" : "pengeluaran"} dari ${formatRangeLong(from, to)} dalam Asia/Jakarta.`}</p>
+          <p className={pageDescriptionClass}>{`Details of ${category.type === "income" ? "income" : "expense"} from ${formatRangeLong(from, to)} in Asia/Jakarta.`}</p>
         </div>
         <Link className={buttonClass("secondary")} href={`/reports?from=${from}&to=${to}`}>
-          Kembali ke laporan
+          Back to reports
         </Link>
       </div>
 
       <div className={`${cardClass} grid gap-[.2rem]`}>
         <div>
-          <h2 className="m-0 text-[.86rem] text-muted">Total {category.type === "income" ? "pemasukan" : "pengeluaran"}</h2>
+          <h2 className="m-0 text-[.86rem] text-muted">Total {category.type === "income" ? "income" : "expense"}</h2>
         </div>
         <strong className="wrap-anywhere text-[clamp(1.35rem,2.5vw,2rem)] tracking-[-.04em]">{formatIdr(total)}</strong>
       </div>
@@ -85,7 +85,7 @@ export default async function CategoryDetailPage({
               </strong>
               <div className="flex items-center gap-2 max-[540px]:col-start-3 max-[540px]:row-span-2">
                 <Link
-                  aria-label={`Edit transaksi ${row.note ?? ""}`}
+                  aria-label={`Edit transaction ${row.note ?? ""}`}
                   className={iconButtonClass}
                   href={`/transactions/${row.id}/edit`}
                 >
@@ -98,8 +98,8 @@ export default async function CategoryDetailPage({
       ) : (
         <div className={emptyStateClass}>
           <div>
-            <h2>Belum ada transaksi</h2>
-            <p className="m-0 text-muted">Tidak ada transaksi pada kategori dan periode ini.</p>
+            <h2>No transactions yet</h2>
+            <p className="m-0 text-muted">No transactions for this category and period.</p>
           </div>
         </div>
       )}

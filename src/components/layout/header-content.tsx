@@ -15,37 +15,37 @@ type HeaderMeta = {
 
 function resolveMeta(pathname: string): HeaderMeta {
   const path = pathname.replace(/\/$/, "") || "/";
-  if (path === "/" || path === "/dashboard") return { title: "Beranda", noBack: true };
+  if (path === "/" || path === "/dashboard") return { title: "Home", noBack: true };
 
-  if (path === "/transactions/new") return { title: "Tambah transaksi", back: "/transactions" };
-  if (/^\/transactions\/.+\/edit$/.test(path)) return { title: "Edit transaksi", back: "/transactions" };
-  if (path === "/transactions") return { title: "Transaksi", back: "/dashboard" };
+  if (path === "/transactions/new") return { title: "Add transaction", back: "/transactions" };
+  if (/^\/transactions\/.+\/edit$/.test(path)) return { title: "Edit transaction", back: "/transactions" };
+  if (path === "/transactions") return { title: "Transactions", back: "/dashboard" };
 
-  if (path === "/accounts/new") return { title: "Tambah akun", back: "/accounts" };
-  if (/^\/accounts\/.+\/edit$/.test(path)) return { title: "Edit akun", back: "/accounts" };
-  if (/^\/accounts\/.+$/.test(path)) return { title: "Detail akun", back: "/accounts" };
-  if (path === "/accounts") return { title: "Akun", back: "/dashboard" };
+  if (path === "/accounts/new") return { title: "Add account", back: "/accounts" };
+  if (/^\/accounts\/.+\/edit$/.test(path)) return { title: "Edit account", back: "/accounts" };
+  if (/^\/accounts\/.+$/.test(path)) return { title: "Account details", back: "/accounts" };
+  if (path === "/accounts") return { title: "Accounts", back: "/dashboard" };
 
-  if (path === "/budgets/new") return { title: "Buat anggaran", back: "/budgets" };
-  if (/^\/budgets\/.+\/edit$/.test(path)) return { title: "Edit anggaran", back: "/budgets" };
-  if (path === "/budgets") return { title: "Anggaran", back: "/dashboard" };
+  if (path === "/budgets/new") return { title: "Create budget", back: "/budgets" };
+  if (/^\/budgets\/.+\/edit$/.test(path)) return { title: "Edit budget", back: "/budgets" };
+  if (path === "/budgets") return { title: "Budgets", back: "/dashboard" };
 
-  if (path === "/categories") return { title: "Kategori", back: "/dashboard" };
+  if (path === "/categories") return { title: "Categories", back: "/dashboard" };
 
-  if (path === "/recurring-transactions/new") return { title: "Tambah transaksi berulang", back: "/recurring-transactions" };
-  if (/^\/recurring-transactions\/.+\/edit$/.test(path)) return { title: "Edit transaksi berulang", back: "/recurring-transactions" };
-  if (path === "/recurring-transactions") return { title: "Transaksi Berulang", back: "/dashboard" };
+  if (path === "/recurring-transactions/new") return { title: "Add recurring transaction", back: "/recurring-transactions" };
+  if (/^\/recurring-transactions\/.+\/edit$/.test(path)) return { title: "Edit recurring transaction", back: "/recurring-transactions" };
+  if (path === "/recurring-transactions") return { title: "Recurring Transactions", back: "/dashboard" };
 
-  if (path === "/split-bills/new") return { title: "Buat split bill", back: "/split-bills" };
+  if (path === "/split-bills/new") return { title: "Create split bill", back: "/split-bills" };
   if (/^\/split-bills\/.+\/edit$/.test(path)) return { title: "Edit split bill", back: "/split-bills" };
-  if (/^\/split-bills\/.+$/.test(path)) return { title: "Detail split bill", back: "/split-bills" };
+  if (/^\/split-bills\/.+$/.test(path)) return { title: "Split bill details", back: "/split-bills" };
   if (path === "/split-bills") return { title: "Split Bill", back: "/dashboard" };
 
-  if (/^\/reports\/categories\/.+$/.test(path)) return { title: "Detail kategori", back: "/reports" };
-  if (path === "/reports") return { title: "Laporan", back: "/dashboard" };
+  if (/^\/reports\/categories\/.+$/.test(path)) return { title: "Category details", back: "/reports" };
+  if (path === "/reports") return { title: "Reports", back: "/dashboard" };
 
   if (path === "/transfers") return { title: "Transfer", back: "/accounts" };
-  if (path === "/settings/profile") return { title: "Profil", back: "/dashboard" };
+  if (path === "/settings/profile") return { title: "Profile", back: "/dashboard" };
   return {};
 }
 

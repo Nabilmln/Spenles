@@ -150,14 +150,14 @@ describe("split-bill calculator", () => {
     fixedWithBps.fixedBillTaxAmount = 1_000n;
     fixedWithBps.billTaxBps = 1_000;
     expect(() => calculateSplitBill(fixedWithBps)).toThrow(
-      "Konfigurasi pajak tidak valid.",
+      "Invalid tax configuration.",
     );
 
     const percentageWithFixed = base();
     percentageWithFixed.billTaxMode = "percentage";
     percentageWithFixed.fixedBillTaxAmount = 1_000n;
     expect(() => calculateSplitBill(percentageWithFixed)).toThrow(
-      "Konfigurasi pajak tidak valid.",
+      "Invalid tax configuration.",
     );
   });
 
@@ -198,13 +198,13 @@ describe("split-bill calculator", () => {
     const input = base();
     input.discountMode = "fixed";
     input.fixedDiscountAmount = 10_001n;
-    expect(() => calculateSplitBill(input)).toThrow("melebihi subtotal");
+    expect(() => calculateSplitBill(input)).toThrow("exceed the subtotal");
   });
 
   it("protects the supported monetary range", () => {
     const input = base();
     input.items[0]!.quantity = 2;
     input.items[0]!.unitPrice = 9_007_199_254_740_991n;
-    expect(() => calculateSplitBill(input)).toThrow("rentang");
+    expect(() => calculateSplitBill(input)).toThrow("outside the supported range");
   });
 });

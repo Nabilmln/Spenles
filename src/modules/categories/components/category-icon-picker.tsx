@@ -21,8 +21,8 @@ export function CategoryIconPicker({
 }) {
   return (
     <fieldset className="m-0 grid gap-[.5rem] border-0 p-0">
-      <legend className="mb-[.25rem] text-[.86rem] font-medium">Ikon</legend>
-      <div className="grid grid-cols-[repeat(4,minmax(0,1fr))] gap-[.5rem]" role="radiogroup" aria-label="Pilih ikon">
+      <legend className="mb-[.25rem] text-[.86rem] font-medium">Icon</legend>
+      <div className="grid grid-cols-[repeat(4,minmax(0,1fr))] gap-[.5rem]" role="radiogroup" aria-label="Choose icon">
         {CATEGORY_ICON_NAMES.map((iconName) => {
           const Icon = CATEGORY_ICON_LIBRARY[iconName];
           const selected = value === iconName;
@@ -44,7 +44,7 @@ export function CategoryIconPicker({
                 <Icon aria-hidden="true" size={22} />
               </span>
               <span className="text-[.7rem] font-medium" aria-hidden="true">
-                {CATEGORY_ICON_LABELS[iconName]?.replace("Ikon ", "") ?? iconName}
+                {CATEGORY_ICON_LABELS[iconName]?.replace(" icon", "") ?? iconName}
               </span>
             </label>
           );

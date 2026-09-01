@@ -111,10 +111,10 @@ describe("four-day recent expense chart", () => {
       "2026-08-06",
     ]);
     expect(contract.points.map((point) => point.label)).toEqual([
-      "3 Agustus",
-      "4 Agustus",
-      "5 Agustus",
-      "6 Agustus",
+      "August 3",
+      "August 4",
+      "August 5",
+      "August 6",
     ]);
     expect(contract.points.map((point) => point.expenseIdr)).toEqual([
       "0",
@@ -160,13 +160,13 @@ describe("cash-flow chart contracts", () => {
       "2026-08-05",
     ]);
     expect(contract.points.map((point) => point.label)).toEqual([
-      "Kam, 30",
-      "Jum, 31",
-      "Sab, 1",
-      "Min, 2",
-      "Sen, 3",
-      "Sel, 4",
-      "Rab, 5",
+      "30 Thu",
+      "31 Fri",
+      "1 Sat",
+      "2 Sun",
+      "3 Mon",
+      "4 Tue",
+      "5 Wed",
     ]);
     expect(contract.totalIncome).toBe(100n);
     expect(contract.totalExpense).toBe(65n);
@@ -187,10 +187,10 @@ describe("cash-flow chart contracts", () => {
       "2026-08-03",
     ]);
     expect(contract.points.map((point) => point.label)).toEqual([
-      "13 Jul",
-      "20 Jul",
-      "27 Jul",
-      "3 Agu",
+      "Jul 13",
+      "Jul 20",
+      "Jul 27",
+      "Aug 3",
     ]);
     expect(contract.totalIncome).toBe(1000n);
     expect(contract.totalExpense).toBe(400n);
@@ -209,7 +209,7 @@ describe("cash-flow chart contracts", () => {
     expect(contract.points[0].period).toBe("2025-09");
     expect(contract.points[0].label).toBe("Sep 25");
     expect(contract.points[11].period).toBe("2026-08");
-    expect(contract.points[11].label).toBe("Agu 26");
+    expect(contract.points[11].label).toBe("Aug 26");
     expect(contract.totalIncome).toBe(1500n);
     expect(contract.totalExpense).toBe(500n);
     expect(contract.points[11].incomePlot).toBe(1);

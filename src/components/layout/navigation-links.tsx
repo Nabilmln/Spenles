@@ -17,22 +17,22 @@ import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 const links = [
-  { href: "/dashboard", label: "Beranda", icon: LayoutDashboard },
-  { href: "/transactions", label: "Transaksi", icon: ReceiptText },
-  { href: "/accounts", label: "Akun", icon: WalletCards },
-  { href: "/categories", label: "Kategori", icon: ListTree },
-  { href: "/budgets", label: "Anggaran", icon: Target },
-  { href: "/recurring-transactions", label: "Berulang", icon: Repeat2 },
+  { href: "/dashboard", label: "Home", icon: LayoutDashboard },
+  { href: "/transactions", label: "Transactions", icon: ReceiptText },
+  { href: "/accounts", label: "Accounts", icon: WalletCards },
+  { href: "/categories", label: "Categories", icon: ListTree },
+  { href: "/budgets", label: "Budgets", icon: Target },
+  { href: "/recurring-transactions", label: "Recurring", icon: Repeat2 },
   { href: "/split-bills", label: "Split Bill", icon: UsersRound },
-  { href: "/reports", label: "Laporan", icon: FileBarChart },
-  { href: "/settings/profile", label: "Profil", icon: UserRound },
+  { href: "/reports", label: "Reports", icon: FileBarChart },
+  { href: "/settings/profile", label: "Profile", icon: UserRound },
 ];
 
 const mobileLinks = [
-  { href: "/dashboard", label: "Beranda", icon: LayoutDashboard },
-  { href: "/transactions", label: "Transaksi", icon: ReceiptText },
-  { href: "/split-bills", label: "Split Bill", icon: UsersRound },
-  { href: "/reports", label: "Pelaporan", icon: FileBarChart },
+  { href: "/dashboard", label: "Home", icon: LayoutDashboard },
+  { href: "/transactions", label: "Transactions", icon: ReceiptText },
+  { href: "/reports", label: "Reports", icon: FileBarChart },
+  { href: "/settings/profile", label: "Profile", icon: UserRound },
 ];
 
 const linkBase =
@@ -51,12 +51,12 @@ export function NavigationLinks({ mobile = false }: { mobile?: boolean }) {
           <MobileLink active={pathname === href} href={href} icon={Icon} key={href} label={label} />
         ))}
         <Link
-          aria-label="Tambah transaksi"
-          className="relative z-[1] grid min-h-[3.5rem] place-items-center before:absolute before:z-[-1] before:size-11 before:rounded-full before:bg-primary-600 before:shadow-[0_6px_20px_rgb(240_90_36/40%)] [&_svg]:text-white"
+          aria-label="Add transaction"
+          className="relative z-[1] grid size-[3.1rem] place-items-center self-center rounded-full before:absolute before:z-[-1] before:inset-0 before:rounded-full before:bg-primary-600 before:shadow-[0_6px_20px_rgb(79_70_229/45%)] [&_svg]:text-white"
           href="/transactions/new"
         >
-          <Plus size={24} strokeWidth={2.75} aria-hidden="true" />
-          <span className="sr-only">Tambah transaksi</span>
+          <Plus size={22} strokeWidth={2.75} aria-hidden="true" />
+          <span className="sr-only">Add transaction</span>
         </Link>
         {mobileLinks.slice(2).map(({ href, label, icon: Icon }) => (
           <MobileLink active={pathname === href} href={href} icon={Icon} key={href} label={label} />
@@ -105,11 +105,22 @@ function MobileLink({
   return (
     <Link
       aria-current={active ? "page" : undefined}
-      className={cn(linkBase, active && linkActive)}
+      className={cn(
+        "relative flex min-h-[3.1rem] items-center justify-center gap-[.3rem] rounded-full px-1 text-muted transition-[background,color,box-shadow] duration-200",
+        active &&
+          "bg-primary-50 font-medium text-primary-700 dark:bg-primary-50 dark:text-primary-700",
+      )}
       href={href}
     >
-      <Icon aria-hidden="true" size={20} />
-      <span>{label}</span>
+      <Icon aria-hidden="true" size={20} className="shrink-0" />
+      <span
+        className={cn(
+          "overflow-hidden whitespace-nowrap text-[.72rem] transition-[max-width,opacity] duration-200",
+          active ? "max-w-[5rem] opacity-100" : "max-w-0 opacity-0",
+        )}
+      >
+        {label}
+      </span>
     </Link>
   );
 }

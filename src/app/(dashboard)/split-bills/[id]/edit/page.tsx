@@ -28,7 +28,7 @@ export default async function EditSplitBillPage({
     <div className={pageStackClass}>
       <div className={pageHeadingCopyClass}>
         <h2 className={entityHeadingClass}>{source.bill.merchantName}</h2>
-        <p className={pageDescriptionClass}>Simpan perubahan sebelum finalisasi. Draft memakai pemeriksaan revisi untuk mencegah timpa data.</p>
+        <p className={pageDescriptionClass}>Save changes before finalizing. Drafts use revision checking to prevent overwriting data.</p>
       </div>
       <SplitBillEditor
         action={updateSplitBillAction}

@@ -15,24 +15,24 @@ afterEach(() => {
 describe("ThemeToggle", () => {
   it("offers a single light to dark toggle with a dynamic label", () => {
     render(<ThemeToggle currentTheme="light" />);
-    const button = screen.getByRole("button", { name: "Aktifkan mode gelap" });
-    expect(screen.queryByRole("button", { name: "Tema Sistem" })).not.toBeInTheDocument();
-    expect(screen.queryByRole("button", { name: "Tema Terang" })).not.toBeInTheDocument();
+    const button = screen.getByRole("button", { name: "Enable dark mode" });
+    expect(screen.queryByRole("button", { name: "System theme" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Light theme" })).not.toBeInTheDocument();
 
     fireEvent.click(button);
     expect(setThemeAction).toHaveBeenCalledWith("dark");
     expect(document.documentElement.className).toBe("theme-dark");
     expect(
-      screen.getByRole("button", { name: "Aktifkan mode terang" }),
+      screen.getByRole("button", { name: "Enable light mode" }),
     ).toBeInTheDocument();
   });
 
   it("labels the reverse direction when already dark", () => {
     render(<ThemeToggle currentTheme="dark" />);
     expect(
-      screen.getByRole("button", { name: "Aktifkan mode terang" }),
+      screen.getByRole("button", { name: "Enable light mode" }),
     ).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Aktifkan mode terang" }));
+    fireEvent.click(screen.getByRole("button", { name: "Enable light mode" }));
     expect(setThemeAction).toHaveBeenCalledWith("light");
     expect(document.documentElement.className).toBe("theme-light");
   });

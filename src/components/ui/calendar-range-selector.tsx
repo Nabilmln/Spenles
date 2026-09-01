@@ -11,7 +11,7 @@ import {
 import { formatDateLong, formatMonthYearLabel } from "@/lib/dates/format-id";
 import { buttonClass, formMessageClass, iconButtonClass } from "./styles";
 
-const WEEK_DAYS = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
+const WEEK_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export function CalendarRangeSelector({
   from,
@@ -62,7 +62,7 @@ export function CalendarRangeSelector({
     const nextFrom = date >= pendingFrom ? pendingFrom : date;
     const nextTo = date >= pendingFrom ? date : pendingFrom;
     if (inclusiveDayCount(nextFrom, nextTo) > maxDays) {
-      setError(`Rentang maksimal ${maxDays} hari.`);
+      setError(`Maximum range is ${maxDays} days.`);
       return;
     }
     setPendingFrom(nextFrom);
@@ -80,11 +80,11 @@ export function CalendarRangeSelector({
 
   function apply() {
     if (!pendingFrom || !pendingTo) {
-      setError("Pilih tanggal mulai dan tanggal akhir.");
+      setError("Select a start and end date.");
       return;
     }
     if (inclusiveDayCount(pendingFrom, pendingTo) > maxDays) {
-      setError(`Rentang maksimal ${maxDays} hari.`);
+      setError(`Maximum range is ${maxDays} days.`);
       return;
     }
     onApply?.(pendingFrom, pendingTo);
@@ -92,9 +92,9 @@ export function CalendarRangeSelector({
 
   return (
     <div className="min-w-[19rem]">
-      <div className="mb-[.65rem] flex items-center justify-between gap-[.5rem]" role="group" aria-label="Navigasi bulan">
+      <div className="mb-[.65rem] flex items-center justify-between gap-[.5rem]" role="group" aria-label="Month navigation">
         <button
-          aria-label="Bulan sebelumnya"
+          aria-label="Previous month"
           className={`${iconButtonClass} size-10`}
           onClick={() =>
             setView((current) => monthShift(current.year, current.month, -1))
@@ -107,7 +107,7 @@ export function CalendarRangeSelector({
           {formatMonthYearLabel(view.year, view.month)}
         </strong>
         <button
-          aria-label="Bulan berikutnya"
+          aria-label="Next month"
           className={`${iconButtonClass} size-10`}
           onClick={() =>
             setView((current) => monthShift(current.year, current.month, 1))
@@ -124,7 +124,7 @@ export function CalendarRangeSelector({
         ))}
       </div>
 
-      <div className="grid grid-cols-7 gap-1" role="grid" aria-label="Kalender bulan">
+      <div className="grid grid-cols-7 gap-1" role="grid" aria-label="Month calendar">
         {grid.map((cell, index) => {
           if (!cell) {
             return (
@@ -179,14 +179,14 @@ export function CalendarRangeSelector({
             <strong>{formatDateLong(pendingTo)}</strong>
             <span className="text-muted">
               {" "}
-              ({inclusiveDayCount(pendingFrom, pendingTo)} hari)
+              ({inclusiveDayCount(pendingFrom, pendingTo)} days)
             </span>
           </span>
         ) : (
           <span className="text-muted">
             {pendingFrom
-              ? "Pilih tanggal akhir."
-              : "Pilih tanggal mulai lalu tanggal akhir."}
+              ? "Select an end date."
+              : "Select a start date, then an end date."}
           </span>
         )}
       </div>
@@ -200,7 +200,7 @@ export function CalendarRangeSelector({
       {onApply ? (
         <div className="mt-[1.1rem] flex justify-end gap-[.6rem]">
           <button
-            aria-label="Reset rentang"
+            aria-label="Reset range"
             className={`${buttonClass("secondary")} max-[720px]:flex-1 max-[720px]:justify-center`}
             onClick={reset}
             type="button"
@@ -213,7 +213,7 @@ export function CalendarRangeSelector({
               onClick={onCancel}
               type="button"
             >
-              Batal
+              Cancel
             </button>
           ) : null}
           <button
@@ -221,7 +221,7 @@ export function CalendarRangeSelector({
             onClick={apply}
             type="button"
           >
-            Terapkan
+            Apply
           </button>
         </div>
       ) : null}

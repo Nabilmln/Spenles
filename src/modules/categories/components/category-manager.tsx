@@ -82,7 +82,7 @@ export function CategoryManager({
 
   return (
     <div className="grid gap-4">
-      <div aria-label="Jenis kategori" className="grid grid-cols-[1fr_1fr] gap-[.35rem] rounded-[1rem] border border-border bg-surface-subtle p-1" role="tablist">
+      <div aria-label="Category type" className="grid grid-cols-[1fr_1fr] gap-[.35rem] rounded-[1rem] border border-border bg-surface-subtle p-1" role="tablist">
         <button
           aria-selected={tab === "expense"}
           className={cn(
@@ -93,7 +93,7 @@ export function CategoryManager({
           role="tab"
           type="button"
         >
-          Pengeluaran
+          Expense
         </button>
         <button
           aria-selected={tab === "income"}
@@ -105,30 +105,30 @@ export function CategoryManager({
           role="tab"
           type="button"
         >
-          Pendapatan
+          Income
         </button>
       </div>
 
       <div className="flex items-start justify-between gap-4 max-[560px]:flex-col">
         <div>
-          <h2 className="m-0 text-[1.08rem] tracking-[-.02em]">{tab === "expense" ? "Kategori pengeluaran" : "Kategori pendapatan"}</h2>
-          <p className="mt-[.2rem] text-[.82rem] text-muted">Kategori yang diarsipkan tetap tersimpan pada transaksi lama.</p>
+          <h2 className="m-0 text-[1.08rem] tracking-[-.02em]">{tab === "expense" ? "Expense categories" : "Income categories"}</h2>
+          <p className="mt-[.2rem] text-[.82rem] text-muted">Archived categories remain attached to past transactions.</p>
         </div>
         <button
-          aria-label="Tambah Kategori"
+          aria-label="Add Category"
           className={`${buttonClass("primary")} min-w-0 max-[560px]:w-full`}
           onClick={openCreate}
           type="button"
         >
           <Plus aria-hidden="true" size={18} />
-          Tambah Kategori
+          Add Category
         </button>
       </div>
 
       {visible.length === 0 ? (
         <div className="grid gap-[.35rem] rounded-[1rem] border border-dashed border-border bg-surface-subtle p-[clamp(1.5rem,6vw,2.5rem)]">
-          <h2 className="m-0 text-base">{tab === "expense" ? "Belum ada kategori pengeluaran" : "Belum ada kategori pendapatan"}</h2>
-          <p className="m-0 text-[.84rem] text-muted">Kategori yang kamu buat akan muncul di sini.</p>
+          <h2 className="m-0 text-base">{tab === "expense" ? "No expense categories yet" : "No income categories yet"}</h2>
+          <p className="m-0 text-[.84rem] text-muted">Categories you create will show up here.</p>
         </div>
       ) : (
         <div className="grid gap-[.6rem]" role="list">
@@ -152,11 +152,11 @@ export function CategoryManager({
                 </span>
                 <div className="grid min-w-0 flex-auto gap-[.1rem]">
                   <strong className="truncate">{item.name}</strong>
-                  {item.status === "archived" ? <small className="text-[.76rem] font-medium text-muted">Diarsipkan</small> : null}
+                  {item.status === "archived" ? <small className="text-[.76rem] font-medium text-muted">Archived</small> : null}
                 </div>
                 <button
                   aria-haspopup="menu"
-                  aria-label={`Aksi untuk ${item.name}`}
+                  aria-label={`Actions for ${item.name}`}
                   aria-expanded={menuFor === item.id}
                   className={cn(iconButtonClass, "size-10 shrink-0")}
                   onClick={() => setMenuFor((current) => (current === item.id ? null : item.id))}
@@ -229,9 +229,9 @@ function CategorySheet({
         role="dialog"
       >
         <div className="mb-4 flex items-center justify-between gap-4">
-          <h2 className="m-0 text-[1.05rem] tracking-[-.02em]" id="category-editor-title">{isNew ? "Tambah kategori" : "Edit kategori"}</h2>
+          <h2 className="m-0 text-[1.05rem] tracking-[-.02em]" id="category-editor-title">{isNew ? "Add category" : "Edit category"}</h2>
           <button
-            aria-label="Tutup formulir kategori"
+            aria-label="Close category form"
             className={iconButtonClass}
             onClick={onClose}
             ref={closeRef}
@@ -270,7 +270,7 @@ function CategoryActionMenu({
   return (
     <div className={menuBackdropClass} onClick={onClose}>
       <div
-        aria-label="Menu aksi kategori"
+        aria-label="Category actions menu"
         className="w-[min(19rem,100%)] rounded-[1rem] border border-border bg-surface p-[.4rem] shadow-card min-[861px]:absolute"
         onClick={(event) => event.stopPropagation()}
         onKeyDown={(event) => {
@@ -282,7 +282,7 @@ function CategoryActionMenu({
       >
         <strong className="block p-[.55rem_.7rem_.45rem] text-[.76rem] text-muted">{item.name}</strong>
         <button className={menuItemClass} onClick={onEdit} role="menuitem" type="button">
-          <Pencil aria-hidden="true" size={18} /> Edit kategori
+          <Pencil aria-hidden="true" size={18} /> Edit category
         </button>
         {item.status === "active" ? (
           <ArchiveButton categoryId={item.id} />
@@ -295,7 +295,7 @@ function CategoryActionMenu({
           role="menuitem"
           type="button"
         >
-          <Trash2 aria-hidden="true" size={18} /> Hapus
+          <Trash2 aria-hidden="true" size={18} /> Delete
         </button>
       </div>
     </div>
@@ -309,7 +309,7 @@ function ArchiveButton({ categoryId }: { categoryId: string }) {
       <input name="id" type="hidden" value={categoryId} />
       <button className={menuItemClass} disabled={pending} role="menuitem" type="submit">
         <Archive aria-hidden="true" size={18} />
-        {pending ? "Memproses..." : "Arsipkan"}
+        {pending ? "Processing..." : "Archive"}
       </button>
     </form>
   );
@@ -322,7 +322,7 @@ function RestoreButton({ categoryId }: { categoryId: string }) {
       <input name="id" type="hidden" value={categoryId} />
       <button className={menuItemClass} disabled={pending} role="menuitem" type="submit">
         <ArchiveRestore aria-hidden="true" size={18} />
-        {pending ? "Memproses..." : "Pulihkan"}
+        {pending ? "Processing..." : "Restore"}
       </button>
     </form>
   );
@@ -351,9 +351,9 @@ function CategoryDeleteSheet({
         role="dialog"
       >
         <div className="mb-4 flex items-center justify-between gap-4">
-          <h2 className="m-0 text-[1.05rem] tracking-[-.02em]" id="category-delete-title">Hapus kategori?</h2>
+          <h2 className="m-0 text-[1.05rem] tracking-[-.02em]" id="category-delete-title">Delete category?</h2>
           <button
-            aria-label="Tutup konfirmasi"
+            aria-label="Close confirmation"
             className={iconButtonClass}
             onClick={onClose}
             ref={closeRef}
@@ -364,13 +364,13 @@ function CategoryDeleteSheet({
         </div>
         <p>
           {deletable
-            ? `Kategori "${item.name}" akan dihapus permanen dan tidak dapat dipulihkan. Tindakan ini hanya berlaku karena kategori belum dipakai transaksi, anggaran, atau aturan berulang.`
-            : `Kategori "${item.name}" tidak dapat dihapus permanen. Arsipkan kategori untuk menyembunyikannya sambil tetap menyimpan riwayat transaksi.`}
+            ? `Category "${item.name}" will be permanently deleted and cannot be restored. This action only applies because the category is not yet used by transactions, budgets, or recurring rules.`
+            : `Category "${item.name}" cannot be permanently deleted. Archive the category to hide it while keeping its transaction history.`}
         </p>
         {deletable ? (
           <DeleteButton categoryId={item.id} />
         ) : item.status === "archived" ? (
-          <p className="text-muted">Kategori sudah terarsip.</p>
+          <p className="text-muted">Category is already archived.</p>
         ) : (
           <ArchiveButton categoryId={item.id} />
         )}
@@ -385,7 +385,7 @@ function DeleteButton({ categoryId }: { categoryId: string }) {
     <form action={formAction} className="mt-4 grid gap-[.6rem]">
       <input name="id" type="hidden" value={categoryId} />
       <button className={`${buttonClass("danger")} w-full justify-center`} disabled={pending} type="submit">
-        {pending ? "Menghapus..." : "Hapus permanen"}
+        {pending ? "Deleting..." : "Delete permanently"}
       </button>
     </form>
   );

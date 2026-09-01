@@ -78,7 +78,7 @@ function monthLabel(value: CalendarDate) {
 }
 
 function dateLabel(value: CalendarDate) {
-  return new Intl.DateTimeFormat("id-ID", {
+  return new Intl.DateTimeFormat("en-US", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -171,24 +171,24 @@ function selectedAndPrevious(filters: DashboardFilters, today: CalendarDate) {
       const start = addMonths(currentMonth, -2);
       const previousStart = addMonths(start, -3);
       return {
-        selected: monthInterval(start, 3, "3 bulan terakhir"),
-        previous: monthInterval(previousStart, 3, "3 bulan sebelumnya"),
+        selected: monthInterval(start, 3, "last 3 months"),
+        previous: monthInterval(previousStart, 3, "previous 3 months"),
       };
     }
     case "last-6-months": {
       const start = addMonths(currentMonth, -5);
       const previousStart = addMonths(start, -6);
       return {
-        selected: monthInterval(start, 6, "6 bulan terakhir"),
-        previous: monthInterval(previousStart, 6, "6 bulan sebelumnya"),
+        selected: monthInterval(start, 6, "last 6 months"),
+        previous: monthInterval(previousStart, 6, "previous 6 months"),
       };
     }
     case "current-year": {
       const start = { year: today.year, month: 1, day: 1 };
       const previousStart = { year: today.year - 1, month: 1, day: 1 };
       return {
-        selected: monthInterval(start, 12, `Tahun ${today.year}`),
-        previous: monthInterval(previousStart, 12, `Tahun ${today.year - 1}`),
+        selected: monthInterval(start, 12, `Year ${today.year}`),
+        previous: monthInterval(previousStart, 12, `Year ${today.year - 1}`),
       };
     }
     case "current-month":
@@ -251,7 +251,7 @@ export function fourDayJakartaInterval(now = new Date()): DateInterval {
   const today = jakartaToday(now);
   const start = addDays(today, -3);
   const end = addDays(today, 1);
-  return interval(start, end, "4 hari terakhir");
+  return interval(start, end, "last 4 days");
 }
 
 export function lastDaysJakartaInterval(
@@ -261,7 +261,7 @@ export function lastDaysJakartaInterval(
   const today = jakartaToday(now);
   const start = addDays(today, -(count - 1));
   const end = addDays(today, 1);
-  return interval(start, end, `${count} hari terakhir`);
+  return interval(start, end, `last ${count} days`);
 }
 
 export function lastWeeksJakartaInterval(
@@ -272,7 +272,7 @@ export function lastWeeksJakartaInterval(
   const currentWeek = startOfWeek(today);
   const start = addDays(currentWeek, -(count - 1) * 7);
   const end = addDays(currentWeek, 7);
-  return interval(start, end, `${count} minggu terakhir`);
+  return interval(start, end, `last ${count} weeks`);
 }
 
 export function lastMonthsJakartaInterval(
@@ -284,7 +284,7 @@ export function lastMonthsJakartaInterval(
   return monthInterval(
     addMonths(currentMonth, -(count - 1)),
     count,
-    `${count} bulan terakhir`,
+    `last ${count} months`,
   );
 }
 

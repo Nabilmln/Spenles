@@ -16,7 +16,7 @@ afterEach(() => {
 });
 
 function makeState(text?: string): SplitBillActionState {
-  return text ? { success: "Ringkasan siap disalin.", text } : {};
+  return text ? { success: "Summary ready to copy.", text } : {};
 }
 
 describe("ShareSummaryButton clipboard", () => {
@@ -36,7 +36,7 @@ describe("ShareSummaryButton clipboard", () => {
         "Split Bill — Warung\nTotal: Rp21.600",
       ),
     );
-    await screen.findByText("Ringkasan disalin ke clipboard.");
+    await screen.findByText("Summary copied to clipboard.");
     expect(action).toHaveBeenCalledTimes(1);
   });
 
@@ -51,7 +51,7 @@ describe("ShareSummaryButton clipboard", () => {
     render(<ShareSummaryButton billId="bill-1" />);
     fireEvent.click(screen.getByRole("button", { name: "Copy" }));
 
-    await screen.findByText("Ringkasan disalin ke clipboard.");
+    await screen.findByText("Summary copied to clipboard.");
     expect(exec).toHaveBeenCalledWith("copy");
   });
 
@@ -67,6 +67,6 @@ describe("ShareSummaryButton clipboard", () => {
     fireEvent.click(screen.getByRole("button", { name: "Copy" }));
 
     await screen.findByRole("alert");
-    expect(screen.getByRole("alert")).toHaveTextContent(/gagal menyalin/i);
+    expect(screen.getByRole("alert")).toHaveTextContent(/copy failed/i);
   });
 });

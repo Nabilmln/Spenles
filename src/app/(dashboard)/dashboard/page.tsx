@@ -31,6 +31,7 @@ import {
   lastDaysJakartaInterval,
   lastMonthsJakartaInterval,
   lastWeeksJakartaInterval,
+  MobileBalanceCard,
   MonthlyExpenseCard,
   monthIntervalForKey,
   RecentActivityCard,
@@ -81,11 +82,11 @@ export default async function DashboardPage({
       <div className="grid gap-[1.75rem]">
         <section className={`${cardClass} flex items-center gap-[.8rem] shadow-none`} role="alert">
           <div>
-            <h2 className="m-[0_0_.25rem]! text-base!">Periksa pilihan periode</h2>
+            <h2 className="m-[0_0_.25rem]! text-base!">Check your period selection</h2>
             <p className="m-0 text-muted text-[.84rem]">{filtersResult.error}</p>
           </div>
           <Link className={buttonClass("primary")} href="/dashboard">
-            Kembali ke bulan ini
+            Back to this month
           </Link>
         </section>
       </div>
@@ -214,16 +215,30 @@ export default async function DashboardPage({
   const activeAccounts = isFulfilled(accountsResult)
     ? accountsResult.value.filter((account) => account.status === "active")
     : [];
+  const totalBalance = activeAccounts.reduce(
+    (sum, account) => sum + BigInt(account.balance),
+    0n,
+  );
 
   return (
     <div>
       <div className="dashboard-grid grid gap-3 min-[861px]:grid-cols-8 min-[1024px]:grid-cols-12">
         <div className="min-w-0 min-[861px]:col-span-4 min-[1024px]:col-span-4">
-          <FinancialOverview
-            name={profile?.displayName ?? "Pengguna Spenles"}
-            income={overview.income.toString()}
-            expense={overview.expense.toString()}
-          />
+          <div className="hidden min-[861px]:block">
+            <FinancialOverview
+              name={profile?.displayName ?? "Pengguna Spenles"}
+              income={overview.income.toString()}
+              expense={overview.expense.toString()}
+            />
+          </div>
+          <div className="min-[861px]:hidden">
+            <MobileBalanceCard
+              name={profile?.displayName ?? "Pengguna Spenles"}
+              balance={totalBalance}
+              income={overview.income}
+              expense={overview.expense}
+            />
+          </div>
         </div>
 
         <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
@@ -236,7 +251,7 @@ export default async function DashboardPage({
               previousLabel={prevCardInterval.label}
             />
           ) : (
-            <DashboardSectionError title="Perbandingan bulanan belum tersedia" />
+            <DashboardSectionError title="Monthly comparison not available yet" />
           )}
         </div>
 
@@ -247,14 +262,19 @@ export default async function DashboardPage({
               periodNet={savingsNet}
             />
           ) : (
-            <DashboardSectionError title="Ringkasan tabungan belum tersedia" />
+            <DashboardSectionError title="Savings summary not available yet" />
           )}
         </div>
       </div>
 
-      <div className="-mx-[clamp(1.25rem,4vw,2.75rem)] mt-[1.55rem] max-[860px]:rounded-t-[3.5rem] max-[860px]:bg-primary-600 max-[860px]:pt-10 max-[860px]:pb-[6rem] px-7 min-[861px]:mx-0 min-[861px]:mt-3 min-[861px]:rounded-none min-[861px]:bg-transparent min-[861px]:p-0">
+      <div className="mx-0 mt-[1.55rem] grid gap-3 px-0">
         <div className="dashboard-grid grid gap-3 min-[861px]:grid-cols-8 min-[1024px]:grid-cols-12">
-          <DashboardFeatureGrid />
+          <div className="min-w-0 min-[861px]:col-span-8 min-[1024px]:col-span-12">
+            <p className="mb-[.55rem] text-[.72rem] font-semibold uppercase tracking-[.12em] text-muted">
+              Layanan
+            </p>
+            <DashboardFeatureGrid />
+          </div>
 
           <div className="min-w-0 min-[861px]:hidden">
             {daily ? (
@@ -269,7 +289,7 @@ export default async function DashboardPage({
                 totalIncome={overview.income}
               />
             ) : (
-              <DashboardSectionError title="Pengeluaran bulanan belum tersedia" />
+              <DashboardSectionError title="Monthly expenses not available yet" />
             )}
           </div>
 
@@ -289,7 +309,7 @@ export default async function DashboardPage({
                 totalExpense={categoryContract.totalExpense}
               />
             ) : (
-              <DashboardSectionError title="Pengeluaran per kategori belum tersedia" />
+              <DashboardSectionError title="Category expenses not available yet" />
             )}
           </div>
 
@@ -297,7 +317,7 @@ export default async function DashboardPage({
             {isFulfilled(activityResult) ? (
               <RecentActivityCard rows={activityResult.value} />
             ) : (
-              <DashboardSectionError title="Aktivitas terbaru belum tersedia" />
+              <DashboardSectionError title="Recent activity not available yet" />
             )}
           </div>
 
@@ -308,7 +328,7 @@ export default async function DashboardPage({
                 rows={categoryRows}
               />
             ) : (
-              <DashboardSectionError title="Kategori teratas belum tersedia" />
+              <DashboardSectionError title="Top categories not available yet" />
             )}
           </div>
 
@@ -321,7 +341,7 @@ export default async function DashboardPage({
                   previousLabel={prevCardInterval.label}
                 />
               ) : (
-                <DashboardSectionError title="Rata-rata harian belum tersedia" />
+                <DashboardSectionError title="Daily average not available yet" />
               )}
               <DashboardAccountCard rows={activeAccounts} />
             </div>

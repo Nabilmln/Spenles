@@ -12,14 +12,14 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   if (url.searchParams.size > 0) {
     return NextResponse.json(
-      { ok: false, error: "Parameter tidak didukung." },
+      { ok: false, error: "Unsupported parameter." },
       { status: 400, headers: noStoreHeaders },
     );
   }
   const secret = getServerEnv().CRON_SECRET;
   if (!isSchedulerAuthorized(request.headers.get("authorization"), secret)) {
     return NextResponse.json(
-      { ok: false, error: "Tidak diizinkan." },
+      { ok: false, error: "Not allowed." },
       { status: 401, headers: noStoreHeaders },
     );
   }

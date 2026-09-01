@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { statePanelClass } from "@/components/ui/styles";
 
 export function ErrorState({
-  title = "Terjadi kendala",
-  message = "Kami belum dapat memuat halaman ini.",
+  title = "Something went wrong",
+  message = "We could not load this page.",
   retry,
 }: {
   title?: string;
@@ -16,7 +16,7 @@ export function ErrorState({
     <div className={statePanelClass} role="alert">
       <h2>{title}</h2>
       <p className="m-0 text-muted">{message}</p>
-      {retry ? <Button onClick={retry}>Coba lagi</Button> : null}
+      {retry ? <Button onClick={retry}>Try again</Button> : null}
     </div>
   );
 }

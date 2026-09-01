@@ -15,7 +15,7 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Spenles",
   description:
-    "Aplikasi pencatatan keuangan, anggaran, arus kas, laporan, dan split bill personal.",
+    "A personal finance app for income, expenses, budgets, cash flow, reports, and split bills.",
   applicationName: "Spenles",
   appleWebApp: {
     capable: true,
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f05a24",
+  themeColor: "#4f46e5",
 };
 
 export default async function RootLayout({

@@ -59,7 +59,7 @@ export function FinancialOverview({
 
   return (
     <section
-      aria-label="Ringkasan keuangan"
+      aria-label="Financial summary"
       className="-mx-[clamp(1.25rem,4vw,2.75rem)] mt-4 min-[861px]:mx-0 min-[861px]:-mt-0"
     >
       <div className="min-w-0 px-[1.15rem] min-[861px]:rounded-[.85rem] min-[861px]:border min-[861px]:border-border min-[861px]:bg-surface min-[861px]:px-[1.25rem] min-[861px]:py-[1.1rem] min-[861px]:shadow-card">
@@ -69,13 +69,13 @@ export function FinancialOverview({
           </p>
           <div className="flex items-center justify-between gap-[.5rem]">
             <h1 className="m-0 min-w-0 truncate text-[clamp(1.05rem,4vw,1.3rem)] font-medium leading-[1.15] tracking-[-.02em] min-[861px]:text-[clamp(1.25rem,2.5vw,1.65rem)]">
-              Halo,{" "}
+              Hello,{" "}
               <span className="text-primary-600 dark:text-primary-700">{name}</span>
             </h1>
             <button
               type="button"
               className={`${iconButtonClass} shrink-0`}
-              aria-label={hidden ? "Tampilkan nominal" : "Sembunyikan nominal"}
+              aria-label={hidden ? "Show amount" : "Hide amount"}
               aria-pressed={hidden}
               onClick={() => setHidden((value) => !value)}
             >
@@ -90,11 +90,11 @@ export function FinancialOverview({
 
         <div className="mt-[.75rem] grid min-w-0 grid-cols-2 gap-3 min-[861px]:mt-[.85rem] min-[861px]:gap-x-5">
           <div className={tileClass}>
-            <span className={metricLabelClass}>Pendapatan</span>
+            <span className={metricLabelClass}>Income</span>
             <MetricValue hidden={hidden} tone="income" value={income} />
           </div>
           <div className={`${tileClass} min-[861px]:border-l min-[861px]:border-border min-[861px]:pl-5`}>
-            <span className={metricLabelClass}>Pengeluaran</span>
+            <span className={metricLabelClass}>Expense</span>
             <MetricValue hidden={hidden} tone="expense" value={expense} />
           </div>
         </div>

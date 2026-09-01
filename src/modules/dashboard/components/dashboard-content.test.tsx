@@ -8,11 +8,11 @@ describe("dashboard accessible content", () => {
       <ChartShell
         chart={<div aria-hidden="true">visual</div>}
         summary="Total Rp1.000"
-        title="Pengeluaran bulanan"
+        title="Monthly expenses"
       />,
     );
 
-    expect(screen.getByRole("heading", { name: "Pengeluaran bulanan" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Monthly expenses" })).toBeInTheDocument();
     expect(screen.getByText("Total Rp1.000")).toBeInTheDocument();
   });
 });

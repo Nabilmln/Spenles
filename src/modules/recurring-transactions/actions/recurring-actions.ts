@@ -55,7 +55,7 @@ export async function createRecurringRuleAction(
   const parsed = parse(formData);
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
   const startAt = parseJakartaDateTime(parsed.data.startAt);
-  if (!startAt) return { error: "Waktu mulai tidak valid." };
+  if (!startAt) return { error: "Invalid start time." };
   const next = initialOccurrence(
     startAt,
     parsed.data.frequency,
@@ -70,10 +70,10 @@ export async function createRecurringRuleAction(
       nextOccurrenceAt: next,
     });
     if (!created) {
-      return { error: "Akun atau kategori aktif tidak tersedia." };
+      return { error: "Account or active category is not available." };
     }
   } catch {
-    return { error: "Aturan berulang belum dapat dibuat." };
+    return { error: "Recurring rule could not be created." };
   }
   invalidateRecurring();
   redirect("/recurring-transactions");
@@ -89,13 +89,13 @@ export async function updateRecurringRuleAction(
   if (!id.success || !parsed.success) {
     return {
       error: parsed.success
-        ? "Aturan berulang tidak ditemukan."
+        ? "Recurring rule not found."
         : parsed.error.issues[0]?.message,
     };
   }
   const existing = await getOwnedRecurringRule(user.id, id.data);
   if (!existing || existing.status === "archived") {
-    return { error: "Aturan berulang tidak ditemukan." };
+    return { error: "Recurring rule not found." };
   }
   const next =
     existing.status === "active"
@@ -112,9 +112,9 @@ export async function updateRecurringRuleAction(
       amount: BigInt(parsed.data.amount),
       nextOccurrenceAt: next,
     });
-    if (!updated) return { error: "Pilihan akun atau kategori tidak tersedia." };
+    if (!updated) return { error: "Selected account or category is not available." };
   } catch {
-    return { error: "Aturan berulang belum dapat diperbarui." };
+    return { error: "Recurring rule could not be updated." };
   }
   invalidateRecurring();
   redirect("/recurring-transactions");
@@ -126,7 +126,7 @@ async function mutateStatus(
 ): Promise<RecurringActionState> {
   const user = await requireSessionUser();
   const id = recurringRuleIdSchema.safeParse(formData.get("id"));
-  if (!id.success) return { error: "Aturan berulang tidak ditemukan." };
+  if (!id.success) return { error: "Recurring rule not found." };
   try {
     const result =
       operation === "pause"
@@ -138,12 +138,12 @@ async function mutateStatus(
       return {
         error:
           operation === "resume"
-            ? "Aturan tidak dapat dilanjutkan. Periksa akun, kategori, dan tanggal selesai."
-            : "Aturan berulang tidak ditemukan.",
+            ? "Rule cannot be resumed. Check the account, category, and end date."
+            : "Recurring rule not found.",
       };
     }
   } catch {
-    return { error: "Status aturan berulang belum dapat diperbarui." };
+    return { error: "Recurring rule status could not be updated." };
   }
   invalidateRecurring();
   return {};

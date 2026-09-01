@@ -29,14 +29,14 @@ export function MonthlyExpenseCard({
   currentMonth: string;
 }) {
   return (
-    <section aria-label="Pengeluaran bulanan" className={`${cardClass} shadow-none`}>
-      <p className={`${eyebrowClass} pb-2 mb-[.4rem]`}>Arus Kas</p>
+    <section aria-label="Monthly expenses" className={`${cardClass} shadow-none`}>
+      <p className={`${eyebrowClass} pb-2 mb-[.4rem]`}>Cash flow</p>
       <div className="flex justify-center">
-        <div className="flex items-center gap-[.35rem]" role="group" aria-label="Pilih bulan">
+        <div className="flex items-center gap-[.35rem]" role="group" aria-label="Select month">
           <form action="/dashboard" method="get">
             <input name="month" type="hidden" value={prevMonth} />
             <button
-              aria-label="Bulan sebelumnya"
+              aria-label="Previous month"
               className={`${iconButtonClass} size-[2.2rem]`}
               type="submit"
             >
@@ -52,7 +52,7 @@ export function MonthlyExpenseCard({
           <form action="/dashboard" method="get">
             <input name="month" type="hidden" value={nextMonth} />
             <button
-              aria-label="Bulan berikutnya"
+              aria-label="Next month"
               className={`${iconButtonClass} size-[2.2rem]`}
               type="submit"
             >
@@ -63,11 +63,11 @@ export function MonthlyExpenseCard({
       </div>
       <div className="my-[.85rem_0] grid grid-cols-2 gap-3">
         <div className="grid min-w-0 gap-[.15rem]">
-          <span className="text-[.72rem] font-semibold uppercase tracking-[.08em] text-muted">Pendapatan</span>
+          <span className="text-[.72rem] font-semibold uppercase tracking-[.08em] text-muted">Income</span>
           <strong className="min-w-0 text-income text-[clamp(1.05rem,3.5vw,1.5rem)] tracking-[-.03em] [overflow-wrap:anywhere]">{formatIdr(totalIncome)}</strong>
         </div>
         <div className="grid min-w-0 gap-[.15rem]">
-          <span className="text-[.72rem] font-semibold uppercase tracking-[.08em] text-muted">Pengeluaran</span>
+          <span className="text-[.72rem] font-semibold uppercase tracking-[.08em] text-muted">Expenses</span>
           <strong className="min-w-0 text-expense text-[clamp(1.05rem,3.5vw,1.5rem)] tracking-[-.03em] [overflow-wrap:anywhere]">{formatIdr(totalExpense)}</strong>
         </div>
       </div>

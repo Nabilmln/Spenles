@@ -11,9 +11,9 @@ function barWidth(value: bigint, maximum: bigint) {
 function changeLabel(changeBps: string | null, previousLabel: string) {
   if (changeBps === null) return null;
   const bps = BigInt(changeBps);
-  if (bps === 0n) return `Sama dengan ${previousLabel}`;
+  if (bps === 0n) return `Same as ${previousLabel}`;
   const arrow = bps > 0n ? "▲" : "▼";
-  return `${arrow} ${formatChangeBps(changeBps)} dibanding ${previousLabel}`;
+  return `${arrow} ${formatChangeBps(changeBps)} vs ${previousLabel}`;
 }
 
 const toneBarClass = {
@@ -78,17 +78,17 @@ export function IncomeVsExpenseComparison({
 
   return (
     <section
-      aria-label="Perbandingan pemasukan dan pengeluaran"
+      aria-label="Income and expense comparison"
       className={`${cardClass} flex h-full flex-col shadow-none`}
     >
-      <p className={eyebrowClass}>Perbandingan</p>
+      <p className={eyebrowClass}>Comparison</p>
       <h2 className="m-0 mb-[.85rem] text-[.95rem] tracking-[-.02em]">
-        Pemasukan vs Pengeluaran
+        Income vs Expense
       </h2>
       <div className="grid flex-1 content-center gap-[.85rem]">
         <ComparisonRow
           changeBps={incomeChangeBps}
-          label="Pemasukan bulan ini"
+          label="Income this month"
           maximum={maximum}
           previousLabel={previousLabel}
           tone="income"
@@ -96,7 +96,7 @@ export function IncomeVsExpenseComparison({
         />
         <ComparisonRow
           changeBps={expenseChangeBps}
-          label="Pengeluaran bulan ini"
+          label="Expense this month"
           maximum={maximum}
           previousLabel={previousLabel}
           tone="expense"

@@ -22,7 +22,7 @@ export default async function SplitBillsPage({
       <div className={pageStackClass}>
         <div className={cardClass}>
           <Link className={buttonClass("primary")} href="/split-bills">
-            Reset filter
+            Reset filters
           </Link>
         </div>
       </div>
@@ -32,9 +32,9 @@ export default async function SplitBillsPage({
   return (
     <div className={pageStackClass}>
       <div className={pageHeadingRowClass}>
-        <p className={pageDescriptionClass}>Bagi item, diskon, pajak, dan biaya layanan dengan rekonsiliasi rupiah yang tepat.</p>
+        <p className={pageDescriptionClass}>Split items, discounts, tax, and service charges with exact rupiah reconciliation.</p>
         <Link className={buttonClass("primary")} href="/split-bills/new">
-          Buat Split Bill
+          Create Split Bill
         </Link>
       </div>
       <SplitBillFilterBar filters={parsed.data} />

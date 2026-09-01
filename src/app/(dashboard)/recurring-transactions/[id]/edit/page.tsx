@@ -29,7 +29,7 @@ export default async function EditRecurringRulePage({
     : [{ id: rule.categoryId, name: rule.categoryName, type: rule.type }, ...options.categories];
   return (
     <div className={`${pageStackClass} ${narrowPageClass}`}>
-      <p className={pageDescriptionClass}>Tanggal mulai tetap menjadi jangkar jadwal.</p>
+      <p className={pageDescriptionClass}>The start date remains the anchor of the schedule.</p>
       <section className={cardClass}>
         <RecurringRuleForm
           action={updateRecurringRuleAction}

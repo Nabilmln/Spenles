@@ -1,11 +1,11 @@
 export const ACCOUNT_TYPES = [
-  { value: "cash", label: "Tunai" },
-  { value: "bank", label: "Rekening bank" },
-  { value: "e_wallet", label: "Dompet digital" },
-  { value: "savings", label: "Tabungan" },
-  { value: "other", label: "Lainnya" },
+  { value: "cash", label: "Cash" },
+  { value: "bank", label: "Bank" },
+  { value: "e_wallet", label: "E-wallet" },
+  { value: "savings", label: "Savings" },
+  { value: "other", label: "Other" },
 ] as const;
 
 export function accountTypeLabel(value: string) {
-  return ACCOUNT_TYPES.find((type) => type.value === value)?.label ?? "Lainnya";
+  return ACCOUNT_TYPES.find((type) => type.value === value)?.label ?? "Other";
 }

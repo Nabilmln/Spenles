@@ -11,7 +11,7 @@ export default async function NewRecurringRulePage() {
   const options = await listRecurringOptions(user.id);
   return (
     <div className={`${pageStackClass} ${narrowPageClass}`}>
-      <p className={pageDescriptionClass}>Kejadian masa lalu tidak dibuat saat aturan disimpan.</p>
+      <p className={pageDescriptionClass}>Past occurrences are not created when a rule is saved.</p>
       <section className={cardClass}>
         <RecurringRuleForm
           action={createRecurringRuleAction}

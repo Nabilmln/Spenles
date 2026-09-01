@@ -20,7 +20,7 @@ type TransactionRow = {
 export function TransactionList({ rows }: { rows: TransactionRow[] }) {
   if (!rows.length) {
     return (
-      <EmptyState title="Belum ada transaksi" description="Transaksi yang kamu catat akan muncul di sini." />
+      <EmptyState title="No transactions yet" description="Transactions you record will appear here." />
     );
   }
   return (
@@ -42,7 +42,7 @@ export function TransactionList({ rows }: { rows: TransactionRow[] }) {
             <Link className={iconButtonClass} aria-label={`Edit ${row.categoryName}`} href={`/transactions/${row.id}/edit`}><Pencil size={17} /></Link>
             <form action={deleteTransactionAction}>
               <input type="hidden" name="id" value={row.id} />
-              <button className={iconButtonClass} aria-label={`Hapus ${row.categoryName}`} type="submit"><Trash2 size={17} /></button>
+              <button className={iconButtonClass} aria-label={`Delete ${row.categoryName}`} type="submit"><Trash2 size={17} /></button>
             </form>
           </div>
         </article>

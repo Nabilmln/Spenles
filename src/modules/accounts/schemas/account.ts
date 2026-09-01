@@ -4,12 +4,12 @@ import { moneyString } from "@/lib/money/schema";
 export const accountIdSchema = z.uuid();
 
 export const accountSchema = z.object({
-  name: z.string().trim().min(1, "Nama akun wajib diisi.").max(80),
+  name: z.string().trim().min(1, "Account name is required.").max(80),
   type: z.enum(["cash", "bank", "e_wallet", "savings", "other"]),
   openingBalance: moneyString({
     allowZero: true,
-    formatMessage: "Nilai harus berupa rupiah bulat.",
-    rangeMessage: "Nilai melewati batas yang didukung.",
+    formatMessage: "Value must be a whole number of rupiah.",
+    rangeMessage: "Value exceeds the supported limit.",
   }),
 });
 
