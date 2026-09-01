@@ -8,8 +8,8 @@ export default function manifest(): MetadataRoute.Manifest {
       "Aplikasi pencatatan keuangan, anggaran, arus kas, laporan, dan split bill personal.",
     start_url: "/",
     display: "standalone",
-    background_color: "#f05a24",
-    theme_color: "#f05a24",
+    background_color: "#4f46e5",
+    theme_color: "#4f46e5",
     icons: [
       { src: "/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
       {

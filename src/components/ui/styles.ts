@@ -2,7 +2,7 @@ export const buttonBase =
   "button inline-flex min-h-[2.6rem] cursor-pointer items-center justify-center gap-[.5rem] rounded-[.65rem] border border-transparent px-[.9rem] py-[.55rem] text-[.88rem] font-medium transition-[background,transform,box-shadow] duration-150 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-55";
 
 export const buttonVariant: Record<string, string> = {
-  primary: "bg-primary-600 text-white hover:enabled:bg-primary-700 shadow-[0_2px_12px_rgb(240_90_36/25%)] hover:enabled:shadow-[0_4px_18px_rgb(240_90_36/35%)]",
+  primary: "bg-primary-600 text-white hover:enabled:bg-primary-700 shadow-[0_2px_12px_rgb(79_70_229/25%)] hover:enabled:shadow-[0_4px_18px_rgb(79_70_229/35%)]",
   secondary: "border-primary-600 bg-primary-600 text-white hover:enabled:bg-primary-700",
   blue: "bg-blue-600 text-white hover:enabled:bg-blue-700 shadow-[0_2px_12px_rgb(37_99_235/25%)] hover:enabled:shadow-[0_4px_18px_rgb(37_99_235/35%)]",
   ghost: "bg-transparent text-foreground hover:enabled:bg-surface-subtle",
@@ -20,7 +20,7 @@ export const cardClass =
   "card rounded-[.85rem] border border-border bg-surface p-[.9rem] shadow-card";
 
 export const inputClass =
-  "w-full min-h-[2.6rem] rounded-[.65rem] border border-border bg-surface-subtle px-[.8rem] py-[.6rem] text-base text-foreground transition-[border,box-shadow] duration-150 focus:border-primary-500 focus:shadow-[0_0_0_3px_rgb(240_90_36/12%)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-65";
+  "w-full min-h-[2.6rem] rounded-[.65rem] border border-border bg-surface-subtle px-[.8rem] py-[.6rem] text-base text-foreground transition-[border,box-shadow] duration-150 focus:border-primary-500 focus:shadow-[0_0_0_3px_rgb(79_70_229/12%)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-65";
 
 export const textareaClass = `${inputClass} min-h-[7rem] resize-y`;
 

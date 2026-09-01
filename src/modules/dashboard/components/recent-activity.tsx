@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { ArrowDownLeft, ArrowUpRight, List } from "lucide-react";
+import { ArrowDownLeft, ArrowRight, ArrowUpRight } from "lucide-react";
 import { formatJakartaDateLong, JAKARTA_OFFSET_MS } from "@/lib/dates/jakarta";
 import { formatIdr } from "@/lib/money/format-idr";
-import { cardClass, eyebrowClass, textLinkClass } from "@/components/ui/styles";
+import { cardClass, eyebrowClass } from "@/components/ui/styles";
 import type { RecentDashboardTransaction } from "../types/dashboard";
 
 const DAY_MS = 86_400_000;
@@ -54,14 +54,17 @@ export function RecentActivityCard({
 
   return (
     <section aria-labelledby="recent-activity-title" className={`${cardClass} flex h-full flex-col shadow-none`}>
-      <div className="mb-[.65rem] flex items-start justify-between gap-3 max-[540px]:flex-col">
+      <div className="mb-[.65rem] flex items-end justify-between gap-3">
         <div>
-          <p className={eyebrowClass}>Aktivitas terbaru</p>
-          <h2 id="recent-activity-title" className="m-0 text-[.95rem] tracking-[-.02em]">Transaksi terbaru</h2>
+          <p className={eyebrowClass}>Transaksi terbaru</p>
+          <h2 id="recent-activity-title" className="m-0 text-[1.05rem] tracking-[-.02em]">Aktivitas terbaru</h2>
         </div>
-        <Link className={`${textLinkClass} inline-flex items-center gap-[.3rem] text-[.76rem]`} href="/transactions">
-          <List size={14} aria-hidden="true" />
+        <Link
+          className="inline-flex items-center gap-[.25rem] whitespace-nowrap text-[.76rem] font-medium text-primary-600 hover:text-primary-700"
+          href="/transactions"
+        >
           Lihat semua
+          <ArrowRight size={13} aria-hidden="true" />
         </Link>
       </div>
 
@@ -75,11 +78,11 @@ export function RecentActivityCard({
               <div className="grid">
                 {groups.get(day)!.map((row) => (
                   <article
-                    className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-[.65rem] border-b border-border p-[.6rem_0] last:border-0 max-[540px]:grid-cols-[auto_minmax(0,1fr)]"
+                    className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-[.7rem] border-b border-border p-[.65rem_0] last:border-0 max-[540px]:grid-cols-[auto_minmax(0,1fr)]"
                     key={row.id}
                   >
                     <span
-                      className={`grid size-[2.2rem] shrink-0 place-items-center rounded-full [&_svg]:size-[.95rem] ${
+                      className={`grid size-[2.3rem] shrink-0 place-items-center rounded-full [&_svg]:size-[1rem] ${
                         row.type === "income"
                           ? "text-income bg-[color-mix(in_srgb,var(--income)_10%,transparent)]"
                           : "text-expense bg-[color-mix(in_srgb,var(--expense)_10%,transparent)]"
@@ -88,14 +91,14 @@ export function RecentActivityCard({
                       {row.type === "income" ? <ArrowDownLeft /> : <ArrowUpRight />}
                     </span>
                     <div className="grid min-w-0">
-                      <strong className="text-[.83rem]">{row.categoryName}</strong>
+                      <strong className="truncate text-[.86rem]">{row.categoryName}</strong>
                       <span className="truncate text-[.72rem] text-muted">
                         {row.accountName} · {formatJakartaDateLong(row.transactionAt)}
                       </span>
                       {row.note ? <small className="truncate text-[.72rem] text-muted">{row.note}</small> : null}
                     </div>
                     <strong
-                      className={`text-[.8rem] max-[540px]:col-start-2 ${
+                      className={`text-[.82rem] max-[540px]:col-start-2 ${
                         row.type === "income" ? "text-income" : "text-expense"
                       }`}
                     >
@@ -109,10 +112,16 @@ export function RecentActivityCard({
         </div>
       ) : (
         <div
-          className="mt-3 grid min-h-[4rem] flex-1 place-items-center rounded-[.65rem] border border-dashed border-border bg-surface-subtle p-3 text-center text-[.8rem] text-muted"
+          className="mt-3 grid min-h-[5rem] flex-1 place-items-center rounded-[.8rem] border border-dashed border-border bg-surface-subtle p-4 text-center"
           role="status"
         >
-          Belum ada transaksi tercatat.
+          <div className="grid gap-[.2rem]">
+            <p className="m-0 text-[.85rem] font-medium text-foreground">Belum ada pengeluaran</p>
+            <p className="m-0 text-[.78rem] text-muted">Mulai catat pengeluaran pertamamu.</p>
+            <Link className="mx-auto mt-[.6rem] text-[.78rem] font-medium text-primary-600 hover:text-primary-700" href="/transactions/new">
+              Catat pengeluaran
+            </Link>
+          </div>
         </div>
       )}
     </section>

@@ -26,7 +26,7 @@ describe("mobile dashboard cards", () => {
     expect(screen.getByRole("link", { name: "Akun" })).toHaveAttribute("href", "/accounts");
     expect(screen.getByRole("link", { name: "Anggaran" })).toHaveAttribute("href", "/budgets");
     expect(screen.getByRole("link", { name: "Kategori" })).toHaveAttribute("href", "/categories");
-    expect(screen.getByRole("link", { name: "Berulang" })).toHaveAttribute("href", "/recurring-transactions");
+    expect(screen.getByRole("link", { name: "Laporan" })).toHaveAttribute("href", "/reports");
     expect(screen.queryByRole("link", { name: /Ekspor|Notifikasi/ })).not.toBeInTheDocument();
   });
 
@@ -81,7 +81,7 @@ describe("mobile dashboard cards", () => {
       />,
     );
 
-    expect(screen.getByRole("heading", { name: "Transaksi terbaru" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Aktivitas terbaru" })).toBeInTheDocument();
     expect(screen.getByText("Hari ini")).toBeInTheDocument();
     expect(screen.getByText("Kemarin")).toBeInTheDocument();
     expect(screen.getByText("Makan siang")).toBeInTheDocument();
@@ -95,7 +95,10 @@ describe("mobile dashboard cards", () => {
     render(<RecentActivityCard rows={[]} />);
 
     expect(
-      screen.getByText("Belum ada transaksi tercatat."),
+      screen.getByText("Belum ada pengeluaran"),
     ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Catat pengeluaran" }),
+    ).toHaveAttribute("href", "/transactions/new");
   });
 });

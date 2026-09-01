@@ -31,6 +31,7 @@ import {
   lastDaysJakartaInterval,
   lastMonthsJakartaInterval,
   lastWeeksJakartaInterval,
+  MobileBalanceCard,
   MonthlyExpenseCard,
   monthIntervalForKey,
   RecentActivityCard,
@@ -214,16 +215,30 @@ export default async function DashboardPage({
   const activeAccounts = isFulfilled(accountsResult)
     ? accountsResult.value.filter((account) => account.status === "active")
     : [];
+  const totalBalance = activeAccounts.reduce(
+    (sum, account) => sum + BigInt(account.balance),
+    0n,
+  );
 
   return (
     <div>
       <div className="dashboard-grid grid gap-3 min-[861px]:grid-cols-8 min-[1024px]:grid-cols-12">
         <div className="min-w-0 min-[861px]:col-span-4 min-[1024px]:col-span-4">
-          <FinancialOverview
-            name={profile?.displayName ?? "Pengguna Spenles"}
-            income={overview.income.toString()}
-            expense={overview.expense.toString()}
-          />
+          <div className="hidden min-[861px]:block">
+            <FinancialOverview
+              name={profile?.displayName ?? "Pengguna Spenles"}
+              income={overview.income.toString()}
+              expense={overview.expense.toString()}
+            />
+          </div>
+          <div className="min-[861px]:hidden">
+            <MobileBalanceCard
+              name={profile?.displayName ?? "Pengguna Spenles"}
+              balance={totalBalance}
+              income={overview.income}
+              expense={overview.expense}
+            />
+          </div>
         </div>
 
         <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
@@ -252,9 +267,14 @@ export default async function DashboardPage({
         </div>
       </div>
 
-      <div className="-mx-[clamp(1.25rem,4vw,2.75rem)] mt-[1.55rem] max-[860px]:rounded-t-[3.5rem] max-[860px]:bg-primary-600 max-[860px]:pt-10 max-[860px]:pb-[6rem] px-7 min-[861px]:mx-0 min-[861px]:mt-3 min-[861px]:rounded-none min-[861px]:bg-transparent min-[861px]:p-0">
+      <div className="mx-0 mt-[1.55rem] grid gap-3 px-0">
         <div className="dashboard-grid grid gap-3 min-[861px]:grid-cols-8 min-[1024px]:grid-cols-12">
-          <DashboardFeatureGrid />
+          <div className="min-w-0 min-[861px]:col-span-8 min-[1024px]:col-span-12">
+            <p className="mb-[.55rem] text-[.72rem] font-semibold uppercase tracking-[.12em] text-muted">
+              Layanan
+            </p>
+            <DashboardFeatureGrid />
+          </div>
 
           <div className="min-w-0 min-[861px]:hidden">
             {daily ? (

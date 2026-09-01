@@ -52,10 +52,10 @@ export function NavigationLinks({ mobile = false }: { mobile?: boolean }) {
         ))}
         <Link
           aria-label="Tambah transaksi"
-          className="relative z-[1] grid min-h-[3.5rem] place-items-center before:absolute before:z-[-1] before:size-11 before:rounded-full before:bg-primary-600 before:shadow-[0_6px_20px_rgb(240_90_36/40%)] [&_svg]:text-white"
+          className="relative z-[1] grid size-[3.1rem] place-items-center self-center rounded-full before:absolute before:z-[-1] before:inset-0 before:rounded-full before:bg-primary-600 before:shadow-[0_6px_20px_rgb(79_70_229/45%)] [&_svg]:text-white"
           href="/transactions/new"
         >
-          <Plus size={24} strokeWidth={2.75} aria-hidden="true" />
+          <Plus size={22} strokeWidth={2.75} aria-hidden="true" />
           <span className="sr-only">Tambah transaksi</span>
         </Link>
         {mobileLinks.slice(2).map(({ href, label, icon: Icon }) => (
@@ -105,11 +105,22 @@ function MobileLink({
   return (
     <Link
       aria-current={active ? "page" : undefined}
-      className={cn(linkBase, active && linkActive)}
+      className={cn(
+        "relative flex min-h-[3.1rem] items-center justify-center gap-[.3rem] rounded-full px-1 text-muted transition-[background,color,box-shadow] duration-200",
+        active &&
+          "bg-primary-50 font-medium text-primary-700 dark:bg-primary-50 dark:text-primary-700",
+      )}
       href={href}
     >
-      <Icon aria-hidden="true" size={20} />
-      <span>{label}</span>
+      <Icon aria-hidden="true" size={20} className="shrink-0" />
+      <span
+        className={cn(
+          "overflow-hidden whitespace-nowrap text-[.72rem] transition-[max-width,opacity] duration-200",
+          active ? "max-w-[5rem] opacity-100" : "max-w-0 opacity-0",
+        )}
+      >
+        {label}
+      </span>
     </Link>
   );
 }

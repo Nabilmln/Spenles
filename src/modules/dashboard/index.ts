@@ -10,6 +10,7 @@ export * from "./components/dashboard-section-error";
 export * from "./components/financial-overview";
 export * from "./components/income-expense-chart";
 export * from "./components/income-vs-expense-comparison";
+export * from "./components/mobile-balance-card";
 export * from "./components/monthly-expense-card";
 export * from "./components/recent-activity";
 export * from "./components/savings-summary-card";

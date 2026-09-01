@@ -20,7 +20,7 @@ export function Brand({
           "grid size-[2.35rem] shrink-0 place-items-center rounded-[.7rem]",
           tone === "light"
             ? "bg-white text-primary-600"
-            : "bg-primary-600 text-white shadow-[0_4px_16px_rgb(240_90_36/40%)]",
+            : "bg-primary-600 text-white shadow-[0_4px_16px_rgb(79_70_229/40%)]",
         )}
         aria-hidden="true"
       >
