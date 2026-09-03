@@ -2,6 +2,7 @@
 
 import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
+import { AmountInput } from "@/components/ui/amount-input";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { fieldClass, fieldLabelClass } from "@/components/ui/styles";
@@ -58,12 +59,9 @@ export function BudgetForm({
       </div>
       <div className={fieldClass}>
         <label htmlFor="budget-amount" className={fieldLabelClass}>Budget amount (IDR)</label>
-        <Input
+        <AmountInput
           id="budget-amount"
           name="amount"
-          type="number"
-          min="1"
-          step="1"
           defaultValue={initial?.amount}
           required
         />

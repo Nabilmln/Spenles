@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
+import { AmountInput } from "@/components/ui/amount-input";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { fieldClass, fieldLabelClass, textareaClass } from "@/components/ui/styles";
@@ -52,7 +53,7 @@ export function RecurringRuleForm({
       </div>
       <div className={fieldClass}>
         <label htmlFor="recurring-amount" className={fieldLabelClass}>Amount (IDR)</label>
-        <Input id="recurring-amount" name="amount" type="number" min="1" step="1" defaultValue={initial?.amount} required />
+        <AmountInput id="recurring-amount" name="amount" defaultValue={initial?.amount} required />
       </div>
       <div className="grid grid-cols-2 gap-4 max-[540px]:grid-cols-1">
         <div className={fieldClass}>

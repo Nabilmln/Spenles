@@ -2,6 +2,7 @@
 
 import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
+import { AmountInput } from "@/components/ui/amount-input";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { fieldClass, fieldLabelClass } from "@/components/ui/styles";
@@ -53,13 +54,9 @@ export function AccountForm({
       </div>
       <div className={fieldClass}>
         <label htmlFor="opening-balance" className={fieldLabelClass}>Opening balance (IDR)</label>
-        <Input
+        <AmountInput
           id="opening-balance"
           name="openingBalance"
-          type="number"
-          inputMode="numeric"
-          min="0"
-          step="1"
           defaultValue={initial?.openingBalance ?? "0"}
           required
         />

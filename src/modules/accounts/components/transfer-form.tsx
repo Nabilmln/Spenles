@@ -2,6 +2,7 @@
 
 import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
+import { AmountInput } from "@/components/ui/amount-input";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { fieldClass, fieldLabelClass, textareaClass } from "@/components/ui/styles";
@@ -42,7 +43,7 @@ export function TransferForm({
       </div>
       <div className={fieldClass}>
         <label htmlFor="transfer-amount" className={fieldLabelClass}>Amount (IDR)</label>
-        <Input id="transfer-amount" name="amount" type="number" min="1" step="1" required />
+        <AmountInput id="transfer-amount" name="amount" required />
       </div>
       <div className={fieldClass}>
         <label htmlFor="transfer-at" className={fieldLabelClass}>Transfer time</label>

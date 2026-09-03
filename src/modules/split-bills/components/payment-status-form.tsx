@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { AmountInput } from "@/components/ui/amount-input";
 import { Select } from "@/components/ui/select";
 import { fieldClass } from "@/components/ui/styles";
 import {
@@ -66,13 +66,9 @@ export function PaymentStatusForm({
           <label htmlFor={`paid-amount-${participantId}`}>
             Amount paid
           </label>
-          <Input
+          <AmountInput
             id={`paid-amount-${participantId}`}
             name="paidAmount"
-            type="number"
-            min="1"
-            max={BigInt(obligation) > 0n ? (BigInt(obligation) - 1n).toString() : "0"}
-            step="1"
             defaultValue={paidAmount}
             required
           />

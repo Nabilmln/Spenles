@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { Button } from "@/components/ui/button";
+import { AmountInput } from "@/components/ui/amount-input";
 import { Input } from "@/components/ui/input";
 import { useToastActionState } from "@/components/ui/toast";
 import {
@@ -85,13 +86,9 @@ export function AccountCreateSheet({
             <label htmlFor="create-account-opening-balance" className={fieldLabelClass}>
               Opening balance (IDR)
             </label>
-            <Input
+            <AmountInput
               id="create-account-opening-balance"
               name="openingBalance"
-              type="number"
-              inputMode="numeric"
-              min="0"
-              step="1"
               defaultValue="0"
               required
             />

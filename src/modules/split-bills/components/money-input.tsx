@@ -1,12 +1,9 @@
 "use client";
 
 import { useId } from "react";
-import { cn } from "@/lib/utils";
+import { AmountInput } from "@/components/ui/amount-input";
 import { Input } from "@/components/ui/input";
-import {
-  formatThousands,
-  stripLeadingZeros,
-} from "@/lib/money/input-format";
+import { stripLeadingZeros } from "@/lib/money/input-format";
 
 export function RupiahInput({
   value,
@@ -19,30 +16,18 @@ export function RupiahInput({
   onChange: (value: string) => void;
   id?: string;
   className?: string;
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, "value" | "onChange">) {
-  const autoId = useId();
-  const inputId = id ?? autoId;
+} & Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "value" | "onChange" | "defaultValue"
+>) {
   return (
-    <div className="relative">
-      <span
-        className="pointer-events-none absolute top-1/2 left-[.8rem] -translate-y-1/2 text-[.88rem] font-medium text-muted"
-        aria-hidden="true"
-      >
-        Rp
-      </span>
-      <Input
-        id={inputId}
-        className={cn(className, "pl-[2.1rem]")}
-        inputMode="numeric"
-        autoComplete="off"
-        value={value ? formatThousands(value) : ""}
-        onChange={(event) =>
-          onChange(stripLeadingZeros(event.target.value))
-        }
-        placeholder="0"
-        {...props}
-      />
-    </div>
+    <AmountInput
+      id={id}
+      className={className}
+      value={value}
+      onChange={onChange}
+      {...props}
+    />
   );
 }
 
