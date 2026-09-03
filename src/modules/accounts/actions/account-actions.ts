@@ -50,6 +50,26 @@ export async function createAccountAction(
   redirect("/accounts");
 }
 
+export async function createAccountFromSheetAction(
+  _state: AccountActionState,
+  formData: FormData,
+): Promise<AccountActionState> {
+  const user = await requireSessionUser();
+  const parsed = accountSchema.safeParse(values(formData));
+  if (!parsed.success) return { error: parsed.error.issues[0]?.message };
+  try {
+    const created = await createOwnedAccount(db, user.id, {
+      ...parsed.data,
+      openingBalance: BigInt(parsed.data.openingBalance),
+    });
+    if (!created) return { error: "Account could not be created." };
+  } catch {
+    return { error: "Account could not be created." };
+  }
+  invalidateAccounts();
+  return { success: "Account created." };
+}
+
 export async function updateAccountAction(
   _state: AccountActionState,
   formData: FormData,

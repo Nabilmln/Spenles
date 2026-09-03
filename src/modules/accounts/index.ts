@@ -1,6 +1,7 @@
 export * from "./actions/account-actions";
 export * from "./actions/transfer-actions";
 export * from "./components/account-card";
+export * from "./components/account-create-sheet";
 export * from "./components/account-detail-sheet";
 export * from "./components/account-form";
 export * from "./components/account-list";

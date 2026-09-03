@@ -22,6 +22,7 @@ vi.mock("react-dom", async (importOriginal) => {
 vi.mock("../actions/account-actions", () => ({
   updateAccountFromSheetAction: vi.fn(),
   deleteAccountAction: vi.fn(),
+  createAccountFromSheetAction: vi.fn(),
 }));
 
 import { AccountDetailSheet } from "./account-detail-sheet";
