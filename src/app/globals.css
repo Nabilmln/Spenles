@@ -158,6 +158,36 @@ body {
 }
 .profile-curtain-in { animation: profile-curtain-in .3s cubic-bezier(.22,.61,.36,1) both; }
 
+@keyframes profile-curtain-out {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(100%); }
+}
+.profile-curtain-out { animation: profile-curtain-out .24s cubic-bezier(.4,0,.2,1) both; }
+
+@keyframes curtain-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.curtain-backdrop-in { animation: curtain-backdrop-in .25s ease-out both; }
+
+@keyframes curtain-backdrop-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+.curtain-backdrop-out { animation: curtain-backdrop-out .24s ease-in both; }
+
+@keyframes dialog-in {
+  from { opacity: 0; transform: translateY(12px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.dialog-in { animation: dialog-in .22s cubic-bezier(.22,.61,.36,1) both; }
+
+@keyframes dialog-out {
+  from { opacity: 1; transform: translateY(0) scale(1); }
+  to { opacity: 0; transform: translateY(12px) scale(.97); }
+}
+.dialog-out { animation: dialog-out .2s ease-in both; }
+
 input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }

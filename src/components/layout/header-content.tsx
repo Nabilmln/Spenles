@@ -64,10 +64,7 @@ export function HeaderContent({
     <>
       {showBack ? (
         <>
-          <BackButton fallback={meta.back} />
-          {meta.title ? (
-            <h1 className="m-0 min-w-0 truncate text-[1.05rem] font-medium max-[540px]:text-[.95rem]">{meta.title}</h1>
-          ) : null}
+          <BackButton fallback={meta.back} title={meta.title} />
           <div className="flex-1" />
           <ThemeToggle currentTheme={profile.theme} />
           <ProfileMenu displayName={profile.displayName} email={email} defaultCurrency={profile.defaultCurrency} timezone={profile.timezone} />

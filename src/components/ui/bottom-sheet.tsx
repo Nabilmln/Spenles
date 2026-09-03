@@ -1,26 +1,47 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+const EXIT_MS = 240;
 
 export function BottomSheet({
   open,
   onClose,
   title,
   ariaLabel,
+  zIndex = "z-[80]",
   children,
 }: {
   open: boolean;
   onClose: () => void;
   title: string;
   ariaLabel: string;
+  zIndex?: string;
   children: React.ReactNode;
 }) {
-  if (!open) return null;
+  const [prevOpen, setPrevOpen] = useState(open);
+  const [closing, setClosing] = useState(false);
+
+  if (prevOpen !== open) {
+    setPrevOpen(open);
+    setClosing(!open);
+  }
+
+  useEffect(() => {
+    if (!closing) return;
+    const timer = window.setTimeout(() => setClosing(false), EXIT_MS);
+    return () => window.clearTimeout(timer);
+  }, [closing]);
+
+  const visible = open || closing;
+  if (!visible) return null;
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[80] flex items-end"
+      className={cn("fixed inset-0 flex items-end", zIndex)}
       role="dialog"
       aria-modal="true"
       aria-label={ariaLabel}
@@ -28,11 +49,17 @@ export function BottomSheet({
       <button
         type="button"
         aria-label={`Close ${ariaLabel}`}
-        className="absolute inset-0 cursor-default bg-[rgb(15_15_18/45%)]"
+        className={cn(
+          "absolute inset-0 cursor-default bg-[rgb(15_15_18/45%)]",
+          closing ? "curtain-backdrop-out" : "curtain-backdrop-in",
+        )}
         onClick={onClose}
       />
       <div
-        className="relative w-full rounded-t-[1.6rem] border-t border-border bg-surface p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-[0_-10px_40px_rgb(15_15_18/20%)] profile-curtain-in"
+        className={cn(
+          "relative w-full rounded-t-[1.6rem] border-t border-border bg-surface p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-[0_-10px_40px_rgb(15_15_18/20%)]",
+          closing ? "profile-curtain-out" : "profile-curtain-in",
+        )}
         onClick={(event) => event.stopPropagation()}
       >
         <div className="mb-[1.1rem] flex items-center justify-between">

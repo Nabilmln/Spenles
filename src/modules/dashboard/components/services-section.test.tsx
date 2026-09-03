@@ -1,4 +1,10 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import { ServicesSection } from "./services-section";
 import { ALL_SERVICES } from "./services";
@@ -31,10 +37,10 @@ describe("ServicesSection", () => {
     }
   });
 
-  it("closes the modal with the close button", () => {
+  it("closes the modal with the close button", async () => {
     render(<ServicesSection />);
     fireEvent.click(screen.getByRole("button", { name: "More Services" }));
     fireEvent.click(screen.getByRole("button", { name: "Close" }));
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
   });
 });

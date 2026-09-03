@@ -51,8 +51,10 @@ function renderHeader() {
 describe("HeaderContent shared mobile header", () => {
   it("shows back button, page title, theme toggle and profile menu on secondary pages", () => {
     renderHeader();
-    expect(screen.getByRole("button", { name: "Back" })).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: "Transactions" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Back to Transactions" }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Transactions")).toBeInTheDocument();
     expect(
       screen.getByRole("button", { name: "Enable dark mode" }),
     ).toBeInTheDocument();
@@ -70,7 +72,9 @@ describe("HeaderContent shared mobile header", () => {
   it("navigates back when the back button is used", () => {
     Object.defineProperty(window.history, "length", { value: 3, configurable: true });
     renderHeader();
-    fireEvent.click(screen.getByRole("button", { name: "Back" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Back to Transactions" }),
+    );
     expect(backMock).toHaveBeenCalledTimes(1);
     expect(pushMock).not.toHaveBeenCalled();
   });
@@ -78,7 +82,9 @@ describe("HeaderContent shared mobile header", () => {
   it("falls back to the parent route when there is no history to go back to", () => {
     Object.defineProperty(window.history, "length", { value: 1, configurable: true });
     renderHeader();
-    fireEvent.click(screen.getByRole("button", { name: "Back" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Back to Transactions" }),
+    );
     expect(window.history.length).toBe(1);
     expect(pushMock.mock.calls).toEqual([["/dashboard"]]);
     expect(backMock).not.toHaveBeenCalled();
@@ -96,11 +102,9 @@ describe("HeaderContent home tab", () => {
   it("shows the brand without a back button on the dashboard", () => {
     vi.mocked(usePathname).mockReturnValue("/dashboard");
     renderHeader();
-    expect(screen.queryByRole("button", { name: "Back" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Back to/ })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Spenles" })).toBeInTheDocument();
-    expect(
-      screen.queryByRole("heading", { name: "Home" }),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Home")).not.toBeInTheDocument();
   });
 });
 
@@ -117,16 +121,21 @@ for (const [route, title] of cases) {
     it(`resolves ${route} to "${title}"`, () => {
       vi.mocked(usePathname).mockReturnValue(route);
       renderHeader();
-      expect(screen.getByRole("heading", { name: title })).toBeInTheDocument();
+      expect(
+        screen.getByRole("button", { name: `Back to ${title}` }),
+      ).toBeInTheDocument();
+      expect(screen.getByText(title)).toBeInTheDocument();
     });
   }
 
   it("does not label budgets edit as an edit-transaction title", () => {
     vi.mocked(usePathname).mockReturnValue("/budgets/abc123/edit");
     renderHeader();
-    expect(screen.getByRole("heading", { name: "Edit budget" })).toBeInTheDocument();
     expect(
-      screen.queryByRole("heading", { name: "Edit transaction" }),
+      screen.getByRole("button", { name: "Back to Edit budget" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText("Edit transaction"),
     ).not.toBeInTheDocument();
   });
 
@@ -134,7 +143,9 @@ for (const [route, title] of cases) {
     Object.defineProperty(window.history, "length", { value: 1, configurable: true });
     vi.mocked(usePathname).mockReturnValue("/split-bills/abc123/edit");
     renderHeader();
-    fireEvent.click(screen.getByRole("button", { name: "Back" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Back to Edit split bill" }),
+    );
     expect(pushMock.mock.calls).toEqual([["/split-bills"]]);
   });
 });

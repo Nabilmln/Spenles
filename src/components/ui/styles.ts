@@ -19,6 +19,15 @@ export function buttonClass(
 export const cardClass =
   "card rounded-[.85rem] border border-border bg-surface p-[.9rem] shadow-card";
 
+export const financialCardClass =
+  "relative grid min-w-0 overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-primary-600 to-primary-700 p-[1.25rem] text-white shadow-[0_12px_40px_rgb(79_70_229/28%)]";
+
+export const financialCardOrbTop =
+  "pointer-events-none absolute -top-14 -right-14 size-44 rounded-full bg-white/10";
+
+export const financialCardOrbBottom =
+  "pointer-events-none absolute -bottom-20 -left-10 size-40 rounded-full bg-white/5";
+
 export const inputClass =
   "w-full min-h-[2.6rem] rounded-[.65rem] border border-border bg-surface-subtle px-[.8rem] py-[.6rem] text-base text-foreground transition-[border,box-shadow] duration-150 focus:border-primary-500 focus:shadow-[0_0_0_3px_rgb(79_70_229/12%)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-65";
 

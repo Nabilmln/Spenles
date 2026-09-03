@@ -124,3 +124,49 @@ export async function setOwnedAccountStatus(
     ? { ok: true as const, id: result.rows[0].id }
     : { ok: false as const, reason: "last-active-or-not-found" as const };
 }
+
+export async function deleteOwnedAccount(
+  database: Database,
+  userId: string,
+  accountId: string,
+) {
+  const dependencyCount = await database.execute<{ count: string }>(sql`
+    select (
+      (
+        select count(*)
+        from transactions as transaction
+        where transaction.user_id = ${userId}
+          and transaction.account_id = ${accountId}::uuid
+      )
+      + (
+        select count(*)
+        from transfers as transfer
+        where transfer.user_id = ${userId}
+          and (
+            transfer.source_account_id = ${accountId}::uuid
+            or transfer.destination_account_id = ${accountId}::uuid
+          )
+      )
+      + (
+        select count(*)
+        from recurring_rules as rule
+        where rule.user_id = ${userId}
+          and rule.account_id = ${accountId}::uuid
+      )
+    )::text as count
+  `);
+  const count = BigInt(dependencyCount.rows[0]?.count ?? "0");
+  if (count > 0n) {
+    return { ok: false as const, reason: "has-history" as const };
+  }
+
+  const result = await database.execute<ReturnedId>(sql`
+    delete from accounts
+    where id = ${accountId}::uuid
+      and user_id = ${userId}
+    returning id
+  `);
+  return result.rows[0]
+    ? { ok: true as const, id: result.rows[0].id }
+    : { ok: false as const, reason: "not-found" as const };
+}
