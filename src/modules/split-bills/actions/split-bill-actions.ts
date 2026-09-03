@@ -55,9 +55,15 @@ function preparedCalculationInput(input: PreparedSplitBillDraft) {
 }
 
 function calculationMessage(error: unknown) {
-  return error instanceof SplitBillCalculationError
-    ? error.message
-    : "The bill could not be processed.";
+  if (error instanceof SplitBillCalculationError) return error.message;
+  const detail =
+    typeof (error as { cause?: { message?: string } }).cause?.message ===
+    "string"
+      ? (error as { cause: { message: string } }).cause.message
+      : error instanceof Error && error.message
+        ? error.message
+        : "unknown error";
+  return `The bill could not be processed: ${detail}`;
 }
 
 export async function createSplitBillAction(

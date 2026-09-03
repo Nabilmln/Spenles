@@ -167,7 +167,7 @@ describe("createAndFinalizeSplitBillAction", () => {
 
     const result = await createAndFinalizeSplitBillAction({}, formData());
 
-    expect(result.error).toBe("The bill could not be processed.");
+    expect(result.error).toBe("The bill could not be processed: calculation failed");
     expect(mocks.createOwnedSplitBillDraft).not.toHaveBeenCalled();
     expect(mocks.redirect).not.toHaveBeenCalled();
   });
