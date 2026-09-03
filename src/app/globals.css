@@ -146,6 +146,19 @@ body {
 .dashboard-grid > *:nth-child(9) { animation-delay: .48s; }
 .dashboard-grid > *:nth-child(10) { animation-delay: .54s; }
 
+.page-stagger > * {
+  animation: dashboard-card-in .5s ease-out both;
+}
+.page-stagger > *:nth-child(2) { animation-delay: .05s; }
+.page-stagger > *:nth-child(3) { animation-delay: .1s; }
+.page-stagger > *:nth-child(4) { animation-delay: .15s; }
+.page-stagger > *:nth-child(5) { animation-delay: .2s; }
+.page-stagger > *:nth-child(6) { animation-delay: .25s; }
+.page-stagger > *:nth-child(7) { animation-delay: .3s; }
+.page-stagger > *:nth-child(8) { animation-delay: .35s; }
+.page-stagger > *:nth-child(9) { animation-delay: .4s; }
+.page-stagger > *:nth-child(10) { animation-delay: .45s; }
+
 @keyframes toast-in {
   from { opacity: 0; transform: translateX(16px); }
   to { opacity: 1; transform: translateX(0); }

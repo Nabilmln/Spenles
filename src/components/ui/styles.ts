@@ -68,7 +68,7 @@ export const textLinkClass = "font-medium text-primary-600 hover:text-primary-70
 export const eyebrowClass =
   "mb-[.5rem] text-[.7rem] font-semibold uppercase tracking-[.14em] text-primary-600 dark:text-primary-700";
 
-export const pageStackClass = "grid gap-[1.5rem]";
+export const pageStackClass = "page-stagger grid gap-[1.5rem]";
 
 export const pageHeadingRowClass =
   "flex items-start justify-between gap-4 max-[540px]:flex-col max-[540px]:items-stretch";
