@@ -57,11 +57,7 @@ export default async function TransactionsPage({
 
   return (
     <div className={pageStackClass}>
-      <ExpenseOverviewCard
-        points={overview.points}
-        totalExpense={overview.totalExpense}
-        totalIncome={overview.totalIncome}
-      />
+      <ExpenseOverviewCard points={overview.points} />
       <TransactionSummary
         income={summary.income}
         expense={summary.expense}

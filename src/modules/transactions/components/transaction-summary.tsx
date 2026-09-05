@@ -1,7 +1,16 @@
-import { ArrowDownLeft, ArrowUpRight, PiggyBank } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { cardClass } from "@/components/ui/styles";
 import { formatIdr } from "@/lib/money/format-idr";
+
+const cards = [
+  { key: "payment", label: "Payment" },
+  { key: "income", label: "Income" },
+  { key: "saving", label: "Saving" },
+] as const;
+
+function nominal(value: bigint) {
+  return value < 0n ? `− ${formatIdr(-value)}` : formatIdr(value);
+}
 
 export function TransactionSummary({
   income,
@@ -12,33 +21,30 @@ export function TransactionSummary({
   expense: bigint;
   savings: bigint;
 }) {
+  const values: Record<(typeof cards)[number]["key"], string> = {
+    payment: nominal(expense),
+    income: nominal(income),
+    saving: nominal(savings),
+  };
+
   return (
     <section
       aria-label="Period summary"
-      className={cn(cardClass, "flex items-stretch shadow-none")}
+      className="mt-2 grid grid-cols-3 gap-[.4rem]"
     >
-      <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-[.3rem] p-[.9rem_.35rem] border-l border-border text-center first:border-l-0">
-        <ArrowDownLeft aria-hidden="true" className="size-[1.15rem] text-income" />
-        <strong className="wrap-anywhere text-[clamp(.72rem,3.4vw,.95rem)] font-medium tracking-[-.01em] text-income">
-          + {formatIdr(income)}
-        </strong>
-        <span className="text-[.68rem] font-medium text-muted">Income</span>
-      </div>
-      <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-[.3rem] p-[.9rem_.35rem] border-l border-border text-center first:border-l-0">
-        <ArrowUpRight aria-hidden="true" className="size-[1.15rem] text-expense" />
-        <strong className="wrap-anywhere text-[clamp(.72rem,3.4vw,.95rem)] font-medium tracking-[-.01em] text-expense">
-          − {formatIdr(expense)}
-        </strong>
-        <span className="text-[.68rem] font-medium text-muted">Payment</span>
-      </div>
-      <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-[.3rem] p-[.9rem_.35rem] border-l border-border text-center first:border-l-0">
-        <PiggyBank aria-hidden="true" className="size-[1.15rem] text-primary-600" />
-        <strong className="wrap-anywhere text-[clamp(.72rem,3.4vw,.95rem)] font-medium tracking-[-.01em] text-primary-700">
-          {savings < 0n ? "− " : ""}
-          {formatIdr(savings < 0n ? -savings : savings)}
-        </strong>
-        <span className="text-[.68rem] font-medium text-muted">Savings</span>
-      </div>
+      {cards.map((card) => (
+        <article
+          className={cn(cardClass, "grid min-w-0 justify-items-center text-center shadow-none")}
+          key={card.key}
+        >
+          <p className="m-0 text-[.68rem] font-medium text-foreground">
+            {card.label}
+          </p>
+          <strong className="wrap-anywhere text-[.65rem] tracking-[-.01em] text-foreground [overflow-wrap:anywhere]">
+            {values[card.key]}
+          </strong>
+        </article>
+      ))}
     </section>
   );
 }

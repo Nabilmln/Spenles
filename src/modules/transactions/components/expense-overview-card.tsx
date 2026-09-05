@@ -1,46 +1,27 @@
-import { cardClass, eyebrowClass } from "@/components/ui/styles";
-import { formatIdr } from "@/lib/money/format-idr";
-import { IncomeExpenseChart } from "@/modules/dashboard";
 import type { IncomeExpensePoint } from "@/modules/dashboard";
+import { TransactionTrendChart } from "./transaction-trend-chart";
 
 export function ExpenseOverviewCard({
   points,
-  totalIncome,
-  totalExpense,
 }: {
   points: IncomeExpensePoint[];
-  totalIncome: bigint;
-  totalExpense: bigint;
 }) {
-  const hasData = totalIncome > 0n || totalExpense > 0n;
+  const hasData = points.some((point) => BigInt(point.expenseIdr) > 0n);
 
   return (
-    <section
-      aria-label="Expense overview"
-      className={`${cardClass} grid gap-[.4rem] shadow-none`}
-    >
-      <p className={eyebrowClass}>Expense Overview</p>
+    <section aria-label="Expense overview">
       {hasData ? (
-        <>
-          <p className="m-0 text-[.82rem] text-muted">
-            Income and expenses over the last 6 months.
-          </p>
-          <IncomeExpenseChart points={points} />
-        </>
+        <TransactionTrendChart points={points} />
       ) : (
-        <p
-          className="m-0 rounded-[.8rem] bg-surface-subtle p-[1rem] text-center text-[.82rem] text-muted"
+        <div
+          className="grid h-[12.5rem] place-items-center rounded-[.9rem] bg-surface-subtle text-center"
           role="status"
         >
-          No expense data yet. Start adding transactions to see your spending
-          overview.
-        </p>
+          <p className="m-0 px-4 text-[.82rem] text-muted">
+            No transaction data yet.
+          </p>
+        </div>
       )}
-      {hasData ? (
-        <p className="m-0 text-[.78rem] text-muted">
-          Income {formatIdr(totalIncome)} · Expense {formatIdr(totalExpense)}
-        </p>
-      ) : null}
     </section>
   );
 }

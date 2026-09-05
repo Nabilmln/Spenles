@@ -53,7 +53,7 @@ export function TransactionFilterBar({
     >
       <input
         aria-label="Search description or category"
-        className={cn(inputClass, "flex-1 min-w-0")}
+        className={cn(inputClass, "flex-1 min-w-0 rounded-full bg-white! dark:bg-surface!")}
         defaultValue={filters.q}
         name="q"
         placeholder="Search transactions..."
@@ -63,7 +63,7 @@ export function TransactionFilterBar({
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-label="Open filters"
-        className={cn(iconButtonClass, "relative size-[2.9rem] min-h-[2.9rem]")}
+        className={cn(iconButtonClass, "relative size-[2.9rem] min-h-[2.9rem] rounded-full bg-white! dark:bg-surface!")}
         onClick={() => setOpen(true)}
         type="button"
       >
