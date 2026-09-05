@@ -1,9 +1,8 @@
 import Link from "next/link";
-import { ArrowDownLeft, ArrowUpRight } from "lucide-react";
-import { formatJakartaDateLong, JAKARTA_OFFSET_MS } from "@/lib/dates/jakarta";
-import { formatIdr } from "@/lib/money/format-idr";
+import { JAKARTA_OFFSET_MS } from "@/lib/dates/jakarta";
 import { formatLongDateUtc } from "@/lib/dates/format-id";
 import { cardClass } from "@/components/ui/styles";
+import { TransactionCard } from "@/components/transactions/transaction-card";
 import type { RecentDashboardTransaction } from "../types/dashboard";
 
 const DAY_MS = 86_400_000;
@@ -62,42 +61,26 @@ export function RecentActivityCard({
       </div>
 
       {orderedDays.length ? (
-        <div className="grid flex-1">
+        <div className="grid flex-1 gap-[.9rem]">
           {orderedDays.map((day) => (
             <section key={day}>
               <h3 className="my-[.7rem_.1rem] text-[.7rem] font-semibold uppercase tracking-[.08em] text-muted [&:first-child]:mt-[.35rem]">
                 {groupLabel(today, day)}
               </h3>
-              <div className="grid">
+              <div className="grid gap-[.6rem]">
                 {groups.get(day)!.map((row) => (
-                  <article
-                    className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-[.7rem] border-b border-border p-[.65rem_0] last:border-0 max-[540px]:grid-cols-[auto_minmax(0,1fr)]"
+                  <TransactionCard
+                    compact
                     key={row.id}
-                  >
-                    <span
-                      className={`grid size-[2.3rem] shrink-0 place-items-center rounded-full [&_svg]:size-[1rem] ${
-                        row.type === "income"
-                          ? "text-income bg-[color-mix(in_srgb,var(--income)_10%,transparent)]"
-                          : "text-expense bg-[color-mix(in_srgb,var(--expense)_10%,transparent)]"
-                      }`}
-                    >
-                      {row.type === "income" ? <ArrowDownLeft /> : <ArrowUpRight />}
-                    </span>
-                    <div className="grid min-w-0">
-                      <strong className="truncate text-[.86rem]">{row.categoryName}</strong>
-                      <span className="truncate text-[.72rem] text-muted">
-                        {row.accountName} · {formatJakartaDateLong(row.transactionAt)}
-                      </span>
-                      {row.note ? <small className="truncate text-[.72rem] text-muted">{row.note}</small> : null}
-                    </div>
-                    <strong
-                      className={`text-[.82rem] max-[540px]:col-start-2 ${
-                        row.type === "income" ? "text-income" : "text-expense"
-                      }`}
-                    >
-                      {row.type === "income" ? "+" : "−"} {formatIdr(row.amountIdr)}
-                    </strong>
-                  </article>
+                    transaction={{
+                      id: row.id,
+                      type: row.type,
+                      amount: row.amountIdr,
+                      transactionAt: row.transactionAt,
+                      note: row.note,
+                      categoryName: row.categoryName,
+                    }}
+                  />
                 ))}
               </div>
             </section>
