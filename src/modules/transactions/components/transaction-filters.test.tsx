@@ -1,4 +1,10 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import type { TransactionFilters } from "../schemas/transaction-filters";
 import { activeFilterCount, TransactionFilterBar } from "./transaction-filters";
@@ -16,7 +22,7 @@ const baseFilters: TransactionFilters = {
   sort: "transactionAt",
   direction: "desc",
   page: 1,
-  pageSize: 20,
+  pageSize: 15,
 };
 
 const accounts = [{ id: "acc-1", name: "Kas Utama" }];
@@ -44,7 +50,7 @@ describe("TransactionFilterBar", () => {
 
     expect(
       screen.getByRole("searchbox", { name: "Search description or category" }),
-    ).toHaveAttribute("placeholder", "Search description or category");
+    ).toHaveAttribute("placeholder", "Search transactions...");
     expect(screen.getByRole("button", { name: "Open filters" })).toBeInTheDocument();
     expect(
       screen.queryByRole("dialog", { name: "Filter transactions" }),
@@ -87,11 +93,11 @@ describe("TransactionFilterBar", () => {
       "href",
       "/transactions",
     );
-    expect(screen.getByRole("button", { name: "Close filters" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Close" })).toBeInTheDocument();
     expect(screen.queryByText("Add transaction")).not.toBeInTheDocument();
   });
 
-  it("closes the sheet from the close button and the Escape key", () => {
+  it("closes the sheet from the close button and the Escape key", async () => {
     render(
       <TransactionFilterBar
         accounts={accounts}
@@ -101,18 +107,22 @@ describe("TransactionFilterBar", () => {
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Open filters" }));
-    fireEvent.click(screen.getByRole("button", { name: "Close filters" }));
-    expect(
-      screen.queryByRole("dialog", { name: "Filter transactions" }),
-    ).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Close" }));
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("dialog", { name: "Filter transactions" }),
+      ).not.toBeInTheDocument(),
+    );
 
     fireEvent.click(screen.getByRole("button", { name: "Open filters" }));
     fireEvent.keyDown(screen.getByRole("dialog", { name: "Filter transactions" }), {
       key: "Escape",
     });
-    expect(
-      screen.queryByRole("dialog", { name: "Filter transactions" }),
-    ).not.toBeInTheDocument();
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("dialog", { name: "Filter transactions" }),
+      ).not.toBeInTheDocument(),
+    );
   });
 
   it("applies a filter selection to the submitted form without a page parameter", () => {

@@ -29,7 +29,7 @@ export function TransactionSummary({
         <strong className="wrap-anywhere text-[clamp(.72rem,3.4vw,.95rem)] font-medium tracking-[-.01em] text-expense">
           − {formatIdr(expense)}
         </strong>
-        <span className="text-[.68rem] font-medium text-muted">Expense</span>
+        <span className="text-[.68rem] font-medium text-muted">Payment</span>
       </div>
       <div className="flex min-w-0 flex-1 flex-col items-center justify-center gap-[.3rem] p-[.9rem_.35rem] border-l border-border text-center first:border-l-0">
         <PiggyBank aria-hidden="true" className="size-[1.15rem] text-primary-600" />

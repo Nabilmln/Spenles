@@ -17,6 +17,9 @@ import type { Database } from "@/db/types";
 import { conditionalSumSql } from "@/db/sql-helpers";
 import { accounts, categories, transactions } from "@/db/schema";
 import { getPeriodSavings } from "@/modules/accounts";
+import { getMonthlyAggregates } from "@/modules/dashboard";
+import { buildMonthlyCashFlowContract } from "@/modules/dashboard";
+import { lastMonthsJakartaInterval } from "@/modules/dashboard";
 import type { TransactionFilters } from "../schemas/transaction-filters";
 import { categoryJoin, conditions, dateInterval } from "./transaction-search";
 
@@ -70,6 +73,21 @@ export async function getTransaction(userId: string, id: string) {
     .where(and(eq(transactions.id, id), eq(transactions.userId, userId), isNull(transactions.deletedAt)))
     .limit(1);
   return rows[0];
+}
+
+export async function getExpenseOverview(
+  userId: string,
+  months = 6,
+  database: Database = db,
+) {
+  const interval = lastMonthsJakartaInterval(months);
+  const rows = await getMonthlyAggregates(userId, interval, database);
+  const contract = buildMonthlyCashFlowContract(interval, rows);
+  return {
+    points: contract.points,
+    totalIncome: contract.totalIncome,
+    totalExpense: contract.totalExpense,
+  };
 }
 
 export async function getTransactionOptions(

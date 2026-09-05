@@ -18,7 +18,7 @@ describe("TransactionSummary", () => {
     expect(region).toHaveClass("card");
     expect(region.querySelectorAll(":scope > div")).toHaveLength(3);
     expect(screen.getByText("Income")).toBeInTheDocument();
-    expect(screen.getByText("Expense")).toBeInTheDocument();
+    expect(screen.getByText("Payment")).toBeInTheDocument();
     expect(screen.getByText("Savings")).toBeInTheDocument();
     expect(screen.getByText(/Rp\s*1\.000\.000/u)).toBeInTheDocument();
     expect(screen.getByText(/Rp\s*250\.000/u)).toBeInTheDocument();

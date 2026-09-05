@@ -25,6 +25,8 @@ export function BottomSheet({
   const [prevOpen, setPrevOpen] = useState(open);
   const [closing, setClosing] = useState(false);
 
+  const visible = open || closing;
+
   if (prevOpen !== open) {
     setPrevOpen(open);
     setClosing(!open);
@@ -36,7 +38,14 @@ export function BottomSheet({
     return () => window.clearTimeout(timer);
   }, [closing]);
 
-  const visible = open || closing;
+  useEffect(() => {
+    if (!visible || closing) return;
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") onClose();
+    }
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [visible, closing, onClose]);
   if (!visible) return null;
 
   return createPortal(

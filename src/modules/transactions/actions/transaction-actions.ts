@@ -11,9 +11,24 @@ import {
   softDeleteOwnedTransaction,
   updateOwnedTransaction,
 } from "../services/transaction-mutations";
-import { getTransaction } from "../queries/transactions";
+import { getTransaction, listTransactions } from "../queries/transactions";
+import { transactionFilterSchema, type TransactionFilters } from "../schemas/transaction-filters";
 
 export type TransactionActionState = { error?: string };
+
+export async function loadMoreTransactionsAction(
+  filters: TransactionFilters,
+  page: number,
+) {
+  const user = await requireSessionUser();
+  const parsed = transactionFilterSchema.safeParse({ ...filters, page });
+  if (!parsed.success) return { rows: [], hasMore: false };
+  const result = await listTransactions(user.id, parsed.data);
+  return {
+    rows: result.rows,
+    hasMore: result.total > parsed.data.page * parsed.data.pageSize,
+  };
+}
 
 function input(formData: FormData) {
   return {

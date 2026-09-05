@@ -1,16 +1,20 @@
-import Link from "next/link";
 import { requireSessionUser } from "@/lib/auth/require-session";
-import { buttonClass, cardClass, pageDescriptionClass, pageStackClass } from "@/components/ui/styles";
+import { pageStackClass } from "@/components/ui/styles";
 import {
+  ExpenseOverviewCard,
+  getExpenseOverview,
   getTransactionOptions,
   getTransactionSummary,
   listTransactions,
-  Pagination,
   parseTransactionFilters,
-  TransactionFilterBar,
-  TransactionList,
+  TransactionHistorySection,
   TransactionSummary,
 } from "@/modules/transactions";
+
+export const dynamic = "force-dynamic";
+
+const INITIAL_PAGE = 1;
+const INITIAL_PAGE_SIZE = 15;
 
 export default async function TransactionsPage({
   searchParams,
@@ -23,27 +27,57 @@ export default async function TransactionsPage({
   if (!parsed.success) {
     return (
       <div className={pageStackClass}>
-        <div className={cardClass}><p className="m-0 text-muted">The search or filter parameters could not be applied.</p><Link className={buttonClass("primary")} href="/transactions">Reset filters</Link></div>
+        <TransactionHistorySection
+          filters={{
+            q: "",
+            sort: "transactionAt",
+            direction: "desc",
+            page: INITIAL_PAGE,
+            pageSize: INITIAL_PAGE_SIZE,
+          }}
+          accounts={[]}
+          categories={[]}
+          initialRows={[]}
+          total={0}
+        />
       </div>
     );
   }
-  const [result, options, summary] = await Promise.all([
-    listTransactions(user.id, parsed.data),
+
+  const [result, options, summary, overview] = await Promise.all([
+    listTransactions(user.id, {
+      ...parsed.data,
+      page: INITIAL_PAGE,
+      pageSize: INITIAL_PAGE_SIZE,
+    }),
     getTransactionOptions(user.id),
     getTransactionSummary(user.id, parsed.data),
+    getExpenseOverview(user.id),
   ]);
+
   return (
     <div className={pageStackClass}>
-      <p className={pageDescriptionClass}>Record and find your income, expenses, and savings.</p>
-      <TransactionSummary income={summary.income} expense={summary.expense} savings={summary.savings} />
-      <div className="flex items-center justify-end">
-        <Link className={buttonClass("primary")} href="/transactions/new">
-          Add transaction
-        </Link>
-      </div>
-      <TransactionFilterBar filters={parsed.data} {...options} />
-      <TransactionList rows={result.rows} />
-      <Pagination filters={parsed.data} total={result.total} totalPages={result.totalPages} />
+      <ExpenseOverviewCard
+        points={overview.points}
+        totalExpense={overview.totalExpense}
+        totalIncome={overview.totalIncome}
+      />
+      <TransactionSummary
+        income={summary.income}
+        expense={summary.expense}
+        savings={summary.savings}
+      />
+      <TransactionHistorySection
+        filters={{
+          ...parsed.data,
+          page: INITIAL_PAGE,
+          pageSize: INITIAL_PAGE_SIZE,
+        }}
+        accounts={options.accounts}
+        categories={options.categories}
+        initialRows={result.rows}
+        total={result.total}
+      />
     </div>
   );
 }

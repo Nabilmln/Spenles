@@ -5,7 +5,7 @@ describe("transaction filters", () => {
   it("provides controlled defaults", () => {
     const result = parseTransactionFilters({});
     expect(result.success).toBe(true);
-    if (result.success) expect(result.data).toMatchObject({ page: 1, pageSize: 20, sort: "transactionAt", direction: "desc" });
+    if (result.success) expect(result.data).toMatchObject({ page: 1, pageSize: 15, sort: "transactionAt", direction: "desc" });
   });
 
   it("accepts allowlisted sorting and pagination", () => {
