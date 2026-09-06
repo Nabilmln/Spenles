@@ -197,7 +197,7 @@ export function TransactionFilterBar({
           </div>
         </div>
 
-        <div className="mt-[1.35rem] mb-4 grid grid-cols-2 gap-[.55rem]">
+        <div className="mt-[1.35rem] grid grid-cols-2 gap-[.55rem]">
           <Link
             className={cn(buttonClass("secondary"), "justify-center")}
             href="/transactions"

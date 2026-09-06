@@ -5,7 +5,6 @@ import {
   FileBarChart,
   Home,
   ListTree,
-  Plus,
   ReceiptText,
   Repeat2,
   Target,
@@ -15,6 +14,7 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { AddTransactionButton } from "./add-transaction-button";
 
 const links = [
   { href: "/dashboard", label: "Home", icon: Home },
@@ -49,16 +49,7 @@ export function NavigationLinks({ mobile = false }: { mobile?: boolean }) {
         {mobileLinks.map(({ href, label, icon: Icon }) => (
           <MobileLink active={pathname === href} href={href} icon={Icon} key={href} label={label} />
         ))}
-        <Link
-          aria-label="Add transaction"
-          className="grid min-h-[2.9rem] min-w-[2.9rem] place-items-center self-center rounded-full"
-          href="/transactions/new"
-        >
-          <span className="grid size-[2.2rem] place-items-center rounded-full bg-primary-600 text-white shadow-[0_6px_20px_rgb(79_70_229/45%)] transition-transform duration-150 active:scale-95">
-            <Plus size={18} strokeWidth={2.75} aria-hidden="true" />
-          </span>
-          <span className="sr-only">Add transaction</span>
-        </Link>
+        <AddTransactionButton />
       </>
     );
   }

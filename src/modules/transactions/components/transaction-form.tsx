@@ -1,18 +1,23 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
+import { ChevronRight } from "lucide-react";
 import { useToastActionState } from "@/components/ui/toast";
-import { calculateExpression } from "../services/calculator";
 import { createTransferAction } from "@/modules/accounts/actions/transfer-actions";
 import type { TransactionActionState } from "../actions/transaction-actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { FormMessage } from "@/components/ui/form-message";
-import { Select } from "@/components/ui/select";
-import { buttonClass, fieldClass, fieldHintClass, fieldLabelClass, formMessageClass, inputDisplayClass, textareaClass } from "@/components/ui/styles";
+import { fieldClass, fieldLabelClass, formMessageClass, inputClass } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import { formatIdr } from "@/lib/money/format-idr";
+import { formatDateLong } from "@/lib/dates/format-id";
+import { AmountCalculatorSheet } from "./amount-calculator-sheet";
+import {
+  AccountSelectionSheet,
+  CategorySelectionSheet,
+} from "./selection-sheets";
+import { SingleDateCalendar } from "@/components/ui/single-date-calendar";
+import { BottomSheet } from "@/components/ui/bottom-sheet";
 
 const modeLabelClass =
   "relative flex flex-1 min-w-[6.5rem] min-h-[2.55rem] cursor-pointer items-center justify-center rounded-[.7rem] border border-border bg-surface-subtle p-[.45rem_.6rem] text-center text-[.78rem] font-medium text-muted focus-within:outline-2 focus-within:outline-primary-500 focus-within:outline-offset-2";
@@ -23,8 +28,19 @@ const directionLabelClass =
 const modeActiveClass = "border-primary-500 bg-primary-50 text-primary-700";
 
 type Option = { id: string; name: string; type?: string };
-type CategoryOption = Option & { type: "income" | "expense" };
+export type TransactionFormCategory = Option & {
+  type: "income" | "expense";
+  icon: string | null;
+  color: string | null;
+};
 type FlowType = "expense" | "income" | "savings";
+
+function sheetFieldClass() {
+  return cn(
+    inputClass,
+    "flex min-h-[2.9rem] cursor-pointer items-center justify-between gap-[.5rem] rounded-[.72rem] bg-white! p-[.72rem_.85rem] text-left dark:bg-surface!",
+  );
+}
 
 export function TransactionForm({
   action,
@@ -35,7 +51,7 @@ export function TransactionForm({
 }: {
   action: (state: TransactionActionState, data: FormData) => Promise<TransactionActionState>;
   accounts: Option[];
-  categories: CategoryOption[];
+  categories: TransactionFormCategory[];
   initial?: {
     id: string;
     type: "income" | "expense";
@@ -60,7 +76,22 @@ export function TransactionForm({
   const [amount, setAmount] = useState(initial?.amount ?? "");
   const [date, setDate] = useState(initial?.transactionAt.slice(0, 10) ?? defaultDate ?? "");
   const [direction, setDirection] = useState<"save" | "withdraw">("save");
-  const matchingCategories = useMemo(() => categories.filter((item) => item.type === type), [categories, type]);
+  const [categoryId, setCategoryId] = useState(initial?.categoryId ?? "");
+  const [accountId, setAccountId] = useState(initial?.accountId ?? "");
+  const [sourceAccountId, setSourceAccountId] = useState("");
+  const [destinationAccountId, setDestinationAccountId] = useState("");
+
+  const [amountSheet, setAmountSheet] = useState(false);
+  const [categorySheet, setCategorySheet] = useState(false);
+  const [accountSheet, setAccountSheet] = useState(false);
+  const [dateSheet, setDateSheet] = useState(false);
+  const [sourceSheet, setSourceSheet] = useState(false);
+  const [destinationSheet, setDestinationSheet] = useState(false);
+
+  const matchingCategories = useMemo(
+    () => categories.filter((item) => item.type === type),
+    [categories, type],
+  );
 
   const spendingAccounts = useMemo(
     () => accounts.filter((item) => item.type !== "savings"),
@@ -74,375 +105,306 @@ export function TransactionForm({
   const sourceAccounts = direction === "save" ? spendingAccounts : savingsAccounts;
   const destinationAccounts = direction === "save" ? savingsAccounts : spendingAccounts;
 
+  const selectedCategory = matchingCategories.find((item) => item.id === categoryId);
+  const selectedAccount = spendingAccounts.find((item) => item.id === accountId);
+  const selectedSource = accounts.find((item) => item.id === sourceAccountId);
+  const selectedDestination = accounts.find((item) => item.id === destinationAccountId);
+
   return (
-    <form
-      action={formAction}
-      className="grid gap-[1.25rem] text-[.9rem]"
-      aria-busy={pending}
-    >
-      {initial ? <input type="hidden" name="id" value={initial.id} /> : null}
+    <>
+      <form
+        action={formAction}
+        className="grid gap-[1rem] text-[.9rem]"
+        aria-busy={pending}
+      >
+        {initial ? <input type="hidden" name="id" value={initial.id} /> : null}
 
-      <fieldset className="flex flex-wrap gap-2 m-0 p-0 border-0">
-        <legend className="w-full mb-[.45rem] text-[.8rem] font-medium">Transaction type</legend>
-        {(["expense", "income"] as const).map((value) => (
-          <label key={value} className={cn(modeLabelClass, type === value && modeActiveClass)}>
-            <input
-              type="radio"
-              name="type"
-              value={value}
-              checked={type === value}
-              onChange={() => setType(value)}
-              className="absolute opacity-0 pointer-events-none"
-            />
-            {value === "expense" ? "Expense" : "Income"}
-          </label>
-        ))}
-        {!initial ? (
-          <label className={cn(modeLabelClass, type === "savings" && modeActiveClass)}>
-            <input
-              type="radio"
-              name="type"
-              value="savings"
-              checked={type === "savings"}
-              onChange={() => setType("savings")}
-              className="absolute opacity-0 pointer-events-none"
-            />
-            Savings
-          </label>
-        ) : null}
-      </fieldset>
-
-      {type === "savings" ? (
-        <SavingsFields
-          direction={direction}
-          setDirection={setDirection}
-          hasSavings={hasSavings}
-          sourceAccounts={sourceAccounts}
-          destinationAccounts={destinationAccounts}
-          amount={amount}
-          setAmount={setAmount}
-          pending={pending}
-          date={date}
-          setDate={setDate}
-          errorId="form-error"
-        />
-      ) : (
-        <>
-          <AmountField amount={amount} setAmount={setAmount} pending={pending} />
-          <div className={fieldClass}>
-            <label htmlFor="accountId" className={cn(fieldLabelClass, "text-[.8rem]")}>Source of funds</label>
-            <Select id="accountId" name="accountId" defaultValue={initial?.accountId} required>
-              <option value="">Select account</option>
-              {spendingAccounts.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
-            </Select>
-          </div>
-          <div className={fieldClass}>
-            <label htmlFor="categoryId" className={cn(fieldLabelClass, "text-[.8rem]")}>
-              {type === "expense" ? "Expense category" : "Income category"}
+        <fieldset className="m-0 flex flex-wrap gap-2 border-0 p-0">
+          <legend className="mb-[.45rem] w-full text-[.8rem] font-medium">Transaction type</legend>
+          {(["expense", "income"] as const).map((value) => (
+            <label key={value} className={cn(modeLabelClass, type === value && modeActiveClass)}>
+              <input
+                type="radio"
+                name="type"
+                value={value}
+                checked={type === value}
+                onChange={() => setType(value)}
+                className="pointer-events-none absolute opacity-0"
+              />
+              {value === "expense" ? "Payment" : "Income"}
             </label>
-            <Select
-              id="categoryId"
-              name="categoryId"
-              defaultValue={initial?.categoryId}
-              key={`${type}-${initial?.categoryId}`}
-              required
-            >
-              <option value="">Select category</option>
-              {matchingCategories.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
-            </Select>
-          </div>
-          <div className={fieldClass}>
-            <label htmlFor="transactionAt" className={cn(fieldLabelClass, "text-[.8rem]")}>Date</label>
-            <Input
-              id="transactionAt"
-              name="transactionAt"
-              type="date"
-              value={date}
-              onChange={(event) => setDate(event.target.value)}
-              required
-              className="min-h-[2.7rem]"
+          ))}
+          {!initial ? (
+            <label className={cn(modeLabelClass, type === "savings" && modeActiveClass)}>
+              <input
+                type="radio"
+                name="type"
+                value="savings"
+                checked={type === "savings"}
+                onChange={() => setType("savings")}
+                className="pointer-events-none absolute opacity-0"
+              />
+              Saving
+            </label>
+          ) : null}
+        </fieldset>
+
+        {type === "savings" ? (
+          <>
+            <fieldset className="m-0 flex flex-wrap gap-2 border-0 p-0">
+              <legend className="mb-[.45rem] w-full text-[.8rem] font-medium">Fund direction</legend>
+              {(["save", "withdraw"] as const).map((value) => (
+                <label key={value} className={cn(directionLabelClass, direction === value && modeActiveClass)}>
+                  <input
+                    type="radio"
+                    name="direction"
+                    value={value}
+                    checked={direction === value}
+                    onChange={() => setDirection(value)}
+                    className="pointer-events-none absolute opacity-0"
+                  />
+                  {value === "save" ? "Save" : "Withdraw"}
+                </label>
+              ))}
+            </fieldset>
+            {!hasSavings ? (
+              <p className={formMessageClass}>
+                Create a Savings account on the Accounts page before recording savings.
+              </p>
+            ) : null}
+
+            <AmountField
+              amount={amount}
+              onOpen={() => setAmountSheet(true)}
+              disabled={pending}
             />
-            <p className={cn(fieldHintClass, "text-[.72rem] mt-[.35rem]")}>Time is filled automatically using the current time in the Asia/Jakarta timezone.</p>
-          </div>
-          <div className={fieldClass}>
-            <label htmlFor="note" className={cn(fieldLabelClass, "text-[.8rem]")}>Note (optional)</label>
-            <textarea className={cn(textareaClass, "min-h-[2.7rem]")} id="note" name="note" maxLength={500} defaultValue={initial?.note} />
-          </div>
-          <div className="flex items-center gap-2">
+
+            <div className={fieldClass}>
+              <span className={cn(fieldLabelClass, "text-[.8rem]")}>From account</span>
+              <button
+                type="button"
+                className={sheetFieldClass()}
+                disabled={!hasSavings}
+                onClick={() => setSourceSheet(true)}
+              >
+                <span className="min-w-0 truncate">{selectedSource?.name ?? "Choose account"}</span>
+                <ChevronRight aria-hidden="true" className="shrink-0 text-muted" size={18} />
+              </button>
+              <input type="hidden" name="sourceAccountId" value={sourceAccountId} />
+            </div>
+
+            <div className={fieldClass}>
+              <span className={cn(fieldLabelClass, "text-[.8rem]")}>To savings account</span>
+              <button
+                type="button"
+                className={sheetFieldClass()}
+                disabled={!hasSavings}
+                onClick={() => setDestinationSheet(true)}
+              >
+                <span className="min-w-0 truncate">{selectedDestination?.name ?? "Choose account"}</span>
+                <ChevronRight aria-hidden="true" className="shrink-0 text-muted" size={18} />
+              </button>
+              <input type="hidden" name="destinationAccountId" value={destinationAccountId} />
+            </div>
+
+            <DateField date={date} onOpen={() => setDateSheet(true)} inputName="transferredAt" />
+            <NoteField />
+            <div className="flex items-center gap-2">
+              <Button type="submit" disabled={pending || !hasSavings} className="min-h-[2.6rem] flex-1 p-[.55rem_.9rem] text-[.88rem]">
+                {pending ? "Saving..." : "Add Transaction"}
+              </Button>
+            </div>
+          </>
+        ) : (
+          <>
+            <AmountField amount={amount} onOpen={() => setAmountSheet(true)} disabled={pending} />
+
+            <div className={fieldClass}>
+              <span className={cn(fieldLabelClass, "text-[.8rem]")}>Category</span>
+              <button
+                type="button"
+                className={sheetFieldClass()}
+                onClick={() => setCategorySheet(true)}
+              >
+                <span className="min-w-0 truncate">{selectedCategory?.name ?? "Choose Category"}</span>
+                <ChevronRight aria-hidden="true" className="shrink-0 text-muted" size={18} />
+              </button>
+              <input type="hidden" name="categoryId" value={categoryId} />
+            </div>
+
+            <div className={fieldClass}>
+              <span className={cn(fieldLabelClass, "text-[.8rem]")}>Account</span>
+              <button
+                type="button"
+                className={sheetFieldClass()}
+                onClick={() => setAccountSheet(true)}
+              >
+                <span className="min-w-0 truncate">{selectedAccount?.name ?? "Choose Account"}</span>
+                <ChevronRight aria-hidden="true" className="shrink-0 text-muted" size={18} />
+              </button>
+              <input type="hidden" name="accountId" value={accountId} />
+            </div>
+
+            <NoteField />
+            <DateField date={date} onOpen={() => setDateSheet(true)} inputName="transactionAt" />
+
             <Button type="submit" disabled={pending} className="min-h-[2.6rem] p-[.55rem_.9rem] text-[.88rem]">
-              {pending ? "Saving..." : "Confirm"}
+              {pending ? "Saving..." : "Add Transaction"}
             </Button>
-            <Link className={cn(buttonClass("secondary"), "min-h-[2.6rem] p-[.55rem_.9rem] text-[.88rem]")} href="/transactions">Cancel</Link>
-          </div>
-        </>
-      )}
-    </form>
+          </>
+        )}
+      </form>
+
+      <AmountCalculatorSheet
+        open={amountSheet}
+        onClose={() => setAmountSheet(false)}
+        onCommit={setAmount}
+      />
+
+      <CategorySelectionSheet
+        open={categorySheet}
+        onClose={() => setCategorySheet(false)}
+        categories={matchingCategories}
+        selectedId={categoryId}
+        onSelect={setCategoryId}
+      />
+
+      <AccountSelectionSheet
+        open={accountSheet}
+        onClose={() => setAccountSheet(false)}
+        accounts={spendingAccounts}
+        selectedId={accountId}
+        onSelect={setAccountId}
+      />
+
+      <AccountSelectionSheet
+        open={sourceSheet}
+        onClose={() => setSourceSheet(false)}
+        accounts={sourceAccounts}
+        selectedId={sourceAccountId}
+        onSelect={setSourceAccountId}
+      />
+
+      <AccountSelectionSheet
+        open={destinationSheet}
+        onClose={() => setDestinationSheet(false)}
+        accounts={destinationAccounts}
+        selectedId={destinationAccountId}
+        onSelect={setDestinationAccountId}
+      />
+
+      <SingleDateSheet
+        open={dateSheet}
+        onClose={() => setDateSheet(false)}
+        date={date}
+        onSelect={setDate}
+        inputName={type === "savings" ? "transferredAt" : "transactionAt"}
+      />
+    </>
   );
 }
 
 function AmountField({
   amount,
-  setAmount,
-  pending,
+  onOpen,
+  disabled,
 }: {
   amount: string;
-  setAmount: (value: string) => void;
-  pending: boolean;
+  onOpen: () => void;
+  disabled?: boolean;
 }) {
-  const [open, setOpen] = useState(false);
-  const [expression, setExpression] = useState("");
-  const [calculatorError, setCalculatorError] = useState("");
-  const amountRef = useRef<HTMLButtonElement>(null);
-
-  const result = useMemo(() => {
-    if (!expression.trim()) return null;
-    try {
-      return calculateExpression(expression);
-    } catch {
-      return null;
-    }
-  }, [expression]);
-
-  useEffect(() => {
-    if (open) {
-      requestAnimationFrame(() => document.getElementById("calc-expression")?.focus());
-    }
-  }, [open]);
-
-  function commit() {
-    if (!result) {
-      setCalculatorError(calculatorError || "Enter the amount using the number buttons so it can be calculated.");
-      return;
-    }
-    setAmount(result);
-    setOpen(false);
-    setExpression("");
-    setCalculatorError("");
-    amountRef.current?.focus();
-  }
-
-  function append(char: string) {
-    setExpression((current) => current + char);
-    setCalculatorError("");
-  }
-
-  function backspace() {
-    setExpression((current) => current.replace(/\s+$/u, "").slice(0, -1));
-  }
-
-  useEffect(() => {
-    function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setOpen(false);
-        amountRef.current?.focus();
-      }
-    }
-    if (open) window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open]);
-
   return (
     <div className={fieldClass}>
-      <label htmlFor="amount-control" className={cn(fieldLabelClass, "text-[.8rem]")}>Amount</label>
+      <label className={cn(fieldLabelClass, "text-[.8rem]")}>Amount</label>
       <button
         type="button"
-        id="amount-control"
-        ref={amountRef}
-        className="w-full min-h-[2.9rem] cursor-pointer rounded-[.72rem] border-0 bg-transparent p-0 text-left focus-visible:outline-2 focus-visible:outline-primary-500 focus-visible:outline-offset-2"
-        onClick={() => setOpen(true)}
+        className={cn(inputClass, "flex min-h-[2.9rem] cursor-pointer items-center justify-between gap-[.5rem] rounded-[.72rem] bg-white! p-[.72rem_.85rem] text-left dark:bg-surface!")}
+        disabled={disabled}
+        onClick={onOpen}
         aria-haspopup="dialog"
-        aria-expanded={open}
-        aria-label="Enter the amount using the calculator"
       >
-        <span className={`${inputDisplayClass} text-foreground text-[1.05rem]`}>{amount ? formatIdr(amount) : "Enter amount"}</span>
+        <span className="min-w-0 truncate text-[.95rem] font-medium">
+          {amount ? formatIdr(amount) : "Enter amount"}
+        </span>
+        <ChevronRight aria-hidden="true" className="shrink-0 text-muted" size={18} />
       </button>
-      {amount ? (
-        <input type="hidden" name="amount" value={amount} />
-      ) : (
-        <input type="hidden" name="amount" value="" />
-      )}
-
-      {open ? (
-        <div
-          className="fixed inset-0 z-40 flex items-end justify-center bg-[rgb(15_23_42/45%)] p-4 min-[861px]:items-center"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Amount calculator"
-          onMouseDown={(event) => {
-            if (event.currentTarget === event.target) {
-              setOpen(false);
-              amountRef.current?.focus();
-            }
-          }}
-        >
-          <div className="max-h-[90vh] w-full max-w-[30rem] overflow-y-auto rounded-t-[1.25rem] rounded-b-[1.1rem] border border-border bg-surface p-5 shadow-card min-[861px]:rounded-[1.25rem_1.25rem_1.1rem_1.1rem]">
-            <div className="mb-4 flex items-center justify-between gap-4">
-              <strong className="text-[.95rem]">Amount calculator</strong>
-              <button
-                type="button"
-                className="cursor-pointer border-0 bg-transparent font-medium text-muted hover:text-foreground"
-                aria-label="Close calculator"
-                onClick={() => {
-                  setOpen(false);
-                  amountRef.current?.focus();
-                }}
-              >
-                Close
-              </button>
-            </div>
-            <div className="mb-[.85rem] grid gap-[.3rem] rounded-[.8rem] border border-border bg-surface-subtle p-[.9rem]">
-              <input
-                id="calc-expression"
-                className="w-full min-h-[1.6rem] border-0 bg-transparent p-0 text-[.85rem] font-medium text-muted outline-none"
-                aria-label="Calculator expression"
-                value={expression}
-                onChange={(event) => setExpression(event.target.value)}
-                placeholder="25000 + 18000 + 7500"
-                readOnly
-              />
-              <p className="m-0 text-[1.15rem] font-medium tracking-[-.03em]" aria-live="polite">
-                {result ? formatIdr(result) : "—"}
-              </p>
-            </div>
-            <FormMessage>{calculatorError}</FormMessage>
-            <div className="grid grid-cols-[repeat(4,minmax(0,1fr))] gap-2">
-              {["7", "8", "9", "/"].map((key) => <KeypadButton key={key} label={key} aria={key} onClick={() => append(key)} />)}
-              {["4", "5", "6", "*"].map((key) => <KeypadButton key={key} label={key} aria={key} onClick={() => append(key)} />)}
-              {["1", "2", "3", "-"].map((key) => <KeypadButton key={key} label={key} aria={key} onClick={() => append(key)} />)}
-              {["0"].map((key) => <KeypadButton key={key} label={key} aria={key} onClick={() => append(key)} />)}
-              <KeypadButton label="C" aria="Clear" onClick={() => { setExpression(""); setCalculatorError(""); }} />
-              <KeypadButton label="⌫" aria="Delete last character" onClick={backspace} />
-              <KeypadButton label="+" aria="Add" onClick={() => append("+")} />
-              <KeypadButton
-                label="("
-                aria="Open parenthesis"
-                onClick={() => append("(")}
-              />
-              <KeypadButton
-                label=")"
-                aria="Close parenthesis"
-                onClick={() => append(")")}
-              />
-            </div>
-            <p className={cn(fieldHintClass, "text-[.72rem] mt-[.35rem]")}>Operators: +, −, ×, ÷, and parentheses. The result is rounded to the nearest rupiah.</p>
-            <Button
-              type="button"
-              variant="primary"
-              className="w-full mt-[.9rem] min-h-[2.6rem] p-[.55rem_.9rem] text-[.88rem]"
-              disabled={pending || !result}
-              onClick={commit}
-            >
-              Done
-            </Button>
-          </div>
-        </div>
-      ) : null}
+      <input type="hidden" name="amount" value={amount} />
     </div>
   );
 }
 
-function KeypadButton({
-  label,
-  aria,
-  onClick,
+function DateField({
+  date,
+  onOpen,
+  inputName,
 }: {
-  label: string;
-  aria: string;
-  onClick: () => void;
+  date: string;
+  onOpen: () => void;
+  inputName: string;
 }) {
   return (
-    <button type="button" className="min-h-[2.85rem] cursor-pointer rounded-[.7rem] border border-border bg-surface-subtle p-[.5rem] text-[.92rem] font-medium text-foreground hover:bg-primary-50 focus-visible:outline-2 focus-visible:outline-primary-500 focus-visible:outline-offset-2" aria-label={aria} onClick={onClick}>
-      {label}
-    </button>
+    <div className={fieldClass}>
+      <label className={cn(fieldLabelClass, "text-[.8rem]")}>Date</label>
+      <button
+        type="button"
+        className={sheetFieldClass()}
+        onClick={onOpen}
+        aria-haspopup="dialog"
+      >
+        <span className="min-w-0 truncate">{date ? formatDateLong(date) : "Select date"}</span>
+        <ChevronRight aria-hidden="true" className="shrink-0 text-muted" size={18} />
+      </button>
+      <input type="hidden" name={inputName} value={date} />
+    </div>
   );
 }
 
-function SavingsFields({
-  direction,
-  setDirection,
-  hasSavings,
-  sourceAccounts,
-  destinationAccounts,
-  amount,
-  setAmount,
-  pending,
+function NoteField() {
+  return (
+    <div className={fieldClass}>
+      <label htmlFor="tx-note" className={cn(fieldLabelClass, "text-[.8rem]")}>
+        Description (optional)
+      </label>
+      <Input
+        id="tx-note"
+        name="note"
+        className="min-h-[2.9rem]"
+        maxLength={500}
+        placeholder="Add a description..."
+      />
+    </div>
+  );
+}
+
+function SingleDateSheet({
+  open,
+  onClose,
   date,
-  setDate,
-  errorId,
+  onSelect,
+  inputName,
 }: {
-  direction: "save" | "withdraw";
-  setDirection: (value: "save" | "withdraw") => void;
-  hasSavings: boolean;
-  sourceAccounts: Option[];
-  destinationAccounts: Option[];
-  amount: string;
-  setAmount: (value: string) => void;
-  pending: boolean;
+  open: boolean;
+  onClose: () => void;
   date: string;
-  setDate: (value: string) => void;
-  errorId: string;
+  onSelect: (value: string) => void;
+  inputName: string;
 }) {
   return (
-    <>
-      <fieldset className="flex flex-wrap gap-2 m-0 p-0 border-0">
-        <legend className="w-full mb-[.45rem] text-[.8rem] font-medium">Fund direction</legend>
-        {(["save", "withdraw"] as const).map((value) => (
-          <label key={value} className={cn(directionLabelClass, direction === value && modeActiveClass)}>
-            <input
-              type="radio"
-              name="direction"
-              value={value}
-              checked={direction === value}
-              onChange={() => setDirection(value)}
-              className="absolute opacity-0 pointer-events-none"
-            />
-            {value === "save" ? "Save" : "Withdraw"}
-          </label>
-        ))}
-      </fieldset>
-      {!hasSavings ? (
-        <p className={formMessageClass}>
-          Create a Savings account on the Accounts page before recording savings.
-        </p>
-      ) : null}
-      <AmountField amount={amount} setAmount={setAmount} pending={pending} />
-      <div className={fieldClass}>
-        <label htmlFor="sourceAccountId" className={cn(fieldLabelClass, "text-[.8rem]")}>From account</label>
-        <Select id="sourceAccountId" name="sourceAccountId" defaultValue="" required disabled={!hasSavings}>
-          <option value="">Select account</option>
-          {sourceAccounts.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
-        </Select>
-      </div>
-      <div className={fieldClass}>
-        <label htmlFor="destinationAccountId" className={cn(fieldLabelClass, "text-[.8rem]")}>To savings account</label>
-        <Select id="destinationAccountId" name="destinationAccountId" defaultValue="" required disabled={!hasSavings}>
-          <option value="">Select account</option>
-          {destinationAccounts.map((item) => <option key={item.id} value={item.id}>{item.name}</option>)}
-        </Select>
-      </div>
-      <div className={fieldClass}>
-        <label htmlFor="transferredAt" className={cn(fieldLabelClass, "text-[.8rem]")}>Date</label>
-        <Input
-          id="transferredAt"
-          name="transferredAt"
-          type="date"
-          value={date}
-          onChange={(event) => setDate(event.target.value)}
-          required
-          className="min-h-[2.7rem]"
-        />
-        <p className={cn(fieldHintClass, "text-[.72rem] mt-[.35rem]")}>Time is taken from the current time in the Asia/Jakarta timezone.</p>
-      </div>
-      <div className={fieldClass}>
-        <label htmlFor="note" className={cn(fieldLabelClass, "text-[.8rem]")}>Note (optional)</label>
-        <textarea className={cn(textareaClass, "min-h-[2.7rem]")} id="note" name="note" maxLength={500} />
-      </div>
-      <div className="flex items-center gap-2">
-        <Button type="submit" disabled={pending || !hasSavings} aria-describedby={errorId} className="min-h-[2.6rem] p-[.55rem_.9rem] text-[.88rem]">
-          {pending ? "Saving..." : "Confirm"}
-        </Button>
-        <Link className={cn(buttonClass("secondary"), "min-h-[2.6rem] p-[.55rem_.9rem] text-[.88rem]")} href="/transactions">Cancel</Link>
-      </div>
-    </>
+    <BottomSheet
+      open={open}
+      onClose={onClose}
+      title="Select Date"
+      ariaLabel="Select date"
+      zIndex="z-[85]"
+    >
+      <SingleDateCalendar
+        value={date}
+        onChange={(next) => {
+          onSelect(next);
+          onClose();
+        }}
+      />
+      <input type="hidden" name={inputName} value={date} />
+    </BottomSheet>
   );
 }

@@ -13,6 +13,7 @@ export function BottomSheet({
   title,
   ariaLabel,
   zIndex = "z-[80]",
+  fullHeight = false,
   children,
 }: {
   open: boolean;
@@ -20,6 +21,7 @@ export function BottomSheet({
   title: string;
   ariaLabel: string;
   zIndex?: string;
+  fullHeight?: boolean;
   children: React.ReactNode;
 }) {
   const [prevOpen, setPrevOpen] = useState(open);
@@ -75,7 +77,8 @@ export function BottomSheet({
       />
       <div
         className={cn(
-          "relative flex max-h-[88dvh] w-full flex-col overflow-hidden rounded-t-[1.6rem] border-t border-border bg-surface shadow-[0_-10px_40px_rgb(15_15_18/20%)]",
+          "relative flex w-full flex-col overflow-hidden rounded-t-[1.6rem] border-t border-border bg-surface shadow-[0_-10px_40px_rgb(15_15_18/20%)]",
+          fullHeight ? "h-dvh" : "max-h-[88dvh]",
           closing ? "profile-curtain-out" : "profile-curtain-in",
         )}
         onClick={(event) => event.stopPropagation()}

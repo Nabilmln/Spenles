@@ -1,4 +1,11 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { TransactionForm } from "./transaction-form";
 
@@ -13,8 +20,8 @@ const accounts = [
   { id: "acc-2", name: "Tabungan", type: "savings" },
 ];
 const categories = [
-  { id: "cat-1", name: "Makanan", type: "expense" as const },
-  { id: "cat-2", name: "Gaji", type: "income" as const },
+  { id: "cat-1", name: "Makanan", type: "expense" as const, icon: null, color: null },
+  { id: "cat-2", name: "Gaji", type: "income" as const, icon: null, color: null },
 ];
 
 function renderForm() {
@@ -29,69 +36,84 @@ function renderForm() {
 }
 
 describe("TransactionForm", () => {
-  it("shows a segmented control with expense, income and savings options", () => {
+  it("shows a segmented control with payment, income and saving options", () => {
     renderForm();
-    expect(screen.getByRole("radio", { name: "Expense" })).toBeChecked();
+    expect(screen.getByRole("radio", { name: "Payment" })).toBeChecked();
     expect(screen.getByRole("radio", { name: "Income" })).not.toBeChecked();
-    expect(screen.getByRole("radio", { name: "Savings" })).not.toBeChecked();
+    expect(screen.getByRole("radio", { name: "Saving" })).not.toBeChecked();
   });
 
-  it("uses date-only input for the transaction date", () => {
+  it("defaults the date field to today", () => {
     renderForm();
-    const dateInput = screen.getByLabelText("Date");
-    expect(dateInput).toHaveAttribute("type", "date");
-    expect(dateInput).toHaveValue("2026-08-07");
+    expect(screen.getByText("7 August 2026")).toBeInTheDocument();
   });
 
-  it("maps expense categories only in expense mode", () => {
+  it("opens the category curtain and selects an expense category", async () => {
     renderForm();
-    expect(screen.getByLabelText("Expense category")).toBeInTheDocument();
-    const select = screen.getByLabelText("Expense category");
-    const expenses = Array.from(select.querySelectorAll("option")).map((option) => option.value);
-    expect(expenses).toContain("cat-1");
-    expect(expenses).not.toContain("cat-2");
+    fireEvent.click(screen.getByRole("button", { name: "Choose Category" }));
+    const dialog = screen.getByRole("dialog", { name: "Select category" });
+    fireEvent.click(within(dialog).getByRole("button", { name: /Makanan/ }));
+
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("dialog", { name: "Select category" }),
+      ).not.toBeInTheDocument(),
+    );
+    expect(screen.getByText("Makanan")).toBeInTheDocument();
+    const hidden = document.querySelector('input[type="hidden"][name="categoryId"]');
+    expect(hidden).toHaveValue("cat-1");
   });
 
-  it("maps income categories only in income mode", () => {
+  it("opens the account curtain and selects an account", async () => {
     renderForm();
-    fireEvent.click(screen.getByRole("radio", { name: "Income" }));
-    const select = screen.getByLabelText("Income category");
-    const incomes = Array.from(select.querySelectorAll("option")).map((option) => option.value);
-    expect(incomes).toContain("cat-2");
-    expect(incomes).not.toContain("cat-1");
+    fireEvent.click(screen.getByRole("button", { name: "Choose Account" }));
+    const dialog = screen.getByRole("dialog", { name: "Select account" });
+    fireEvent.click(within(dialog).getByRole("button", { name: /Kas Utama/ }));
+
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("dialog", { name: "Select account" }),
+      ).not.toBeInTheDocument(),
+    );
+    const hidden = document.querySelector('input[type="hidden"][name="accountId"]');
+    expect(hidden).toHaveValue("acc-1");
   });
 
-  it("opens the calculator from the amount field and updates the amount via Done", () => {
+  it("opens the amount calculator and updates the amount via Use Amount", async () => {
     renderForm();
-    fireEvent.click(screen.getByRole("button", { name: "Enter the amount using the calculator" }));
+    fireEvent.click(screen.getByRole("button", { name: /Enter amount/ }));
     expect(screen.getByRole("dialog", { name: "Amount calculator" })).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "2" }));
     fireEvent.click(screen.getByRole("button", { name: "5" }));
     fireEvent.click(screen.getByRole("button", { name: "Add" }));
     fireEvent.click(screen.getByRole("button", { name: "3" }));
-    fireEvent.click(screen.getByRole("button", { name: "Done" }));
+    fireEvent.click(screen.getByRole("button", { name: "Use Amount" }));
 
-    expect(screen.queryByRole("dialog", { name: "Amount calculator" })).not.toBeInTheDocument();
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("dialog", { name: "Amount calculator" }),
+      ).not.toBeInTheDocument(),
+    );
     const hidden = document.querySelector('input[type="hidden"][name="amount"]');
     expect(hidden).toHaveValue("28");
   });
 
-  it("keeps the amount display visible while the keypad is open", () => {
+  it("inserts three zeroes with the 000 button", () => {
     renderForm();
-    fireEvent.click(screen.getByRole("button", { name: "Enter the amount using the calculator" }));
-    expect(screen.getByRole("dialog", { name: "Amount calculator" })).toBeInTheDocument();
-    expect(screen.getByLabelText("Enter the amount using the calculator")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /Enter amount/ }));
+    fireEvent.click(screen.getByRole("button", { name: "1" }));
+    fireEvent.click(screen.getByRole("button", { name: "Insert three zeros" }));
+    expect(screen.getByText(/Rp\s*1\.000/u)).toBeInTheDocument();
   });
 
-  it("renders the navy savings-specific account fields but no category", () => {
+  it("renders the savings-specific account fields but no category", () => {
     renderForm();
-    fireEvent.click(screen.getByRole("radio", { name: "Savings" }));
-    expect(screen.getByLabelText("From account")).toBeInTheDocument();
-    expect(screen.getByLabelText("To savings account")).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("radio", { name: "Saving" }));
+    expect(screen.getByText("From account")).toBeInTheDocument();
+    expect(screen.getByText("To savings account")).toBeInTheDocument();
     expect(screen.getByText("Fund direction")).toBeInTheDocument();
-    expect(screen.queryByText("Expense category")).not.toBeInTheDocument();
-    expect(screen.queryByText("Income category")).not.toBeInTheDocument();
+    expect(screen.queryByText("Category")).not.toBeInTheDocument();
   });
 
   it("blocks savings submission when no savings account exists", () => {
@@ -103,14 +125,8 @@ describe("TransactionForm", () => {
         defaultDate="2026-08-07"
       />,
     );
-    fireEvent.click(screen.getByRole("radio", { name: "Savings" }));
-    const submit = screen.getByRole("button", { name: "Confirm" });
+    fireEvent.click(screen.getByRole("radio", { name: "Saving" }));
+    const submit = screen.getByRole("button", { name: "Add Transaction" });
     expect(submit).toBeDisabled();
-  });
-
-  it("prevents duplicate submission by disabling the confirm button while pending", () => {
-    renderForm();
-    const submit = screen.getByRole("button", { name: "Confirm" });
-    expect(submit).not.toBeDisabled();
   });
 });

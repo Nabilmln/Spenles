@@ -11,10 +11,15 @@ import {
   softDeleteOwnedTransaction,
   updateOwnedTransaction,
 } from "../services/transaction-mutations";
-import { getTransaction, listTransactions } from "../queries/transactions";
+import { getTransaction, getTransactionOptions, listTransactions } from "../queries/transactions";
 import { transactionFilterSchema, type TransactionFilters } from "../schemas/transaction-filters";
 
 export type TransactionActionState = { error?: string };
+
+export async function getTransactionOptionsAction() {
+  const user = await requireSessionUser();
+  return getTransactionOptions(user.id);
+}
 
 export async function loadMoreTransactionsAction(
   filters: TransactionFilters,
