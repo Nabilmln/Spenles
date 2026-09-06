@@ -55,7 +55,7 @@ export function ProfileMenu({
   const initial = displayName.slice(0, 1).toUpperCase();
 
   return (
-    <div className="relative" ref={rootRef}>
+    <div className="relative z-40" ref={rootRef}>
       <button
         type="button"
         className="flex min-h-[2.75rem] items-center gap-[.65rem] rounded-full border-0 bg-transparent p-0 text-foreground"
