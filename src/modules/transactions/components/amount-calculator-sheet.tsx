@@ -1,6 +1,15 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import {
+  Delete,
+  Divide,
+  Equal,
+  Minus,
+  Plus,
+  X,
+  type LucideIcon,
+} from "lucide-react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
@@ -13,19 +22,21 @@ function KeypadButton({
   label,
   aria,
   onClick,
+  icon: Icon,
 }: {
   label: string;
   aria: string;
   onClick: () => void;
+  icon?: LucideIcon;
 }) {
   return (
     <button
       type="button"
-      className="min-h-[2.85rem] cursor-pointer rounded-[.7rem] border border-border bg-surface-subtle p-[.5rem] text-[.92rem] font-medium text-foreground hover:bg-primary-50 focus-visible:outline-2 focus-visible:outline-primary-500 focus-visible:outline-offset-2"
+      className="grid min-h-[2.85rem] place-items-center rounded-[.7rem] border border-border bg-surface-subtle p-[.5rem] text-[.92rem] font-medium text-foreground hover:bg-primary-50 focus-visible:outline-2 focus-visible:outline-primary-500 focus-visible:outline-offset-2"
       aria-label={aria}
       onClick={onClick}
     >
-      {label}
+      {Icon ? <Icon aria-hidden="true" size={20} strokeWidth={2} /> : label}
     </button>
   );
 }
@@ -108,21 +119,24 @@ export function AmountCalculatorSheet({
       </div>
       <FormMessage>{calculatorError}</FormMessage>
       <div className="grid grid-cols-[repeat(4,minmax(0,1fr))] gap-2">
-        {["7", "8", "9", "/"].map((key) => (
+        {["7", "8", "9"].map((key) => (
           <KeypadButton key={key} label={key} aria={key} onClick={() => append(key)} />
         ))}
-        {["4", "5", "6", "*"].map((key) => (
+        <KeypadButton label="/" aria="Divide" icon={Divide} onClick={() => append("/")} />
+        {["4", "5", "6"].map((key) => (
           <KeypadButton key={key} label={key} aria={key} onClick={() => append(key)} />
         ))}
-        {["1", "2", "3", "-"].map((key) => (
+        <KeypadButton label="*" aria="Multiply" icon={X} onClick={() => append("*")} />
+        {["1", "2", "3"].map((key) => (
           <KeypadButton key={key} label={key} aria={key} onClick={() => append(key)} />
         ))}
+        <KeypadButton label="-" aria="Subtract" icon={Minus} onClick={() => append("-")} />
         <KeypadButton label="000" aria="Insert three zeros" onClick={() => append("000")} />
         <KeypadButton label="0" aria="Zero" onClick={() => append("0")} />
         <KeypadButton label="C" aria="Clear" onClick={clear} />
-        <KeypadButton label="⌫" aria="Delete last character" onClick={backspace} />
-        <KeypadButton label="+" aria="Add" onClick={() => append("+")} />
-        <KeypadButton label="=" aria="Calculate result" onClick={commit} />
+        <KeypadButton label="⌫" aria="Delete last character" icon={Delete} onClick={backspace} />
+        <KeypadButton label="+" aria="Add" icon={Plus} onClick={() => append("+")} />
+        <KeypadButton label="=" aria="Calculate result" icon={Equal} onClick={commit} />
       </div>
       <p className={cn(fieldHintClass, "mt-[.35rem] text-[.72rem]")}>
         Operators: +, −, ×, ÷. The result is rounded to the nearest rupiah.
