@@ -3,6 +3,7 @@ import {
   eq,
   gte,
   ilike,
+  inArray,
   isNull,
   lt,
   or,
@@ -44,7 +45,9 @@ export function dateInterval(filters: TransactionFilters) {
 export function conditions(userId: string, filters: TransactionFilters) {
   const result: SQL[] = [eq(transactions.userId, userId), isNull(transactions.deletedAt)];
   if (filters.type) result.push(eq(transactions.type, filters.type));
-  if (filters.category) result.push(eq(transactions.categoryId, filters.category));
+  if (filters.category?.length) {
+    result.push(inArray(transactions.categoryId, filters.category));
+  }
   if (filters.account) result.push(eq(transactions.accountId, filters.account));
   if (filters.q) {
     const search = searchCondition(filters.q);

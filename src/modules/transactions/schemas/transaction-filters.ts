@@ -5,7 +5,7 @@ export const transactionFilterSchema = z
   .object({
     q: z.string().trim().max(100).default(""),
     type: z.enum(["income", "expense"]).optional(),
-    category: z.uuid().optional(),
+    category: z.array(z.uuid()).max(50).optional(),
     account: z.uuid().optional(),
     month: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/u).optional(),
     from: z.string().optional(),
@@ -34,10 +34,15 @@ export const transactionFilterSchema = z
 export type TransactionFilters = z.infer<typeof transactionFilterSchema>;
 
 export function parseTransactionFilters(searchParams: Record<string, string | string[] | undefined>) {
-  const recognized = Object.fromEntries(
-    ["q", "type", "category", "account", "month", "from", "to", "sort", "direction", "page", "pageSize"]
-      .map((key) => [key, Array.isArray(searchParams[key]) ? searchParams[key]?.[0] : searchParams[key]])
-      .filter(([, value]) => value !== undefined && value !== ""),
-  );
+  const recognized: Record<string, string | string[] | undefined> = {};
+  for (const key of ["q", "type", "category", "account", "month", "from", "to", "sort", "direction", "page", "pageSize"]) {
+    const value = searchParams[key];
+    if (value === undefined || value === "") continue;
+    if (key === "category") {
+      recognized[key] = Array.isArray(value) ? value : [value];
+    } else {
+      recognized[key] = Array.isArray(value) ? value[0] : value;
+    }
+  }
   return transactionFilterSchema.safeParse(recognized);
 }

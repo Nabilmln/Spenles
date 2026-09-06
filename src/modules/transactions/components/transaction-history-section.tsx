@@ -40,7 +40,13 @@ export function TransactionHistorySection({
 }: {
   filters: TransactionFilters;
   accounts: { id: string; name: string }[];
-  categories: { id: string; name: string; type: "income" | "expense" }[];
+  categories: {
+    id: string;
+    name: string;
+    type: "income" | "expense";
+    icon: string | null;
+    color: string | null;
+  }[];
   initialRows: TransactionCardRow[];
   total: number;
 }) {
@@ -103,9 +109,9 @@ export function TransactionHistorySection({
         </div>
       ) : (
         <EmptyState
-          title={filters.q || filters.type || filters.category || filters.account ? "No transactions found" : "No transactions yet"}
+          title={filters.q || filters.type || (filters.category?.length ?? 0) > 0 || filters.account ? "No transactions found" : "No transactions yet"}
           description={
-            filters.q || filters.type || filters.category || filters.account
+            filters.q || filters.type || (filters.category?.length ?? 0) > 0 || filters.account
               ? "Try another search keyword or change your filter."
               : "Start adding your first transaction to see your financial activity here."
           }

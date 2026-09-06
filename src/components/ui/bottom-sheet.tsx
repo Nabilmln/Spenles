@@ -46,11 +46,20 @@ export function BottomSheet({
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [visible, closing, onClose]);
+
+  useEffect(() => {
+    if (!visible) return;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previous;
+    };
+  }, [visible]);
   if (!visible) return null;
 
   return createPortal(
     <div
-      className={cn("fixed inset-0 flex items-end", zIndex)}
+      className={cn("fixed inset-0 z-[80] flex items-end", zIndex)}
       role="dialog"
       aria-modal="true"
       aria-label={ariaLabel}
@@ -66,12 +75,12 @@ export function BottomSheet({
       />
       <div
         className={cn(
-          "relative w-full rounded-t-[1.6rem] border-t border-border bg-surface p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-[0_-10px_40px_rgb(15_15_18/20%)]",
+          "relative flex max-h-[88dvh] w-full flex-col overflow-hidden rounded-t-[1.6rem] border-t border-border bg-surface shadow-[0_-10px_40px_rgb(15_15_18/20%)]",
           closing ? "profile-curtain-out" : "profile-curtain-in",
         )}
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="mb-[1.1rem] flex items-center justify-between">
+        <div className="mb-[1.1rem] flex shrink-0 items-center justify-between p-5 pb-0">
           <h2 className="m-0 text-[1.05rem] font-semibold tracking-[-.02em]">
             {title}
           </h2>
@@ -84,7 +93,9 @@ export function BottomSheet({
             <X size={18} aria-hidden="true" />
           </button>
         </div>
-        {children}
+        <div className="min-h-0 flex-1 overflow-y-auto p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+          {children}
+        </div>
       </div>
     </div>,
     document.body,

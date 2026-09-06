@@ -99,7 +99,7 @@ export async function getTransactionOptions(
     database.select({ id: accounts.id, name: accounts.name, type: accounts.type }).from(accounts).where(
       and(eq(accounts.userId, userId), eq(accounts.status, "active"), eq(accounts.currency, "IDR")),
     ).orderBy(asc(accounts.name)),
-    database.select({ id: categories.id, name: categories.name, type: categories.type }).from(categories).where(
+    database.select({ id: categories.id, name: categories.name, type: categories.type, icon: categories.icon, color: categories.color }).from(categories).where(
       and(
         eq(categories.userId, userId),
         currentCategoryId

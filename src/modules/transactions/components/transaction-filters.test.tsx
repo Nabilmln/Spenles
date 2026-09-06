@@ -4,6 +4,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 import type { TransactionFilters } from "../schemas/transaction-filters";
@@ -27,15 +28,14 @@ const baseFilters: TransactionFilters = {
 
 const accounts = [{ id: "acc-1", name: "Kas Utama" }];
 const categories = [
-  { id: "cat-1", name: "Makanan", type: "expense" as const },
-  { id: "cat-2", name: "Gaji", type: "income" as const },
+  { id: "cat-1", name: "Makanan", type: "expense" as const, icon: null, color: null },
+  { id: "cat-2", name: "Gaji", type: "income" as const, icon: null, color: null },
 ];
 
-function hiddenValue(container: HTMLElement, name: string) {
-  return (
-    container.querySelector<HTMLInputElement>(`input[type="hidden"][name="${name}"]`)
-      ?.value ?? ""
-  );
+function hiddenValues(container: HTMLElement, name: string) {
+  return Array.from(
+    container.querySelectorAll<HTMLInputElement>(`input[type="hidden"][name="${name}"]`),
+  ).map((input) => input.value);
 }
 
 describe("TransactionFilterBar", () => {
@@ -55,23 +55,22 @@ describe("TransactionFilterBar", () => {
     expect(
       screen.queryByRole("dialog", { name: "Filter transactions" }),
     ).not.toBeInTheDocument();
-    expect(screen.queryByText("Add transaction")).not.toBeInTheDocument();
     expect(container.querySelector('form')).toHaveAttribute("method", "get");
   });
 
-  it("shows an active filter count badge and preserves applied filters in hidden inputs", () => {
+  it("shows an active filter count badge for applied filters", () => {
     render(
       <TransactionFilterBar
         accounts={accounts}
         categories={categories}
-        filters={{ ...baseFilters, type: "expense", sort: "amount" }}
+        filters={{ ...baseFilters, type: "expense" }}
       />,
     );
 
-    expect(screen.getByText("2")).toBeInTheDocument();
+    expect(screen.getByText("1")).toBeInTheDocument();
   });
 
-  it("opens the filter sheet and exposes all filter controls and actions", () => {
+  it("opens the filter sheet with segmented type, category, account, and date controls", () => {
     render(
       <TransactionFilterBar
         accounts={accounts}
@@ -83,18 +82,19 @@ describe("TransactionFilterBar", () => {
     fireEvent.click(screen.getByRole("button", { name: "Open filters" }));
 
     expect(screen.getByRole("dialog", { name: "Filter transactions" })).toBeInTheDocument();
-    expect(screen.getByRole("combobox", { name: "Transaction type" })).toBeInTheDocument();
-    expect(screen.getByRole("combobox", { name: "Category" })).toBeInTheDocument();
-    expect(screen.getByRole("combobox", { name: "Account" })).toBeInTheDocument();
-    expect(screen.getByRole("combobox", { name: "Sort" })).toBeInTheDocument();
-    expect(screen.getByRole("combobox", { name: "Sort direction" })).toBeInTheDocument();
+    expect(screen.getByRole("group", { name: "Transaction type" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "All" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Payment" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Income" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Choose Category" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "All Accounts" })).toBeInTheDocument();
+    expect(screen.queryByRole("combobox", { name: "Sort" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("combobox", { name: "Sort direction" })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Apply Filters" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Reset" })).toHaveAttribute(
       "href",
       "/transactions",
     );
-    expect(screen.getByRole("button", { name: "Close" })).toBeInTheDocument();
-    expect(screen.queryByText("Add transaction")).not.toBeInTheDocument();
   });
 
   it("closes the sheet from the close button and the Escape key", async () => {
@@ -125,7 +125,7 @@ describe("TransactionFilterBar", () => {
     );
   });
 
-  it("applies a filter selection to the submitted form without a page parameter", () => {
+  it("selects a transaction type via the segmented control", () => {
     const { container } = render(
       <TransactionFilterBar
         accounts={accounts}
@@ -135,24 +135,60 @@ describe("TransactionFilterBar", () => {
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Open filters" }));
-    fireEvent.change(screen.getByRole("combobox", { name: "Transaction type" }), {
-      target: { value: "expense" },
-    });
-    fireEvent.change(screen.getByRole("combobox", { name: "Category" }), {
-      target: { value: "cat-1" },
-    });
-    fireEvent.change(screen.getByRole("combobox", { name: "Sort" }), {
-      target: { value: "amount" },
-    });
+    fireEvent.click(screen.getByRole("button", { name: "Payment" }));
 
-    expect(hiddenValue(container, "type")).toBe("expense");
-    expect(hiddenValue(container, "category")).toBe("cat-1");
-    expect(hiddenValue(container, "sort")).toBe("amount");
-    expect(hiddenValue(container, "direction")).toBe("desc");
-    expect(
-      container.querySelector('input[type="hidden"][name="page"]'),
-    ).toBeNull();
-    expect(container.querySelector('input[type="hidden"][name="pageSize"]')).not.toBeNull();
+    expect(hiddenValues(container, "type")).toEqual(["expense"]);
+  });
+
+  it("selects multiple categories from the category curtain", async () => {
+    const { container } = render(
+      <TransactionFilterBar
+        accounts={accounts}
+        categories={categories}
+        filters={baseFilters}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Open filters" }));
+    fireEvent.click(screen.getByRole("button", { name: "Choose Category" }));
+
+    const categoryDialog = screen.getByRole("dialog", { name: "Choose category" });
+    fireEvent.click(screen.getByRole("button", { name: /Makanan/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Gaji/ }));
+    expect(categoryDialog).toBeInTheDocument();
+
+    fireEvent.click(
+      within(categoryDialog).getByRole("button", { name: "Close" }),
+    );
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("dialog", { name: "Choose category" }),
+      ).not.toBeInTheDocument(),
+    );
+    expect(hiddenValues(container, "category")).toEqual(["cat-1", "cat-2"]);
+  });
+
+  it("selects an account from the account curtain", async () => {
+    const { container } = render(
+      <TransactionFilterBar
+        accounts={accounts}
+        categories={categories}
+        filters={baseFilters}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Open filters" }));
+    fireEvent.click(screen.getByRole("button", { name: "All Accounts" }));
+
+    expect(screen.getByRole("dialog", { name: "Select account" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: /Kas Utama/ }));
+
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("dialog", { name: "Select account" }),
+      ).not.toBeInTheDocument(),
+    );
+    expect(hiddenValues(container, "account")).toEqual(["acc-1"]);
   });
 });
 
@@ -160,15 +196,12 @@ describe("activeFilterCount", () => {
   it("counts only non-default filter selections", () => {
     expect(activeFilterCount(baseFilters)).toBe(0);
     expect(activeFilterCount({ ...baseFilters, q: "kopi" })).toBe(1);
-    expect(
-      activeFilterCount({ ...baseFilters, type: "income", direction: "asc" }),
-    ).toBe(2);
+    expect(activeFilterCount({ ...baseFilters, type: "income" })).toBe(1);
     expect(
       activeFilterCount({
         ...baseFilters,
-        category: "cat-1",
+        category: ["cat-1", "cat-2"],
         month: "2026-08",
-        sort: "amount",
       }),
     ).toBe(3);
   });

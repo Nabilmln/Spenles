@@ -141,12 +141,16 @@ export function CalendarRangeSelector({
           const isInRange =
             hasRange && cell.date >= pendingFrom! && cell.date <= pendingTo!;
           const isToday = cell.date === today;
+          const inSelection = isStart || isEnd || isInRange;
           const className = [
-            "grid min-h-[2.5rem] place-items-center text-[.88rem] cursor-pointer border border-transparent bg-surface-subtle text-foreground hover:enabled:bg-primary-50 disabled:cursor-not-allowed disabled:text-muted disabled:opacity-50",
+            "grid min-h-[2.5rem] place-items-center text-[.88rem] cursor-pointer border border-transparent hover:enabled:bg-primary-50 disabled:cursor-not-allowed disabled:text-muted disabled:opacity-50",
+            inSelection
+              ? "bg-primary-600 text-white"
+              : "bg-surface-subtle text-foreground",
             isToday ? "border-primary-600 font-medium" : "",
-            isStart ? "relative z-[1] rounded-l-[.6rem] bg-primary-600 font-medium text-white" : "",
-            isEnd ? "relative z-[1] rounded-r-[.6rem] bg-primary-600 font-medium text-white" : "",
-            isInRange && !isStart && !isEnd ? "rounded-none bg-primary-50" : "",
+            isStart ? "relative z-[1] rounded-l-[.6rem] font-medium" : "",
+            isEnd ? "relative z-[1] rounded-r-[.6rem] font-medium" : "",
+            isInRange && !isStart && !isEnd ? "rounded-none" : "",
           ]
             .filter(Boolean)
             .join(" ");

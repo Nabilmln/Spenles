@@ -22,7 +22,7 @@ let expenseCategoryB = "";
 const baseFilters = {
   q: "",
   type: undefined,
-  category: undefined,
+  category: [],
   account: undefined,
   month: undefined,
   from: undefined,
