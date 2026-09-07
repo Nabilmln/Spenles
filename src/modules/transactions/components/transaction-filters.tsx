@@ -197,7 +197,7 @@ export function TransactionFilterBar({
           </div>
         </div>
 
-        <div className="mt-[1.35rem] grid grid-cols-2 gap-[.55rem]">
+        <div className="mt-[1.35rem] grid grid-cols-2 gap-[.55rem] mb-5">
           <Link
             className={cn(buttonClass("secondary"), "justify-center")}
             href="/transactions"
@@ -260,7 +260,7 @@ export function TransactionFilterBar({
         ariaLabel="Select account"
         zIndex="z-[85]"
       >
-        <div className="grid max-h-[60vh] gap-[.4rem] overflow-y-auto">
+        <div className="grid max-h-[60vh] gap-[.4rem] overflow-y-auto mb-5">
           <button
             aria-pressed={account === ""}
             className={cn(

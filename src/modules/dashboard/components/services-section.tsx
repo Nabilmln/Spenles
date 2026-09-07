@@ -34,7 +34,7 @@ export function ServicesSection() {
         title="Services"
         ariaLabel="Services"
       >
-        <div className="grid max-h-[62vh] grid-cols-2 gap-[.7rem] overflow-y-auto pr-1">
+        <div className="grid max-h-[62vh] grid-cols-2 gap-[.7rem] overflow-y-auto pr-1 mb-5">
           {ALL_SERVICES.map(({ href, label, icon: Icon }) => (
             <Link
               className="flex min-h-[3.6rem] items-center gap-[.65rem] rounded-[1rem] border border-border bg-surface p-[.6rem_.75rem] text-left text-[.82rem] font-medium text-foreground transition-[background] duration-150 hover:bg-surface-subtle [&_svg]:shrink-0 [&_svg]:text-primary-600"
