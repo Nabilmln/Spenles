@@ -44,6 +44,8 @@ export async function listTransactions(
         note: transactions.note,
         accountName: accounts.name,
         categoryName: categories.name,
+        categoryId: categories.id,
+        categoryIcon: categories.icon,
       })
       .from(transactions)
       .innerJoin(accounts, and(eq(accounts.id, transactions.accountId), eq(accounts.userId, userId)))

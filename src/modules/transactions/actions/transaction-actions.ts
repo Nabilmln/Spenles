@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
-import { preserveOrAttachNow } from "@/lib/dates/jakarta";
+import { preserveOrAttachNow, formatJakartaDate } from "@/lib/dates/jakarta";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { transactionIdSchema, transactionSchema } from "../schemas/transaction";
 import {
@@ -12,6 +12,7 @@ import {
   updateOwnedTransaction,
 } from "../services/transaction-mutations";
 import { getTransaction, getTransactionOptions, listTransactions } from "../queries/transactions";
+import { listTransactionHistory } from "../queries/transaction-history";
 import { transactionFilterSchema, type TransactionFilters } from "../schemas/transaction-filters";
 
 export type TransactionActionState = { error?: string };
@@ -19,6 +20,47 @@ export type TransactionActionState = { error?: string };
 export async function getTransactionOptionsAction() {
   const user = await requireSessionUser();
   return getTransactionOptions(user.id);
+}
+
+export type TransactionEditPayload = {
+  id: string;
+  type: "income" | "expense";
+  amount: string;
+  accountId: string;
+  categoryId: string;
+  transactionAt: string;
+  note: string;
+};
+
+export async function getTransactionForEditAction(id: string): Promise<TransactionEditPayload | null> {
+  const user = await requireSessionUser();
+  const parsedId = transactionIdSchema.safeParse(id);
+  if (!parsedId.success) return null;
+  const transaction = await getTransaction(user.id, parsedId.data);
+  if (!transaction) return null;
+  return {
+    id: transaction.id,
+    type: transaction.type,
+    amount: transaction.amount.toString(),
+    accountId: transaction.accountId,
+    categoryId: transaction.categoryId,
+    transactionAt: formatJakartaDate(transaction.transactionAt),
+    note: transaction.note ?? "",
+  };
+}
+
+export async function loadMoreTransactionHistoryAction(
+  filters: TransactionFilters,
+  page: number,
+) {
+  const user = await requireSessionUser();
+  const parsed = transactionFilterSchema.safeParse({ ...filters, page });
+  if (!parsed.success) return { rows: [], hasMore: false };
+  const result = await listTransactionHistory(user.id, parsed.data);
+  return {
+    rows: result.rows,
+    hasMore: result.hasMore,
+  };
 }
 
 export async function loadMoreTransactionsAction(
@@ -122,4 +164,81 @@ export async function deleteTransactionAction(formData: FormData) {
   revalidatePath("/accounts");
   revalidatePath("/budgets");
   revalidatePath("/dashboard");
+}
+
+export type TransactionEditState = { error?: string; success?: string };
+
+export async function editTransactionFromHistoryAction(
+  _state: TransactionEditState,
+  formData: FormData,
+): Promise<TransactionEditState> {
+  const user = await requireSessionUser();
+  const id = transactionIdSchema.safeParse(formData.get("id"));
+  const parsed = transactionSchema.safeParse(input(formData));
+  if (!id.success || !parsed.success) {
+    return { error: parsed.success ? "Transaction not found." : parsed.error.issues[0]?.message };
+  }
+  const existing = await getTransaction(user.id, id.data);
+  if (!existing) return { error: "Transaction not found." };
+  const transactionAt = preserveOrAttachNow(parsed.data.transactionAt, existing.transactionAt);
+  if (!transactionAt) return { error: "Invalid transaction date." };
+  try {
+    const updated = await updateOwnedTransaction(db, user.id, id.data, {
+      type: parsed.data.type,
+      amount: BigInt(parsed.data.amount),
+      accountId: parsed.data.accountId,
+      categoryId: parsed.data.categoryId,
+      transactionAt,
+      note: parsed.data.note,
+    });
+    if (!updated) {
+      return { error: "Transaction not found or the selections are no longer available." };
+    }
+  } catch {
+    return { error: "Transaction could not be updated." };
+  }
+  revalidatePath("/transactions");
+  revalidatePath("/accounts");
+  revalidatePath("/budgets");
+  revalidatePath("/dashboard");
+  return { success: "Transaction updated successfully." };
+}
+
+export async function deleteTransactionFromHistoryAction(
+  _state: TransactionEditState,
+  formData: FormData,
+): Promise<TransactionEditState> {
+  const user = await requireSessionUser();
+  const id = transactionIdSchema.safeParse(formData.get("id"));
+  if (!id.success) return { error: "Transaction not found." };
+  try {
+    const deleted = await softDeleteOwnedTransaction(db, user.id, id.data);
+    if (!deleted) return { error: "Transaction not found or no longer available." };
+  } catch {
+    return { error: "Transaction could not be deleted." };
+  }
+  revalidatePath("/transactions");
+  revalidatePath("/accounts");
+  revalidatePath("/budgets");
+  revalidatePath("/dashboard");
+  return { success: "Transaction deleted successfully." };
+}
+
+export async function deleteTransactionHistoryByIdAction(
+  id: string,
+): Promise<{ ok: boolean }> {
+  const user = await requireSessionUser();
+  const parsedId = transactionIdSchema.safeParse(id);
+  if (!parsedId.success) return { ok: false };
+  try {
+    const deleted = await softDeleteOwnedTransaction(db, user.id, parsedId.data);
+    if (!deleted) return { ok: false };
+  } catch {
+    return { ok: false };
+  }
+  revalidatePath("/transactions");
+  revalidatePath("/accounts");
+  revalidatePath("/budgets");
+  revalidatePath("/dashboard");
+  return { ok: true };
 }

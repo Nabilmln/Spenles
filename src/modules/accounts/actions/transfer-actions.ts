@@ -71,3 +71,17 @@ export async function reverseTransferAction(
   invalidateTransfers();
   return { success: "Transfer reversal recorded successfully." };
 }
+
+export async function reverseTransferByIdAction(id: string): Promise<{ ok: boolean }> {
+  const user = await requireSessionUser();
+  const parsedId = transferIdSchema.safeParse(id);
+  if (!parsedId.success) return { ok: false };
+  try {
+    const result = await reverseOwnedTransfer(db, user.id, parsedId.data);
+    if (!result.ok) return { ok: false };
+  } catch {
+    return { ok: false };
+  }
+  invalidateTransfers();
+  return { ok: true };
+}

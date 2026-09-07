@@ -1,13 +1,20 @@
 import { randomUUID } from "node:crypto";
 import { inArray } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { accounts, categories, profiles, transactions } from "@/db/schema";
+import {
+  accounts,
+  categories,
+  profiles,
+  transactions,
+  transfers,
+} from "@/db/schema";
 import { ensureUserFoundationWithDatabase } from "@/modules/onboarding/services/ensure-user-foundation";
 import { getTestDatabase } from "@/test/database";
 import {
   listTransactions,
   getTransactionOptions,
 } from "./transactions";
+import { listTransactionHistory } from "./transaction-history";
 
 const database = getTestDatabase();
 const userA = `tx-search-a-${randomUUID()}`;
@@ -74,6 +81,27 @@ beforeAll(async () => {
     })
     .returning({ id: categories.id });
   categoryByNameA = byNameCategory.id;
+
+  const [savingsAccount] = await database
+    .insert(accounts)
+    .values({
+      userId: userA,
+      name: "History Savings",
+      type: "savings",
+      currency: "IDR",
+      openingBalance: 0n,
+      status: "active",
+    })
+    .returning({ id: accounts.id });
+
+  await database.insert(transfers).values({
+    userId: userA,
+    sourceAccountId: accountA,
+    destinationAccountId: savingsAccount.id,
+    amount: 50n,
+    transferredAt: new Date("2026-08-02T05:00:00.000Z"),
+    note: "history transfer",
+  });
 
   await database.insert(transactions).values([
     {
@@ -233,5 +261,36 @@ describe("transaction search and pagination", () => {
     expect(
       options.categories.some((item) => item.id === expenseCategoryB),
     ).toBe(false);
+  });
+
+  it("merges transfers into the unified transaction history", async () => {
+    const result = await listTransactionHistory(
+      userA,
+      { ...baseFilters, q: "" },
+      database,
+    );
+
+    const transferRow = result.rows.find((row) => row.type === "transfer");
+    expect(transferRow).toBeDefined();
+    expect(transferRow!.sourceAccountName).toBeTruthy();
+    expect(transferRow!.destinationAccountName).toBeTruthy();
+    expect(transferRow!.amount).toBe("50");
+
+    const transfers = result.rows.filter((row) => row.type === "transfer");
+    expect(transfers).toHaveLength(1);
+
+    const times = result.rows.map((row) => row.transactionAt.getTime());
+    const sorted = [...times].sort((a, b) => b - a);
+    expect(times).toEqual(sorted);
+  });
+
+  it("excludes transfers when a type filter is applied", async () => {
+    const result = await listTransactionHistory(
+      userA,
+      { ...baseFilters, q: "", type: "expense" },
+      database,
+    );
+
+    expect(result.rows.some((row) => row.type === "transfer")).toBe(false);
   });
 });

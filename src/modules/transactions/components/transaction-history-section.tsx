@@ -1,12 +1,20 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useTransition } from "react";
 import { EmptyState } from "@/components/feedback/empty-state";
-import { loadMoreTransactionsAction } from "../actions/transaction-actions";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { useToast } from "@/components/ui/toast";
+import { reverseTransferByIdAction } from "@/modules/accounts/actions/transfer-actions";
+import { TransactionCard, type TransactionCardRow } from "@/components/transactions/transaction-card";
+import {
+  deleteTransactionHistoryByIdAction,
+  loadMoreTransactionHistoryAction,
+} from "../actions/transaction-actions";
 import type { TransactionFilters } from "../schemas/transaction-filters";
-import type { TransactionCardRow } from "./transaction-card";
-import { TransactionCard } from "./transaction-card";
+import { EditTransactionSheet } from "./edit-transaction-sheet";
 import { TransactionFilterBar } from "./transaction-filters";
+import { TransactionActionSheet } from "./transaction-action-sheet";
 
 const INITIAL_PAGE = 1;
 
@@ -50,12 +58,37 @@ export function TransactionHistorySection({
   initialRows: TransactionCardRow[];
   total: number;
 }) {
+  const toast = useToast();
   const [rows, setRows] = useState(initialRows);
   const [page, setPage] = useState(INITIAL_PAGE);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(initialRows.length < total);
   const sentinelRef = useRef<HTMLDivElement>(null);
   const loadingRef = useRef(false);
+
+  const [prevInitial, setPrevInitial] = useState(initialRows);
+  const [prevTotal, setPrevTotal] = useState(total);
+  if (prevInitial !== initialRows || prevTotal !== total) {
+    setPrevInitial(initialRows);
+    setPrevTotal(total);
+    setRows(initialRows);
+    setPage(INITIAL_PAGE);
+    setHasMore(initialRows.length < total);
+  }
+
+  const [selected, setSelected] = useState<{ id: string; type: TransactionCardRow["type"] } | null>(null);
+  const [actionSheetOpen, setActionSheetOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
+
+  const resetFromPageOne = useCallback(() => {
+    loadMoreTransactionHistoryAction(filters, INITIAL_PAGE).then((result) => {
+      setRows(result.rows);
+      setPage(INITIAL_PAGE);
+      setHasMore(result.hasMore);
+    });
+  }, [filters]);
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
@@ -66,7 +99,7 @@ export function TransactionHistorySection({
         loadingRef.current = true;
         setLoading(true);
         const nextPage = page + 1;
-        loadMoreTransactionsAction(filters, nextPage)
+        loadMoreTransactionHistoryAction(filters, nextPage)
           .then((result) => {
             setRows((current) => [...current, ...result.rows]);
             setPage(nextPage);
@@ -84,6 +117,39 @@ export function TransactionHistorySection({
   }, [hasMore, page, filters]);
 
   const hasResults = rows.length > 0;
+
+  function handleAction(id: string, type: TransactionCardRow["type"]) {
+    setSelected({ id, type });
+    setActionSheetOpen(true);
+  }
+
+  function handleEdit() {
+    setActionSheetOpen(false);
+    setEditOpen(true);
+  }
+
+  function handleDelete() {
+    setActionSheetOpen(false);
+    setDeleteOpen(true);
+  }
+
+  function confirmDelete() {
+    if (!selected) return;
+    startTransition(async () => {
+      const ok =
+        selected.type === "transfer"
+          ? (await reverseTransferByIdAction(selected.id)).ok
+          : (await deleteTransactionHistoryByIdAction(selected.id)).ok;
+      if (ok) {
+        toast.success("Transaction deleted successfully.");
+        setDeleteOpen(false);
+        setSelected(null);
+        resetFromPageOne();
+      } else {
+        toast.error("Transaction could not be deleted.");
+      }
+    });
+  }
 
   return (
     <section aria-label="Transaction history">
@@ -104,7 +170,12 @@ export function TransactionHistorySection({
       {hasResults ? (
         <div className="grid gap-[.75rem]">
           {rows.map((row) => (
-            <TransactionCard key={row.id} transaction={row} />
+            <TransactionCard
+              key={row.id}
+              transaction={row}
+              showActions
+              onAction={handleAction}
+            />
           ))}
         </div>
       ) : (
@@ -127,6 +198,35 @@ export function TransactionHistorySection({
           No more transactions
         </p>
       ) : null}
+
+      <TransactionActionSheet
+        open={actionSheetOpen}
+        onClose={() => setActionSheetOpen(false)}
+        canEdit={selected?.type !== "transfer"}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
+
+      <EditTransactionSheet
+        transactionId={selected?.type === "transfer" ? null : selected?.id ?? null}
+        open={editOpen}
+        onClose={() => setEditOpen(false)}
+        onSaved={resetFromPageOne}
+      />
+
+      <ConfirmDialog
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+        title="Delete Transaction?"
+        message={
+          selected?.type === "transfer"
+            ? "Are you sure you want to delete this transfer? It will be reversed and removed from your history."
+            : "Are you sure you want to delete this transaction? This cannot be undone."
+        }
+        confirmLabel="Delete"
+        pending={isPending}
+        onConfirm={confirmDelete}
+      />
     </section>
   );
 }

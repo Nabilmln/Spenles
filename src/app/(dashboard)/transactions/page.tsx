@@ -5,7 +5,7 @@ import {
   getExpenseOverview,
   getTransactionOptions,
   getTransactionSummary,
-  listTransactions,
+  listTransactionHistory,
   parseTransactionFilters,
   TransactionHistorySection,
   TransactionSummary,
@@ -45,7 +45,7 @@ export default async function TransactionsPage({
   }
 
   const [result, options, summary, overview] = await Promise.all([
-    listTransactions(user.id, {
+    listTransactionHistory(user.id, {
       ...parsed.data,
       page: INITIAL_PAGE,
       pageSize: INITIAL_PAGE_SIZE,
