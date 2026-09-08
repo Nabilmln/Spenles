@@ -48,6 +48,20 @@ import {
   listOwnedAccounts,
 } from "@/modules/accounts";
 import { getProfile } from "@/modules/profiles";
+import type { Profile } from "@/db/schema";
+
+function profileFallback(userId: string): Profile {
+  return {
+    id: userId,
+    userId,
+    displayName: "Pengguna Spenles",
+    defaultCurrency: "IDR",
+    timezone: "Asia/Jakarta",
+    theme: "system",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+}
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -219,6 +233,8 @@ export default async function DashboardPage({
     (sum, account) => sum + BigInt(account.balance),
     0n,
   );
+  const servicesProfile: Profile =
+    profile ?? profileFallback(user.id);
 
   return (
     <div>
@@ -270,7 +286,7 @@ export default async function DashboardPage({
       <div className="mx-0 mt-[1.55rem] grid gap-3 px-0">
         <div className="dashboard-grid grid gap-3 min-[861px]:grid-cols-8 min-[1024px]:grid-cols-12">
           <div className="min-w-0 min-[861px]:col-span-8 min-[1024px]:col-span-12">
-            <ServicesSection />
+            <ServicesSection profile={servicesProfile} email={user.email ?? ""} />
           </div>
 
           <div className="hidden min-w-0 min-[861px]:col-span-8 min-[861px]:block min-[1024px]:col-span-8">

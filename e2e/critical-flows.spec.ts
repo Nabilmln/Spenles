@@ -33,7 +33,10 @@ test("authentication, private navigation, transaction, and exports", async ({
   await expect(page).toHaveURL(/\/login/u);
   await login(page, environment.users.a);
 
-  await page.goto("/transactions/new");
+  await page.goto("/dashboard");
+  await page.getByRole("button", { name: "More Services" }).click();
+  await page.getByRole("button", { name: "Add Expense" }).click();
+  await expect(page.getByLabel("Jumlah (rupiah)")).toBeVisible();
   await page.getByLabel("Jumlah (rupiah)").fill("12345");
   await page.getByLabel("Akun").selectOption({ index: 1 });
   await page.getByLabel("Kategori").selectOption({ index: 1 });
@@ -53,7 +56,6 @@ test("authentication, private navigation, transaction, and exports", async ({
     "/recurring-transactions",
     "/split-bills",
     "/reports",
-    "/settings/profile",
   ]) {
     await page.goto(route);
     await expect(page.locator("h1").first()).toBeVisible();

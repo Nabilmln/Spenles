@@ -17,7 +17,6 @@ function resolveMeta(pathname: string): HeaderMeta {
   const path = pathname.replace(/\/$/, "") || "/";
   if (path === "/" || path === "/dashboard") return { title: "Home", noBack: true };
 
-  if (path === "/transactions/new") return { title: "Add transaction", back: "/transactions" };
   if (/^\/transactions\/.+\/edit$/.test(path)) return { title: "Edit transaction", back: "/transactions" };
   if (path === "/transactions") return { title: "Transactions", back: "/dashboard" };
 
@@ -45,7 +44,6 @@ function resolveMeta(pathname: string): HeaderMeta {
   if (path === "/reports") return { title: "Reports", back: "/dashboard" };
 
   if (path === "/transfers") return { title: "Transfer", back: "/accounts" };
-  if (path === "/settings/profile") return { title: "Profile", back: "/dashboard" };
   return {};
 }
 
@@ -67,18 +65,18 @@ export function HeaderContent({
           <BackButton fallback={meta.back} title={meta.title} />
           <div className="flex-1" />
           <ThemeToggle currentTheme={profile.theme} />
-          <ProfileMenu displayName={profile.displayName} email={email} defaultCurrency={profile.defaultCurrency} timezone={profile.timezone} />
+          <ProfileMenu profile={profile} email={email} />
         </>
       ) : (
         <>
           <div className="hidden min-[861px]:block"><Brand /></div>
           <div className="min-[861px]:hidden">
-            <ProfileMenu displayName={profile.displayName} email={email} defaultCurrency={profile.defaultCurrency} timezone={profile.timezone} />
+            <ProfileMenu profile={profile} email={email} />
           </div>
           <div className="flex-1" />
           <ThemeToggle currentTheme={profile.theme} />
           <div className="hidden min-[861px]:block">
-            <ProfileMenu displayName={profile.displayName} email={email} defaultCurrency={profile.defaultCurrency} timezone={profile.timezone} />
+            <ProfileMenu profile={profile} email={email} />
           </div>
         </>
       )}

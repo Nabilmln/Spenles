@@ -11,6 +11,10 @@ vi.mock("./daily-expense-chart", () => ({
   DailyExpenseChart: () => <div data-testid="daily-chart" />,
 }));
 
+vi.mock("@/modules/transactions/components/add-transaction-sheet", () => ({
+  AddTransactionSheet: () => null,
+}));
+
 const point = (day: string, expenseIdr: string, plot: number): DailyExpensePoint => ({
   day,
   label: day,
@@ -19,15 +23,16 @@ const point = (day: string, expenseIdr: string, plot: number): DailyExpensePoint
 });
 
 describe("mobile dashboard cards", () => {
-  it("renders the quick services with real routes only", () => {
+  it("renders the quick services with real page routes only", () => {
     render(<DashboardFeatureGrid />);
 
     expect(screen.getByRole("navigation", { name: "Quick services" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Add Expense" })).toHaveAttribute("href", "/transactions/new");
+    expect(screen.queryByRole("link", { name: "Add Expense" })).not.toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Accounts" })).toHaveAttribute("href", "/accounts");
     expect(screen.getByRole("link", { name: "Split Bill" })).toHaveAttribute("href", "/split-bills");
+    expect(screen.getByRole("link", { name: "Categories" })).toHaveAttribute("href", "/categories");
     expect(screen.getByRole("link", { name: "Reports" })).toHaveAttribute("href", "/reports");
-    expect(screen.queryByRole("link", { name: /Ekspor|Notifikasi/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /Ekspor|Notifikasi|Add Expense/ })).not.toBeInTheDocument();
   });
 
   it("renders both chart canvases and the income and expense totals without a mobile add button", () => {
@@ -98,7 +103,7 @@ describe("mobile dashboard cards", () => {
       screen.getByText("No expenses yet"),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Record expense" }),
-    ).toHaveAttribute("href", "/transactions/new");
+      screen.getByRole("button", { name: "Record expense" }),
+    ).toBeInTheDocument();
   });
 });

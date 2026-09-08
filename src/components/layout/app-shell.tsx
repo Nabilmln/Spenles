@@ -12,7 +12,7 @@ export function AppShell({ profile, email, children }: { profile: Profile; email
       >
         Skip to main content
       </a>
-      <Sidebar />
+      <Sidebar profile={profile} email={email} />
       <div className="min-w-0">
         <AppHeader profile={profile} email={email} />
         <main

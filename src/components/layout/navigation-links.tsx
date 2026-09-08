@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import {
   FileBarChart,
@@ -14,7 +15,9 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import type { Profile } from "@/db/schema";
 import { AddTransactionButton } from "./add-transaction-button";
+import { ProfileSheet } from "./profile-sheet";
 
 const links = [
   { href: "/dashboard", label: "Home", icon: Home },
@@ -25,7 +28,6 @@ const links = [
   { href: "/recurring-transactions", label: "Recurring", icon: Repeat2 },
   { href: "/split-bills", label: "Split Bill", icon: UsersRound },
   { href: "/reports", label: "Reports", icon: FileBarChart },
-  { href: "/settings/profile", label: "Profile", icon: UserRound },
 ];
 
 const mobileLinks = [
@@ -40,8 +42,17 @@ const linkBase =
 const linkActive =
   "text-primary-600 bg-primary-50 dark:text-primary-700 dark:bg-primary-50";
 
-export function NavigationLinks({ mobile = false }: { mobile?: boolean }) {
+export function NavigationLinks({
+  mobile = false,
+  profile,
+  email,
+}: {
+  mobile?: boolean;
+  profile?: Profile;
+  email?: string;
+}) {
   const pathname = usePathname();
+  const [profileOpen, setProfileOpen] = useState(false);
 
   if (mobile) {
     return (
@@ -76,6 +87,22 @@ export function NavigationLinks({ mobile = false }: { mobile?: boolean }) {
           </Link>
         );
       })}
+      <button
+        type="button"
+        className={cn(linkBase, "w-full text-left")}
+        onClick={() => setProfileOpen(true)}
+      >
+        <UserRound aria-hidden="true" size={17} className="shrink-0" />
+        <span className="whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-150">Profile</span>
+      </button>
+      {profile && (
+        <ProfileSheet
+          open={profileOpen}
+          onClose={() => setProfileOpen(false)}
+          profile={profile}
+          email={email ?? ""}
+        />
+      )}
     </nav>
   );
 }

@@ -3,6 +3,7 @@ import { JAKARTA_OFFSET_MS } from "@/lib/dates/jakarta";
 import { formatLongDateUtc } from "@/lib/dates/format-id";
 import { cardClass } from "@/components/ui/styles";
 import { TransactionCard } from "@/components/transactions/transaction-card";
+import { RecordExpenseButton } from "./record-expense-button";
 import type { RecentDashboardTransaction } from "../types/dashboard";
 
 const DAY_MS = 86_400_000;
@@ -94,9 +95,7 @@ export function RecentActivityCard({
           <div className="grid gap-[.2rem]">
             <p className="m-0 text-[.85rem] font-medium text-foreground">No expenses yet</p>
             <p className="m-0 text-[.78rem] text-muted">Start recording your first expense.</p>
-            <Link className="mx-auto mt-[.6rem] text-[.78rem] font-medium text-primary-600 hover:text-primary-700" href="/transactions/new">
-              Record expense
-            </Link>
+            <RecordExpenseButton />
           </div>
         </div>
       )}

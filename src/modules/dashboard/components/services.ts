@@ -1,32 +1,41 @@
 import {
+  CirclePlus,
   FileBarChart,
   ListTree,
-  ReceiptText,
-  Repeat2,
-  Target,
   UserRound,
   UsersRound,
   WalletCards,
-  CirclePlus,
   type LucideIcon,
 } from "lucide-react";
 
-export type Service = {
+export type PageService = {
+  kind: "page";
   href: string;
   label: string;
   icon: LucideIcon;
 };
 
-export const ALL_SERVICES: Service[] = [
-  { href: "/transactions/new", label: "Add Expense", icon: CirclePlus },
-  { href: "/accounts", label: "Accounts", icon: WalletCards },
-  { href: "/split-bills", label: "Split Bill", icon: UsersRound },
-  { href: "/reports", label: "Reports", icon: FileBarChart },
-  { href: "/transactions", label: "Transactions", icon: ReceiptText },
-  { href: "/categories", label: "Categories", icon: ListTree },
-  { href: "/budgets", label: "Budgets", icon: Target },
-  { href: "/recurring-transactions", label: "Recurring", icon: Repeat2 },
-  { href: "/settings/profile", label: "Profile", icon: UserRound },
+export type SheetService = {
+  kind: "sheet";
+  id: "add-expense" | "profile";
+  label: string;
+  icon: LucideIcon;
+};
+
+export type ServiceItem = PageService | SheetService;
+
+export const DASHBOARD_SERVICES: PageService[] = [
+  { kind: "page", href: "/accounts", label: "Accounts", icon: WalletCards },
+  { kind: "page", href: "/split-bills", label: "Split Bill", icon: UsersRound },
+  { kind: "page", href: "/categories", label: "Categories", icon: ListTree },
+  { kind: "page", href: "/reports", label: "Reports", icon: FileBarChart },
 ];
 
-export const QUICK_SERVICES = ALL_SERVICES.slice(0, 4);
+export const SERVICES_SHEET_ITEMS: ServiceItem[] = [
+  { kind: "sheet", id: "add-expense", label: "Add Expense", icon: CirclePlus },
+  { kind: "page", href: "/accounts", label: "Accounts", icon: WalletCards },
+  { kind: "page", href: "/categories", label: "Categories", icon: ListTree },
+  { kind: "sheet", id: "profile", label: "Profile", icon: UserRound },
+  { kind: "page", href: "/reports", label: "Reports", icon: FileBarChart },
+  { kind: "page", href: "/split-bills", label: "Split Bill", icon: UsersRound },
+];
