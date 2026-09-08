@@ -54,7 +54,15 @@ describe("ServicesSection", () => {
 
     expect(screen.getByRole("dialog", { name: "Services" })).toBeInTheDocument();
 
-    for (const label of ["Accounts", "Categories", "Reports", "Split Bill"]) {
+    for (const label of [
+      "Accounts",
+      "Budgets",
+      "Categories",
+      "Recurring",
+      "Reports",
+      "Split Bill",
+      "Transactions",
+    ]) {
       expect(
         screen.getAllByRole("link", { name: label }).length,
       ).toBeGreaterThanOrEqual(1);
