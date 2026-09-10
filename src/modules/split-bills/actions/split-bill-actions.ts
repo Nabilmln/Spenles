@@ -4,13 +4,14 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { requireSessionUser } from "@/lib/auth/require-session";
-import { getOwnedSplitBillDetail } from "../queries/split-bills";
+import { getOwnedSplitBillDetail, listOwnedSplitBills } from "../queries/split-bills";
 import {
   parseSplitBillPayload,
   paymentUpdateSchema,
   splitBillIdSchema,
   splitBillRevisionSchema,
 } from "../schemas/split-bill";
+import { splitBillFilterSchema } from "../schemas/split-bill-filters";
 import { calculateSplitBill, SplitBillCalculationError } from "../services/calculator";
 import {
   archiveOwnedSplitBill,
@@ -325,5 +326,19 @@ export async function createShareSummaryAction(
       includePaymentStatus: formData.get("includePaymentStatus") === "on",
     }),
     success: "Summary ready to copy.",
+  };
+}
+
+export async function loadMoreSplitBillsAction(
+  filters: Record<string, unknown>,
+  page: number,
+) {
+  const user = await requireSessionUser();
+  const parsed = splitBillFilterSchema.safeParse({ ...filters, page });
+  if (!parsed.success) return { rows: [], hasMore: false };
+  const result = await listOwnedSplitBills(user.id, parsed.data);
+  return {
+    rows: result.rows,
+    hasMore: result.hasMore,
   };
 }

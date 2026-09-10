@@ -1,6 +1,7 @@
 export * from "./accounts";
 export * from "./budgets";
 export * from "./categories";
+export * from "./friends";
 export * from "./profiles";
 export * from "./recurring-transactions";
 export * from "./split-bills";

@@ -50,6 +50,13 @@
       "when": 1788006365202,
       "tag": "0006_bright_maelstrom",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1789030023968,
+      "tag": "0007_bouncy_roxanne_simpson",
+      "breakpoints": true
     }
   ]
 }

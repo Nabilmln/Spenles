@@ -104,6 +104,7 @@ export async function listOwnedSplitBills(
     database.select({ value: count() }).from(splitBills).where(where),
   ]);
   const total = totalRows[0]?.value ?? 0;
+  const hasMore = total > filters.page * filters.pageSize;
   return {
     rows: rows.map((row) => ({
       ...row,
@@ -112,6 +113,7 @@ export async function listOwnedSplitBills(
     })),
     total,
     totalPages: Math.max(1, Math.ceil(total / filters.pageSize)),
+    hasMore,
   };
 }
 

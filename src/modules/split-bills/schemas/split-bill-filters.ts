@@ -19,6 +19,7 @@ export const splitBillFilterSchema = z.object({
       z.union(
         SPLIT_BILL_PAGE_SIZES.map((size) => z.literal(size)) as [
           z.ZodLiteral<10>,
+          z.ZodLiteral<15>,
           z.ZodLiteral<20>,
           z.ZodLiteral<50>,
         ],

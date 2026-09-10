@@ -4,4 +4,4 @@ export const SPLIT_BILL_MAX_PARTICIPANTS = 50;
 export const SPLIT_BILL_MAX_ITEMS = 200;
 export const SPLIT_BILL_MAX_ASSIGNMENTS = 2_000;
 export const SPLIT_BILL_MAX_QUANTITY = 10_000;
-export const SPLIT_BILL_PAGE_SIZES = [10, 20, 50] as const;
+export const SPLIT_BILL_PAGE_SIZES = [10, 15, 20, 50] as const;
