@@ -1,8 +1,8 @@
-import Link from "next/link";
-import { Users } from "lucide-react";
-import { buttonClass, cardClass } from "@/components/ui/styles";
+import { MoreHorizontal } from "lucide-react";
+import { cardClass } from "@/components/ui/styles";
 import { formatLongDateUtc } from "@/lib/dates/format-id";
 import { formatIdr } from "@/lib/money/format-idr";
+import { ParticipantAvatarStack } from "./participant-avatar-stack";
 
 const statusLabel = {
   draft: "Draft",
@@ -16,29 +16,28 @@ const statusBadgeClass = {
   archived: "text-muted bg-surface-subtle",
 };
 
-type SplitBillHistoryRow = {
+export type SplitBillHistoryRow = {
   id: string;
   merchantName: string;
   billDate: string;
   status: keyof typeof statusLabel;
   finalAmount: string | null;
   participantCount: number;
+  participantNames: string[];
 };
 
 export function SplitBillHistoryCard({
   row,
+  onAction,
 }: {
   row: SplitBillHistoryRow;
+  onAction: (row: SplitBillHistoryRow) => void;
 }) {
   return (
     <article
-      className={`${cardClass} grid min-w-0 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-[.8rem]`}
+      className={`${cardClass} grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-start gap-[.55rem]`}
     >
-      <span className="grid size-[2.7rem] shrink-0 place-items-center rounded-full bg-primary-600/10 text-primary-600">
-        <Users size={16} aria-hidden="true" />
-      </span>
-
-      <div className="grid min-w-0 gap-[.1rem]">
+      <div className="grid min-w-0 gap-[.25rem]">
         <div className="flex min-w-0 items-center gap-[.4rem]">
           <h3 className="min-w-0 flex-1 truncate text-[.9rem] font-semibold">
             {row.merchantName}
@@ -49,32 +48,28 @@ export function SplitBillHistoryCard({
             {statusLabel[row.status]}
           </span>
         </div>
-        <span className="truncate text-[.74rem] font-medium text-muted">
-          {row.participantCount} participants
+        <span className="truncate text-[.7rem] font-medium text-muted">
+          {formatLongDateUtc(row.billDate)}
         </span>
-      </div>
-
-      <div className="grid min-w-0 justify-items-end gap-[.15rem] text-right">
         {row.finalAmount ? (
-          <strong className="whitespace-nowrap text-[.85rem] [overflow-wrap:anywhere] text-foreground">
+          <strong className="text-[.85rem] font-semibold [overflow-wrap:anywhere] text-foreground">
             {formatIdr(row.finalAmount)}
           </strong>
         ) : null}
-        <span className="text-[.7rem] text-muted">
-          {formatLongDateUtc(row.billDate)}
-        </span>
+        <ParticipantAvatarStack
+          names={row.participantNames}
+          count={row.participantCount}
+        />
       </div>
 
-      <Link
-        className={`col-span-full mt-[.15rem] ${buttonClass("secondary", "w-full justify-center text-[.78rem]")}`}
-        href={
-          row.status === "draft"
-            ? `/split-bills/${row.id}/edit`
-            : `/split-bills/${row.id}`
-        }
+      <button
+        type="button"
+        onClick={() => onAction(row)}
+        className="grid size-[2.4rem] shrink-0 place-items-center self-start rounded-full text-muted transition-colors hover:bg-surface-subtle"
+        aria-label="Split bill actions"
       >
-        {row.status === "draft" ? "Continue draft" : "View results"}
-      </Link>
+        <MoreHorizontal size={18} aria-hidden="true" />
+      </button>
     </article>
   );
 }

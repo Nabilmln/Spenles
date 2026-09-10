@@ -1,4 +1,8 @@
-export { createFriendAction, deleteFriendAction } from "./actions/friend-actions";
+export {
+  createFriendAction,
+  deleteFriendAction,
+  updateFriendAction,
+} from "./actions/friend-actions";
 export type { FriendActionState } from "./actions/friend-actions";
 export { listFriends } from "./queries/friends";
 export type { FriendRow } from "./queries/friends";

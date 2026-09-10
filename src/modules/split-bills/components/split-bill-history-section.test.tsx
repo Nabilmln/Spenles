@@ -1,11 +1,24 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { FriendRow } from "@/modules/friends/queries/friends";
 import type { SplitBillFilters } from "../schemas/split-bill-filters";
 import { SplitBillHistorySection } from "./split-bill-history-section";
 
+const pushMock = vi.fn();
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: pushMock }),
+}));
+
 vi.mock("../actions/split-bill-actions", () => ({
   loadMoreSplitBillsAction: vi.fn(async () => ({ rows: [], hasMore: false })),
+  deleteSplitBillByIdAction: vi.fn(async () => ({ ok: true })),
 }));
 
 vi.mock("./split-bill-filter-bar", () => ({
@@ -14,6 +27,10 @@ vi.mock("./split-bill-filter-bar", () => ({
 
 vi.mock("./split-bill-friend-add-sheet", () => ({
   SplitBillFriendAddSheet: () => null,
+}));
+
+vi.mock("./split-bill-friend-edit-sheet", () => ({
+  SplitBillFriendEditSheet: () => null,
 }));
 
 function createMockIntersectionObserver() {
@@ -35,6 +52,7 @@ afterEach(() => {
 });
 
 beforeEach(() => {
+  pushMock.mockReset();
   createMockIntersectionObserver();
 });
 
@@ -60,6 +78,7 @@ const rows = [
     status: "finalized" as const,
     finalAmount: "2160000",
     participantCount: 3,
+    participantNames: ["Ayu", "Bima", "Caca"],
   },
 ];
 
@@ -121,5 +140,53 @@ describe("split-bill history section", () => {
       />,
     );
     expect(screen.getByText("No more split bills")).toBeInTheDocument();
+  });
+
+  it("opens the action sheet and navigates to the result page", async () => {
+    render(
+      <SplitBillHistorySection
+        filters={filters}
+        friends={friends}
+        initialRows={rows}
+        total={1}
+      />,
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Split bill actions" }),
+    );
+    const viewResult = await screen.findByRole("button", {
+      name: "View Result",
+    });
+    fireEvent.click(viewResult);
+    await waitFor(() =>
+      expect(pushMock).toHaveBeenCalledWith("/split-bills/b1"),
+    );
+  });
+
+  it("opens the action sheet and deletes the bill after confirmation", async () => {
+    const deleteAction = vi.mocked(
+      (await import("../actions/split-bill-actions"))
+        .deleteSplitBillByIdAction,
+    );
+    deleteAction.mockResolvedValue({ ok: true });
+    render(
+      <SplitBillHistorySection
+        filters={filters}
+        friends={friends}
+        initialRows={rows}
+        total={1}
+      />,
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Split bill actions" }),
+    );
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Delete Split Bill" }),
+    );
+    fireEvent.click(
+      await screen.findByRole("button", { name: "Delete" }),
+    );
+    await waitFor(() => expect(deleteAction).toHaveBeenCalledWith("b1"));
+    expect(await screen.findByText("No split bills yet")).toBeInTheDocument();
   });
 });

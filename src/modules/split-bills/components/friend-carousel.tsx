@@ -7,9 +7,11 @@ import type { FriendRow } from "@/modules/friends";
 export function FriendCarousel({
   friends,
   onAddFriend,
+  onSelectFriend,
 }: {
   friends: FriendRow[];
   onAddFriend: () => void;
+  onSelectFriend: (friend: FriendRow) => void;
 }) {
   if (friends.length === 0) {
     return (
@@ -31,6 +33,7 @@ export function FriendCarousel({
           <button
             key={friend.id}
             type="button"
+            onClick={() => onSelectFriend(friend)}
             className="flex shrink-0 flex-col items-center gap-[.3rem]"
           >
             <FriendAvatar name={friend.name} />

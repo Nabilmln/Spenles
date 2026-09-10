@@ -1,27 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { EmptyState } from "@/components/feedback/empty-state";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { useToast } from "@/components/ui/toast";
 import { buttonClass } from "@/components/ui/styles";
-import { loadMoreSplitBillsAction } from "../actions/split-bill-actions";
-import type { SplitBillFilters } from "../schemas/split-bill-filters";
 import type { FriendRow } from "@/modules/friends/queries/friends";
+import {
+  deleteSplitBillByIdAction,
+  loadMoreSplitBillsAction,
+} from "../actions/split-bill-actions";
+import type { SplitBillFilters } from "../schemas/split-bill-filters";
 import { FriendCarousel } from "./friend-carousel";
+import { SplitBillActionSheet } from "./split-bill-action-sheet";
 import { SplitBillFriendAddSheet } from "./split-bill-friend-add-sheet";
+import { SplitBillFriendEditSheet } from "./split-bill-friend-edit-sheet";
 import { SplitBillFilterBar } from "./split-bill-filter-bar";
-import { SplitBillHistoryCard } from "./split-bill-history-card";
+import {
+  SplitBillHistoryCard,
+  type SplitBillHistoryRow,
+} from "./split-bill-history-card";
 
 const INITIAL_PAGE = 1;
-
-type SplitBillHistoryRow = {
-  id: string;
-  merchantName: string;
-  billDate: string;
-  status: "draft" | "finalized" | "archived";
-  finalAmount: string | null;
-  participantCount: number;
-};
 
 function SkeletonCards({ count = 3 }: { count?: number }) {
   return (
@@ -62,6 +64,21 @@ export function SplitBillHistorySection({
   const sentinelRef = useRef<HTMLDivElement>(null);
   const loadingRef = useRef(false);
   const [addFriendOpen, setAddFriendOpen] = useState(false);
+  const [friendList, setFriendList] = useState(friends);
+  const [prevFriends, setPrevFriends] = useState(friends);
+  const [friendEditOpen, setFriendEditOpen] = useState(false);
+  const [selectedFriend, setSelectedFriend] = useState<FriendRow | null>(null);
+  const [actionSheetOpen, setActionSheetOpen] = useState(false);
+  const [actionBill, setActionBill] = useState<SplitBillHistoryRow | null>(null);
+  const [deleteBillOpen, setDeleteBillOpen] = useState(false);
+  const [deletingBill, startDeletingBill] = useTransition();
+  const router = useRouter();
+  const toast = useToast();
+
+  if (prevFriends !== friends) {
+    setPrevFriends(friends);
+    setFriendList(friends);
+  }
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
@@ -94,6 +111,69 @@ export function SplitBillHistorySection({
     filters.q || (filters.status && filters.status !== "all") || filters.month,
   );
 
+  function reloadFromPageOne() {
+    loadMoreSplitBillsAction(filters, INITIAL_PAGE).then((result) => {
+      setRows(result.rows);
+      setPage(INITIAL_PAGE);
+      setHasMore(result.hasMore);
+    });
+  }
+
+  function handleFriendSaved(updated: FriendRow) {
+    setFriendList((current) =>
+      [...current.map((friend) => (friend.id === updated.id ? updated : friend))].sort(
+        (a, b) => a.name.localeCompare(b.name),
+      ),
+    );
+  }
+
+  function handleFriendDeleted(id: string) {
+    setFriendList((current) => current.filter((friend) => friend.id !== id));
+  }
+
+  function handleFriendClose() {
+    setFriendEditOpen(false);
+    setSelectedFriend(null);
+  }
+
+  function handleCardAction(row: SplitBillHistoryRow) {
+    setActionBill(row);
+    setActionSheetOpen(true);
+  }
+
+  function handleViewResult() {
+    const bill = actionBill;
+    if (!bill) return;
+    setActionSheetOpen(false);
+    setActionBill(null);
+    router.push(
+      bill.status === "draft"
+        ? `/split-bills/${bill.id}/edit`
+        : `/split-bills/${bill.id}`,
+    );
+  }
+
+  function handleDeleteBill() {
+    setActionSheetOpen(false);
+    setDeleteBillOpen(true);
+  }
+
+  function confirmDeleteBill() {
+    const bill = actionBill;
+    if (!bill) return;
+    startDeletingBill(async () => {
+      const result = await deleteSplitBillByIdAction(bill.id);
+      setDeleteBillOpen(false);
+      setActionBill(null);
+      if (result.ok) {
+        toast.success("Split bill deleted.");
+        reloadFromPageOne();
+      } else {
+        toast.error("Split bill could not be deleted.");
+      }
+    });
+  }
+
   return (
     <section aria-label="Split bill history" className="min-w-0">
       {/* Friends section */}
@@ -102,8 +182,12 @@ export function SplitBillHistorySection({
           Friends
         </h3>
         <FriendCarousel
-          friends={friends}
+          friends={friendList}
           onAddFriend={() => setAddFriendOpen(true)}
+          onSelectFriend={(friend) => {
+            setSelectedFriend(friend);
+            setFriendEditOpen(true);
+          }}
         />
       </div>
 
@@ -140,7 +224,11 @@ export function SplitBillHistorySection({
       {hasResults ? (
         <div className="grid gap-[.75rem]">
           {rows.map((row) => (
-            <SplitBillHistoryCard key={row.id} row={row} />
+            <SplitBillHistoryCard
+              key={row.id}
+              row={row}
+              onAction={handleCardAction}
+            />
           ))}
         </div>
       ) : (
@@ -183,6 +271,36 @@ export function SplitBillHistorySection({
       <SplitBillFriendAddSheet
         open={addFriendOpen}
         onClose={() => setAddFriendOpen(false)}
+      />
+
+      {/* Edit Friend Sheet */}
+      <SplitBillFriendEditSheet
+        open={friendEditOpen}
+        onClose={handleFriendClose}
+        friend={selectedFriend}
+        onSaved={handleFriendSaved}
+        onDeleted={handleFriendDeleted}
+      />
+
+      {/* Split Bill Action Sheet */}
+      <SplitBillActionSheet
+        open={actionSheetOpen}
+        onClose={() => {
+          setActionSheetOpen(false);
+          setActionBill(null);
+        }}
+        onViewResult={handleViewResult}
+        onDelete={handleDeleteBill}
+      />
+
+      <ConfirmDialog
+        open={deleteBillOpen}
+        onClose={() => setDeleteBillOpen(false)}
+        title="Delete Split Bill?"
+        message="This split bill and its related data will be permanently deleted."
+        confirmLabel="Delete"
+        pending={deletingBill}
+        onConfirm={confirmDeleteBill}
       />
     </section>
   );

@@ -10,6 +10,7 @@ import {
   ilike,
   inArray,
   lt,
+  sql,
   type SQL,
 } from "drizzle-orm";
 import { db } from "@/db";
@@ -80,6 +81,7 @@ export async function listOwnedSplitBills(
         createdAt: splitBills.createdAt,
         finalAmount: splitBillCalculations.finalAmount,
         participantCount: count(splitBillParticipants.id),
+        participantNames: sql<Array<string>>`array_agg(${splitBillParticipants.name} order by ${splitBillParticipants.position})`,
       })
       .from(splitBills)
       .leftJoin(
@@ -109,6 +111,7 @@ export async function listOwnedSplitBills(
     rows: rows.map((row) => ({
       ...row,
       finalAmount: row.finalAmount?.toString() ?? null,
+      participantNames: row.participantNames ?? [],
       createdAt: row.createdAt.toISOString(),
     })),
     total,

@@ -1,5 +1,5 @@
-import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { SplitBillHistoryCard } from "./split-bill-history-card";
 
 afterEach(cleanup);
@@ -10,34 +10,51 @@ const base = {
   status: "finalized" as const,
   finalAmount: "2160000",
   participantCount: 4,
+  participantNames: ["Ayu", "Bima", "Caca", "Deni"],
 };
 
 describe("split-bill history card", () => {
-  it("renders merchant, participants, amount and date", () => {
-    render(<SplitBillHistoryCard row={{ id: "b1", ...base }} />);
+  it("renders merchant, badge, amount, date and participant stack", () => {
+    render(
+      <SplitBillHistoryCard row={{ id: "b1", ...base }} onAction={vi.fn()} />,
+    );
     expect(screen.getByText("Warung Bu Endah")).toBeInTheDocument();
-    expect(screen.getByText("4 participants")).toBeInTheDocument();
     expect(screen.getByText("Rp 2.160.000")).toBeInTheDocument();
     expect(screen.getByText("January 15, 2026")).toBeInTheDocument();
     expect(screen.getByText("Final")).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: "4 participants" }),
+    ).toBeInTheDocument();
+    expect(screen.getAllByText(/^[ABC]$/).length).toBe(3);
+    expect(screen.getByText("+1")).toBeInTheDocument();
   });
 
-  it("links drafts to the editor and non-drafts to the result page", () => {
-    const { rerender } = render(
-      <SplitBillHistoryCard row={{ id: "b1", ...base }} />,
-    );
-    expect(screen.getByRole("link", { name: /view results/i })).toHaveAttribute(
-      "href",
-      "/split-bills/b1",
-    );
-    rerender(
+  it("shows the Draft badge and hides the amount for draft bills", () => {
+    render(
       <SplitBillHistoryCard
-        row={{ id: "b2", ...base, status: "draft", finalAmount: null }}
+        row={{ id: "b2", ...base, status: "draft", finalAmount: null, participantNames: ["Ayu"] }}
+        onAction={vi.fn()}
       />,
     );
-    expect(
-      screen.getByRole("link", { name: /continue draft/i }),
-    ).toHaveAttribute("href", "/split-bills/b2/edit");
     expect(screen.getByText("Draft")).toBeInTheDocument();
+    expect(screen.queryByText(/^Rp /)).not.toBeInTheDocument();
+  });
+
+  it("does not render navigation links anymore", () => {
+    render(
+      <SplitBillHistoryCard row={{ id: "b1", ...base }} onAction={vi.fn()} />,
+    );
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+  });
+
+  it("invokes onAction with the row from the compact actions button", () => {
+    const onAction = vi.fn();
+    const row = { id: "b1", ...base };
+    render(<SplitBillHistoryCard row={row} onAction={onAction} />);
+    fireEvent.click(
+      screen.getByRole("button", { name: "Split bill actions" }),
+    );
+    expect(onAction).toHaveBeenCalledTimes(1);
+    expect(onAction).toHaveBeenCalledWith(row);
   });
 });

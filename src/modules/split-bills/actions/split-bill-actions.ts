@@ -220,6 +220,18 @@ export async function deleteSplitBillAction(formData: FormData) {
   redirect("/split-bills");
 }
 
+export async function deleteSplitBillByIdAction(
+  id: string,
+): Promise<{ ok: boolean }> {
+  const user = await requireSessionUser();
+  const parsed = splitBillIdSchema.safeParse(id);
+  if (!parsed.success) return { ok: false };
+  const deleted = await deleteOwnedSplitBill(db, user.id, parsed.data);
+  if (!deleted) return { ok: false };
+  revalidatePath("/split-bills");
+  return { ok: true };
+}
+
 export async function archiveSplitBillAction(
   _state: SplitBillActionState,
   formData: FormData,
