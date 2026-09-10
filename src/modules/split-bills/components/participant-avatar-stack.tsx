@@ -32,11 +32,11 @@ export function ParticipantAvatarStack({
         {displayNames.map((name, index) => (
           <span
             className={`flex shrink-0 overflow-hidden rounded-full ring-2 ring-surface ${
-              index > 0 ? "-ml-[1.3rem]" : ""
+              index > 0 ? "-ml-[.75rem]" : ""
             }`}
             key={`${name || "p"}-${index}`}
           >
-            <FriendAvatar name={name} size="sm" />
+            <FriendAvatar name={name} size="xs" />
           </span>
         ))}
       </div>

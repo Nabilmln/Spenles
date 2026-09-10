@@ -42,7 +42,7 @@ describe("participant avatar stack", () => {
       container.querySelectorAll("div:first-child > div > span"),
     );
     expect(
-      avatarWrappers.some((el) => String(el.className).includes("-ml-[1.3rem]")),
+      avatarWrappers.some((el) => String(el.className).includes("-ml-[.75rem]")),
     ).toBe(true);
   });
 });

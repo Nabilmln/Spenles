@@ -3,13 +3,15 @@ export function FriendAvatar({
   size = "md",
 }: {
   name: string;
-  size?: "sm" | "md";
+  size?: "xs" | "sm" | "md";
 }) {
   const initial = name.slice(0, 1).toUpperCase();
   const sizeClasses =
-    size === "sm"
-      ? "size-[2.6rem] text-[.8rem]"
-      : "size-[3.2rem] text-[.9rem]";
+    size === "xs"
+      ? "size-[1.5rem] text-[.55rem]"
+      : size === "sm"
+        ? "size-[2.6rem] text-[.8rem]"
+        : "size-[3.2rem] text-[.9rem]";
 
   return (
     <span

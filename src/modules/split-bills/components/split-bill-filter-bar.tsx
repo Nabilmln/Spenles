@@ -6,6 +6,7 @@ import { SlidersHorizontal, X } from "lucide-react";
 import { Select } from "@/components/ui/select";
 import { MonthSelector } from "@/components/ui/month-selector";
 import { buttonClass, fieldClass, iconButtonClass, inputClass } from "@/components/ui/styles";
+import { cn } from "@/lib/utils";
 import type { SplitBillFilters } from "../schemas/split-bill-filters";
 
 export function activeSplitBillFilterCount(filters: SplitBillFilters) {
@@ -45,7 +46,10 @@ export function SplitBillFilterBar({
     >
       <input
         aria-label="Search merchant"
-        className={`${inputClass} flex-1 min-w-0`}
+        className={cn(
+          inputClass,
+          "flex-1 min-w-0 rounded-full bg-white! dark:bg-surface!",
+        )}
         defaultValue={filters.q}
         name="q"
         placeholder="Search merchant"
@@ -55,7 +59,10 @@ export function SplitBillFilterBar({
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-label="Open filters"
-        className={`${iconButtonClass} relative w-[2.9rem] min-h-[2.9rem] shrink-0`}
+        className={cn(
+          iconButtonClass,
+          "relative size-[2.9rem] min-h-[2.9rem] rounded-full bg-white! dark:bg-surface!",
+        )}
         onClick={() => setOpen(true)}
         type="button"
       >

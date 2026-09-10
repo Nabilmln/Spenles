@@ -35,24 +35,24 @@ export function SplitBillHistoryCard({
 }) {
   return (
     <article className="grid items-center gap-[.8rem] rounded-[1.1rem] border border-border bg-surface shadow-card p-[.85rem] grid-cols-[auto_minmax(0,1fr)_auto_auto]">
-      <span className="grid size-[2.7rem] shrink-0 place-items-center rounded-full text-primary-600 bg-[color-mix(in_srgb,var(--primary-600)_10%,transparent)]">
-        <ReceiptText size={20} aria-hidden="true" />
+      <span className="relative shrink-0">
+        <span className="grid size-[2.7rem] place-items-center rounded-full text-primary-600 bg-[color-mix(in_srgb,var(--primary-600)_10%,transparent)]">
+          <ReceiptText size={20} aria-hidden="true" />
+        </span>
+        <span
+          className={cn(
+            "absolute -top-[.4rem] -left-[.4rem] rounded-full px-[.4rem] py-[.12rem] whitespace-nowrap text-[.58rem] font-semibold leading-none ring-2 ring-surface",
+            statusBadgeClass[row.status],
+          )}
+        >
+          {statusLabel[row.status]}
+        </span>
       </span>
 
       <div className="grid min-w-0 gap-[.15rem]">
-        <div className="flex min-w-0 items-center gap-[.4rem]">
-          <strong className="min-w-0 flex-1 truncate text-[.9rem]">
-            {row.merchantName}
-          </strong>
-          <span
-            className={cn(
-              "shrink-0 rounded-full px-[.45rem] py-[.12rem] whitespace-nowrap text-[.65rem] font-medium leading-none",
-              statusBadgeClass[row.status],
-            )}
-          >
-            {statusLabel[row.status]}
-          </span>
-        </div>
+        <strong className="text-[.9rem] [overflow-wrap:anywhere]">
+          {row.merchantName}
+        </strong>
         <ParticipantAvatarStack
           names={row.participantNames}
           count={row.participantCount}
