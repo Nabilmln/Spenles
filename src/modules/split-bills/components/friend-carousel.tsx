@@ -25,7 +25,7 @@ export function FriendCarousel({
   }
 
   return (
-    <div className="-mx-[.9rem] min-w-0 max-w-full px-[.9rem]">
+    <div className="min-w-0">
       <div className="flex min-w-0 gap-[.9rem] overflow-x-auto pb-1 scrollbar-none">
         {friends.map((friend) => (
           <button
