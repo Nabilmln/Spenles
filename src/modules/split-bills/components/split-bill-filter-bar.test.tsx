@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import {
   activeSplitBillFilterCount,
@@ -17,7 +17,7 @@ const base: SplitBillFilters = {
 };
 
 describe("split-bill filter bar", () => {
-  it("opens the filter dialog and shows active filter count", () => {
+  it("opens the filter dialog and shows active filter count", async () => {
     render(<SplitBillFilterBar filters={base} />);
     expect(
       screen.getByRole("searchbox", { name: "Search merchant" }),
@@ -30,7 +30,9 @@ describe("split-bill filter bar", () => {
       screen.getByRole("button", { name: "Apply Filters" }),
     ).toBeInTheDocument();
     fireEvent.keyDown(screen.getByRole("dialog"), { key: "Escape" });
-    expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog")).not.toBeInTheDocument(),
+    );
   });
 
   it("counts active filters for badge", () => {

@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { SlidersHorizontal, X } from "lucide-react";
+import { useState } from "react";
+import { SlidersHorizontal } from "lucide-react";
+import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { Select } from "@/components/ui/select";
 import { MonthSelector } from "@/components/ui/month-selector";
 import { buttonClass, fieldClass, iconButtonClass, inputClass } from "@/components/ui/styles";
@@ -29,13 +30,7 @@ export function SplitBillFilterBar({
   const [month, setMonth] = useState(filters.month ?? "");
   const [sort, setSort] = useState(filters.sort);
   const [direction, setDirection] = useState(filters.direction);
-  const closeButtonRef = useRef<HTMLButtonElement>(null);
   const count = activeSplitBillFilterCount(filters);
-
-  useEffect(() => {
-    if (!open) return;
-    closeButtonRef.current?.focus();
-  }, [open]);
 
   return (
     <form
@@ -75,89 +70,77 @@ export function SplitBillFilterBar({
       <input name="direction" type="hidden" value={direction} />
       <input name="pageSize" type="hidden" value={filters.pageSize} />
 
-      {open ? (
-        <div className="fixed inset-0 z-40 flex items-end justify-center bg-[rgb(15_23_42/45%)] p-4 min-[861px]:items-center" onClick={() => setOpen(false)}>
-          <div
-            aria-labelledby="split-filter-title"
-            aria-modal="true"
-            className="w-[min(34rem,100%)] max-h-[88vh] overflow-y-auto rounded-[1.25rem_1.25rem_1.1rem_1.1rem] border border-border bg-surface p-[1.25rem] shadow-card"
-            onClick={(event) => event.stopPropagation()}
-            onKeyDown={(event) => {
-              if (event.key === "Escape") setOpen(false);
-            }}
-            role="dialog"
-          >
-            <div className="mb-4 flex items-center justify-between gap-4">
-              <h2 id="split-filter-title">Filter Split Bill</h2>
-              <button
-                aria-label="Close filters"
-                className={iconButtonClass}
-                onClick={() => setOpen(false)}
-                ref={closeButtonRef}
-                type="button"
-              >
-                <X aria-hidden="true" size={19} />
-              </button>
-            </div>
-            <div className="grid gap-[.9rem]">
-              <label className={fieldClass}>
-                <span className="text-[.86rem] font-medium">Status</span>
-                <Select
-                  aria-label="Status"
-                  onChange={(event) => setStatus(event.target.value)}
-                  value={status}
-                >
-                  <option value="">Active</option>
-                  <option value="draft">Draft</option>
-                  <option value="finalized">Final</option>
-                  <option value="archived">Archived</option>
-                  <option value="all">All</option>
-                </Select>
-              </label>
-              <div className={fieldClass}>
-                <span className="text-[.86rem] font-medium">Bill month</span>
-                <MonthSelector month={month} onChange={setMonth} />
-              </div>
-              <label className={fieldClass}>
-                <span className="text-[.86rem] font-medium">Sort by</span>
-                <Select
-                  aria-label="Sort by"
-                  onChange={(event) =>
-                    setSort(event.target.value as SplitBillFilters["sort"])
-                  }
-                  value={sort}
-                >
-                  <option value="billDate">Date</option>
-                  <option value="amount">Amount</option>
-                </Select>
-              </label>
-              <label className={fieldClass}>
-                <span className="text-[.86rem] font-medium">Sort order</span>
-                <Select
-                  aria-label="Sort order"
-                  onChange={(event) =>
-                    setDirection(
-                      event.target.value as SplitBillFilters["direction"],
-                    )
-                  }
-                  value={direction}
-                >
-                  <option value="desc">Newest first</option>
-                  <option value="asc">Oldest first</option>
-                </Select>
-              </label>
-            </div>
-            <div className="mt-[1.25rem] flex gap-[.55rem]">
-              <Link className={buttonClass("secondary", "flex-1 justify-center")} href="/split-bills">
-                Reset
-              </Link>
-              <button className={buttonClass("primary", "flex-1 justify-center")} type="submit">
-                Apply Filters
-              </button>
-            </div>
+      <BottomSheet
+        open={open}
+        onClose={() => setOpen(false)}
+        title="Filter Split Bill"
+        ariaLabel="Filter Split Bill"
+      >
+        <div className="grid gap-[.9rem]">
+          <label className={fieldClass}>
+            <span className="text-[.86rem] font-medium">Status</span>
+            <Select
+              aria-label="Status"
+              onChange={(event) => setStatus(event.target.value)}
+              value={status}
+            >
+              <option value="">Active</option>
+              <option value="draft">Draft</option>
+              <option value="finalized">Final</option>
+              <option value="archived">Archived</option>
+              <option value="all">All</option>
+            </Select>
+          </label>
+          <div className={fieldClass}>
+            <span className="text-[.86rem] font-medium">Bill month</span>
+            <MonthSelector month={month} onChange={setMonth} />
           </div>
+          <label className={fieldClass}>
+            <span className="text-[.86rem] font-medium">Sort by</span>
+            <Select
+              aria-label="Sort by"
+              onChange={(event) =>
+                setSort(event.target.value as SplitBillFilters["sort"])
+              }
+              value={sort}
+            >
+              <option value="billDate">Date</option>
+              <option value="amount">Amount</option>
+            </Select>
+          </label>
+          <label className={fieldClass}>
+            <span className="text-[.86rem] font-medium">Sort order</span>
+            <Select
+              aria-label="Sort order"
+              onChange={(event) =>
+                setDirection(
+                  event.target.value as SplitBillFilters["direction"],
+                )
+              }
+              value={direction}
+            >
+              <option value="desc">Newest first</option>
+              <option value="asc">Oldest first</option>
+            </Select>
+          </label>
         </div>
-      ) : null}
+
+        <div className="mt-[1.35rem] grid grid-cols-2 gap-[.55rem] mb-5">
+          <Link
+            className={cn(buttonClass("secondary"), "justify-center")}
+            href="/split-bills"
+          >
+            Reset
+          </Link>
+          <button
+            className={cn(buttonClass("primary"), "justify-center")}
+            form="split-bill-filters-form"
+            type="submit"
+          >
+            Apply Filters
+          </button>
+        </div>
+      </BottomSheet>
     </form>
   );
 }
