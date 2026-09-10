@@ -1,7 +1,7 @@
-import { MoreHorizontal } from "lucide-react";
-import { cardClass } from "@/components/ui/styles";
+import { MoreHorizontal, ReceiptText } from "lucide-react";
 import { formatLongDateUtc } from "@/lib/dates/format-id";
 import { formatIdr } from "@/lib/money/format-idr";
+import { cn } from "@/lib/utils";
 import { ParticipantAvatarStack } from "./participant-avatar-stack";
 
 const statusLabel = {
@@ -34,38 +34,46 @@ export function SplitBillHistoryCard({
   onAction: (row: SplitBillHistoryRow) => void;
 }) {
   return (
-    <article
-      className={`${cardClass} grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-start gap-[.55rem]`}
-    >
-      <div className="grid min-w-0 gap-[.25rem]">
+    <article className="grid items-center gap-[.8rem] rounded-[1.1rem] border border-border bg-surface shadow-card p-[.85rem] grid-cols-[auto_minmax(0,1fr)_auto_auto]">
+      <span className="grid size-[2.7rem] shrink-0 place-items-center rounded-full text-primary-600 bg-[color-mix(in_srgb,var(--primary-600)_10%,transparent)]">
+        <ReceiptText size={20} aria-hidden="true" />
+      </span>
+
+      <div className="grid min-w-0 gap-[.15rem]">
         <div className="flex min-w-0 items-center gap-[.4rem]">
-          <h3 className="min-w-0 flex-1 truncate text-[.9rem] font-semibold">
+          <strong className="min-w-0 flex-1 truncate text-[.9rem]">
             {row.merchantName}
-          </h3>
+          </strong>
           <span
-            className={`shrink-0 rounded-full px-[.45rem] py-[.12rem] whitespace-nowrap text-[.65rem] font-medium leading-none ${statusBadgeClass[row.status]}`}
+            className={cn(
+              "shrink-0 rounded-full px-[.45rem] py-[.12rem] whitespace-nowrap text-[.65rem] font-medium leading-none",
+              statusBadgeClass[row.status],
+            )}
           >
             {statusLabel[row.status]}
           </span>
         </div>
-        <span className="truncate text-[.7rem] font-medium text-muted">
-          {formatLongDateUtc(row.billDate)}
-        </span>
-        {row.finalAmount ? (
-          <strong className="text-[.85rem] font-semibold [overflow-wrap:anywhere] text-foreground">
-            {formatIdr(row.finalAmount)}
-          </strong>
-        ) : null}
         <ParticipantAvatarStack
           names={row.participantNames}
           count={row.participantCount}
         />
       </div>
 
+      <div className="grid justify-items-end gap-[.15rem]">
+        {row.finalAmount ? (
+          <strong className="whitespace-nowrap text-[.85rem] [overflow-wrap:anywhere] text-foreground">
+            {formatIdr(row.finalAmount)}
+          </strong>
+        ) : null}
+        <span className="text-[.7rem] text-muted">
+          {formatLongDateUtc(row.billDate)}
+        </span>
+      </div>
+
       <button
         type="button"
         onClick={() => onAction(row)}
-        className="grid size-[2.4rem] shrink-0 place-items-center self-start rounded-full text-muted transition-colors hover:bg-surface-subtle"
+        className="grid size-[2.4rem] shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-surface-subtle"
         aria-label="Split bill actions"
       >
         <MoreHorizontal size={18} aria-hidden="true" />
