@@ -25,13 +25,13 @@ export function FriendCarousel({
   }
 
   return (
-    <div className="-mx-[.9rem] px-[.9rem]">
-      <div className="flex gap-[.9rem] overflow-x-auto pb-1 scrollbar-none">
+    <div className="-mx-[.9rem] min-w-0 max-w-full px-[.9rem]">
+      <div className="flex min-w-0 gap-[.9rem] overflow-x-auto pb-1 scrollbar-none">
         {friends.map((friend) => (
           <button
             key={friend.id}
             type="button"
-            className="flex min-w-0 flex-col items-center gap-[.3rem]"
+            className="flex shrink-0 flex-col items-center gap-[.3rem]"
           >
             <FriendAvatar name={friend.name} />
             <span className="max-w-[4rem] truncate text-[.7rem] text-muted">
@@ -42,7 +42,7 @@ export function FriendCarousel({
         <button
           type="button"
           onClick={onAddFriend}
-          className="flex min-w-0 flex-col items-center gap-[.3rem]"
+          className="flex shrink-0 flex-col items-center gap-[.3rem]"
         >
           <span className="grid size-[3.2rem] place-items-center rounded-full border-2 border-dashed border-border bg-surface-subtle text-primary-600">
             <UserPlus size={16} aria-hidden="true" />

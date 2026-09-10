@@ -21,6 +21,14 @@
 
 @custom-variant dark (&:where(.theme-dark, .theme-dark *));
 
+@utility scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 :root {
   --primary-50: #eef2ff;
   --primary-100: #e0e7ff;

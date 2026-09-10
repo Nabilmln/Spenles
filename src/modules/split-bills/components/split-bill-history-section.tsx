@@ -95,7 +95,7 @@ export function SplitBillHistorySection({
   );
 
   return (
-    <section aria-label="Split bill history">
+    <section aria-label="Split bill history" className="min-w-0">
       {/* Friends section */}
       <div className="mb-[1rem]">
         <h3 className="m-0 mb-[.55rem] text-[.72rem] font-semibold uppercase tracking-[.12em] text-muted">
