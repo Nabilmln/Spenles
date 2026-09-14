@@ -10,7 +10,6 @@ export default async function NewSplitBillPage() {
   const friends = await listFriends(user.id);
   return (
     <div className={`${pageStackClass} ${narrowPageClass}`}>
-      <p className={pageDescriptionClass}>Select friends, add the bill details, then review and confirm. The preview is local; the server re-verifies all amounts.</p>
       <MakeBillWizard friends={friends} />
     </div>
   );
