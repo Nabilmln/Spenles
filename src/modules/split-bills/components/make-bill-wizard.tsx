@@ -34,9 +34,11 @@ import {
 import { calculateSplitBill } from "../services/calculator";
 import { createId, percentageToBasisPoints } from "../services/draft-utils";
 import type { SplitBillTaxMode } from "../types/split-bill";
+import { FriendAvatar } from "./friend-avatar";
 import { FriendCarousel } from "./friend-carousel";
 import { MakeBillDateSheet } from "./make-bill-date-sheet";
 import { MakeBillFriendPickerSheet } from "./make-bill-friend-picker-sheet";
+import { MakeBillOverviewSheet, type MakeBillOverviewItem } from "./make-bill-overview-sheet";
 import { MakeBillPreviewSheet } from "./make-bill-preview-sheet";
 import { MakeBillTaxSheet } from "./make-bill-tax-sheet";
 import { QuantityInput, RupiahInput } from "./money-input";
@@ -46,10 +48,11 @@ type ItemDraft = {
   name: string;
   quantity: number;
   unitPrice: string;
+  participantIds: string[];
 };
 
 const STEPS = [
-  { number: 1, label: "Friends" },
+  { number: 1, label: "Add Friends" },
   { number: 2, label: "Bill Details" },
   { number: 3, label: "Overview" },
 ];
@@ -69,10 +72,10 @@ function StepIndicator({ current }: { current: number }) {
         const done = step.number < current;
         const active = step.number === current;
         return (
-          <li key={step.number} className="flex flex-col items-center gap-[.3rem]">
+          <li key={step.number} className="flex min-w-0 flex-col items-center gap-[.3rem]">
             <span
               className={
-                "grid size-[1.9rem] place-items-center rounded-full text-[.82rem] font-semibold " +
+                "grid size-[1.9rem] shrink-0 place-items-center rounded-full text-[.82rem] font-semibold " +
                 (active
                   ? "bg-primary-600 text-white"
                   : done
@@ -85,7 +88,7 @@ function StepIndicator({ current }: { current: number }) {
             </span>
             <span
               className={
-                "text-[.72rem] " +
+                "max-w-full truncate text-[.72rem] " +
                 (active ? "font-semibold text-foreground" : "text-muted")
               }
             >
@@ -120,12 +123,11 @@ export function MakeBillWizard({ friends }: { friends: FriendRow[] }) {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [dateOpen, setDateOpen] = useState(false);
   const [taxOpen, setTaxOpen] = useState(false);
+  const [overviewOpen, setOverviewOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
 
   const billTaxBps =
     billTaxMode === "percentage" ? percentageToBasisPoints(taxPercent) : 0;
-
-  const participantIds = selectedFriends.map((friend) => friend.id);
 
   const payload = useMemo(
     () => ({
@@ -150,7 +152,7 @@ export function MakeBillWizard({ friends }: { friends: FriendRow[] }) {
         quantity: item.quantity,
         unitPrice: item.unitPrice,
         itemTaxBps: 0,
-        participantIds,
+        participantIds: item.participantIds,
       })),
     }),
     [
@@ -162,7 +164,6 @@ export function MakeBillWizard({ friends }: { friends: FriendRow[] }) {
       billTaxBps,
       selectedFriends,
       items,
-      participantIds,
     ],
   );
 
@@ -189,7 +190,7 @@ export function MakeBillWizard({ friends }: { friends: FriendRow[] }) {
         quantity: Number(item.quantity),
         unitPrice: BigInt(item.unitPrice || "0"),
         itemTaxBps: 0,
-        assignments: participantIds.map((participantId) => ({
+        assignments: item.participantIds.map((participantId) => ({
           id: `${item.id}:${participantId}`,
           participantId,
         })),
@@ -216,18 +217,30 @@ export function MakeBillWizard({ friends }: { friends: FriendRow[] }) {
     return true;
   }
 
+  const itemsHaveParticipants = items.every(
+    (item) => item.participantIds.length >= 1,
+  );
+
   const step2Valid =
+    step1Valid &&
     merchantName.trim().length > 0 &&
     isDateKey(billDate) &&
     items.length >= 1 &&
-    items.every(isValidItem);
+    items.every(isValidItem) &&
+    itemsHaveParticipants;
 
-  const step3Valid = step1Valid && step2Valid && preview !== null;
+  const step3Valid = step2Valid && preview !== null;
 
   const taxSet =
     billTaxMode === "percentage"
       ? billTaxBps > 0
       : BigInt(fixedBillTaxAmount || "0") > 0n;
+
+  const taxLabel = taxSet
+    ? billTaxMode === "percentage"
+      ? `${percentageLabel(billTaxBps)}%`
+      : formatIdr(fixedBillTaxAmount || "0")
+    : null;
 
   function buildFormData() {
     const formData = new FormData();
@@ -263,20 +276,36 @@ export function MakeBillWizard({ friends }: { friends: FriendRow[] }) {
     }
     if (result.finalizedId) {
       setFinalizedId(result.finalizedId);
+      setOverviewOpen(false);
       setPreviewOpen(true);
     }
   }
 
   function confirmFriends(ids: string[]) {
-    setSelectedFriends(
-      friends.filter((friend) => ids.includes(friend.id)),
+    const nextFriends = friends.filter((friend) => ids.includes(friend.id));
+    setSelectedFriends(nextFriends);
+    const validIds = new Set(nextFriends.map((friend) => friend.id));
+    setItems((current) =>
+      current.map((item) => ({
+        ...item,
+        participantIds: item.participantIds.filter((id) => validIds.has(id)),
+      })),
     );
+    if (nextFriends.length >= 1) {
+      setStep((current) => (current === 1 ? 2 : current));
+    }
   }
 
   function addItem() {
     setItems((current) => [
       ...current,
-      { id: createId(), name: "", quantity: 1, unitPrice: "" },
+      {
+        id: createId(),
+        name: "",
+        quantity: 1,
+        unitPrice: "",
+        participantIds: [],
+      },
     ]);
   }
 
@@ -338,47 +367,79 @@ export function MakeBillWizard({ friends }: { friends: FriendRow[] }) {
     });
   }
 
-  function goBack() {
-    setStep((current) => (current > 1 ? current - 1 : current));
+  function toggleItemParticipant(itemId: string, participantId: string) {
+    setItems((current) =>
+      current.map((row) => {
+        if (row.id !== itemId) return row;
+        const has = row.participantIds.includes(participantId);
+        return {
+          ...row,
+          participantIds: has
+            ? row.participantIds.filter((id) => id !== participantId)
+            : [...row.participantIds, participantId],
+        };
+      }),
+    );
   }
 
-  function goNext() {
-    setStep((current) => (current < 3 ? current + 1 : current));
+  function openOverview() {
+    if (!step2Valid) return;
+    setStep(3);
+    setOverviewOpen(true);
   }
+
+  function closeOverview() {
+    setOverviewOpen(false);
+    setStep(2);
+  }
+
+  const overviewItems: MakeBillOverviewItem[] = items.map((item) => ({
+    id: item.id,
+    name: item.name,
+    quantity: item.quantity,
+    unitPrice: item.unitPrice,
+    participantIds: item.participantIds,
+  }));
 
   return (
-    <div className={`${cardClass} grid gap-[1.25rem]`}>
-      <StepIndicator current={step} />
+    <div className="grid gap-[1.25rem]">
+      <div className={`${cardClass} grid`} aria-label="Bill progress timeline">
+        <StepIndicator current={step} />
+      </div>
 
-      {step === 1 ? (
-        <section aria-label="Step 1: Friends">
-          <div className="mb-[.75rem] grid gap-[.3rem]">
-            <h2 className="m-0 text-[1.05rem] tracking-[-.02em]">Friends</h2>
-            <p className="m-0 text-[.82rem] text-muted">
-              Add the people sharing this bill.
-            </p>
-          </div>
-          <FriendCarousel
-            friends={selectedFriends}
-            onAddFriend={() => setPickerOpen(true)}
-            onSelectFriend={() => setPickerOpen(true)}
-          />
-        </section>
-      ) : null}
+      <section
+        className={`${cardClass} grid gap-[1rem]`}
+        aria-label="Step 1: Add Friends"
+      >
+        <div className="grid gap-[.3rem]">
+          <h2 className="m-0 text-[1.05rem] tracking-[-.02em]">Friends</h2>
+          <p className="m-0 text-[.82rem] text-muted">
+            Add the people sharing this bill.
+          </p>
+        </div>
+        <FriendCarousel
+          friends={selectedFriends}
+          onAddFriend={() => setPickerOpen(true)}
+          onSelectFriend={() => setPickerOpen(true)}
+        />
+      </section>
 
-      {step === 2 ? (
-        <section aria-label="Step 2: Bill Details" className="grid gap-[1.25rem]">
+      {step >= 2 ? (
+        <section
+          className={`${cardClass} grid gap-[1.25rem]`}
+          aria-label="Step 2: Bill Details"
+        >
           <div className="grid gap-[.3rem]">
             <h2 className="m-0 text-[1.05rem] tracking-[-.02em]">Bill Details</h2>
             <p className="m-0 text-[.82rem] text-muted">
-              Enter the merchant and the purchased items.
+              Enter the merchant, items, and who is paying for each.
             </p>
           </div>
 
           <div className="grid gap-[1rem]">
             <div className={fieldClass}>
               <label className="text-[.86rem] font-medium" htmlFor="make-bill-merchant">
-                Merchant
+                Merchant name
               </label>
               <Input
                 id="make-bill-merchant"
@@ -390,25 +451,27 @@ export function MakeBillWizard({ friends }: { friends: FriendRow[] }) {
             </div>
 
             <div className={fieldClass}>
-              <span className="text-[.86rem] font-medium">Bill date</span>
+              <span className="text-[.86rem] font-medium">Date</span>
               <button
                 type="button"
                 className="flex min-h-[2.6rem] items-center justify-between gap-[.5rem] rounded-[.65rem] border border-border bg-surface-subtle px-[.8rem] py-[.6rem] text-left text-[.9rem] text-foreground transition-colors hover:border-primary-300"
                 onClick={() => setDateOpen(true)}
-                aria-label="Bill date"
+                aria-label="Date"
               >
-                <span className="inline-flex items-center gap-[.5rem]">
+                <span className="inline-flex min-w-0 items-center gap-[.5rem]">
                   <CalendarDays
                     size={16}
                     aria-hidden="true"
-                    className="text-muted"
+                    className="shrink-0 text-muted"
                   />
-                  {billDate ? formatDateLong(billDate) : "Select date"}
+                  <span className="truncate">
+                    {billDate ? formatDateLong(billDate) : "Select date"}
+                  </span>
                 </span>
                 <ChevronLeft
                   size={16}
                   aria-hidden="true"
-                  className="rotate-[270deg] text-muted"
+                  className="shrink-0 rotate-[270deg] text-muted"
                 />
               </button>
             </div>
@@ -433,11 +496,11 @@ export function MakeBillWizard({ friends }: { friends: FriendRow[] }) {
                 return (
                   <article
                     key={item.id}
-                    className="grid gap-[.85rem] rounded-[.85rem] border border-border bg-surface-subtle p-[.9rem]"
+                    className="grid min-w-0 gap-[.8rem] rounded-[.85rem] border border-border bg-surface-subtle p-[.9rem]"
                   >
                     <div className="flex items-center justify-between gap-4">
                       <h3 className="m-0 text-[.95rem]">Item {itemIndex + 1}</h3>
-                      <div className="flex items-center gap-[.3rem]">
+                      <div className="flex shrink-0 items-center gap-[.3rem]">
                         <button
                           type="button"
                           className={`${iconButtonClass} text-expense hover:bg-[color-mix(in_srgb,var(--expense)_10%,transparent)]`}
@@ -458,7 +521,7 @@ export function MakeBillWizard({ friends }: { friends: FriendRow[] }) {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-[minmax(0,1fr)_7rem] gap-[.7rem] max-[420px]:grid-cols-1">
+                    <div className="grid grid-cols-[minmax(0,1fr)_6rem] gap-[.7rem] max-[380px]:grid-cols-1">
                       <div className={fieldClass}>
                         <label
                           className="text-[.82rem] font-medium"
@@ -480,7 +543,7 @@ export function MakeBillWizard({ friends }: { friends: FriendRow[] }) {
                           className="text-[.82rem] font-medium"
                           htmlFor={`make-bill-item-quantity-${item.id}`}
                         >
-                          Quantity
+                          Qty
                         </label>
                         <QuantityInput
                           id={`make-bill-item-quantity-${item.id}`}
@@ -543,156 +606,129 @@ export function MakeBillWizard({ friends }: { friends: FriendRow[] }) {
                           : "Enter a unit price or total."}
                       </p>
                     )}
+
+                    <div className="grid gap-[.4rem] border-t border-border pt-[.7rem]">
+                      <p className="m-0 text-[.78rem] font-semibold uppercase tracking-[.12em] text-muted">
+                        Who is paying?
+                      </p>
+                      <div className="grid gap-[.1rem]">
+                        {selectedFriends.map((friend) => {
+                          const checked =
+                            item.participantIds.includes(friend.id);
+                          return (
+                            <label
+                              key={friend.id}
+                              className="flex min-w-0 cursor-pointer items-center gap-[.5rem] rounded-[.5rem] px-[.3rem] py-[.25rem]"
+                            >
+                              <FriendAvatar name={friend.name} size="xs" />
+                              <span className="min-w-0 flex-1 truncate text-[.85rem]">
+                                {friend.name}
+                              </span>
+                              <input
+                                type="checkbox"
+                                className="shrink-0"
+                                checked={checked}
+                                aria-label={`${friend.name} pays for item ${itemIndex + 1}`}
+                                onChange={() =>
+                                  toggleItemParticipant(item.id, friend.id)
+                                }
+                              />
+                            </label>
+                          );
+                        })}
+                      </div>
+                      {item.participantIds.length === 0 ? (
+                        <p
+                          className="m-0 text-[.76rem] font-medium text-expense"
+                          role="alert"
+                        >
+                          Select at least one person paying for this item.
+                        </p>
+                      ) : null}
+                    </div>
                   </article>
                 );
               })
             )}
           </div>
-        </section>
-      ) : null}
 
-      {step === 3 ? (
-        <section aria-label="Step 3: Overview" className="grid gap-[1.25rem]">
-          <div className="grid gap-[.3rem]">
-            <h2 className="m-0 text-[1.05rem] tracking-[-.02em]">Overview</h2>
-            <p className="m-0 text-[.82rem] text-muted">
-              Add optional tax and a description before saving.
-            </p>
-          </div>
-
-          <div className="grid gap-[.75rem]">
-            {taxSet ? (
-              <div className="flex items-center justify-between gap-4 rounded-[.85rem] border border-border p-[.9rem]">
+          <div className="grid gap-[1rem]">
+            <div className="grid gap-[.75rem]">
+              {taxSet ? (
+                <div className="flex items-center justify-between gap-4 rounded-[.85rem] border border-border p-[.9rem]">
+                  <button
+                    type="button"
+                    className="min-w-0 text-left"
+                    onClick={() => setTaxOpen(true)}
+                  >
+                    <p className="m-0 text-[.78rem] font-semibold uppercase tracking-[.12em] text-muted">
+                      Tax
+                    </p>
+                    <p className="m-0 text-[1rem] font-medium">
+                      {taxLabel}
+                    </p>
+                  </button>
+                  <button
+                    type="button"
+                    className={iconButtonClass}
+                    aria-label="Remove tax"
+                    onClick={() => {
+                      setBillTaxMode("percentage");
+                      setTaxPercent("0");
+                      setFixedBillTaxAmount("");
+                    }}
+                  >
+                    <X size={17} aria-hidden="true" />
+                  </button>
+                </div>
+              ) : (
                 <button
                   type="button"
-                  className="min-w-0 text-left"
                   onClick={() => setTaxOpen(true)}
+                  className="flex min-h-[3.5rem] w-full items-center justify-center gap-[.4rem] rounded-[1rem] border-2 border-dashed border-border bg-surface-subtle text-[.82rem] font-medium text-muted transition-colors hover:border-primary-300 hover:text-primary-600"
                 >
-                  <p className="m-0 text-[.78rem] font-semibold uppercase tracking-[.12em] text-muted">
-                    Tax
-                  </p>
-                  <p className="m-0 text-[1rem] font-medium">
-                    {billTaxMode === "percentage"
-                      ? `${percentageLabel(billTaxBps)}%`
-                      : formatIdr(fixedBillTaxAmount || "0")}
-                  </p>
+                  <Plus size={18} aria-hidden="true" />
+                  Add Tax (Optional)
                 </button>
-                <button
-                  type="button"
-                  className={iconButtonClass}
-                  aria-label="Remove tax"
-                  onClick={() => {
-                    setBillTaxMode("percentage");
-                    setTaxPercent("0");
-                    setFixedBillTaxAmount("");
-                  }}
-                >
-                  <X size={17} aria-hidden="true" />
-                </button>
-              </div>
-            ) : (
-              <button
-                type="button"
-                onClick={() => setTaxOpen(true)}
-                className="flex min-h-[3.5rem] w-full items-center justify-center gap-[.4rem] rounded-[1rem] border-2 border-dashed border-border bg-surface-subtle text-[.82rem] font-medium text-muted transition-colors hover:border-primary-300 hover:text-primary-600"
-              >
-                <Plus size={18} aria-hidden="true" />
-                Add Tax (Optional)
-              </button>
-            )}
-          </div>
-
-          <div className={fieldClass}>
-            <label className="text-[.86rem] font-medium" htmlFor="make-bill-note">
-              Description (optional)
-            </label>
-            <textarea
-              id="make-bill-note"
-              className={`${textareaClass} min-h-[6rem]`}
-              value={note}
-              onChange={(event) => setNote(event.target.value)}
-              maxLength={500}
-              placeholder="Add a short note about this bill"
-            />
-          </div>
-
-          {preview ? (
-            <div className="rounded-[.85rem] border border-border p-[.9rem]">
-              <p className="m-0 text-[.78rem] font-semibold uppercase tracking-[.12em] text-muted">
-                Bill summary
-              </p>
-              <div className="mt-[.6rem] flex items-baseline justify-between gap-4">
-                <span className="text-[.9rem] text-muted">Final total</span>
-                <strong className="text-[1.2rem] wrap-anywhere">
-                  {formatIdr(preview.finalAmount)}
-                </strong>
-              </div>
-              <p className="m-0 mt-[.4rem] text-[.76rem] text-muted">
-                {selectedFriends.length} participant
-                {selectedFriends.length === 1 ? "" : "s"} · the server re-verifies
-                all amounts before saving.
-              </p>
+              )}
             </div>
+
+            <div className={fieldClass}>
+              <label className="text-[.86rem] font-medium" htmlFor="make-bill-note">
+                Description (optional)
+              </label>
+              <textarea
+                id="make-bill-note"
+                className={`${textareaClass} min-h-[6rem]`}
+                value={note}
+                onChange={(event) => setNote(event.target.value)}
+                maxLength={500}
+                placeholder="Add a short note about this bill"
+              />
+            </div>
+          </div>
+
+          {!itemsHaveParticipants ? (
+            <p
+              className="m-0 text-[.78rem] font-medium text-expense"
+              role="alert"
+            >
+              Assign at least one person to every item before continuing.
+            </p>
           ) : null}
+
+          <div className="flex items-center gap-2 border-t border-border pt-[1rem]">
+            <Button
+              type="button"
+              className="flex-1"
+              disabled={!step2Valid}
+              onClick={openOverview}
+            >
+              Continue
+            </Button>
+          </div>
         </section>
       ) : null}
-
-      <div className="flex items-center gap-2 border-t border-border pt-[1rem]">
-        {step > 1 ? (
-          <button
-            type="button"
-            className={iconButtonClass}
-            aria-label="Back"
-            onClick={goBack}
-          >
-            <ChevronLeft size={18} aria-hidden="true" />
-          </button>
-        ) : null}
-
-        {step === 1 ? (
-          <Button
-            type="button"
-            className="flex-1"
-            disabled={!step1Valid}
-            onClick={goNext}
-          >
-            Continue
-          </Button>
-        ) : null}
-
-        {step === 2 ? (
-          <Button
-            type="button"
-            className="flex-1"
-            disabled={!step2Valid}
-            onClick={goNext}
-          >
-            Continue
-          </Button>
-        ) : null}
-
-        {step === 3 ? (
-          <div className="flex flex-1 items-center gap-2">
-            <Button
-              type="button"
-              variant="secondary"
-              className="flex-1"
-              disabled={saving}
-              onClick={handleSaveDraft}
-            >
-              {saving ? "Saving..." : "Save Draft"}
-            </Button>
-            <Button
-              type="button"
-              className="flex-1"
-              disabled={finalizing || !step3Valid}
-              onClick={handleFinalize}
-            >
-              {finalizing ? "Finalizing..." : "Confirm"}
-            </Button>
-          </div>
-        ) : null}
-      </div>
 
       <MakeBillFriendPickerSheet
         open={pickerOpen}
@@ -718,6 +754,22 @@ export function MakeBillWizard({ friends }: { friends: FriendRow[] }) {
         onPercentChange={setTaxPercent}
         fixedValue={fixedBillTaxAmount}
         onFixedChange={setFixedBillTaxAmount}
+      />
+
+      <MakeBillOverviewSheet
+        open={overviewOpen}
+        onClose={closeOverview}
+        preview={preview}
+        merchantName={merchantName.trim()}
+        billDate={billDate ? formatDateLong(billDate) : ""}
+        participants={selectedFriends}
+        items={overviewItems}
+        taxLabel={taxLabel}
+        note={note.trim()}
+        onSaveDraft={handleSaveDraft}
+        saving={saving}
+        onConfirm={handleFinalize}
+        finalizing={finalizing}
       />
 
       <MakeBillPreviewSheet

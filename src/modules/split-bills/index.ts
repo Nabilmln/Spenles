@@ -3,6 +3,7 @@ export * from "./actions/make-bill-actions";
 export * from "./components/friend-avatar";
 export * from "./components/friend-carousel";
 export * from "./components/make-bill-wizard";
+export * from "./components/make-bill-overview-sheet";
 export * from "./components/participant-avatar-stack";
 export * from "./components/split-bill-action-sheet";
 export * from "./components/split-bill-delete-button";

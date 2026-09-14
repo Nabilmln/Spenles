@@ -45,97 +45,108 @@ const friends: FriendRow[] = [
   { id: "f2", name: "Ayu", createdAt: "2026-01-01T00:00:00.000Z" },
 ];
 
+async function selectFriend(name: string) {
+  const openButton = screen.queryByRole("button", { name: "Add" })
+    ? screen.getByRole("button", { name: "Add" })
+    : screen.getByRole("button", { name: "Add Friend" });
+  fireEvent.click(openButton);
+  fireEvent.click(await screen.findByRole("button", { name }));
+  fireEvent.click(screen.getByRole("button", { name: "Add 1 Friend" }));
+}
+
+async function fillValidItem() {
+  fireEvent.click(screen.getByRole("button", { name: "Add Item" }));
+  fireEvent.change(screen.getByLabelText("Item name"), {
+    target: { value: "Nasi Padang" },
+  });
+  fireEvent.change(screen.getByLabelText("Unit price"), {
+    target: { value: "Rp30.000" },
+  });
+  fireEvent.click(
+    screen.getByRole("checkbox", { name: "Nabil pays for item 1" }),
+  );
+}
+
 describe("MakeBillWizard", () => {
-  it("starts on the friends step with Continue disabled", () => {
+  it("renders the timeline and friends section as separate containers", () => {
     render(<MakeBillWizard friends={friends} />);
 
-    expect(screen.getByText("Friends", { selector: "h2" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Continue" })).toBeDisabled();
+    expect(
+      screen.getByLabelText("Bill progress timeline"),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Friends" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Add Friend" })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Continue" })).not.toBeInTheDocument();
   });
 
-  it("adds friends through the picker sheet and enables Continue", async () => {
+  it("reveals bill details below the friends section after selecting a friend", async () => {
     render(<MakeBillWizard friends={friends} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Add Friend" }));
+    await selectFriend("Nabil");
 
-    const dialog = screen.getByRole("dialog");
-    fireEvent.click(await waitFor(() => screen.getByRole("button", { name: "Nabil" })));
-    fireEvent.click(screen.getByRole("button", { name: "Add 1 Friend" }));
-
-    expect(screen.getByRole("button", { name: "Continue" })).toBeEnabled();
-    expect(dialog).toBeInTheDocument();
-  });
-
-  it("reveals bill details after continuing past friends", async () => {
-    render(<MakeBillWizard friends={friends} />);
-
-    fireEvent.click(screen.getByRole("button", { name: "Add Friend" }));
-    fireEvent.click(await screen.findByRole("button", { name: "Nabil" }));
-    fireEvent.click(screen.getByRole("button", { name: "Add 1 Friend" }));
-    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
-
-    expect(screen.getByLabelText("Merchant")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Bill date" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Friends" })).toBeInTheDocument();
+    expect(screen.getByLabelText("Merchant name")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Date" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Add Item" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Continue" })).toBeInTheDocument();
   });
 
-  it("creates item cards with quantity, unit price, and total price inputs", async () => {
+  it("shows per-item participant rows sourced from the selected friends", async () => {
     render(<MakeBillWizard friends={friends} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Add Friend" }));
-    fireEvent.click(await screen.findByRole("button", { name: "Nabil" }));
-    fireEvent.click(screen.getByRole("button", { name: "Add 1 Friend" }));
-    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
-
+    await selectFriend("Nabil");
+    await selectFriend("Ayu");
     fireEvent.click(screen.getByRole("button", { name: "Add Item" }));
 
     expect(screen.getByText("Item 1")).toBeInTheDocument();
-    expect(screen.getByLabelText("Item name")).toBeInTheDocument();
-    expect(screen.getByLabelText("Quantity")).toBeInTheDocument();
-    expect(screen.getByLabelText("Unit price")).toBeInTheDocument();
-    expect(screen.getByLabelText("Total price")).toBeInTheDocument();
+    expect(screen.getByText("Who is paying?")).toBeInTheDocument();
     expect(
-      screen.getByRole("button", { name: "Delete item 1" }),
-    ).toHaveAccessibleName("Delete item 1");
+      screen.getByRole("checkbox", { name: "Nabil pays for item 1" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("checkbox", { name: "Ayu pays for item 1" }),
+    ).toBeInTheDocument();
   });
 
-  it("shows tax, description, and confirm actions on the overview step", async () => {
+  it("keeps participant assignment independent per item", async () => {
     render(<MakeBillWizard friends={friends} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Add Friend" }));
-    fireEvent.click(await screen.findByRole("button", { name: "Nabil" }));
-    fireEvent.click(screen.getByRole("button", { name: "Add 1 Friend" }));
-    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
-
-    fireEvent.change(screen.getByLabelText("Merchant"), {
-      target: { value: "Warung Nasi Padang" },
-    });
+    await selectFriend("Nabil");
+    await selectFriend("Ayu");
     fireEvent.click(screen.getByRole("button", { name: "Add Item" }));
     fireEvent.change(screen.getByLabelText("Item name"), {
-      target: { value: "Nasi Padang" },
+      target: { value: "Nasi Goreng" },
     });
-    const unitPrice = screen.getByLabelText("Unit price") as HTMLInputElement;
-    fireEvent.change(unitPrice, { target: { value: "Rp30.000" } });
-
-    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+    fireEvent.click(
+      screen.getByRole("checkbox", { name: "Nabil pays for item 1" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Add item" }));
+    fireEvent.change(screen.getByLabelText("Item name"), {
+      target: { value: "Es Teh" },
+    });
+    fireEvent.click(
+      screen.getByRole("checkbox", { name: "Ayu pays for item 2" }),
+    );
 
     expect(
-      screen.getByRole("button", { name: "Add Tax (Optional)" }),
-    ).toBeInTheDocument();
-    expect(screen.getByLabelText("Description (optional)")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Save Draft" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Confirm" })).toBeInTheDocument();
+      screen.getByRole("checkbox", { name: "Nabil pays for item 1" }),
+    ).toBeChecked();
+    expect(
+      screen.getByRole("checkbox", { name: "Ayu pays for item 1" }),
+    ).not.toBeChecked();
+    expect(
+      screen.getByRole("checkbox", { name: "Nabil pays for item 2" }),
+    ).not.toBeChecked();
+    expect(
+      screen.getByRole("checkbox", { name: "Ayu pays for item 2" }),
+    ).toBeChecked();
   });
 
-  it("saves a draft using the server action", async () => {
+  it("blocks Continue until every item has a participant", async () => {
     render(<MakeBillWizard friends={friends} />);
 
-    fireEvent.click(screen.getByRole("button", { name: "Add Friend" }));
-    fireEvent.click(await screen.findByRole("button", { name: "Nabil" }));
-    fireEvent.click(screen.getByRole("button", { name: "Add 1 Friend" }));
-    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
-
-    fireEvent.change(screen.getByLabelText("Merchant"), {
+    await selectFriend("Nabil");
+    fireEvent.change(screen.getByLabelText("Merchant name"), {
       target: { value: "Warung Nasi Padang" },
     });
     fireEvent.click(screen.getByRole("button", { name: "Add Item" }));
@@ -145,10 +156,71 @@ describe("MakeBillWizard", () => {
     fireEvent.change(screen.getByLabelText("Unit price"), {
       target: { value: "Rp30.000" },
     });
+
+    expect(screen.getByRole("button", { name: "Continue" })).toBeDisabled();
+    expect(screen.getByRole("alert")).toHaveTextContent(/at least one person/i);
+
+    fireEvent.click(
+      screen.getByRole("checkbox", { name: "Nabil pays for item 1" }),
+    );
+
+    expect(screen.getByRole("button", { name: "Continue" })).toBeEnabled();
+  });
+
+  it("opens the overview sheet showing item participant assignments", async () => {
+    render(<MakeBillWizard friends={friends} />);
+
+    await selectFriend("Nabil");
+    fireEvent.change(screen.getByLabelText("Merchant name"), {
+      target: { value: "Warung Nasi Padang" },
+    });
+    await fillValidItem();
+    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+
+    const dialog = screen.getByRole("dialog", { name: "Overview" });
+    expect(dialog).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Save Draft" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Confirm" })).toBeInTheDocument();
+    expect(dialog).toHaveTextContent("Warung Nasi Padang");
+    expect(dialog).toHaveTextContent("Nasi Padang");
+    expect(dialog).toHaveTextContent("Nabil");
+  });
+
+  it("saves a draft from the overview sheet", async () => {
+    render(<MakeBillWizard friends={friends} />);
+
+    await selectFriend("Nabil");
+    fireEvent.change(screen.getByLabelText("Merchant name"), {
+      target: { value: "Warung Nasi Padang" },
+    });
+    await fillValidItem();
     fireEvent.click(screen.getByRole("button", { name: "Continue" }));
 
     fireEvent.click(screen.getByRole("button", { name: "Save Draft" }));
 
     await waitFor(() => expect(saveSplitBillDraftAction).toHaveBeenCalledTimes(1));
+  });
+
+  it("returns to bill details from the overview sheet without losing data", async () => {
+    render(<MakeBillWizard friends={friends} />);
+
+    await selectFriend("Nabil");
+    fireEvent.change(screen.getByLabelText("Merchant name"), {
+      target: { value: "Warung Nasi Padang" },
+    });
+    await fillValidItem();
+    fireEvent.click(screen.getByRole("button", { name: "Continue" }));
+
+    fireEvent.click(screen.getByRole("button", { name: "Back" }));
+
+    expect(
+      screen.queryByRole("dialog", { name: "Overview" }),
+    ).not.toBeInTheDocument();
+    expect(
+      (screen.getByLabelText("Merchant name") as HTMLInputElement).value,
+    ).toBe("Warung Nasi Padang");
+    expect(
+      screen.getByRole("checkbox", { name: "Nabil pays for item 1" }),
+    ).toBeChecked();
   });
 });
