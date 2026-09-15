@@ -7,6 +7,40 @@ import { cn } from "@/lib/utils";
 
 const EXIT_MS = 240;
 
+let scrollLockCount = 0;
+let lockedScrollY = 0;
+
+function lockBodyScroll() {
+  scrollLockCount += 1;
+  if (scrollLockCount === 1) {
+    lockedScrollY = window.scrollY;
+    const body = document.body.style;
+    body.position = "fixed";
+    body.top = `${-lockedScrollY}px`;
+    body.left = "0";
+    body.right = "0";
+    body.overflowY = "scroll";
+    document.documentElement.style.overflow = "hidden";
+  }
+}
+
+function unlockBodyScroll() {
+  scrollLockCount = Math.max(0, scrollLockCount - 1);
+  if (scrollLockCount !== 0) return;
+  const body = document.body.style;
+  body.position = "";
+  body.top = "";
+  body.left = "";
+  body.right = "";
+  body.overflowY = "";
+  document.documentElement.style.overflow = "";
+  try {
+    window.scrollTo({ top: lockedScrollY });
+  } catch {
+    // Some environments (e.g. jsdom) do not implement window.scrollTo.
+  }
+}
+
 export function BottomSheet({
   open,
   onClose,
@@ -53,10 +87,9 @@ export function BottomSheet({
 
   useEffect(() => {
     if (!visible) return;
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    lockBodyScroll();
     return () => {
-      document.body.style.overflow = previous;
+      unlockBodyScroll();
     };
   }, [visible]);
   if (!visible) return null;
