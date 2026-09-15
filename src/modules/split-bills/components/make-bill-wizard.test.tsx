@@ -121,7 +121,7 @@ describe("MakeBillWizard", () => {
       screen.getByRole("checkbox", { name: "Nabil pays for item 1" }),
     );
     fireEvent.click(screen.getByRole("button", { name: "Add item" }));
-    fireEvent.change(screen.getByLabelText("Item name"), {
+    fireEvent.change(screen.getAllByLabelText("Item name")[1], {
       target: { value: "Es Teh" },
     });
     fireEvent.click(
@@ -158,7 +158,11 @@ describe("MakeBillWizard", () => {
     });
 
     expect(screen.getByRole("button", { name: "Continue" })).toBeDisabled();
-    expect(screen.getByRole("alert")).toHaveTextContent(/at least one person/i);
+    expect(
+      screen.getAllByRole("alert").some((alert) =>
+        alert.textContent?.match(/at least one person/i),
+      ),
+    ).toBe(true);
 
     fireEvent.click(
       screen.getByRole("checkbox", { name: "Nabil pays for item 1" }),
@@ -213,9 +217,11 @@ describe("MakeBillWizard", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Back" }));
 
-    expect(
-      screen.queryByRole("dialog", { name: "Overview" }),
-    ).not.toBeInTheDocument();
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("dialog", { name: "Overview" }),
+      ).not.toBeInTheDocument(),
+    );
     expect(
       (screen.getByLabelText("Merchant name") as HTMLInputElement).value,
     ).toBe("Warung Nasi Padang");

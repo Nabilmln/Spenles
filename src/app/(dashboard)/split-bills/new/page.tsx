@@ -1,5 +1,5 @@
 import { requireSessionUser } from "@/lib/auth/require-session";
-import { narrowPageClass, pageDescriptionClass, pageStackClass } from "@/components/ui/styles";
+import { narrowPageClass, pageStackClass } from "@/components/ui/styles";
 import { listFriends } from "@/modules/friends";
 import { MakeBillWizard } from "@/modules/split-bills";
 

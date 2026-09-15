@@ -86,6 +86,7 @@ export function MakeBillOverviewSheet({
               return (
                 <div
                   key={item.id}
+                  data-testid={`overview-item-${item.id}`}
                   className="rounded-[.7rem] border border-border bg-surface-subtle p-[.8rem]"
                 >
                   <div className="flex items-baseline justify-between gap-4">

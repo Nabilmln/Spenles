@@ -229,8 +229,6 @@ export function MakeBillWizard({ friends }: { friends: FriendRow[] }) {
     items.every(isValidItem) &&
     itemsHaveParticipants;
 
-  const step3Valid = step2Valid && preview !== null;
-
   const taxSet =
     billTaxMode === "percentage"
       ? billTaxBps > 0

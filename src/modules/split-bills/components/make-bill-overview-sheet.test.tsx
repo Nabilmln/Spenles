@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { FriendRow } from "@/modules/friends";
 import type { SplitBillCalculationResult } from "../types/split-bill";
@@ -65,10 +65,11 @@ describe("MakeBillOverviewSheet", () => {
       />,
     );
 
-    expect(screen.getByText("Nasi Goreng")).toBeInTheDocument();
-    expect(screen.getByText("Rp 30.000")).toBeInTheDocument();
-    expect(screen.getByText("Nabil")).toBeInTheDocument();
-    expect(screen.queryByText("Ayu")).not.toBeInTheDocument();
+    const itemCard = screen.getByTestId("overview-item-i1");
+    expect(within(itemCard).getByText("Nasi Goreng")).toBeInTheDocument();
+    expect(within(itemCard).getByText("Rp 30.000")).toBeInTheDocument();
+    expect(within(itemCard).getByText("Nabil")).toBeInTheDocument();
+    expect(within(itemCard).queryByText("Ayu")).not.toBeInTheDocument();
   });
 
   it("shows configured tax and description", () => {
