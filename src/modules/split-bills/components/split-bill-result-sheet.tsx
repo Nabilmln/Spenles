@@ -145,16 +145,50 @@ export function SplitBillResultSheet({
 
             {result.participants.length > 0 ? (
               <div className="grid gap-[.45rem]">
-                <p className={`${eyebrowClass} m-0`}>Participants</p>
-                <div className="flex flex-wrap gap-[.4rem]">
-                  {result.participants.map((participant) => (
-                    <span
-                      key={participant.id}
-                      className="rounded-full border border-border bg-surface-subtle px-[.6rem] py-[.25rem] text-[.8rem] font-medium"
-                    >
-                      {participant.name}
-                    </span>
-                  ))}
+                <p className={`${eyebrowClass} m-0`}>Breakdown</p>
+                <div className="grid gap-[.45rem]">
+                  {result.participants.map((participant) => {
+                    const parts = [
+                      participant.itemAmount !== "0"
+                        ? `Item ${formatIdr(participant.itemAmount)}`
+                        : null,
+                      participant.itemTaxAmount !== "0" ||
+                      participant.billTaxAmount !== "0"
+                        ? `Tax ${formatIdr(
+                            (
+                              BigInt(participant.itemTaxAmount) +
+                              BigInt(participant.billTaxAmount)
+                            ).toString(),
+                          )}`
+                        : null,
+                      participant.serviceChargeAmount !== "0"
+                        ? `Service ${formatIdr(
+                            participant.serviceChargeAmount,
+                          )}`
+                        : null,
+                    ].filter((part): part is string => Boolean(part));
+                    return (
+                      <div
+                        key={participant.id}
+                        data-testid={`participant-breakdown-${participant.id}`}
+                        className="grid min-w-0 gap-[.4rem] rounded-[.7rem] border border-border bg-surface-subtle p-[.8rem]"
+                      >
+                        <div className="flex items-center justify-between gap-4">
+                          <span className="min-w-0 truncate rounded-full border border-border bg-surface px-[.6rem] py-[.25rem] text-[.8rem] font-medium">
+                            {participant.name}
+                          </span>
+                          <span className="shrink-0 font-semibold wrap-anywhere">
+                            {formatIdr(participant.finalAmount)}
+                          </span>
+                        </div>
+                        {parts.length > 0 ? (
+                          <p className="m-0 text-[.74rem] text-muted">
+                            {parts.join(" · ")}
+                          </p>
+                        ) : null}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             ) : null}

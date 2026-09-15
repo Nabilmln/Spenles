@@ -106,6 +106,14 @@ export type SplitBillResultData = {
   billTaxAmount: string;
   serviceChargeAmount: string;
   finalAmount: string;
-  participants: { id: string; name: string }[];
+  participants: {
+    id: string;
+    name: string;
+    itemAmount: string;
+    itemTaxAmount: string;
+    billTaxAmount: string;
+    serviceChargeAmount: string;
+    finalAmount: string;
+  }[];
   items: SplitBillResultItem[];
 };

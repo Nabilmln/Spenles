@@ -392,6 +392,11 @@ export async function getSplitBillResultAction(
       participants: detail.participantResults.map((participant) => ({
         id: participant.sourceParticipantId,
         name: participant.nameSnapshot,
+        itemAmount: participant.itemAmount.toString(),
+        itemTaxAmount: participant.itemTaxAmount.toString(),
+        billTaxAmount: participant.billTaxAmount.toString(),
+        serviceChargeAmount: participant.serviceChargeAmount.toString(),
+        finalAmount: participant.finalAmount.toString(),
       })),
       items: detail.itemResults.map((item) => ({
         id: item.sourceItemId,

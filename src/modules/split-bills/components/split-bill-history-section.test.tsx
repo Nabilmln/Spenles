@@ -34,7 +34,17 @@ const {
       billTaxAmount: "0",
       serviceChargeAmount: "0",
       finalAmount: "2160000",
-      participants: [{ id: "p1", name: "Ayu" }],
+      participants: [
+        {
+          id: "p1",
+          name: "Ayu",
+          itemAmount: "2160000",
+          itemTaxAmount: "0",
+          billTaxAmount: "0",
+          serviceChargeAmount: "0",
+          finalAmount: "2160000",
+        },
+      ],
       items: [],
     },
   })),
@@ -196,6 +206,11 @@ describe("split-bill history section", () => {
     expect(dialog).toBeInTheDocument();
     expect(within(dialog).getByText("Warung Bu Endah")).toBeInTheDocument();
     expect(within(dialog).getByText("FINAL")).toBeInTheDocument();
+    const breakdown = within(dialog).getByTestId("participant-breakdown-p1");
+    expect(within(breakdown).getByText("Ayu")).toBeInTheDocument();
+    expect(
+      within(breakdown).getByText("Rp 2.160.000"),
+    ).toBeInTheDocument();
   });
 
   it("opens the action sheet and navigates to the draft editor for a draft bill", async () => {

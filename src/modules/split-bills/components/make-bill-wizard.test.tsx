@@ -27,7 +27,17 @@ const {
     billTaxAmount: "0",
     serviceChargeAmount: "0",
     finalAmount: "30000",
-    participants: [{ id: "f1", name: "Nabil" }],
+    participants: [
+      {
+        id: "f1",
+        name: "Nabil",
+        itemAmount: "30000",
+        itemTaxAmount: "0",
+        billTaxAmount: "0",
+        serviceChargeAmount: "0",
+        finalAmount: "30000",
+      },
+    ],
     items: [
       {
         id: "item1",
