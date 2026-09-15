@@ -51,7 +51,7 @@ export function MakeBillOverviewSheet({
     <BottomSheet open={open} onClose={onClose} title="Overview" ariaLabel="Overview">
       <div className="grid gap-[1.1rem]">
         <div className="grid gap-[.35rem]">
-          <h3 className="m-0 text-[1.1rem] tracking-[-.02em]">
+          <h3 className="m-0 min-w-0 text-[1.1rem] tracking-[-.02em] wrap-anywhere">
             {merchantName || "Untitled bill"}
           </h3>
           <p className="m-0 text-[.8rem] text-muted">{billDate}</p>
@@ -100,7 +100,7 @@ export function MakeBillOverviewSheet({
                       </span>
                     ) : null}
                   </div>
-                  <p className="m-0 mt-[.3rem] text-[.78rem] text-muted">
+                  <p className="m-0 mt-[.3rem] min-w-0 text-[.78rem] text-muted wrap-anywhere">
                     {assignees.length
                       ? assignees.join(", ")
                       : "No participants"}
@@ -125,7 +125,9 @@ export function MakeBillOverviewSheet({
         ) : null}
 
         {note ? (
-          <p className="m-0 text-[.82rem] text-muted">{note}</p>
+          <p className="m-0 min-w-0 text-[.82rem] text-muted wrap-anywhere">
+            {note}
+          </p>
         ) : null}
 
         <div className="grid gap-[.6rem] border-t border-border pt-[1rem]">

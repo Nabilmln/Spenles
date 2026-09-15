@@ -134,19 +134,48 @@ export function MakeBillWizard({
   const [saving, setSaving] = useState(false);
   const [finalizing, setFinalizing] = useState(false);
 
-  const initialParticipants = useMemo(
-    () =>
-      initial
-        ? friends.filter((friend) =>
-            initial.participants.some((participant) => participant.id === friend.id),
-          )
-        : [],
-    [friends, initial],
-  );
+  const initialRemap = useMemo(() => {
+    if (!initial) return null;
+    const friendByName = new Map<string, FriendRow>();
+    for (const friend of friends) {
+      const key = friend.name.trim().toLowerCase();
+      if (!friendByName.has(key)) friendByName.set(key, friend);
+    }
+    const friendIdByDraftId = new Map<string, string>();
+    const selected: FriendRow[] = [];
+    for (const participant of initial.participants) {
+      const matched = friendByName.get(participant.name.trim().toLowerCase());
+      if (matched) {
+        friendIdByDraftId.set(participant.id, matched.id);
+        selected.push(matched);
+      } else {
+        friendIdByDraftId.set(participant.id, participant.id);
+        selected.push({
+          id: participant.id,
+          name: participant.name,
+          createdAt: "1970-01-01T00:00:00.000Z",
+        });
+      }
+    }
+    return {
+      selected,
+      items: initial.items.map((item) => ({
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        participantIds: item.participantIds.map(
+          (participantId) =>
+            friendIdByDraftId.get(participantId) ?? participantId,
+        ),
+      })),
+    };
+  }, [friends, initial]);
 
   const [step, setStep] = useState(initial ? 2 : 1);
-  const [selectedFriends, setSelectedFriends] =
-    useState<FriendRow[]>(initialParticipants);
+  const [selectedFriends, setSelectedFriends] = useState<FriendRow[]>(
+    initialRemap?.selected ?? [],
+  );
   const [merchantName, setMerchantName] = useState(initial?.merchantName ?? "");
   const [billDate, setBillDateState] = useState(
     () => initial?.billDate ?? todayJakartaDate(),
@@ -168,19 +197,11 @@ export function MakeBillWizard({
     }
     return "";
   });
-  const [items, setItems] = useState<ItemDraft[]>(() =>
-    initial
-      ? initial.items.map((item) => ({
-          id: item.id,
-          name: item.name,
-          quantity: item.quantity,
-          unitPrice: item.unitPrice,
-          participantIds: item.participantIds,
-        }))
-      : [],
+  const [items, setItems] = useState<ItemDraft[]>(
+    initialRemap?.items ?? [],
   );
   const [itemErrors, setItemErrors] = useState<Record<string, string>>({});
-  const [savedRef, setSavedRef] = useState<{ id: string; revision: number } | null>(
+  const [savedRef] = useState<{ id: string; revision: number } | null>(
     initial ? { id: initial.id, revision: initial.revision } : null,
   );
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -322,10 +343,8 @@ export function MakeBillWizard({
       toast.error(result.error);
       return;
     }
-    if (result.id) {
-      setSavedRef({ id: result.id, revision: result.revision ?? 0 });
-    }
     if (result.success) toast.success(result.success);
+    router.push("/split-bills");
   }
 
   async function handleFinalize() {

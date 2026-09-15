@@ -42,7 +42,7 @@
   --surface: #ffffff;
   --surface-subtle: #f0f0f3;
   --foreground: #0f0f12;
-  --muted: #6b6b78;
+  --muted: #4f505c;
   --border: #e2e2e8;
   --focus: #4f46e5;
   --shadow: 0 1px 3px rgb(0 0 0 / 7%), 0 6px 20px rgb(0 0 0 / 6%);
@@ -62,7 +62,7 @@
   --surface: #101013;
   --surface-subtle: #17171c;
   --foreground: #ededf0;
-  --muted: #6a6a76;
+  --muted: #a3a3af;
   --border: #1f1f26;
   --focus: #6366f1;
   --shadow: 0 1px 3px rgb(0 0 0 / 60%), 0 8px 24px rgb(0 0 0 / 50%);
@@ -83,7 +83,7 @@
     --surface: #101013;
     --surface-subtle: #17171c;
     --foreground: #ededf0;
-    --muted: #6a6a76;
+    --muted: #a3a3af;
     --border: #1f1f26;
     --focus: #6366f1;
     --shadow: 0 1px 3px rgb(0 0 0 / 60%), 0 8px 24px rgb(0 0 0 / 50%);

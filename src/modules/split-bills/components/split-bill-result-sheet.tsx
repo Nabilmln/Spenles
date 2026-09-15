@@ -182,7 +182,7 @@ export function SplitBillResultSheet({
                           </span>
                         </div>
                         {parts.length > 0 ? (
-                          <p className="m-0 text-[.74rem] text-muted">
+                          <p className="m-0 min-w-0 text-[.74rem] text-muted wrap-anywhere">
                             {parts.join(" · ")}
                           </p>
                         ) : null}
@@ -243,7 +243,9 @@ export function SplitBillResultSheet({
               />
 
             {result.note ? (
-              <p className="m-0 text-[.82rem] text-muted">{result.note}</p>
+              <p className="m-0 min-w-0 text-[.82rem] text-muted wrap-anywhere">
+                {result.note}
+              </p>
             ) : null}
           </div>
         ) : null}

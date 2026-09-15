@@ -10,6 +10,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { FriendRow } from "@/modules/friends";
 import { MakeBillWizard } from "./make-bill-wizard";
 
+const pushMock = vi.hoisted(() => vi.fn());
+
 const {
   saveSplitBillDraftAction,
   finalizeSplitBillAction,
@@ -63,7 +65,7 @@ const {
 });
 
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: vi.fn() }),
+  useRouter: () => ({ push: pushMock }),
 }));
 
 vi.mock("../actions/make-bill-actions", () => ({
@@ -84,6 +86,7 @@ afterEach(() => {
   saveSplitBillDraftAction.mockClear();
   finalizeSplitBillAction.mockClear();
   getSplitBillResultAction.mockClear();
+  pushMock.mockClear();
 });
 
 const friends: FriendRow[] = [
@@ -249,6 +252,7 @@ describe("MakeBillWizard", () => {
     fireEvent.click(screen.getByRole("button", { name: "Save Draft" }));
 
     await waitFor(() => expect(saveSplitBillDraftAction).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(pushMock).toHaveBeenCalledWith("/split-bills"));
   });
 
   it("returns to bill details from the overview sheet without losing data", async () => {
@@ -275,5 +279,46 @@ describe("MakeBillWizard", () => {
     expect(
       screen.getByRole("checkbox", { name: "Nabil pays for item 1" }),
     ).toBeChecked();
+  });
+
+  it("pre-selects the draft participants when editing an existing draft", () => {
+    render(
+      <MakeBillWizard
+        friends={friends}
+        initial={{
+          id: "bill-1",
+          revision: 3,
+          merchantName: "Warung Nasi Padang",
+          billDate: "2026-01-15",
+          note: "",
+          billTaxMode: "percentage",
+          fixedBillTaxAmount: "0",
+          billTaxBps: 0,
+          participants: [
+            { id: "draft-p1", name: "Nabil" },
+            { id: "draft-p2", name: "Ayu" },
+          ],
+          items: [
+            {
+              id: "item1",
+              name: "Nasi Padang",
+              quantity: 1,
+              unitPrice: "30000",
+              participantIds: ["draft-p1"],
+            },
+          ],
+        }}
+      />,
+    );
+
+    expect(
+      (screen.getByLabelText("Merchant name") as HTMLInputElement).value,
+    ).toBe("Warung Nasi Padang");
+    expect(
+      screen.getByRole("checkbox", { name: "Nabil pays for item 1" }),
+    ).toBeChecked();
+    expect(
+      screen.getByRole("checkbox", { name: "Ayu pays for item 1" }),
+    ).not.toBeChecked();
   });
 });
