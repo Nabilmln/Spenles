@@ -4,6 +4,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { FriendRow } from "@/modules/friends";
@@ -250,7 +251,8 @@ describe("MakeBillWizard", () => {
     await fillValidItem();
     fireEvent.click(screen.getByRole("button", { name: "Continue" }));
 
-    fireEvent.click(screen.getByRole("button", { name: "Back" }));
+    const overview = screen.getByRole("dialog", { name: "Overview" });
+    fireEvent.click(within(overview).getByRole("button", { name: "Close" }));
 
     await waitFor(() =>
       expect(

@@ -14,7 +14,7 @@ import {
   createShareSummaryAction,
   deleteSplitBillByIdAction,
 } from "../actions/split-bill-actions";
-import { ParticipantAvatarStack } from "./participant-avatar-stack";
+import { BillAmountSummary } from "./bill-amount-summary";
 
 function copyToClipboard(text: string) {
   if (navigator.clipboard?.writeText) {
@@ -33,25 +33,6 @@ function copyToClipboard(text: string) {
   return succeeded
     ? Promise.resolve()
     : Promise.reject(new Error("Clipboard not available."));
-}
-
-function AmountRow({
-  label,
-  value,
-  valueClass,
-}: {
-  label: string;
-  value: string;
-  valueClass?: string;
-}) {
-  return (
-    <div className="flex items-baseline justify-between gap-4">
-      <dt className="text-[.85rem] text-muted">{label}</dt>
-      <dd className={`m-0 wrap-anywhere ${valueClass ?? "font-medium"}`}>
-        {formatIdr(value)}
-      </dd>
-    </div>
-  );
 }
 
 export function SplitBillResultSheet({
@@ -165,10 +146,16 @@ export function SplitBillResultSheet({
             {result.participants.length > 0 ? (
               <div className="grid gap-[.45rem]">
                 <p className={`${eyebrowClass} m-0`}>Participants</p>
-                <ParticipantAvatarStack
-                  names={result.participants.map((participant) => participant.name)}
-                  count={result.participants.length}
-                />
+                <div className="flex flex-wrap gap-[.4rem]">
+                  {result.participants.map((participant) => (
+                    <span
+                      key={participant.id}
+                      className="rounded-full border border-border bg-surface-subtle px-[.6rem] py-[.25rem] text-[.8rem] font-medium"
+                    >
+                      {participant.name}
+                    </span>
+                  ))}
+                </div>
               </div>
             ) : null}
 
@@ -210,36 +197,16 @@ export function SplitBillResultSheet({
               </div>
             ) : null}
 
-            <dl className="m-0 grid gap-[.4rem]">
-              <AmountRow label="Subtotal" value={result.subtotalAmount} />
-              {result.discountAmount !== "0" ? (
-                <AmountRow
-                  label="Discount"
-                  value={`-${result.discountAmount}`}
-                />
-              ) : null}
-              {BigInt(result.itemTaxAmount) + BigInt(result.billTaxAmount) > 0n ? (
-                <AmountRow
-                  label="Item tax"
-                  value={result.itemTaxAmount}
-                />
-              ) : null}
-              {result.billTaxAmount !== "0" ? (
-                <AmountRow label="Bill tax" value={result.billTaxAmount} />
-              ) : null}
-              {result.serviceChargeAmount !== "0" ? (
-                <AmountRow
-                  label="Service charge"
-                  value={result.serviceChargeAmount}
-                />
-              ) : null}
-              <div className="mt-[.35rem] flex items-baseline justify-between gap-4 border-t border-border pt-[.75rem] text-[1.05rem]">
-                <dt className="text-muted">Total</dt>
-                <dd className="m-0 font-semibold wrap-anywhere">
-                  {formatIdr(result.finalAmount)}
-                </dd>
-              </div>
-            </dl>
+            <BillAmountSummary
+                amounts={{
+                  subtotal: result.subtotalAmount,
+                  discount: result.discountAmount,
+                  itemTax: result.itemTaxAmount,
+                  billTax: result.billTaxAmount,
+                  serviceCharge: result.serviceChargeAmount,
+                  total: result.finalAmount,
+                }}
+              />
 
             {result.note ? (
               <p className="m-0 text-[.82rem] text-muted">{result.note}</p>

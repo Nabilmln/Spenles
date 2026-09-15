@@ -56,7 +56,6 @@ describe("MakeBillOverviewSheet", () => {
             participantIds: ["f1"],
           },
         ]}
-        taxLabel={null}
         note=""
         onSaveDraft={vi.fn()}
         saving={false}
@@ -72,7 +71,7 @@ describe("MakeBillOverviewSheet", () => {
     expect(within(itemCard).queryByText("Ayu")).not.toBeInTheDocument();
   });
 
-  it("shows configured tax and description", () => {
+  it("shows bill summary and description", () => {
     render(
       <MakeBillOverviewSheet
         open
@@ -82,7 +81,6 @@ describe("MakeBillOverviewSheet", () => {
         billDate="5 Agustus 2026"
         participants={participants}
         items={[]}
-        taxLabel="10%"
         note="Lunch together"
         onSaveDraft={vi.fn()}
         saving={false}
@@ -91,7 +89,8 @@ describe("MakeBillOverviewSheet", () => {
       />,
     );
 
-    expect(screen.getByText("10%")).toBeInTheDocument();
+    expect(screen.getByText("Total")).toBeInTheDocument();
+    expect(screen.getAllByText("Rp 30.000").length).toBeGreaterThan(0);
     expect(screen.getByText("Lunch together")).toBeInTheDocument();
   });
 
@@ -107,7 +106,6 @@ describe("MakeBillOverviewSheet", () => {
         billDate="5 Agustus 2026"
         participants={participants}
         items={[]}
-        taxLabel={null}
         note=""
         onSaveDraft={onSaveDraft}
         saving={false}

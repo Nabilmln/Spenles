@@ -832,7 +832,6 @@ export function MakeBillWizard({
         billDate={billDate ? formatDateLong(billDate) : ""}
         participants={selectedFriends}
         items={overviewItems}
-        taxLabel={taxLabel}
         note={note.trim()}
         onSaveDraft={handleSaveDraft}
         saving={saving}
@@ -857,33 +856,3 @@ export function MakeBillWizard({
     </div>
   );
 }
-
-// Split Bill — Gacoan
-
-// September 11, 2026
-
-// Ahmad:
-// • lvl 7 — Rp 39.000
-// Total: Rp 39.000
-
-// Anyul:
-// • lvl 7 — Rp 39.000
-// Total: Rp 39.000
-
-// Jihan:
-// • lvl 7 — Rp 39.000
-// Total: Rp 39.000
-
-// Nabil:
-// • lvl 7 — Rp 39.000
-// Total: Rp 39.000
-
-// Nopek:
-// • lvl 7 — Rp 39.000
-// Total: Rp 39.000
-
-// Subtotal: Rp 195.000
-// Tax 0%: Rp 0
-// Total: Rp 195.000
-
-// Calculated with Spenles.

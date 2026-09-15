@@ -6,6 +6,7 @@ import { eyebrowClass } from "@/components/ui/styles";
 import { formatIdr } from "@/lib/money/format-idr";
 import type { FriendRow } from "@/modules/friends";
 import type { SplitBillCalculationResult } from "../types/split-bill";
+import { BillAmountSummary } from "./bill-amount-summary";
 
 export type MakeBillOverviewItem = {
   id: string;
@@ -23,7 +24,6 @@ export function MakeBillOverviewSheet({
   billDate,
   participants,
   items,
-  taxLabel,
   note,
   onSaveDraft,
   saving,
@@ -37,14 +37,15 @@ export function MakeBillOverviewSheet({
   billDate: string;
   participants: FriendRow[];
   items: MakeBillOverviewItem[];
-  taxLabel: string | null;
   note: string;
   onSaveDraft: () => void;
   saving: boolean;
   onConfirm: () => void;
   finalizing: boolean;
 }) {
-  const nameById = new Map(participants.map((participant) => [participant.id, participant.name]));
+  const nameById = new Map(
+    participants.map((participant) => [participant.id, participant.name]),
+  );
 
   return (
     <BottomSheet open={open} onClose={onClose} title="Overview" ariaLabel="Overview">
@@ -110,30 +111,24 @@ export function MakeBillOverviewSheet({
           </div>
         ) : null}
 
-        {taxLabel ? (
-          <div className="flex items-baseline justify-between gap-4">
-            <span className="text-[.85rem] text-muted">Tax</span>
-            <span className="font-medium">{taxLabel}</span>
-          </div>
+        {preview ? (
+          <BillAmountSummary
+            amounts={{
+              subtotal: preview.subtotalAmount.toString(),
+              discount: preview.discountAmount.toString(),
+              itemTax: preview.itemTaxAmount.toString(),
+              billTax: preview.billTaxAmount.toString(),
+              serviceCharge: preview.serviceChargeAmount.toString(),
+              total: preview.finalAmount.toString(),
+            }}
+          />
         ) : null}
 
         {note ? (
           <p className="m-0 text-[.82rem] text-muted">{note}</p>
         ) : null}
 
-        {preview ? (
-          <div className="flex items-baseline justify-between gap-4 border-t border-border pt-[.9rem]">
-            <span className="text-[.85rem] text-muted">Final total</span>
-            <strong className="text-[1.2rem] wrap-anywhere">
-              {formatIdr(preview.finalAmount)}
-            </strong>
-          </div>
-        ) : null}
-
         <div className="grid gap-[.6rem] border-t border-border pt-[1rem]">
-          <Button type="button" variant="ghost" className="w-full" onClick={onClose}>
-            Back
-          </Button>
           <div className="flex gap-2">
             <Button
               type="button"

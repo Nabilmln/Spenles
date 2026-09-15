@@ -79,7 +79,7 @@ export function BottomSheet({
       />
       <div
         className={cn(
-          "relative flex w-full flex-col overflow-hidden rounded-t-[1.6rem] border-t border-border bg-surface shadow-[0_-10px_40px_rgb(15_15_18/20%)]",
+          "relative mx-auto flex w-full max-w-[30rem] flex-col overflow-hidden rounded-t-[1.6rem] border-t border-border bg-surface shadow-[0_-10px_40px_rgb(15_15_18/20%)]",
           fullHeight ? "h-dvh" : "max-h-[88dvh]",
           closing ? "profile-curtain-out" : "profile-curtain-in",
         )}
