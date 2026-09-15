@@ -9,6 +9,14 @@ laporan finansial dengan perhitungan yang deterministik dan dapat diaudit.
 Aplikasi ini bukan platform bank, pembayaran, investasi, atau akuntansi
 profesional.
 
+Spenles adalah **Progressive Web App (PWA)**: berbasis web, tetapi dapat
+diinstal di perangkat pengguna dan dibuka berdiri sendiri (standalone) dari
+home screen, tanpa harus melalui toko aplikasi. Web App Manifest menyediakan
+ikon dan tema, sementara service worker men-cache aset statis (style, script,
+gambar, font) agar aplikasi terasa ringan di koneksi lambat. Navigasi dan
+request API sengaja tidak di-cache sehingga halaman yang sudah login selalu
+menampilkan data terbaru.
+
 ## Fitur utama
 
 - **Transaksi pemasukan dan pengeluaran** dengan kalkulasi server-side yang
@@ -27,6 +35,24 @@ profesional.
   sebagai snapshot bernomor versi.
 - **Laporan dan ekspor**: laporan PDF privat, ekspor transaksi CSV yang aman
   untuk spreadsheet, dan backup data pribadi JSON ber-versi.
+
+## Masalah dan solusi
+
+- **Pencatatan keuangan tersebar di spreadsheet atau catatan manual** —
+  Spenles memusatkan pemasukan, pengeluaran, dan saldo dalam satu aplikasi
+  dengan kategori yang dapat diatur sendiri.
+- **Kesalahan hitung dan hasil yang tidak konsisten** — uang disimpan sebagai
+  integer rupiah dan semua perhitungan keuangan dilakukan di server, sehingga
+  total selalu deterministik dan dapat diaudit.
+- **Privasi data diragukan** — setiap data di-scope oleh sesi pengguna yang
+  terverifikasi; laporan dan unduhan dibuat server-side dan tidak pernah
+  membocorkan kredensial database ke browser.
+- **Membagi tagihan antar-teman terasa rumit** — split bill menghitung
+  otomatis tanggung jawab tiap orang termasuk pajak dan service charge,
+  lengkap dengan snapshot final.
+- **Tidak punya gambaran arah keuangan** — dashboard arus kas, grafik,
+  anggaran bulanan, dan laporan PDF/CSV memberikan ringkasan yang jelas per
+  periode.
 
 ## Manfaat
 
@@ -156,6 +182,22 @@ file tersebut.
 
 Catatan: jadwal Vercel Cron berjalan dalam UTC sedangkan aplikasi memakai
 timezone Asia/Jakarta. Jangan commit `.env.local` / `.env.e2e.local`.
+
+## Rencana pengembangan
+
+Spenles masih memiliki rencana pengembangan yang tetap berada di dalam cakupan
+produk pengelolaan keuangan pribadi:
+
+- integrasi dengan saluran pembayaran, misalnya mencocokkan transaksi dan
+  menerima notifikasi pembayaran;
+- impor transaksi dari bank atau penyedia layanan keuangan;
+- analitik lain seperti perbandingan kategori antarperiode dan target tabungan;
+- sinkronisasi data lintas perangkat yang lebih halus, termasuk mode
+  offline-first yang lebih jauh.
+
+Catatan: Spenles **bukan dan tidak berfokus pada investasi**. Fitur seperti
+rekomendasi portofolio, trading, atau perencanaan aset investasi tidak termasuk
+dalam roadmap produk ini.
 
 ## Perintah umum
 
