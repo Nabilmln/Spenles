@@ -92,7 +92,7 @@ export async function saveSplitBillDraftAction(
       }
       revalidatePath("/split-bills");
       return {
-        success: "Split Bill saved as draft.",
+        success: "Draft updated.",
         id: id.data,
         revision: updated.revision,
       };

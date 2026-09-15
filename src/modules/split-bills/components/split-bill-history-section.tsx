@@ -10,9 +10,11 @@ import { buttonClass } from "@/components/ui/styles";
 import type { FriendRow } from "@/modules/friends/queries/friends";
 import {
   deleteSplitBillByIdAction,
+  getSplitBillResultAction,
   loadMoreSplitBillsAction,
 } from "../actions/split-bill-actions";
 import type { SplitBillFilters } from "../schemas/split-bill-filters";
+import type { SplitBillResultData } from "../types/split-bill";
 import { FriendCarousel } from "./friend-carousel";
 import { SplitBillActionSheet } from "./split-bill-action-sheet";
 import { SplitBillFriendAddSheet } from "./split-bill-friend-add-sheet";
@@ -22,6 +24,7 @@ import {
   SplitBillHistoryCard,
   type SplitBillHistoryRow,
 } from "./split-bill-history-card";
+import { SplitBillResultSheet } from "./split-bill-result-sheet";
 
 const INITIAL_PAGE = 1;
 
@@ -72,6 +75,8 @@ export function SplitBillHistorySection({
   const [actionBill, setActionBill] = useState<SplitBillHistoryRow | null>(null);
   const [deleteBillOpen, setDeleteBillOpen] = useState(false);
   const [deletingBill, startDeletingBill] = useTransition();
+  const [resultOpen, setResultOpen] = useState(false);
+  const [resultData, setResultData] = useState<SplitBillResultData | null>(null);
   const router = useRouter();
   const toast = useToast();
 
@@ -111,14 +116,6 @@ export function SplitBillHistorySection({
     filters.q || (filters.status && filters.status !== "all") || filters.month,
   );
 
-  function reloadFromPageOne() {
-    loadMoreSplitBillsAction(filters, INITIAL_PAGE).then((result) => {
-      setRows(result.rows);
-      setPage(INITIAL_PAGE);
-      setHasMore(result.hasMore);
-    });
-  }
-
   function handleFriendSaved(updated: FriendRow) {
     setFriendList((current) =>
       [...current.map((friend) => (friend.id === updated.id ? updated : friend))].sort(
@@ -146,11 +143,22 @@ export function SplitBillHistorySection({
     if (!bill) return;
     setActionSheetOpen(false);
     setActionBill(null);
-    router.push(
-      bill.status === "draft"
-        ? `/split-bills/${bill.id}/edit`
-        : `/split-bills/${bill.id}`,
-    );
+    getSplitBillResultAction(bill.id).then((outcome) => {
+      if (outcome.ok) {
+        setResultData(outcome.result);
+        setResultOpen(true);
+      } else {
+        toast.error(outcome.error);
+      }
+    });
+  }
+
+  function handleEditBill() {
+    const bill = actionBill;
+    if (!bill) return;
+    setActionSheetOpen(false);
+    setActionBill(null);
+    router.push(`/split-bills/${bill.id}/edit`);
   }
 
   function handleDeleteBill() {
@@ -167,11 +175,16 @@ export function SplitBillHistorySection({
       setActionBill(null);
       if (result.ok) {
         toast.success("Split bill deleted.");
-        reloadFromPageOne();
+        setRows((current) => current.filter((row) => row.id !== bill.id));
       } else {
         toast.error("Split bill could not be deleted.");
       }
     });
+  }
+
+  function closeResultSheet() {
+    setResultOpen(false);
+    setResultData(null);
   }
 
   return (
@@ -289,8 +302,24 @@ export function SplitBillHistorySection({
           setActionSheetOpen(false);
           setActionBill(null);
         }}
+        status={actionBill?.status === "draft" ? "draft" : "finalized"}
         onViewResult={handleViewResult}
+        onEdit={handleEditBill}
         onDelete={handleDeleteBill}
+      />
+
+      <SplitBillResultSheet
+        open={resultOpen}
+        onClose={closeResultSheet}
+        result={resultData}
+        onDeleted={() => {
+          if (resultData) {
+            setRows((current) =>
+              current.filter((row) => row.id !== resultData.id),
+            );
+          }
+          closeResultSheet();
+        }}
       />
 
       <ConfirmDialog

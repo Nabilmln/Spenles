@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   CalendarDays,
   Check,
@@ -27,21 +28,22 @@ import {
   finalizeSplitBillAction,
   saveSplitBillDraftAction,
 } from "../actions/make-bill-actions";
+import { getSplitBillResultAction } from "../actions/split-bill-actions";
 import {
   SPLIT_BILL_MAX_MONEY,
   SPLIT_BILL_MAX_QUANTITY,
 } from "../constants/limits";
 import { calculateSplitBill } from "../services/calculator";
 import { createId, percentageToBasisPoints } from "../services/draft-utils";
-import type { SplitBillTaxMode } from "../types/split-bill";
+import type { SplitBillResultData, SplitBillTaxMode } from "../types/split-bill";
 import { FriendAvatar } from "./friend-avatar";
 import { FriendCarousel } from "./friend-carousel";
 import { MakeBillDateSheet } from "./make-bill-date-sheet";
 import { MakeBillFriendPickerSheet } from "./make-bill-friend-picker-sheet";
 import { MakeBillOverviewSheet, type MakeBillOverviewItem } from "./make-bill-overview-sheet";
-import { MakeBillPreviewSheet } from "./make-bill-preview-sheet";
 import { MakeBillTaxSheet } from "./make-bill-tax-sheet";
 import { QuantityInput, RupiahInput } from "./money-input";
+import { SplitBillResultSheet } from "./split-bill-result-sheet";
 
 type ItemDraft = {
   id: string;
@@ -49,6 +51,25 @@ type ItemDraft = {
   quantity: number;
   unitPrice: string;
   participantIds: string[];
+};
+
+export type MakeBillDraftInitial = {
+  id: string;
+  revision: number;
+  merchantName: string;
+  billDate: string;
+  note: string;
+  billTaxMode: SplitBillTaxMode;
+  fixedBillTaxAmount: string;
+  billTaxBps: number;
+  participants: { id: string; name: string }[];
+  items: {
+    id: string;
+    name: string;
+    quantity: number;
+    unitPrice: string;
+    participantIds: string[];
+  }[];
 };
 
 const STEPS = [
@@ -101,30 +122,73 @@ function StepIndicator({ current }: { current: number }) {
   );
 }
 
-export function MakeBillWizard({ friends }: { friends: FriendRow[] }) {
+export function MakeBillWizard({
+  friends,
+  initial,
+}: {
+  friends: FriendRow[];
+  initial?: MakeBillDraftInitial;
+}) {
   const toast = useToast();
+  const router = useRouter();
   const [saving, setSaving] = useState(false);
   const [finalizing, setFinalizing] = useState(false);
 
-  const [step, setStep] = useState(1);
-  const [selectedFriends, setSelectedFriends] = useState<FriendRow[]>([]);
-  const [merchantName, setMerchantName] = useState("");
-  const [billDate, setBillDateState] = useState(() => todayJakartaDate());
-  const [note, setNote] = useState("");
-  const [billTaxMode, setBillTaxMode] = useState<SplitBillTaxMode>("percentage");
-  const [taxPercent, setTaxPercent] = useState("0");
-  const [fixedBillTaxAmount, setFixedBillTaxAmount] = useState("");
-  const [items, setItems] = useState<ItemDraft[]>([]);
+  const initialParticipants = useMemo(
+    () =>
+      initial
+        ? friends.filter((friend) =>
+            initial.participants.some((participant) => participant.id === friend.id),
+          )
+        : [],
+    [friends, initial],
+  );
+
+  const [step, setStep] = useState(initial ? 2 : 1);
+  const [selectedFriends, setSelectedFriends] =
+    useState<FriendRow[]>(initialParticipants);
+  const [merchantName, setMerchantName] = useState(initial?.merchantName ?? "");
+  const [billDate, setBillDateState] = useState(
+    () => initial?.billDate ?? todayJakartaDate(),
+  );
+  const [note, setNote] = useState(initial?.note ?? "");
+  const [billTaxMode, setBillTaxMode] = useState<SplitBillTaxMode>(
+    initial?.billTaxMode ?? "percentage",
+  );
+  const [taxPercent, setTaxPercent] = useState(() => {
+    if (initial && initial.billTaxMode === "percentage") {
+      return percentageLabel(initial.billTaxBps);
+    }
+    return "0";
+  });
+  const [fixedBillTaxAmount, setFixedBillTaxAmount] = useState(() => {
+    if (initial && initial.billTaxMode === "fixed") {
+      const amount = BigInt(initial.fixedBillTaxAmount || "0");
+      return amount > 0n ? amount.toString() : "";
+    }
+    return "";
+  });
+  const [items, setItems] = useState<ItemDraft[]>(() =>
+    initial
+      ? initial.items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          quantity: item.quantity,
+          unitPrice: item.unitPrice,
+          participantIds: item.participantIds,
+        }))
+      : [],
+  );
   const [itemErrors, setItemErrors] = useState<Record<string, string>>({});
   const [savedRef, setSavedRef] = useState<{ id: string; revision: number } | null>(
-    null,
+    initial ? { id: initial.id, revision: initial.revision } : null,
   );
-  const [finalizedId, setFinalizedId] = useState<string | null>(null);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [dateOpen, setDateOpen] = useState(false);
   const [taxOpen, setTaxOpen] = useState(false);
   const [overviewOpen, setOverviewOpen] = useState(false);
-  const [previewOpen, setPreviewOpen] = useState(false);
+  const [resultOpen, setResultOpen] = useState(false);
+  const [resultData, setResultData] = useState<SplitBillResultData | null>(null);
 
   const billTaxBps =
     billTaxMode === "percentage" ? percentageToBasisPoints(taxPercent) : 0;
@@ -273,9 +337,15 @@ export function MakeBillWizard({ friends }: { friends: FriendRow[] }) {
       return;
     }
     if (result.finalizedId) {
-      setFinalizedId(result.finalizedId);
       setOverviewOpen(false);
-      setPreviewOpen(true);
+      const outcome = await getSplitBillResultAction(result.finalizedId);
+      if (outcome.ok) {
+        setResultData(outcome.result);
+        setResultOpen(true);
+      } else {
+        toast.error(outcome.error);
+        router.push("/split-bills");
+      }
     }
   }
 
@@ -770,14 +840,50 @@ export function MakeBillWizard({ friends }: { friends: FriendRow[] }) {
         finalizing={finalizing}
       />
 
-      <MakeBillPreviewSheet
-        open={previewOpen}
-        onClose={() => setPreviewOpen(false)}
-        result={preview}
-        merchantName={merchantName.trim()}
-        billDate={billDate ? formatDateLong(billDate) : ""}
-        finalizedId={finalizedId}
+      <SplitBillResultSheet
+        open={resultOpen}
+        onClose={() => {
+          setResultOpen(false);
+          setResultData(null);
+          router.push("/split-bills");
+        }}
+        result={resultData}
+        onDeleted={() => {
+          setResultOpen(false);
+          setResultData(null);
+          router.push("/split-bills");
+        }}
       />
     </div>
   );
 }
+
+// Split Bill — Gacoan
+
+// September 11, 2026
+
+// Ahmad:
+// • lvl 7 — Rp 39.000
+// Total: Rp 39.000
+
+// Anyul:
+// • lvl 7 — Rp 39.000
+// Total: Rp 39.000
+
+// Jihan:
+// • lvl 7 — Rp 39.000
+// Total: Rp 39.000
+
+// Nabil:
+// • lvl 7 — Rp 39.000
+// Total: Rp 39.000
+
+// Nopek:
+// • lvl 7 — Rp 39.000
+// Total: Rp 39.000
+
+// Subtotal: Rp 195.000
+// Tax 0%: Rp 0
+// Total: Rp 195.000
+
+// Calculated with Spenles.

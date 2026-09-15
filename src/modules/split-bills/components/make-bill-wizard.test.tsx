@@ -9,17 +9,47 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { FriendRow } from "@/modules/friends";
 import { MakeBillWizard } from "./make-bill-wizard";
 
-const { saveSplitBillDraftAction, finalizeSplitBillAction } = vi.hoisted(() => ({
-  saveSplitBillDraftAction: vi.fn(async () => ({
-    success: "Split Bill saved as draft.",
+const {
+  saveSplitBillDraftAction,
+  finalizeSplitBillAction,
+  getSplitBillResultAction,
+} = vi.hoisted(() => {
+  const result = {
     id: "00000000-0000-4000-8000-000000000001",
-    revision: 0,
-  })),
-  finalizeSplitBillAction: vi.fn(async () => ({
-    success: "Split Bill finalized.",
-    finalizedId: "00000000-0000-4000-8000-000000000001",
-  })),
-}));
+    merchantName: "Warung Nasi Padang",
+    billDate: "2026-01-15",
+    note: null,
+    status: "finalized",
+    subtotalAmount: "30000",
+    discountAmount: "0",
+    itemTaxAmount: "0",
+    billTaxAmount: "0",
+    serviceChargeAmount: "0",
+    finalAmount: "30000",
+    participants: [{ id: "f1", name: "Nabil" }],
+    items: [
+      {
+        id: "item1",
+        name: "Nasi Padang",
+        quantity: 1,
+        unitPrice: "30000",
+        participantIds: ["f1"],
+      },
+    ],
+  };
+  return {
+    saveSplitBillDraftAction: vi.fn(async () => ({
+      success: "Draft updated.",
+      id: "00000000-0000-4000-8000-000000000001",
+      revision: 1,
+    })),
+    finalizeSplitBillAction: vi.fn(async () => ({
+      success: "Split Bill finalized.",
+      finalizedId: "00000000-0000-4000-8000-000000000001",
+    })),
+    getSplitBillResultAction: vi.fn(async () => ({ ok: true, result })),
+  };
+});
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn() }),
@@ -30,14 +60,19 @@ vi.mock("../actions/make-bill-actions", () => ({
   finalizeSplitBillAction,
 }));
 
-vi.mock("./make-bill-preview-sheet", () => ({
-  MakeBillPreviewSheet: () => null,
+vi.mock("../actions/split-bill-actions", () => ({
+  getSplitBillResultAction,
+}));
+
+vi.mock("./split-bill-result-sheet", () => ({
+  SplitBillResultSheet: () => null,
 }));
 
 afterEach(() => {
   cleanup();
   saveSplitBillDraftAction.mockClear();
   finalizeSplitBillAction.mockClear();
+  getSplitBillResultAction.mockClear();
 });
 
 const friends: FriendRow[] = [

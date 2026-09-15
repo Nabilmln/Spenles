@@ -5,15 +5,13 @@ import { cn } from "@/lib/utils";
 import { ParticipantAvatarStack } from "./participant-avatar-stack";
 
 const statusLabel = {
-  draft: "Draft",
-  finalized: "Final",
-  archived: "Archived",
-};
+  draft: "DRAFT",
+  finalized: "FINAL",
+} as const;
 
 const statusBadgeClass = {
   draft: "text-[#b45309] bg-[color-mix(in_srgb,var(--warning)_16%,transparent)]",
   finalized: "text-income bg-[color-mix(in_srgb,var(--income)_10%,transparent)]",
-  archived: "text-muted bg-surface-subtle",
 };
 
 export type SplitBillHistoryRow = {

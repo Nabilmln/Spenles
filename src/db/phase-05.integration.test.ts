@@ -412,11 +412,11 @@ describe("Phase 05 split-bill database boundaries", () => {
       database,
     );
     expect(defaults.total).toBe(0);
-    const archived = await listOwnedSplitBills(
+    const legacyStatusFallback = await listOwnedSplitBills(
       userA,
       {
         q: merchant,
-        status: "archived",
+        status: "all",
         page: 1,
         pageSize: 20,
         sort: "billDate",
@@ -424,7 +424,6 @@ describe("Phase 05 split-bill database boundaries", () => {
       },
       database,
     );
-    expect(archived.total).toBe(1);
-    expect(archived.rows[0]?.id).toBe(draftA!.id);
+    expect(legacyStatusFallback.total).toBe(0);
   });
 });

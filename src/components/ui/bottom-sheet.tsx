@@ -14,6 +14,7 @@ export function BottomSheet({
   ariaLabel,
   zIndex = "z-[80]",
   fullHeight = false,
+  footer,
   children,
 }: {
   open: boolean;
@@ -22,6 +23,7 @@ export function BottomSheet({
   ariaLabel: string;
   zIndex?: string;
   fullHeight?: boolean;
+  footer?: React.ReactNode;
   children: React.ReactNode;
 }) {
   const [prevOpen, setPrevOpen] = useState(open);
@@ -96,9 +98,21 @@ export function BottomSheet({
             <X size={18} aria-hidden="true" />
           </button>
         </div>
-        <div className="min-h-0 flex-1 overflow-y-auto p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+        <div
+          className={cn(
+            "min-h-0 flex-1 overflow-y-auto",
+            footer
+              ? "p-5 pb-5"
+              : "p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]",
+          )}
+        >
           {children}
         </div>
+        {footer ? (
+          <div className="shrink-0 border-t border-border p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))]">
+            {footer}
+          </div>
+        ) : null}
       </div>
     </div>,
     document.body,

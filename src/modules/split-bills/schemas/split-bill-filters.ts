@@ -2,9 +2,7 @@ import { z } from "zod";
 import { SPLIT_BILL_PAGE_SIZES } from "../constants/limits";
 
 export const splitBillFilterSchema = z.object({
-  status: z
-    .enum(["draft", "finalized", "archived", "all"])
-    .optional(),
+  status: z.enum(["draft", "finalized", "all"]).optional(),
   month: z
     .string()
     .regex(/^\d{4}-(0[1-9]|1[0-2])$/u)

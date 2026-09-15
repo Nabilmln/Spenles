@@ -85,3 +85,27 @@ export type SplitBillCalculationResult = {
   assignments: SplitBillAssignmentResult[];
   participants: SplitBillParticipantResult[];
 };
+
+export type SplitBillResultItem = {
+  id: string;
+  name: string;
+  quantity: number;
+  unitPrice: string;
+  participantIds: string[];
+};
+
+export type SplitBillResultData = {
+  id: string;
+  merchantName: string;
+  billDate: string;
+  note: string | null;
+  status: "finalized";
+  subtotalAmount: string;
+  discountAmount: string;
+  itemTaxAmount: string;
+  billTaxAmount: string;
+  serviceChargeAmount: string;
+  finalAmount: string;
+  participants: { id: string; name: string }[];
+  items: SplitBillResultItem[];
+};

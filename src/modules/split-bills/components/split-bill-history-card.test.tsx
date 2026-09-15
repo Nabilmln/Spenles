@@ -21,7 +21,7 @@ describe("split-bill history card", () => {
     expect(screen.getByText("Warung Bu Endah")).toBeInTheDocument();
     expect(screen.getByText("Rp 2.160.000")).toBeInTheDocument();
     expect(screen.getByText("January 15, 2026")).toBeInTheDocument();
-    expect(screen.getByText("Final")).toBeInTheDocument();
+    expect(screen.getByText("FINAL")).toBeInTheDocument();
     expect(
       screen.getByRole("img", { name: "4 participants" }),
     ).toBeInTheDocument();
@@ -36,7 +36,7 @@ describe("split-bill history card", () => {
         onAction={vi.fn()}
       />,
     );
-    expect(screen.getByText("Draft")).toBeInTheDocument();
+    expect(screen.getByText("DRAFT")).toBeInTheDocument();
     expect(screen.queryByText(/^Rp /)).not.toBeInTheDocument();
   });
 

@@ -46,9 +46,9 @@ function splitBillOrder(filters: SplitBillFilters) {
 
 function historyConditions(userId: string, filters: SplitBillFilters) {
   const result: SQL[] = [eq(splitBills.userId, userId)];
-  if (filters.status && filters.status !== "all") {
+  if (filters.status === "draft" || filters.status === "finalized") {
     result.push(eq(splitBills.status, filters.status));
-  } else if (!filters.status) {
+  } else {
     result.push(inArray(splitBills.status, ["draft", "finalized"]));
   }
   if (filters.month) {
@@ -108,12 +108,17 @@ export async function listOwnedSplitBills(
   const total = totalRows[0]?.value ?? 0;
   const hasMore = total > filters.page * filters.pageSize;
   return {
-    rows: rows.map((row) => ({
-      ...row,
-      finalAmount: row.finalAmount?.toString() ?? null,
-      participantNames: row.participantNames ?? [],
-      createdAt: row.createdAt.toISOString(),
-    })),
+    rows: rows.map((row) => {
+      const status: "draft" | "finalized" =
+        row.status === "draft" ? "draft" : "finalized";
+      return {
+        ...row,
+        status,
+        finalAmount: row.finalAmount?.toString() ?? null,
+        participantNames: row.participantNames ?? [],
+        createdAt: row.createdAt.toISOString(),
+      };
+    }),
     total,
     totalPages: Math.max(1, Math.ceil(total / filters.pageSize)),
     hasMore,

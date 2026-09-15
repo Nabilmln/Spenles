@@ -25,6 +25,7 @@ import {
 import { finalizeOwnedSplitBill } from "../services/finalization";
 import { updateOwnedParticipantPayment } from "../services/payment-mutations";
 import { createSplitBillShareSummary } from "../services/share-summary";
+import type { SplitBillResultData } from "../types/split-bill";
 
 export type SplitBillActionState = {
   error?: string;
@@ -352,5 +353,55 @@ export async function loadMoreSplitBillsAction(
   return {
     rows: result.rows,
     hasMore: result.hasMore,
+  };
+}
+
+export async function getSplitBillResultAction(
+  id: string,
+): Promise<
+  | { ok: true; result: SplitBillResultData }
+  | { ok: false; error: string }
+> {
+  const user = await requireSessionUser();
+  const parsed = splitBillIdSchema.safeParse(id);
+  if (!parsed.success) return { ok: false, error: "Invalid bill." };
+  const detail = await getOwnedSplitBillDetail(user.id, parsed.data);
+  if (!detail || !detail.calculation) {
+    return { ok: false, error: "Result is not available yet." };
+  }
+  if (detail.bill.status !== "finalized") {
+    return {
+      ok: false,
+      error: "Result is only available for finalized bills.",
+    };
+  }
+  return {
+    ok: true,
+    result: {
+      id: detail.bill.id,
+      merchantName: detail.calculation.merchantNameSnapshot,
+      billDate: detail.calculation.billDateSnapshot,
+      note: detail.calculation.noteSnapshot,
+      status: "finalized",
+      subtotalAmount: detail.calculation.subtotalAmount.toString(),
+      discountAmount: detail.calculation.discountAmount.toString(),
+      itemTaxAmount: detail.calculation.itemTaxAmount.toString(),
+      billTaxAmount: detail.calculation.billTaxAmount.toString(),
+      serviceChargeAmount: detail.calculation.serviceChargeAmount.toString(),
+      finalAmount: detail.calculation.finalAmount.toString(),
+      participants: detail.participantResults.map((participant) => ({
+        id: participant.sourceParticipantId,
+        name: participant.nameSnapshot,
+      })),
+      items: detail.itemResults.map((item) => ({
+        id: item.sourceItemId,
+        name: item.nameSnapshot,
+        quantity: item.quantitySnapshot,
+        unitPrice: item.unitPriceSnapshot.toString(),
+        participantIds: detail.assignmentResults
+          .filter((assignment) => assignment.sourceItemId === item.sourceItemId)
+          .map((assignment) => assignment.sourceParticipantId),
+      })),
+    },
   };
 }

@@ -4,6 +4,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { FriendRow } from "@/modules/friends/queries/friends";
@@ -12,13 +13,41 @@ import { SplitBillHistorySection } from "./split-bill-history-section";
 
 const pushMock = vi.fn();
 
+const {
+  getSplitBillResultAction,
+  loadMoreSplitBillsAction,
+  deleteSplitBillByIdAction,
+} = vi.hoisted(() => ({
+  loadMoreSplitBillsAction: vi.fn(async () => ({ rows: [], hasMore: false })),
+  deleteSplitBillByIdAction: vi.fn(async () => ({ ok: true })),
+  getSplitBillResultAction: vi.fn(async () => ({
+    ok: true,
+    result: {
+      id: "b1",
+      merchantName: "Warung Bu Endah",
+      billDate: "2026-01-15",
+      note: null,
+      status: "finalized",
+      subtotalAmount: "2160000",
+      discountAmount: "0",
+      itemTaxAmount: "0",
+      billTaxAmount: "0",
+      serviceChargeAmount: "0",
+      finalAmount: "2160000",
+      participants: [{ id: "p1", name: "Ayu" }],
+      items: [],
+    },
+  })),
+}));
+
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: pushMock }),
 }));
 
 vi.mock("../actions/split-bill-actions", () => ({
-  loadMoreSplitBillsAction: vi.fn(async () => ({ rows: [], hasMore: false })),
-  deleteSplitBillByIdAction: vi.fn(async () => ({ ok: true })),
+  loadMoreSplitBillsAction,
+  deleteSplitBillByIdAction,
+  getSplitBillResultAction,
 }));
 
 vi.mock("./split-bill-filter-bar", () => ({
@@ -142,7 +171,7 @@ describe("split-bill history section", () => {
     expect(screen.getByText("No more split bills")).toBeInTheDocument();
   });
 
-  it("opens the action sheet and navigates to the result page", async () => {
+  it("opens the action sheet and fetches the result to show in the result sheet", async () => {
     render(
       <SplitBillHistorySection
         filters={filters}
@@ -159,7 +188,44 @@ describe("split-bill history section", () => {
     });
     fireEvent.click(viewResult);
     await waitFor(() =>
-      expect(pushMock).toHaveBeenCalledWith("/split-bills/b1"),
+      expect(getSplitBillResultAction).toHaveBeenCalledWith("b1"),
+    );
+    const dialog = await screen.findByRole("dialog", {
+      name: "Split bill result",
+    });
+    expect(dialog).toBeInTheDocument();
+    expect(within(dialog).getByText("Warung Bu Endah")).toBeInTheDocument();
+    expect(within(dialog).getByText("FINAL")).toBeInTheDocument();
+  });
+
+  it("opens the action sheet and navigates to the draft editor for a draft bill", async () => {
+    render(
+      <SplitBillHistorySection
+        filters={filters}
+        friends={friends}
+        initialRows={[
+          {
+            id: "b2",
+            merchantName: "Soto Ayam Bu Tatik",
+            billDate: "2026-01-20",
+            status: "draft",
+            finalAmount: null,
+            participantCount: 1,
+            participantNames: ["Ayu"],
+          },
+        ]}
+        total={1}
+      />,
+    );
+    fireEvent.click(
+      screen.getByRole("button", { name: "Split bill actions" }),
+    );
+    const edit = await screen.findByRole("button", {
+      name: "Edit Split Bill",
+    });
+    fireEvent.click(edit);
+    await waitFor(() =>
+      expect(pushMock).toHaveBeenCalledWith("/split-bills/b2/edit"),
     );
   });
 
