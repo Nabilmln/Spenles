@@ -90,19 +90,17 @@ export function SingleDateCalendar({
               />
             );
           }
-          const isFuture = cell.date > today;
           const selected = cell.date === value;
           return (
             <button
               aria-label={formatDateLong(cell.date)}
               aria-pressed={selected}
               className={cn(
-                "grid min-h-[2.5rem] place-items-center text-[.88rem] cursor-pointer border border-transparent hover:enabled:bg-primary-50 disabled:cursor-not-allowed disabled:text-muted disabled:opacity-50",
+                "grid min-h-[2.5rem] place-items-center text-[.88rem] cursor-pointer border border-transparent hover:bg-primary-50",
                 selected
                   ? "rounded-[.6rem] bg-primary-600 font-medium text-white"
                   : "bg-surface-subtle text-foreground",
               )}
-              disabled={isFuture}
               key={cell.date}
               onClick={() => onChange(cell.date)}
               type="button"

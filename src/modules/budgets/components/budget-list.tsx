@@ -109,7 +109,7 @@ export function BudgetList({
                       <div className="mt-[.3rem] flex min-w-0 flex-wrap gap-[.3rem]">
                         {periodSegments(row).map((segment) => (
                           <span
-                            className="inline-flex min-h-[1.4rem] max-w-full items-center justify-center truncate rounded-full border border-border bg-surface-subtle px-[.5rem] text-[.68rem] font-medium text-muted"
+                            className="inline-flex min-h-[1.4rem] min-w-0 max-w-full items-center justify-center truncate rounded-full border border-border bg-surface-subtle px-[.5rem] text-[.68rem] font-medium text-muted"
                             key={segment}
                           >
                             {segment}
@@ -139,10 +139,12 @@ export function BudgetList({
                   </div>
                 </header>
 
-                <div className="flex items-baseline justify-end gap-[.3rem] text-[.76rem]">
-                  <span className="font-medium">{formatIdr(row.usage)}</span>
-                  <span className="text-muted"> / {formatIdr(row.amount)}</span>
-                  <span className="ml-1 text-muted">
+                <div className="flex flex-wrap items-baseline justify-end gap-x-[.3rem] gap-y-[.15rem] text-[.76rem]">
+                  <span className="min-w-0 font-medium">{formatIdr(row.usage)}</span>
+                  <span className="min-w-0 text-muted">
+                    {" "}/ {formatIdr(row.amount)}
+                  </span>
+                  <span className="ml-1 min-w-0 text-muted">
                     {formatPercentageBps(percent)} used
                   </span>
                 </div>
