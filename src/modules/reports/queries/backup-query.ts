@@ -98,13 +98,16 @@ export async function getPersonalDataBackupJson(
           select jsonb_agg(jsonb_build_object(
             'id', owned_budget.id,
             'categoryId', owned_budget.category_id,
-            'budgetMonth', owned_budget.budget_month,
+            'periodType', owned_budget.period_type,
+            'periodStart', owned_budget.period_start,
+            'periodEnd', owned_budget.period_end,
             'amountIdr', owned_budget.amount::text,
             'warningThresholdBps', owned_budget.warning_threshold_bps,
+            'warningDaysRemaining', owned_budget.warning_days_remaining,
             'status', owned_budget.status,
             'createdAt', owned_budget.created_at,
             'updatedAt', owned_budget.updated_at
-          ) order by owned_budget.budget_month, owned_budget.id)
+          ) order by owned_budget.period_type, owned_budget.period_start, owned_budget.id)
           from budgets as owned_budget
           where owned_budget.user_id = ${userId}
         ), '[]'::jsonb),

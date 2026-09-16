@@ -6,9 +6,12 @@ import type { Database } from "@/db/types";
 
 export type BudgetMutationInput = {
   categoryId: string;
-  budgetMonth: string;
+  periodType: "monthly" | "weekly" | "custom";
+  periodStart: string | null;
+  periodEnd: string | null;
   amount: bigint;
-  warningThresholdBps: number;
+  warningThresholdBps: number | null;
+  warningDaysRemaining: number | null;
 };
 
 type ReturnedId = { id: string };
@@ -23,16 +26,22 @@ export async function createOwnedBudget(
       insert into budgets (
         user_id,
         category_id,
-        budget_month,
+        period_type,
+        period_start,
+        period_end,
         amount,
-        warning_threshold_bps
+        warning_threshold_bps,
+        warning_days_remaining
       )
       select
         ${userId},
         category.id,
-        ${input.budgetMonth}::date,
+        ${input.periodType}::budget_period_type,
+        ${input.periodStart}::date,
+        ${input.periodEnd}::date,
         ${input.amount}::bigint,
-        ${input.warningThresholdBps}::smallint
+        ${input.warningThresholdBps}::smallint,
+        ${input.warningDaysRemaining}::smallint
       from categories as category
       where category.id = ${input.categoryId}::uuid
         and category.user_id = ${userId}
@@ -55,20 +64,42 @@ export async function updateOwnedBudget(
   database: Database,
   userId: string,
   budgetId: string,
-  values: Pick<BudgetMutationInput, "amount" | "warningThresholdBps">,
+  values: BudgetMutationInput,
 ) {
-  const result = await database.execute<ReturnedId>(sql`
-    update budgets
-    set
-      amount = ${values.amount}::bigint,
-      warning_threshold_bps = ${values.warningThresholdBps}::smallint,
-      updated_at = now()
-    where id = ${budgetId}::uuid
-      and user_id = ${userId}
-      and status = 'active'
-    returning id
-  `);
-  return result.rows[0] ?? null;
+  try {
+    const result = await database.execute<ReturnedId>(sql`
+      update budgets as budget
+      set
+        category_id = ${values.categoryId}::uuid,
+        period_type = ${values.periodType}::budget_period_type,
+        period_start = ${values.periodStart}::date,
+        period_end = ${values.periodEnd}::date,
+        amount = ${values.amount}::bigint,
+        warning_threshold_bps = ${values.warningThresholdBps}::smallint,
+        warning_days_remaining = ${values.warningDaysRemaining}::smallint,
+        updated_at = now()
+      where budget.id = ${budgetId}::uuid
+        and budget.user_id = ${userId}
+        and budget.status = 'active'
+        and (
+          budget.category_id = ${values.categoryId}::uuid
+          or exists (
+            select 1 from categories as category
+            where category.id = ${values.categoryId}::uuid
+              and category.user_id = ${userId}
+              and category.type = 'expense'
+              and category.status = 'active'
+          )
+        )
+      returning budget.id
+    `);
+    return result.rows[0] ?? null;
+  } catch (error) {
+    if (hasPostgresErrorCode(error, "23505")) {
+      return null;
+    }
+    throw error;
+  }
 }
 
 export async function setOwnedBudgetStatus(

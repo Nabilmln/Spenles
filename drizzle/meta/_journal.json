@@ -57,6 +57,20 @@
       "when": 1789030023968,
       "tag": "0007_bouncy_roxanne_simpson",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1789561256589,
+      "tag": "0008_budget-periods-and-warning-columns",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1789561339608,
+      "tag": "0009_budget-drop-month-rule-based-unique-index",
+      "breakpoints": true
     }
   ]
 }

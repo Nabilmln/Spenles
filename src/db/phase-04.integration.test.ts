@@ -28,6 +28,7 @@ import {
 } from "@/modules/budgets/services/budget-mutations";
 import { listOwnedBudgets, getOwnedBudget } from "@/modules/budgets/queries/budgets";
 import { createOwnedTransaction, softDeleteOwnedTransaction } from "@/modules/transactions/services/transaction-mutations";
+import { todayJakartaDate } from "@/lib/dates/calendar";
 import { createOwnedRecurringRule } from "@/modules/recurring-transactions/services/recurring-mutations";
 import { getOwnedRecurringRule } from "@/modules/recurring-transactions/queries/recurring-rules";
 import { generateOccurrence } from "@/modules/recurring-transactions/services/generate-occurrence";
@@ -96,19 +97,32 @@ describe("Phase 04 financial domains", () => {
       "other",
     ]);
 
+    const periodEnums = await database.execute<{ enumlabel: string }>(sql`
+      select enumlabel
+      from pg_enum
+      inner join pg_type on pg_type.oid = pg_enum.enumtypid
+      where pg_type.typname = 'budget_period_type'
+      order by pg_enum.enumsortorder
+    `);
+    expect(periodEnums.rows.map((row) => row.enumlabel)).toEqual([
+      "monthly",
+      "weekly",
+      "custom",
+    ]);
+
     const indexes = await database.execute<{ indexname: string }>(sql`
       select indexname
       from pg_indexes
       where schemaname = 'public'
         and indexname in (
-          'budgets_user_category_month_active_uidx',
+          'budgets_user_category_active_uidx',
           'transfers_reversal_of_uidx',
           'recurring_generations_rule_scheduled_uidx',
           'recurring_rules_due_idx'
         )
     `);
     expect(indexes.rows.map((row) => row.indexname).sort()).toEqual([
-      "budgets_user_category_month_active_uidx",
+      "budgets_user_category_active_uidx",
       "recurring_generations_rule_scheduled_uidx",
       "recurring_rules_due_idx",
       "transfers_reversal_of_uidx",
@@ -120,6 +134,10 @@ describe("Phase 04 financial domains", () => {
       where conname in (
         'accounts_opening_balance_safe',
         'budgets_category_owner_fk',
+        'budgets_warning_mode_exclusive',
+        'budgets_warning_threshold_valid',
+        'budgets_warning_days_valid',
+        'budgets_period_dates_valid',
         'recurring_rules_category_owner_type_fk',
         'transfers_source_account_owner_fk',
         'transfers_destination_account_owner_fk'
@@ -128,6 +146,10 @@ describe("Phase 04 financial domains", () => {
     expect(constraints.rows.map((row) => row.conname).sort()).toEqual([
       "accounts_opening_balance_safe",
       "budgets_category_owner_fk",
+      "budgets_period_dates_valid",
+      "budgets_warning_days_valid",
+      "budgets_warning_mode_exclusive",
+      "budgets_warning_threshold_valid",
       "recurring_rules_category_owner_type_fk",
       "transfers_destination_account_owner_fk",
       "transfers_source_account_owner_fk",
@@ -139,6 +161,16 @@ describe("Phase 04 financial domains", () => {
       .delete(profiles)
       .where(inArray(profiles.userId, [userA, userB]));
   });
+
+  async function archiveActiveBudget(userId: string, categoryId: string) {
+    const rows = await listOwnedBudgets(userId, database);
+    const active = rows.find(
+      (row) => row.categoryId === categoryId && row.recordStatus === "active",
+    );
+    if (active) {
+      await setOwnedBudgetStatus(database, userId, active.id, "archived");
+    }
+  }
 
   it("derives exact balances from transactions and transfers", async () => {
     await createOwnedTransaction(database, userA, {
@@ -257,23 +289,30 @@ describe("Phase 04 financial domains", () => {
   });
 
   it("enforces active budget uniqueness and exact usage", async () => {
-    const month = `2027-${String(Math.floor(Math.random() * 12) + 1).padStart(2, "0")}-01`;
+    await archiveActiveBudget(userA, expenseCategory);
+    const today = todayJakartaDate();
     const first = await createOwnedBudget(database, userA, {
       categoryId: expenseCategory,
-      budgetMonth: month,
+      periodType: "monthly",
+      periodStart: null,
+      periodEnd: null,
       amount: 100_000n,
       warningThresholdBps: 8000,
+      warningDaysRemaining: null,
     });
     const duplicate = await createOwnedBudget(database, userA, {
       categoryId: expenseCategory,
-      budgetMonth: month,
+      periodType: "weekly",
+      periodStart: null,
+      periodEnd: null,
       amount: 200_000n,
       warningThresholdBps: 8000,
+      warningDaysRemaining: null,
     });
     expect(first.ok).toBe(true);
     expect(duplicate).toEqual({ ok: false, reason: "duplicate" });
 
-    const transactionAt = new Date(`${month.slice(0, 7)}-15T00:00:00+07:00`);
+    const transactionAt = new Date(`${today}T12:00:00+07:00`);
     const activeTransaction = await createOwnedTransaction(database, userA, {
       type: "expense",
       amount: 80_000n,
@@ -299,44 +338,69 @@ describe("Phase 04 financial domains", () => {
   });
 
   it("restores an archived budget only without an active conflict", async () => {
-    const month = "2028-01-01";
+    await archiveActiveBudget(userA, expenseCategory);
     const archived = await createOwnedBudget(database, userA, {
       categoryId: expenseCategory,
-      budgetMonth: month,
+      periodType: "monthly",
+      periodStart: null,
+      periodEnd: null,
       amount: 1n,
       warningThresholdBps: 8000,
+      warningDaysRemaining: null,
     });
-    await setOwnedBudgetStatus(database, userA, archived.ok ? archived.id : "", "archived");
-    await createOwnedBudget(database, userA, {
+    expect(archived.ok).toBe(true);
+    await setOwnedBudgetStatus(
+      database,
+      userA,
+      archived.ok ? archived.id : "",
+      "archived",
+    );
+    const active = await createOwnedBudget(database, userA, {
       categoryId: expenseCategory,
-      budgetMonth: month,
+      periodType: "monthly",
+      periodStart: null,
+      periodEnd: null,
       amount: 2n,
       warningThresholdBps: 8000,
+      warningDaysRemaining: null,
     });
+    expect(active.ok).toBe(true);
     await expect(
-      setOwnedBudgetStatus(database, userA, archived.ok ? archived.id : "", "active"),
+      setOwnedBudgetStatus(
+        database,
+        userA,
+        archived.ok ? archived.id : "",
+        "active",
+      ),
     ).resolves.toEqual({ ok: false, reason: "duplicate" });
   });
 
   it("returns only the requested budget owned by the user", async () => {
-    const month = "2029-03-01";
+    await archiveActiveBudget(userA, expenseCategory);
     const owned = await createOwnedBudget(database, userA, {
       categoryId: expenseCategory,
-      budgetMonth: month,
+      periodType: "monthly",
+      periodStart: null,
+      periodEnd: null,
       amount: 150_000n,
       warningThresholdBps: 8000,
+      warningDaysRemaining: null,
     });
     expect(owned.ok).toBe(true);
 
     const own = await getOwnedBudget(userA, owned.ok ? owned.id : "", database);
     expect(own?.id).toBe(owned.ok ? owned.id : "");
     expect(own?.amount).toBe("150000");
+    expect(own?.periodType).toBe("monthly");
 
     const foreign = await createOwnedBudget(database, userB, {
       categoryId: foreignExpenseCategory,
-      budgetMonth: month,
+      periodType: "monthly",
+      periodStart: null,
+      periodEnd: null,
       amount: 99_000n,
       warningThresholdBps: 8000,
+      warningDaysRemaining: null,
     });
     expect(foreign.ok).toBe(true);
 

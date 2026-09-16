@@ -49,7 +49,8 @@ type AccountRow = {
 type BudgetRow = {
   category_name: string;
   amount: string;
-  warning_threshold_bps: number;
+  warning_threshold_bps: number | null;
+  warning_days_remaining: number | null;
   usage: string;
 };
 
@@ -432,6 +433,7 @@ async function getBudgets(
       owned_category.name as category_name,
       owned_budget.amount::text,
       owned_budget.warning_threshold_bps,
+      owned_budget.warning_days_remaining,
       coalesce(sum(owned_transaction.amount), 0)::text as usage
     from budgets as owned_budget
     inner join categories as owned_category
@@ -446,7 +448,7 @@ async function getBudgets(
       and owned_transaction.transaction_at < ${filters.interval.end}
     where owned_budget.user_id = ${userId}
       and owned_budget.status = 'active'
-      and owned_budget.budget_month = ${filters.interval.startDate}::date
+      and owned_budget.period_type = 'monthly'
     group by
       owned_budget.id,
       owned_category.name,
@@ -454,11 +456,14 @@ async function getBudgets(
     order by owned_category.normalized_name, owned_budget.id
   `);
   return result.rows.map((row) => {
-    const metrics = calculateBudgetMetrics(
-      BigInt(row.amount),
-      BigInt(row.usage),
-      row.warning_threshold_bps,
-    );
+    const metrics = calculateBudgetMetrics({
+      amount: BigInt(row.amount),
+      usage: BigInt(row.usage),
+      warning: row.warning_threshold_bps !== null
+        ? { type: "threshold", thresholdBps: row.warning_threshold_bps }
+        : { type: "days", daysRemaining: row.warning_days_remaining ?? 3 },
+      daysRemainingInPeriod: 30,
+    });
     return {
       categoryName: row.category_name,
       amountIdr: row.amount,

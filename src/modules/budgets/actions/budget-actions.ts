@@ -1,10 +1,8 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { requireSessionUser } from "@/lib/auth/require-session";
-import { budgetMonthToDate } from "@/lib/dates/jakarta-month";
 import { budgetIdSchema, budgetSchema } from "../schemas/budget";
 import {
   createOwnedBudget,
@@ -12,20 +10,37 @@ import {
   updateOwnedBudget,
 } from "../services/budget-mutations";
 
-export type BudgetActionState = { error?: string };
+export type BudgetActionState = { error?: string; success?: string };
 
 function parse(formData: FormData) {
   return budgetSchema.safeParse({
     categoryId: formData.get("categoryId"),
-    month: formData.get("month"),
+    periodType: formData.get("periodType"),
+    periodStart: formData.get("periodStart"),
+    periodEnd: formData.get("periodEnd"),
     amount: formData.get("amount"),
+    warningMode: formData.get("warningMode"),
     warningThresholdBps: formData.get("warningThresholdBps"),
+    warningDaysRemaining: formData.get("warningDaysRemaining"),
   });
 }
 
 function invalidateBudgets() {
   revalidatePath("/budgets");
   revalidatePath("/dashboard");
+}
+
+function warningValues(parsed: {
+  warningMode: "threshold" | "days";
+  warningThresholdBps: number | null;
+  warningDaysRemaining: number | null;
+}) {
+  return {
+    warningThresholdBps:
+      parsed.warningMode === "threshold" ? parsed.warningThresholdBps : null,
+    warningDaysRemaining:
+      parsed.warningMode === "days" ? parsed.warningDaysRemaining : null,
+  };
 }
 
 export async function createBudgetAction(
@@ -35,19 +50,23 @@ export async function createBudgetAction(
   const user = await requireSessionUser();
   const parsed = parse(formData);
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
-  const budgetMonth = budgetMonthToDate(parsed.data.month)!;
+  const warning = warningValues(parsed.data);
   try {
     const result = await createOwnedBudget(db, user.id, {
       categoryId: parsed.data.categoryId,
-      budgetMonth,
+      periodType: parsed.data.periodType,
+      periodStart:
+        parsed.data.periodType === "custom" ? parsed.data.periodStart : null,
+      periodEnd:
+        parsed.data.periodType === "custom" ? parsed.data.periodEnd : null,
       amount: BigInt(parsed.data.amount),
-      warningThresholdBps: parsed.data.warningThresholdBps,
+      ...warning,
     });
     if (!result.ok) {
       return {
         error:
           result.reason === "duplicate"
-            ? "An active budget for that category and month already exists."
+            ? "An active budget for that category already exists."
             : "Expense category is not available.",
       };
     }
@@ -55,7 +74,7 @@ export async function createBudgetAction(
     return { error: "Budget could not be created." };
   }
   invalidateBudgets();
-  redirect("/budgets");
+  return { success: "Budget created." };
 }
 
 export async function updateBudgetAction(
@@ -70,17 +89,24 @@ export async function updateBudgetAction(
       error: parsed.success ? "Budget not found." : parsed.error.issues[0]?.message,
     };
   }
+  const warning = warningValues(parsed.data);
   try {
     const updated = await updateOwnedBudget(db, user.id, id.data, {
+      categoryId: parsed.data.categoryId,
+      periodType: parsed.data.periodType,
+      periodStart:
+        parsed.data.periodType === "custom" ? parsed.data.periodStart : null,
+      periodEnd:
+        parsed.data.periodType === "custom" ? parsed.data.periodEnd : null,
       amount: BigInt(parsed.data.amount),
-      warningThresholdBps: parsed.data.warningThresholdBps,
+      ...warning,
     });
-    if (!updated) return { error: "Active budget not found." };
+    if (!updated) return { error: "Active budget or category is not available." };
   } catch {
     return { error: "Budget could not be updated." };
   }
   invalidateBudgets();
-  redirect("/budgets");
+  return { success: "Budget updated." };
 }
 
 async function setBudgetStatus(
@@ -104,7 +130,7 @@ async function setBudgetStatus(
     return { error: "Budget status could not be updated." };
   }
   invalidateBudgets();
-  return {};
+  return { success: status === "active" ? "Budget restored." : "Budget archived." };
 }
 
 export async function archiveBudgetAction(
