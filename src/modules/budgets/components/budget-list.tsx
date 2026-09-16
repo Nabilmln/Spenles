@@ -21,12 +21,6 @@ const statusLabel = {
   exceeded: "Exceeded",
 };
 
-const statusBadgeClass = {
-  safe: "text-income bg-[color-mix(in_srgb,var(--income)_10%,transparent)]",
-  warning: "text-[#b45309] bg-[color-mix(in_srgb,var(--warning)_16%,transparent)]",
-  exceeded: "text-expense bg-[color-mix(in_srgb,var(--expense)_10%,transparent)]",
-};
-
 function periodSegments(row: BudgetListRow): string[] {
   if (row.periodType === "custom") {
     return row.periodStart && row.periodEnd
@@ -118,25 +112,15 @@ export function BudgetList({
                       </div>
                     </div>
                   </div>
-                  <div className="flex shrink-0 items-start gap-[.4rem]">
-                    <span
-                      className={cn(
-                        "mt-[.15rem] inline-flex min-h-[1.7rem] items-center rounded-full px-[.55rem] py-[.25rem] text-[.7rem] font-medium whitespace-nowrap",
-                        statusBadgeClass[row.budgetStatus],
-                      )}
-                    >
-                      {statusLabel[row.budgetStatus]}
-                    </span>
-                    <button
-                      type="button"
-                      aria-label="Budget actions"
-                      aria-haspopup="dialog"
-                      className="grid size-[2.4rem] shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-surface-subtle"
-                      onClick={() => setActionRow(row)}
-                    >
-                      <MoreHorizontal size={18} aria-hidden="true" />
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    aria-label="Budget actions"
+                    aria-haspopup="dialog"
+                    className="grid size-[2.4rem] shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-surface-subtle"
+                    onClick={() => setActionRow(row)}
+                  >
+                    <MoreHorizontal size={18} aria-hidden="true" />
+                  </button>
                 </header>
 
                 <div className="flex flex-wrap items-baseline justify-end gap-x-[.3rem] gap-y-[.15rem] text-[.76rem]">
@@ -150,7 +134,7 @@ export function BudgetList({
                 </div>
 
                 <div
-                  className="h-[.65rem] overflow-hidden rounded-full bg-surface-subtle"
+                  className="relative h-[1.35rem] overflow-hidden rounded-full bg-surface-subtle"
                   role="progressbar"
                   aria-label={`Budget usage for ${row.categoryName}`}
                   aria-valuemin={0}
@@ -160,7 +144,7 @@ export function BudgetList({
                 >
                   <span
                     className={cn(
-                      "block h-full rounded-[inherit]",
+                      "absolute inset-y-0 left-0",
                       row.budgetStatus === "exceeded"
                         ? "bg-gradient-to-r from-expense to-[#f87171]"
                         : row.budgetStatus === "warning"
@@ -169,6 +153,12 @@ export function BudgetList({
                     )}
                     style={{ width: `${progress}%` }}
                   />
+                  <span
+                    className="pointer-events-none absolute inset-0 flex items-center justify-center text-[.7rem] font-semibold text-white mix-blend-difference"
+                    aria-hidden="true"
+                  >
+                    {statusLabel[row.budgetStatus]}
+                  </span>
                 </div>
               </article>
             </li>
