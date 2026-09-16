@@ -3,13 +3,10 @@
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  pageDescriptionClass,
-  pageHeadingRowClass,
-  pageStackClass,
-} from "@/components/ui/styles";
+import { pageHeadingRowClass, pageStackClass } from "@/components/ui/styles";
 import { BudgetList } from "./budget-list";
 import { BudgetSheet } from "./budget-sheet";
+import type { BudgetCategoryOption } from "./budget-picker-sheets";
 import type { BudgetListRow } from "../queries/budgets";
 
 export function BudgetSection({
@@ -17,23 +14,26 @@ export function BudgetSection({
   categories,
 }: {
   rows: BudgetListRow[];
-  categories: Array<{ id: string; name: string }>;
+  categories: BudgetCategoryOption[];
 }) {
   const [createOpen, setCreateOpen] = useState(false);
   const [editing, setEditing] = useState<BudgetListRow | null>(null);
 
   const editCategories =
     editing && !categories.some((category) => category.id === editing.categoryId)
-      ? [{ id: editing.categoryId, name: editing.categoryName }, ...categories]
+      ? [
+          {
+            id: editing.categoryId,
+            name: editing.categoryName,
+            icon: editing.categoryIcon,
+          },
+          ...categories,
+        ]
       : categories;
 
   return (
     <div className={pageStackClass}>
       <div className={pageHeadingRowClass}>
-        <p className={pageDescriptionClass}>
-          Usage compares expense transactions against each budget period
-          (Asia/Jakarta). A budget repeats automatically each month or week.
-        </p>
         <Button
           type="button"
           className="gap-[.4rem]"

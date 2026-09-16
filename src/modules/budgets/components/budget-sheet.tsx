@@ -2,19 +2,29 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { ChevronRight } from "lucide-react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { Button } from "@/components/ui/button";
 import { AmountInput } from "@/components/ui/amount-input";
 import { CalendarRangeSelector } from "@/components/ui/calendar-range-selector";
-import { Select } from "@/components/ui/select";
 import { useToastActionState } from "@/components/ui/toast";
-import { fieldClass, fieldHintClass, fieldLabelClass } from "@/components/ui/styles";
+import {
+  fieldClass,
+  fieldHintClass,
+  fieldLabelClass,
+  inputClass,
+} from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import {
   createBudgetAction,
   updateBudgetAction,
   type BudgetActionState,
 } from "../actions/budget-actions";
+import {
+  BudgetCategorySheet,
+  BudgetOptionSheet,
+  type BudgetCategoryOption,
+} from "./budget-picker-sheets";
 import type { BudgetListRow, BudgetPeriodType } from "../queries/budgets";
 
 const PERIOD_OPTIONS: Array<{ value: BudgetPeriodType; label: string }> = [
@@ -28,6 +38,20 @@ const WARNING_MODE_OPTIONS = [
   { value: "days", label: "Days left" },
 ] as const;
 
+const THRESHOLD_OPTIONS = [
+  { value: "5000", label: "50%" },
+  { value: "7500", label: "75%" },
+  { value: "8000", label: "80%" },
+  { value: "9000", label: "90%" },
+  { value: "10000", label: "100%" },
+];
+
+const DAYS_OPTIONS = [
+  { value: "1", label: "Last 1 day" },
+  { value: "3", label: "Last 3 days" },
+  { value: "5", label: "Last 5 days" },
+];
+
 function segmentedClass(active: boolean) {
   return cn(
     "flex-1 min-h-[2.6rem] cursor-pointer items-center justify-center rounded-[.7rem] border border-transparent px-[.5rem] py-[.55rem] text-[.82rem] font-medium text-muted transition-[background,color] duration-150",
@@ -37,13 +61,20 @@ function segmentedClass(active: boolean) {
   );
 }
 
+function sheetFieldClass() {
+  return cn(
+    inputClass,
+    "flex min-h-[2.9rem] cursor-pointer items-center justify-between gap-[.5rem] rounded-[.72rem] bg-white! p-[.72rem_.85rem] text-left dark:bg-surface!",
+  );
+}
+
 function BudgetSheetForm({
   initial,
   categories,
   onClose,
 }: {
   initial: BudgetListRow | null;
-  categories: Array<{ id: string; name: string }>;
+  categories: BudgetCategoryOption[];
   onClose: () => void;
 }) {
   const action = initial ? updateBudgetAction : createBudgetAction;
@@ -53,18 +84,25 @@ function BudgetSheetForm({
   >(action, {});
   const router = useRouter();
   const [categoryId, setCategoryId] = useState(initial?.categoryId ?? "");
+  const [categorySheetOpen, setCategorySheetOpen] = useState(false);
   const [periodType, setPeriodType] = useState<BudgetPeriodType>(
     initial?.periodType ?? "monthly",
   );
   const [periodStart, setPeriodStart] = useState(initial?.periodStart ?? "");
   const [periodEnd, setPeriodEnd] = useState(initial?.periodEnd ?? "");
   const [warningMode, setWarningMode] = useState<"threshold" | "days">(
-    initial ? (initial.warningThresholdBps !== null ? "threshold" : "days") : "threshold",
+    initial
+      ? initial.warningThresholdBps !== null
+        ? "threshold"
+        : "days"
+      : "threshold",
   );
   const [threshold, setThreshold] = useState(
     String(initial?.warningThresholdBps ?? 8000),
   );
+  const [thresholdSheetOpen, setThresholdSheetOpen] = useState(false);
   const [days, setDays] = useState(String(initial?.warningDaysRemaining ?? 3));
+  const [daysSheetOpen, setDaysSheetOpen] = useState(false);
 
   useEffect(() => {
     if (!state.success) return;
@@ -73,30 +111,26 @@ function BudgetSheetForm({
   }, [state.success, router, onClose]);
 
   const anyCategory = categories.length > 0;
+  const selectedCategory = categories.find((item) => item.id === categoryId);
 
   return (
     <>
       <form id="budget-sheet-form" action={formAction} className="grid gap-[1.1rem]">
         {initial ? <input type="hidden" name="id" value={initial.id} /> : null}
         <div className={fieldClass}>
-          <label htmlFor="budget-category" className={fieldLabelClass}>
-            Expense category
-          </label>
-          <Select
-            id="budget-category"
-            name="categoryId"
-            aria-label="Expense category"
-            value={categoryId}
-            onChange={(event) => setCategoryId(event.currentTarget.value)}
-            placeholder={anyCategory ? "Pick a category" : undefined}
-            required
+          <span className={fieldLabelClass}>Expense category</span>
+          <button
+            type="button"
+            className={sheetFieldClass()}
+            onClick={() => setCategorySheetOpen(true)}
+            aria-haspopup="dialog"
           >
-            {categories.map((category) => (
-              <option key={category.id} value={category.id}>
-                {category.name}
-              </option>
-            ))}
-          </Select>
+            <span className="min-w-0 truncate">
+              {selectedCategory?.name ?? "Choose Category"}
+            </span>
+            <ChevronRight aria-hidden="true" className="shrink-0 text-muted" size={18} />
+          </button>
+          <input type="hidden" name="categoryId" value={categoryId} />
         </div>
 
         <div className={fieldClass}>
@@ -182,41 +216,37 @@ function BudgetSheetForm({
 
         {warningMode === "threshold" ? (
           <div className={fieldClass}>
-            <label htmlFor="budget-threshold" className={fieldLabelClass}>
-              Warning at percentage used
-            </label>
-            <Select
-              id="budget-threshold"
-              aria-label="Warning percentage"
-              value={threshold}
-              onChange={(event) => setThreshold(event.currentTarget.value)}
-              required
+            <span className={fieldLabelClass}>Warning at percentage used</span>
+            <button
+              type="button"
+              className={sheetFieldClass()}
+              onClick={() => setThresholdSheetOpen(true)}
+              aria-haspopup="dialog"
             >
-              <option value="5000">50%</option>
-              <option value="7500">75%</option>
-              <option value="8000">80%</option>
-              <option value="9000">90%</option>
-              <option value="10000">100%</option>
-            </Select>
+              <span className="min-w-0 truncate">
+                {THRESHOLD_OPTIONS.find((item) => item.value === threshold)?.label ??
+                  "Choose percentage"}
+              </span>
+              <ChevronRight aria-hidden="true" className="shrink-0 text-muted" size={18} />
+            </button>
             <input type="hidden" name="warningThresholdBps" value={threshold} />
             <input type="hidden" name="warningDaysRemaining" value="" />
           </div>
         ) : (
           <div className={fieldClass}>
-            <label htmlFor="budget-days" className={fieldLabelClass}>
-              Warn during last days of the period
-            </label>
-            <Select
-              id="budget-days"
-              aria-label="Days remaining warning"
-              value={days}
-              onChange={(event) => setDays(event.currentTarget.value)}
-              required
+            <span className={fieldLabelClass}>Warn during last days of the period</span>
+            <button
+              type="button"
+              className={sheetFieldClass()}
+              onClick={() => setDaysSheetOpen(true)}
+              aria-haspopup="dialog"
             >
-              <option value="1">Last 1 day</option>
-              <option value="3">Last 3 days</option>
-              <option value="5">Last 5 days</option>
-            </Select>
+              <span className="min-w-0 truncate">
+                {DAYS_OPTIONS.find((item) => item.value === days)?.label ??
+                  "Choose days"}
+              </span>
+              <ChevronRight aria-hidden="true" className="shrink-0 text-muted" size={18} />
+            </button>
             <input type="hidden" name="warningDaysRemaining" value={days} />
             <input type="hidden" name="warningThresholdBps" value="" />
           </div>
@@ -225,12 +255,38 @@ function BudgetSheetForm({
 
       <Button
         form="budget-sheet-form"
-        className="w-full justify-center"
+        className="mt-[1.6rem] w-full justify-center"
         disabled={pending || !anyCategory}
         type="submit"
       >
         {pending ? "Saving..." : initial ? "Save changes" : "Create budget"}
       </Button>
+
+      <BudgetCategorySheet
+        open={categorySheetOpen}
+        onClose={() => setCategorySheetOpen(false)}
+        categories={categories}
+        selectedId={categoryId}
+        onSelect={setCategoryId}
+      />
+      <BudgetOptionSheet
+        open={thresholdSheetOpen}
+        onClose={() => setThresholdSheetOpen(false)}
+        title="Warning percentage"
+        ariaLabel="Select warning percentage"
+        options={THRESHOLD_OPTIONS}
+        selectedValue={threshold}
+        onSelect={setThreshold}
+      />
+      <BudgetOptionSheet
+        open={daysSheetOpen}
+        onClose={() => setDaysSheetOpen(false)}
+        title="Days remaining warning"
+        ariaLabel="Select days remaining warning"
+        options={DAYS_OPTIONS}
+        selectedValue={days}
+        onSelect={setDays}
+      />
     </>
   );
 }
@@ -243,7 +299,7 @@ export function BudgetSheet({
 }: {
   open: boolean;
   onClose: () => void;
-  categories: Array<{ id: string; name: string }>;
+  categories: BudgetCategoryOption[];
   initial: BudgetListRow | null;
 }) {
   return (
