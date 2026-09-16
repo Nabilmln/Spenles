@@ -136,3 +136,17 @@ export async function setOwnedBudgetStatus(
     throw error;
   }
 }
+
+export async function deleteOwnedBudget(
+  database: Database,
+  userId: string,
+  budgetId: string,
+) {
+  const result = await database.execute<ReturnedId>(sql`
+    delete from budgets as budget
+    where budget.id = ${budgetId}::uuid
+      and budget.user_id = ${userId}
+    returning budget.id
+  `);
+  return result.rows[0] ?? null;
+}

@@ -6,6 +6,7 @@ import { requireSessionUser } from "@/lib/auth/require-session";
 import { budgetIdSchema, budgetSchema } from "../schemas/budget";
 import {
   createOwnedBudget,
+  deleteOwnedBudget,
   setOwnedBudgetStatus,
   updateOwnedBudget,
 } from "../services/budget-mutations";
@@ -145,4 +146,21 @@ export async function restoreBudgetAction(
   formData: FormData,
 ) {
   return setBudgetStatus(formData, "active");
+}
+
+export async function deleteBudgetAction(
+  _state: BudgetActionState,
+  formData: FormData,
+): Promise<BudgetActionState> {
+  const user = await requireSessionUser();
+  const id = budgetIdSchema.safeParse(formData.get("id"));
+  if (!id.success) return { error: "Budget not found." };
+  try {
+    const deleted = await deleteOwnedBudget(db, user.id, id.data);
+    if (!deleted) return { error: "Budget not found." };
+  } catch {
+    return { error: "Budget could not be deleted." };
+  }
+  invalidateBudgets();
+  return { success: "Budget deleted." };
 }

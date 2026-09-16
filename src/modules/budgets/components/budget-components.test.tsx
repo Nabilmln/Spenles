@@ -1,9 +1,25 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import {
+  cleanup,
+  fireEvent,
+  render,
+  screen,
+} from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ refresh: vi.fn() }),
+}));
+
+vi.mock("react-dom", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("react-dom")>();
+  return {
+    ...actual,
+    createPortal: (node: React.ReactNode) => node,
+  };
+});
 
 vi.mock("../actions/budget-actions", () => ({
-  archiveBudgetAction: vi.fn(),
-  restoreBudgetAction: vi.fn(),
+  deleteBudgetAction: vi.fn(),
 }));
 import { BudgetList } from "./budget-list";
 
@@ -26,6 +42,8 @@ const monthlyRow = {
   daysRemainingInPeriod: 10,
 };
 
+afterEach(cleanup);
+
 describe("BudgetList", () => {
   it("exposes status text and accessible progress values", () => {
     render(
@@ -37,7 +55,7 @@ describe("BudgetList", () => {
     ).toHaveAttribute("aria-valuetext", "80% used");
   });
 
-  it("shows usage versus amount alongside the period label", () => {
+  it("shows usage versus amount alongside the period badge", () => {
     render(
       <BudgetList rows={[monthlyRow]} onEdit={() => {}} />,
     );
@@ -50,5 +68,21 @@ describe("BudgetList", () => {
     expect(
       screen.getByText(/No budgets yet/i),
     ).toBeInTheDocument();
+  });
+
+  it("opens the action sheet and triggers edit", async () => {
+    const onEdit = vi.fn();
+    render(<BudgetList rows={[monthlyRow]} onEdit={onEdit} />);
+    fireEvent.click(screen.getByRole("button", { name: "Budget actions" }));
+    fireEvent.click(screen.getByRole("button", { name: /Edit Budget/i }));
+    expect(onEdit).toHaveBeenCalledWith(monthlyRow);
+  });
+
+  it("opens a delete confirmation after choosing delete", async () => {
+    render(<BudgetList rows={[monthlyRow]} onEdit={() => {}} />);
+    fireEvent.click(screen.getByRole("button", { name: "Budget actions" }));
+    fireEvent.click(screen.getByRole("button", { name: /Delete Budget/i }));
+    expect(screen.getByRole("alertdialog")).toBeInTheDocument();
+    expect(screen.getByText(/Delete budget\?/i)).toBeInTheDocument();
   });
 });
