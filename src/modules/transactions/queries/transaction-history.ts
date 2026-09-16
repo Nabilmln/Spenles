@@ -8,7 +8,7 @@ import { dateInterval } from "./transaction-search";
 
 export type TransactionHistoryRow = {
   id: string;
-  type: "income" | "expense" | "transfer";
+  type: "income" | "expense";
   amount: string;
   transactionAt: Date;
   note: string | null;
@@ -21,39 +21,19 @@ export type TransactionHistoryRow = {
 
 type RawHistoryRow = {
   id: string;
-  type: "income" | "expense" | "transfer";
+  type: "income" | "expense";
   amount: string;
   at: Date;
   note: string | null;
   category_name: string;
   category_id: string | null;
   category_icon: string | null;
-  source_name: string | null;
-  destination_name: string | null;
 };
 
 function intervalClause(filters: TransactionFilters) {
   const interval = dateInterval(filters);
   if (!interval) return "";
   return `t.transaction_at >= '${interval.start.toISOString()}' and t.transaction_at < '${interval.end.toISOString()}'`;
-}
-
-function transferAllowed(filters: TransactionFilters) {
-  return !filters.type && !filters.category?.length && !filters.account;
-}
-
-function transferWhere(filters: TransactionFilters) {
-  const parts: string[] = [];
-  if (filters.q) {
-    const literal = filters.q.replace(/[\\%_]/gu, "\\$&");
-    parts.push(`r.note ilike '%${literal}%'`);
-  }
-  const interval = dateInterval(filters);
-  if (interval) {
-    parts.push(`r.transferred_at >= '${interval.start.toISOString()}'`);
-    parts.push(`r.transferred_at < '${interval.end.toISOString()}'`);
-  }
-  return parts.length ? ` and ${parts.join(" and ")}` : "";
 }
 
 export async function listTransactionHistory(
@@ -83,54 +63,19 @@ export async function listTransactionHistory(
 
   const result = await database.execute<RawHistoryRow>(sql`
     select
-      transaction_row.id,
-      transaction_row.type,
-      transaction_row.amount,
-      transaction_row.at,
-      transaction_row.note,
-      transaction_row.category_name,
-      transaction_row.category_id,
-      transaction_row.category_icon,
-      transaction_row.source_name,
-      transaction_row.destination_name
-    from (
-      select
-        t.id,
-        t.type::text as type,
-        t.amount::text as amount,
-        t.transaction_at as at,
-        t.note,
-        c.name as category_name,
-        c.id::text as category_id,
-        c.icon::text as category_icon,
-        null::text as source_name,
-        null::text as destination_name
-      from transactions t
-      inner join categories c on c.id = t.category_id and c.user_id = ${userId}
-      inner join accounts a on a.id = t.account_id and a.user_id = ${userId}
-      where t.user_id = ${userId} and ${sql.raw(txWhere)}
-
-      ${transferAllowed(filters) ? sql`
-      union all
-
-      select
-        r.id,
-        'transfer'::text as type,
-        r.amount::text as amount,
-        r.transferred_at as at,
-        r.note,
-        'Transfer' as category_name,
-        null::text as category_id,
-        null::text as category_icon,
-        s.name as source_name,
-        d.name as destination_name
-      from transfers r
-      inner join accounts s on s.id = r.source_account_id and s.user_id = ${userId}
-      inner join accounts d on d.id = r.destination_account_id and d.user_id = ${userId}
-      where r.user_id = ${userId}${sql.raw(transferWhere(filters))}
-      ` : sql``}
-    ) as transaction_row
-    order by transaction_row.at desc, transaction_row.id desc
+      t.id,
+      t.type::text as type,
+      t.amount::text as amount,
+      t.transaction_at as at,
+      t.note,
+      c.name as category_name,
+      c.id::text as category_id,
+      c.icon::text as category_icon
+    from transactions t
+    inner join categories c on c.id = t.category_id and c.user_id = ${userId}
+    inner join accounts a on a.id = t.account_id and a.user_id = ${userId}
+    where t.user_id = ${userId} and ${sql.raw(txWhere)}
+    order by t.transaction_at desc, t.id desc
     limit ${pageSize}
     offset ${offset}
   `);
@@ -144,11 +89,11 @@ export async function listTransactionHistory(
     categoryName: row.category_name,
     categoryId: row.category_id,
     categoryIcon: row.category_icon,
-    sourceAccountName: row.source_name,
-    destinationAccountName: row.destination_name,
+    sourceAccountName: null,
+    destinationAccountName: null,
   }));
 
-  const [txCount, transferCount] = await Promise.all([
+  const [txCount] = await Promise.all([
     database
       .execute<{ count: string }>(sql`
         select count(*)::text as count
@@ -156,17 +101,9 @@ export async function listTransactionHistory(
         inner join categories c on c.id = t.category_id and c.user_id = ${userId}
         where t.user_id = ${userId} and ${sql.raw(txWhere)}
       `),
-    transferAllowed(filters)
-      ? database
-          .execute<{ count: string }>(sql`
-            select count(*)::text as count
-            from transfers r
-            where r.user_id = ${userId}${sql.raw(transferWhere(filters))}
-          `)
-      : Promise.resolve({ rows: [] as { count: string }[] }),
   ]);
 
-  const total = Number(txCount.rows[0]?.count ?? "0") + Number(transferCount.rows[0]?.count ?? "0");
+  const total = Number(txCount.rows[0]?.count ?? "0");
 
   return {
     rows,

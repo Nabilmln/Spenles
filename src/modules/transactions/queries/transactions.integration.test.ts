@@ -263,34 +263,16 @@ describe("transaction search and pagination", () => {
     ).toBe(false);
   });
 
-  it("merges transfers into the unified transaction history", async () => {
+  it("excludes transfers from the unified transaction history", async () => {
     const result = await listTransactionHistory(
       userA,
       { ...baseFilters, q: "" },
       database,
     );
 
-    const transferRow = result.rows.find((row) => row.type === "transfer");
-    expect(transferRow).toBeDefined();
-    expect(transferRow!.sourceAccountName).toBeTruthy();
-    expect(transferRow!.destinationAccountName).toBeTruthy();
-    expect(transferRow!.amount).toBe("50");
-
-    const transfers = result.rows.filter((row) => row.type === "transfer");
-    expect(transfers).toHaveLength(1);
-
-    const times = result.rows.map((row) => row.transactionAt.getTime());
-    const sorted = [...times].sort((a, b) => b - a);
-    expect(times).toEqual(sorted);
-  });
-
-  it("excludes transfers when a type filter is applied", async () => {
-    const result = await listTransactionHistory(
-      userA,
-      { ...baseFilters, q: "", type: "expense" },
-      database,
-    );
-
-    expect(result.rows.some((row) => row.type === "transfer")).toBe(false);
+    expect(result.rows.some((row) => row.amount === "50")).toBe(false);
+    expect(
+      result.rows.every((row) => row.type === "income" || row.type === "expense"),
+    ).toBe(true);
   });
 });

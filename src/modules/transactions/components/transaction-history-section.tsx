@@ -5,7 +5,6 @@ import { useTransition } from "react";
 import { EmptyState } from "@/components/feedback/empty-state";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useToast } from "@/components/ui/toast";
-import { reverseTransferByIdAction } from "@/modules/accounts/actions/transfer-actions";
 import { TransactionCard, type TransactionCardRow } from "@/components/transactions/transaction-card";
 import {
   deleteTransactionHistoryByIdAction,
@@ -136,10 +135,7 @@ export function TransactionHistorySection({
   function confirmDelete() {
     if (!selected) return;
     startTransition(async () => {
-      const ok =
-        selected.type === "transfer"
-          ? (await reverseTransferByIdAction(selected.id)).ok
-          : (await deleteTransactionHistoryByIdAction(selected.id)).ok;
+      const ok = (await deleteTransactionHistoryByIdAction(selected.id)).ok;
       if (ok) {
         toast.success("Transaction deleted successfully.");
         setDeleteOpen(false);
@@ -202,13 +198,13 @@ export function TransactionHistorySection({
       <TransactionActionSheet
         open={actionSheetOpen}
         onClose={() => setActionSheetOpen(false)}
-        canEdit={selected?.type !== "transfer"}
+        canEdit
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
 
       <EditTransactionSheet
-        transactionId={selected?.type === "transfer" ? null : selected?.id ?? null}
+        transactionId={selected?.id ?? null}
         open={editOpen}
         onClose={() => setEditOpen(false)}
         onSaved={resetFromPageOne}
@@ -218,11 +214,7 @@ export function TransactionHistorySection({
         open={deleteOpen}
         onClose={() => setDeleteOpen(false)}
         title="Delete Transaction?"
-        message={
-          selected?.type === "transfer"
-            ? "Are you sure you want to delete this transfer? It will be reversed and removed from your history."
-            : "Are you sure you want to delete this transaction? This cannot be undone."
-        }
+        message="Are you sure you want to delete this transaction? This cannot be undone."
         confirmLabel="Delete"
         pending={isPending}
         onConfirm={confirmDelete}
