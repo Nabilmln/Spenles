@@ -20,7 +20,6 @@ export function CalendarRangeSelector({
   onApply,
   onCancel,
   maxDays = 366,
-  allowFuture = false,
 }: {
   from: string;
   to: string;
@@ -28,7 +27,6 @@ export function CalendarRangeSelector({
   onApply?: (from: string, to: string) => void;
   onCancel?: () => void;
   maxDays?: number;
-  allowFuture?: boolean;
 }) {
   const today = todayJakartaDate();
   const [pendingFrom, setPendingFrom] = useState(from);
@@ -54,7 +52,6 @@ export function CalendarRangeSelector({
   const hasRange = Boolean(pendingFrom && pendingTo);
 
   function handleDayClick(date: string) {
-    if (!allowFuture && date > today) return;
     if (!pendingFrom || pendingTo !== "") {
       setPendingFrom(date);
       setPendingTo("");
@@ -137,7 +134,6 @@ export function CalendarRangeSelector({
               />
             );
           }
-          const isFuture = cell.date > today;
           const isStart = cell.date === pendingFrom;
           const isEnd = cell.date === pendingTo;
           const isInRange =
@@ -145,7 +141,7 @@ export function CalendarRangeSelector({
           const isToday = cell.date === today;
           const inSelection = isStart || isEnd || isInRange;
           const className = [
-            "grid min-h-[2.5rem] place-items-center text-[.88rem] cursor-pointer border border-transparent hover:enabled:bg-primary-50 disabled:cursor-not-allowed disabled:text-muted disabled:opacity-50",
+            "grid min-h-[2.5rem] place-items-center text-[.88rem] cursor-pointer border border-transparent hover:bg-primary-50",
             inSelection
               ? "bg-primary-600 text-white"
               : "bg-surface-subtle text-foreground",
@@ -161,7 +157,6 @@ export function CalendarRangeSelector({
               aria-label={formatDateLong(cell.date)}
               aria-pressed={isStart || isEnd}
               className={className}
-              disabled={!allowFuture && isFuture}
               key={cell.date}
               onClick={() => handleDayClick(cell.date)}
               style={

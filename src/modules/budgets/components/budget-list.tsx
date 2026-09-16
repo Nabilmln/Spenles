@@ -27,19 +27,19 @@ const statusBadgeClass = {
   exceeded: "text-expense bg-[color-mix(in_srgb,var(--expense)_10%,transparent)]",
 };
 
-function periodLabel(row: BudgetListRow) {
+function periodSegments(row: BudgetListRow): string[] {
   if (row.periodType === "custom") {
     return row.periodStart && row.periodEnd
-      ? `Custom · ${formatRangeLong(row.periodStart, row.periodEnd)}`
-      : "Custom";
+      ? [`Custom`, formatRangeLong(row.periodStart, row.periodEnd)]
+      : ["Custom"];
   }
-  const suffix =
-    row.daysRemainingInPeriod !== null && row.daysRemainingInPeriod >= 0
-      ? ` · ${row.daysRemainingInPeriod} day${row.daysRemainingInPeriod === 1 ? "" : "s"} left`
-      : "";
-  return row.periodType === "monthly"
-    ? `Monthly${suffix}`
-    : `Weekly${suffix}`;
+  const segments = [row.periodType === "monthly" ? "Monthly" : "Weekly"];
+  if (row.daysRemainingInPeriod !== null && row.daysRemainingInPeriod >= 0) {
+    segments.push(
+      `${row.daysRemainingInPeriod} day${row.daysRemainingInPeriod === 1 ? "" : "s"} left`,
+    );
+  }
+  return segments;
 }
 
 export function BudgetList({
@@ -95,10 +95,10 @@ export function BudgetList({
             row.categoryIcon,
           );
           return (
-            <li key={row.id}>
+            <li key={row.id} className="min-w-0">
               <article className="card grid min-w-0 gap-[.7rem] rounded-[.9rem] border border-border bg-surface p-[.95rem] shadow-card">
-                <header className="flex items-start justify-between gap-3">
-                  <div className="flex min-w-0 items-center gap-[.8rem]">
+                <header className="flex items-start justify-between gap-2">
+                  <div className="flex min-w-0 items-start gap-[.75rem]">
                     <span className="grid size-[2.6rem] shrink-0 place-items-center rounded-[.8rem] bg-primary-50 text-primary-600">
                       <Icon size={20} aria-hidden="true" />
                     </span>
@@ -106,9 +106,16 @@ export function BudgetList({
                       <h2 className="m-0 truncate text-[.95rem] font-semibold tracking-[-.02em]">
                         {row.categoryName}
                       </h2>
-                      <span className="mt-[.3rem] inline-flex min-h-[1.4rem] max-w-full items-center gap-[.3rem] rounded-full border border-border bg-surface-subtle px-[.5rem] text-[.68rem] font-medium text-muted">
-                        {periodLabel(row)}
-                      </span>
+                      <div className="mt-[.3rem] flex min-w-0 flex-wrap gap-[.3rem]">
+                        {periodSegments(row).map((segment) => (
+                          <span
+                            className="inline-flex min-h-[1.4rem] max-w-full items-center justify-center truncate rounded-full border border-border bg-surface-subtle px-[.5rem] text-[.68rem] font-medium text-muted"
+                            key={segment}
+                          >
+                            {segment}
+                          </span>
+                        ))}
+                      </div>
                     </div>
                   </div>
                   <div className="flex shrink-0 items-start gap-[.4rem]">
