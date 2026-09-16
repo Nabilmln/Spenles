@@ -20,6 +20,7 @@ export function CalendarRangeSelector({
   onApply,
   onCancel,
   maxDays = 366,
+  allowFuture = false,
 }: {
   from: string;
   to: string;
@@ -27,6 +28,7 @@ export function CalendarRangeSelector({
   onApply?: (from: string, to: string) => void;
   onCancel?: () => void;
   maxDays?: number;
+  allowFuture?: boolean;
 }) {
   const today = todayJakartaDate();
   const [pendingFrom, setPendingFrom] = useState(from);
@@ -52,7 +54,7 @@ export function CalendarRangeSelector({
   const hasRange = Boolean(pendingFrom && pendingTo);
 
   function handleDayClick(date: string) {
-    if (date > today) return;
+    if (!allowFuture && date > today) return;
     if (!pendingFrom || pendingTo !== "") {
       setPendingFrom(date);
       setPendingTo("");
@@ -159,7 +161,7 @@ export function CalendarRangeSelector({
               aria-label={formatDateLong(cell.date)}
               aria-pressed={isStart || isEnd}
               className={className}
-              disabled={isFuture}
+              disabled={!allowFuture && isFuture}
               key={cell.date}
               onClick={() => handleDayClick(cell.date)}
               style={

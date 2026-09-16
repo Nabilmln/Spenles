@@ -173,6 +173,7 @@ function BudgetSheetForm({
                 setPeriodEnd(to);
               }}
               maxDays={366}
+              allowFuture
             />
             <input type="hidden" name="periodStart" value={periodStart} />
             <input type="hidden" name="periodEnd" value={periodEnd} />
