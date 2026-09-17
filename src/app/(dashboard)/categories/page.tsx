@@ -1,5 +1,5 @@
 import { requireSessionUser } from "@/lib/auth/require-session";
-import { pageDescriptionClass, pageStackClass } from "@/components/ui/styles";
+import { pageStackClass } from "@/components/ui/styles";
 import {
   CategoryManager,
   listCategories,
@@ -23,7 +23,6 @@ export default async function CategoriesPage() {
   }));
   return (
     <div className={pageStackClass}>
-      <p className={pageDescriptionClass}>Archived categories remain attached to past transactions.</p>
       <CategoryManager categories={categories} deletableIds={deletableIds} />
     </div>
   );

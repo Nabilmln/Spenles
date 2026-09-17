@@ -77,20 +77,20 @@ describe("category manager", () => {
     expect(screen.getByRole("button", { name: "Actions for Transportasi" })).toBeInTheDocument();
   });
 
-  it("opens the action menu with edit, archive and delete items", () => {
+  it("opens the action sheet with edit, archive and delete items", () => {
     renderManager([expense()]);
     fireEvent.click(screen.getByRole("button", { name: "Actions for Makanan" }));
 
-    expect(screen.getByRole("menu")).toBeInTheDocument();
-    expect(screen.getByRole("menuitem", { name: "Edit category" })).toBeInTheDocument();
-    expect(screen.getByRole("menuitem", { name: /Archive/ })).toBeInTheDocument();
-    expect(screen.getByRole("menuitem", { name: "Delete" })).toBeInTheDocument();
+    expect(screen.getByRole("dialog", { name: "Category actions" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Edit category" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /Archive/ })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Delete" })).toBeInTheDocument();
   });
 
-  it("opens the edit sheet from the action menu", () => {
+  it("opens the edit sheet from the action sheet", () => {
     renderManager([expense()]);
     fireEvent.click(screen.getByRole("button", { name: "Actions for Makanan" }));
-    fireEvent.click(screen.getByRole("menuitem", { name: "Edit category" }));
+    fireEvent.click(screen.getByRole("button", { name: "Edit category" }));
 
     expect(screen.getByRole("dialog", { name: "Edit category" })).toBeInTheDocument();
   });
@@ -98,7 +98,7 @@ describe("category manager", () => {
   it("shows a permanent delete confirmation only when deletable", () => {
     renderManager([expense({ isDefault: false })], new Set(["exp-1"]));
     fireEvent.click(screen.getByRole("button", { name: "Actions for Makanan" }));
-    fireEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
+    fireEvent.click(screen.getByRole("button", { name: "Delete" }));
 
     expect(screen.getByRole("dialog", { name: "Delete category?" })).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Delete permanently" })).toBeInTheDocument();
@@ -107,7 +107,7 @@ describe("category manager", () => {
   it("does not allow permanent delete for a referenced or default category", () => {
     renderManager([expense()], new Set());
     fireEvent.click(screen.getByRole("button", { name: "Actions for Makanan" }));
-    fireEvent.click(screen.getByRole("menuitem", { name: "Delete" }));
+    fireEvent.click(screen.getByRole("button", { name: "Delete" }));
 
     const dialog = screen.getByRole("dialog", { name: "Delete category?" });
     expect(screen.queryByRole("button", { name: "Delete permanently" })).not.toBeInTheDocument();
