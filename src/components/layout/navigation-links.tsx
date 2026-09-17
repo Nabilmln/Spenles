@@ -7,7 +7,6 @@ import {
   Home,
   ListTree,
   ReceiptText,
-  Repeat2,
   Target,
   UserRound,
   UsersRound,
@@ -25,7 +24,6 @@ const links = [
   { href: "/accounts", label: "Accounts", icon: WalletCards },
   { href: "/categories", label: "Categories", icon: ListTree },
   { href: "/budgets", label: "Budgets", icon: Target },
-  { href: "/recurring-transactions", label: "Recurring", icon: Repeat2 },
   { href: "/split-bills", label: "Split Bill", icon: UsersRound },
   { href: "/reports", label: "Reports", icon: FileBarChart },
 ];

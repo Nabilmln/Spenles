@@ -111,39 +111,6 @@ export async function getPersonalDataBackupJson(
           from budgets as owned_budget
           where owned_budget.user_id = ${userId}
         ), '[]'::jsonb),
-        'recurringRules', coalesce((
-          select jsonb_agg(jsonb_build_object(
-            'id', owned_rule.id,
-            'type', owned_rule.type,
-            'amountIdr', owned_rule.amount::text,
-            'accountId', owned_rule.account_id,
-            'categoryId', owned_rule.category_id,
-            'frequency', owned_rule.frequency,
-            'startAt', owned_rule.start_at,
-            'endDate', owned_rule.end_date,
-            'nextOccurrenceAt', owned_rule.next_occurrence_at,
-            'status', owned_rule.status,
-            'pauseReason', owned_rule.pause_reason,
-            'note', owned_rule.note,
-            'lastFailureCode', owned_rule.last_failure_code,
-            'lastFailureAt', owned_rule.last_failure_at,
-            'createdAt', owned_rule.created_at,
-            'updatedAt', owned_rule.updated_at
-          ) order by owned_rule.created_at, owned_rule.id)
-          from recurring_rules as owned_rule
-          where owned_rule.user_id = ${userId}
-        ), '[]'::jsonb),
-        'recurringGenerations', coalesce((
-          select jsonb_agg(jsonb_build_object(
-            'id', owned_generation.id,
-            'recurringRuleId', owned_generation.recurring_rule_id,
-            'scheduledFor', owned_generation.scheduled_for,
-            'transactionId', owned_generation.transaction_id,
-            'generatedAt', owned_generation.generated_at
-          ) order by owned_generation.generated_at, owned_generation.id)
-          from recurring_generations as owned_generation
-          where owned_generation.user_id = ${userId}
-        ), '[]'::jsonb),
         'splitBills', coalesce((
           select jsonb_agg(jsonb_build_object(
             'id', owned_bill.id,
@@ -324,8 +291,6 @@ export async function getPersonalDataBackupRecordCount(
       + (select count(*) from transactions where user_id = ${userId})
       + (select count(*) from transfers where user_id = ${userId})
       + (select count(*) from budgets where user_id = ${userId})
-      + (select count(*) from recurring_rules where user_id = ${userId})
-      + (select count(*) from recurring_generations where user_id = ${userId})
       + (select count(*) from split_bills where user_id = ${userId})
       + (select count(*) from split_bill_participants where user_id = ${userId})
       + (select count(*) from split_bill_items where user_id = ${userId})

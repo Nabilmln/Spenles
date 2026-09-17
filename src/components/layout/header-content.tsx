@@ -31,10 +31,6 @@ function resolveMeta(pathname: string): HeaderMeta {
 
   if (path === "/categories") return { title: "Categories", back: "/dashboard" };
 
-  if (path === "/recurring-transactions/new") return { title: "Add recurring transaction", back: "/recurring-transactions" };
-  if (/^\/recurring-transactions\/.+\/edit$/.test(path)) return { title: "Edit recurring transaction", back: "/recurring-transactions" };
-  if (path === "/recurring-transactions") return { title: "Recurring Transactions", back: "/dashboard" };
-
   if (path === "/split-bills/new") return { title: "Create split bill", back: "/split-bills" };
   if (/^\/split-bills\/.+\/edit$/.test(path)) return { title: "Edit split bill", back: "/split-bills" };
   if (/^\/split-bills\/.+$/.test(path)) return { title: "Split bill details", back: "/split-bills" };

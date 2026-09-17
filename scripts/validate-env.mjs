@@ -23,7 +23,6 @@ export function validateReleaseEnvironment(source) {
   const database = required(source, "DATABASE_URL", issues);
   const authUrlValue = required(source, "NEON_AUTH_BASE_URL", issues);
   const cookieSecret = required(source, "NEON_AUTH_COOKIE_SECRET", issues);
-  const cronSecret = required(source, "CRON_SECRET", issues);
   const appName = required(source, "NEXT_PUBLIC_APP_NAME", issues);
   const appUrlValue = required(source, "NEXT_PUBLIC_APP_URL", issues);
   const production =
@@ -44,14 +43,10 @@ export function validateReleaseEnvironment(source) {
   if (cookieSecret && cookieSecret.length < 32) {
     issues.push("NEON_AUTH_COOKIE_SECRET kurang dari 32 karakter");
   }
-  if (cronSecret && cronSecret.length < 32) {
-    issues.push("CRON_SECRET kurang dari 32 karakter");
-  }
   for (const [name, value] of [
     ["DATABASE_URL", database],
     ["NEON_AUTH_BASE_URL", authUrlValue],
     ["NEON_AUTH_COOKIE_SECRET", cookieSecret],
-    ["CRON_SECRET", cronSecret],
     ["NEXT_PUBLIC_APP_URL", appUrlValue],
   ]) {
     if (value && PLACEHOLDER.test(value)) issues.push(`${name} masih placeholder`);

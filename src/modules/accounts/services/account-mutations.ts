@@ -103,20 +103,6 @@ export async function setOwnedAccountStatus(
             and alternative.id <> account.id
         )
       returning account.id
-    ),
-    paused_rules as (
-      update recurring_rules as rule
-      set
-        status = 'paused',
-        pause_reason = 'blocked_account',
-        last_failure_code = 'blocked_account',
-        last_failure_at = now(),
-        updated_at = now()
-      from archived_account
-      where rule.user_id = ${userId}
-        and rule.account_id = archived_account.id
-        and rule.status = 'active'
-      returning rule.id
     )
     select id from archived_account
   `);
@@ -146,12 +132,6 @@ export async function deleteOwnedAccount(
             transfer.source_account_id = ${accountId}::uuid
             or transfer.destination_account_id = ${accountId}::uuid
           )
-      )
-      + (
-        select count(*)
-        from recurring_rules as rule
-        where rule.user_id = ${userId}
-          and rule.account_id = ${accountId}::uuid
       )
     )::text as count
   `);

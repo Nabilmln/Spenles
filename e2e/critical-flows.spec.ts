@@ -53,7 +53,6 @@ test("authentication, private navigation, transaction, and exports", async ({
     "/transfers",
     "/categories",
     "/budgets",
-    "/recurring-transactions",
     "/split-bills",
     "/reports",
   ]) {

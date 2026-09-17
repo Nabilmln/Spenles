@@ -58,7 +58,6 @@ describe("ServicesSection", () => {
       "Accounts",
       "Budgets",
       "Categories",
-      "Recurring",
       "Reports",
       "Split Bill",
       "Transactions",

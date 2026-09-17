@@ -34,28 +34,11 @@ export async function setOwnedCategoryStatus(
   try {
     if (status === "archived") {
       const result = await database.execute<{ id: string }>(sql`
-        with archived_category as (
-          update categories
-          set status = 'archived', updated_at = now()
-          where id = ${categoryId}::uuid
-            and user_id = ${userId}
-          returning id
-        ),
-        paused_rules as (
-          update recurring_rules as rule
-          set
-            status = 'paused',
-            pause_reason = 'blocked_category',
-            last_failure_code = 'blocked_category',
-            last_failure_at = now(),
-            updated_at = now()
-          from archived_category
-          where rule.user_id = ${userId}
-            and rule.category_id = archived_category.id
-            and rule.status = 'active'
-          returning rule.id
-        )
-        select id from archived_category
+        update categories
+        set status = 'archived', updated_at = now()
+        where id = ${categoryId}::uuid
+          and user_id = ${userId}
+        returning id
       `);
       return result.rows[0]
         ? { ok: true as const, id: result.rows[0].id }
@@ -89,8 +72,6 @@ export async function isOwnedCategoryReferenced(
         (select count(*) from transactions
           where user_id = ${userId} and category_id = ${categoryId}::uuid)
         + (select count(*) from budgets
-          where user_id = ${userId} and category_id = ${categoryId}::uuid)
-        + (select count(*) from recurring_rules
           where user_id = ${userId} and category_id = ${categoryId}::uuid)
       )::text as total
   `);

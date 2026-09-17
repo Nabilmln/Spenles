@@ -113,7 +113,6 @@ describe("HeaderContent edit-route title resolution", () => {
     ["/transactions/abc123/edit", "Edit transaction"],
     ["/accounts/abc123/edit", "Edit account"],
     ["/budgets/abc123/edit", "Edit budget"],
-    ["/recurring-transactions/abc123/edit", "Edit recurring transaction"],
     ["/split-bills/abc123/edit", "Edit split bill"],
   ];
 

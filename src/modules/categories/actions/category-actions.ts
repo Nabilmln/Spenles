@@ -52,7 +52,6 @@ export async function createCategoryAction(
   revalidatePath("/categories");
   revalidatePath("/transactions");
   revalidatePath("/budgets");
-  revalidatePath("/recurring-transactions");
   revalidatePath("/dashboard");
   return { success: "Category created successfully." };
 }
@@ -89,7 +88,6 @@ export async function updateCategoryAction(
   revalidatePath("/categories");
   revalidatePath("/transactions");
   revalidatePath("/budgets");
-  revalidatePath("/recurring-transactions");
   revalidatePath("/dashboard");
   return { success: "Category updated successfully." };
 }
@@ -113,7 +111,6 @@ async function setCategoryStatus(
   revalidatePath("/categories");
   revalidatePath("/transactions");
   revalidatePath("/budgets");
-  revalidatePath("/recurring-transactions");
   revalidatePath("/dashboard");
   return {};
 }
@@ -142,7 +139,7 @@ export async function deleteCategoryAction(
   const referenced = await isOwnedCategoryReferenced(db, user.id, id.data);
   if (referenced) {
     return {
-      error: "Category cannot be deleted because it is still used by transactions, budgets, or recurring rules. Archive it instead.",
+      error: "Category cannot be deleted because it is still used by transactions or budgets. Archive it instead.",
     };
   }
   const deleted = await deleteOwnedCategory(db, user.id, id.data);
@@ -150,7 +147,6 @@ export async function deleteCategoryAction(
   revalidatePath("/categories");
   revalidatePath("/transactions");
   revalidatePath("/budgets");
-  revalidatePath("/recurring-transactions");
   revalidatePath("/dashboard");
   return { success: "Category deleted successfully." };
 }

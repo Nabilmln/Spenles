@@ -26,7 +26,6 @@ function invalidateAccounts(accountId?: string) {
   revalidatePath("/accounts");
   if (accountId) revalidatePath(`/accounts/${accountId}`);
   revalidatePath("/transactions");
-  revalidatePath("/recurring-transactions");
   revalidatePath("/dashboard");
 }
 

@@ -38,11 +38,6 @@ export async function listDeletableCategoryIds(
         where reference_budget.user_id = ${userId}
           and reference_budget.category_id = owned_category.id
       )
-      and not exists (
-        select 1 from recurring_rules as reference_rule
-        where reference_rule.user_id = ${userId}
-          and reference_rule.category_id = owned_category.id
-      )
   `);
   return new Set(rows.rows.map((row) => row.category_id));
 }

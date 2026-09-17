@@ -364,7 +364,7 @@ function CategoryDeleteSheet({
         </div>
         <p>
           {deletable
-            ? `Category "${item.name}" will be permanently deleted and cannot be restored. This action only applies because the category is not yet used by transactions, budgets, or recurring rules.`
+            ? `Category "${item.name}" will be permanently deleted and cannot be restored. This action only applies because the category is not yet used by transactions or budgets.`
             : `Category "${item.name}" cannot be permanently deleted. Archive the category to hide it while keeping its transaction history.`}
         </p>
         {deletable ? (

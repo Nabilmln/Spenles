@@ -28,8 +28,6 @@ menampilkan data terbaru.
 - **Banyak akun/wallet IDR** dengan saldo otoritatif dan transfer internal
   antar-akun.
 - **Anggaran kategori bulanan** dan pemantauan pemakaian.
-- **Transaksi berulang** dengan scheduler idempotent dan peringatan dalam
-  aplikasi.
 - **Split bill** dengan rincian tanggung jawab per orang yang deterministik:
   subtotal, diskon, pajak, service charge, dan total final yang tersimpan
   sebagai snapshot bernomor versi.
@@ -84,8 +82,7 @@ menampilkan data terbaru.
   eksternal yang aman.
 - **Pengujian berlapis**: unit test (Vitest), integration test terisolasi
   (Neon branch), dan E2E (Playwright + aksesibilitas).
-- **Deployment serverless dan scheduler**: Vercel, Vercel Cron yang
-  fail-closed, dan validasi environment saat rilis.
+- **Deployment serverless**: Vercel dan validasi environment saat rilis.
 
 ## Tech stack
 
@@ -120,8 +117,6 @@ Isi `.env.local`:
 - `DATABASE_URL` — koneksi PostgreSQL server-only
 - `NEON_AUTH_BASE_URL` — endpoint Neon Auth
 - `NEON_AUTH_COOKIE_SECRET` — rahasia acak minimal 32 karakter
-- `CRON_SECRET` — rahasia server-only minimal 32 karakter (diwajibkan saat
-  rilis; endpoint cron mengembalikan 401 jika kosong)
 - `NEXT_PUBLIC_APP_URL` — URL aplikasi
 
 ```bash
@@ -172,13 +167,8 @@ file tersebut.
    ```
 
 4. Pastikan `npm run validate:env` lolos dengan environment rilis.
-5. Scheduler transaksi berulang memanggil `GET /api/cron/recurring-transactions`
-   setiap jam sesuai `vercel.json`, memakai `Authorization: Bearer CRON_SECRET`.
-   Simpan `CRON_SECRET` (minimal 32 karakter) di environment Vercel:
-
-   ```bash
-   node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"
-   ```
+5. Pastikan `vercel.json` tidak memicu cron yang sudah tidak dipakai. Fitur
+   transaksi berulang telah dihapus dan tidak memiliki endpoint cron lagi.
 
 Catatan: jadwal Vercel Cron berjalan dalam UTC sedangkan aplikasi memakai
 timezone Asia/Jakarta. Jangan commit `.env.local` / `.env.e2e.local`.

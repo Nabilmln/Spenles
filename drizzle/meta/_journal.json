@@ -71,6 +71,13 @@
       "when": 1789561339608,
       "tag": "0009_budget-drop-month-rule-based-unique-index",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1789639415803,
+      "tag": "0010_sudden_spirit",
+      "breakpoints": true
     }
   ]
 }

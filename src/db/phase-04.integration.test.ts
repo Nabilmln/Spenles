@@ -1,11 +1,9 @@
 import { randomUUID } from "node:crypto";
-import { and, count, eq, inArray, sql } from "drizzle-orm";
+import { eq, inArray, sql } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import {
   categories,
   profiles,
-  recurringGenerations,
-  transactions,
   transfers,
 } from "@/db/schema";
 import { ensureUserFoundationWithDatabase } from "@/modules/onboarding/services/ensure-user-foundation";
@@ -29,9 +27,6 @@ import {
 import { listOwnedBudgets, getOwnedBudget } from "@/modules/budgets/queries/budgets";
 import { createOwnedTransaction, softDeleteOwnedTransaction } from "@/modules/transactions/services/transaction-mutations";
 import { todayJakartaDate } from "@/lib/dates/calendar";
-import { createOwnedRecurringRule } from "@/modules/recurring-transactions/services/recurring-mutations";
-import { getOwnedRecurringRule } from "@/modules/recurring-transactions/queries/recurring-rules";
-import { generateOccurrence } from "@/modules/recurring-transactions/services/generate-occurrence";
 import { getSelectedAndPreviousTotals } from "@/modules/dashboard/queries/dashboard-queries";
 import { getTestDatabase } from "@/test/database";
 
@@ -116,15 +111,11 @@ describe("Phase 04 financial domains", () => {
       where schemaname = 'public'
         and indexname in (
           'budgets_user_category_active_uidx',
-          'transfers_reversal_of_uidx',
-          'recurring_generations_rule_scheduled_uidx',
-          'recurring_rules_due_idx'
+          'transfers_reversal_of_uidx'
         )
     `);
     expect(indexes.rows.map((row) => row.indexname).sort()).toEqual([
       "budgets_user_category_active_uidx",
-      "recurring_generations_rule_scheduled_uidx",
-      "recurring_rules_due_idx",
       "transfers_reversal_of_uidx",
     ]);
 
@@ -138,7 +129,6 @@ describe("Phase 04 financial domains", () => {
         'budgets_warning_threshold_valid',
         'budgets_warning_days_valid',
         'budgets_period_dates_valid',
-        'recurring_rules_category_owner_type_fk',
         'transfers_source_account_owner_fk',
         'transfers_destination_account_owner_fk'
       )
@@ -150,7 +140,6 @@ describe("Phase 04 financial domains", () => {
       "budgets_warning_days_valid",
       "budgets_warning_mode_exclusive",
       "budgets_warning_threshold_valid",
-      "recurring_rules_category_owner_type_fk",
       "transfers_destination_account_owner_fk",
       "transfers_source_account_owner_fk",
     ]);
@@ -420,130 +409,6 @@ describe("Phase 04 financial domains", () => {
 
     expect(getOwnedBudget(userA, "00000000-0000-4000-8000-000000000000", database))
       .resolves.toBeNull();
-  });
-
-  it("rejects a recurring rule with another user's account", async () => {
-    await expect(
-      createOwnedRecurringRule(database, userA, {
-        type: "expense",
-        amount: 1n,
-        accountId: foreignAccount,
-        categoryId: expenseCategory,
-        frequency: "daily",
-        startAt: new Date("2026-08-01T00:00:00Z"),
-        endDate: null,
-        nextOccurrenceAt: new Date("2026-08-02T00:00:00Z"),
-        note: null,
-      }),
-    ).resolves.toBeNull();
-  });
-
-  it("returns only the requested recurring rule owned by the user", async () => {
-    const owned = await createOwnedRecurringRule(database, userA, {
-      type: "income",
-      amount: 444n,
-      accountId: accountA,
-      categoryId: incomeCategory,
-      frequency: "daily",
-      startAt: new Date("2026-09-01T00:00:00Z"),
-      endDate: null,
-      nextOccurrenceAt: new Date("2026-09-02T00:00:00Z"),
-      note: "Milik A",
-    });
-    expect(owned).not.toBeNull();
-
-    const own = await getOwnedRecurringRule(userA, owned!.id, database);
-    expect(own?.id).toBe(owned!.id);
-    expect(own?.amount).toBe("444");
-
-    const foreign = await createOwnedRecurringRule(database, userB, {
-      type: "expense",
-      amount: 55n,
-      accountId: foreignAccount,
-      categoryId: foreignExpenseCategory,
-      frequency: "weekly",
-      startAt: new Date("2026-09-01T00:00:00Z"),
-      endDate: null,
-      nextOccurrenceAt: new Date("2026-09-08T00:00:00Z"),
-      note: "Milik B",
-    });
-    expect(foreign).not.toBeNull();
-
-    const crossRead = await getOwnedRecurringRule(userA, foreign!.id, database);
-    expect(crossRead).toBeNull();
-
-    const reverse = await getOwnedRecurringRule(userB, owned!.id, database);
-    expect(reverse).toBeNull();
-
-    expect(
-      getOwnedRecurringRule(
-        userA,
-        "00000000-0000-4000-8000-000000000000",
-        database,
-      ),
-    ).resolves.toBeNull();
-  });
-
-  it("generates one transaction and marker under concurrent calls", async () => {
-    const scheduledFor = new Date("2026-08-01T00:00:00Z");
-    const created = await createOwnedRecurringRule(database, userA, {
-      type: "income",
-      amount: 333n,
-      accountId: accountA,
-      categoryId: incomeCategory,
-      frequency: "daily",
-      startAt: scheduledFor,
-      endDate: "2026-08-01",
-      nextOccurrenceAt: scheduledFor,
-      note: "Terjadwal",
-    });
-    const due = {
-      id: created!.id,
-      userId: userA,
-      startAt: scheduledFor,
-      endDate: "2026-08-01",
-      frequency: "daily" as const,
-      scheduledFor,
-    };
-    const results = await Promise.all([
-      generateOccurrence(database, due, null, new Date("2026-08-02T00:00:00Z")),
-      generateOccurrence(database, due, null, new Date("2026-08-02T00:00:00Z")),
-    ]);
-    expect(results.map((result) => result.status).sort()).toEqual([
-      "duplicate",
-      "generated",
-    ]);
-    const [generationCount, transactionCount] = await Promise.all([
-      database
-        .select({ value: count() })
-        .from(recurringGenerations)
-        .where(eq(recurringGenerations.recurringRuleId, created!.id)),
-      database
-        .select({ value: count() })
-        .from(transactions)
-        .where(
-          and(
-            eq(transactions.userId, userA),
-            eq(transactions.note, "Terjadwal"),
-          ),
-        ),
-    ]);
-    expect(generationCount[0]?.value).toBe(1);
-    expect(transactionCount[0]?.value).toBe(1);
-  });
-
-  it("keeps occurrence uniqueness after generated transaction deletion", async () => {
-    const generation = await database.query.recurringGenerations.findFirst({
-      where: eq(recurringGenerations.userId, userA),
-      orderBy: (table, { desc }) => [desc(table.generatedAt)],
-    });
-    expect(generation).toBeDefined();
-    await softDeleteOwnedTransaction(database, userA, generation!.transactionId);
-    const marker = await database
-      .select()
-      .from(recurringGenerations)
-      .where(eq(recurringGenerations.id, generation!.id));
-    expect(marker).toHaveLength(1);
   });
 
   it("aggregates net savings from transfers into savings-designated accounts", async () => {
