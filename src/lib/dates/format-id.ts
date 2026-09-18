@@ -15,6 +15,21 @@ export const MONTHS_LONG = [
   "December",
 ] as const;
 
+export const MONTHS_SHORT = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+] as const;
+
 const WEEKDAYS = [
   "Sunday",
   "Monday",
@@ -72,6 +87,24 @@ export function formatRangeLong(from: string, to: string) {
     return `${formatDateLongNoYear(from)} – ${formatDateLong(to)}`;
   }
   return `${formatDateLong(from)} – ${formatDateLong(to)}`;
+}
+
+/**
+ * Formats an inclusive ISO date range using abbreviated month names.
+ * Same year:  "1 Aug – 31 Aug 2026"
+ * Cross year: "20 Dec 2026 – 10 Jan 2027"
+ */
+export function formatRangeShort(from: string, to: string) {
+  const start = parseDateKey(from);
+  const end = parseDateKey(to);
+  if (!start || !end) return `${from} – ${to}`;
+  if (from === to) {
+    return `${start.day} ${MONTHS_SHORT[start.month - 1]} ${start.year}`;
+  }
+  if (start.year === end.year) {
+    return `${start.day} ${MONTHS_SHORT[start.month - 1]} – ${end.day} ${MONTHS_SHORT[end.month - 1]} ${end.year}`;
+  }
+  return `${start.day} ${MONTHS_SHORT[start.month - 1]} ${start.year} – ${end.day} ${MONTHS_SHORT[end.month - 1]} ${end.year}`;
 }
 
 /**

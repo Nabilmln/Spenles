@@ -70,7 +70,7 @@ describe("report toolbar", () => {
   it("shows the current range and opens the range sheet", () => {
     render(<ReportToolbar from="2026-08-01" to="2026-08-07" pdfHref="/pdf" csvHref="/csv" />);
 
-    expect(screen.getByText("1 August – 7 August 2026")).toBeInTheDocument();
+    expect(screen.getByText("1 Aug – 7 Aug 2026")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /Select date range/ }));
     expect(screen.getByRole("dialog", { name: "Select date range" })).toBeInTheDocument();
   });

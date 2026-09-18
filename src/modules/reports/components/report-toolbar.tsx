@@ -11,7 +11,7 @@ import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { CalendarRangeSelector } from "@/components/ui/calendar-range-selector";
 import { buttonClass } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
-import { formatReportRange } from "../lib/report-date";
+import { formatReportRange, formatReportRangeShort } from "../lib/report-date";
 
 type Sheet = "none" | "range" | "export";
 
@@ -31,6 +31,7 @@ export function ReportToolbar({
 }) {
   const [sheet, setSheet] = useState<Sheet>("none");
   const rangeLabel = formatReportRange(from, to);
+  const rangeLabelShort = formatReportRangeShort(from, to);
 
   function applyRange(nextFrom: string, nextTo: string) {
     setSheet("none");
@@ -60,7 +61,7 @@ export function ReportToolbar({
               Select date
             </span>
             <span className="leading-snug text-[.84rem] font-semibold [overflow-wrap:anywhere]">
-              {rangeLabel}
+              {rangeLabelShort}
             </span>
           </span>
           <ChevronDown aria-hidden="true" className="shrink-0 text-muted" size={16} />

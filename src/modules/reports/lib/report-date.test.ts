@@ -4,6 +4,7 @@ import {
   buildMonthGrid,
   daysInMonth,
   formatReportRange,
+  formatReportRangeShort,
   inclusiveDayCount,
   isReportDate,
   isValidReportRange,
@@ -46,6 +47,18 @@ it("formats compact ranges across year boundaries", () => {
     );
     expect(formatReportRange("2026-12-20", "2027-01-10")).toBe(
       "20 December 2026 – 10 January 2027",
+    );
+  });
+
+  it("formats ranges with abbreviated month names", () => {
+    expect(formatReportRangeShort("2026-08-01", "2026-08-31")).toBe(
+      "1 Aug – 31 Aug 2026",
+    );
+    expect(formatReportRangeShort("2026-08-07", "2026-08-07")).toBe(
+      "7 Aug 2026",
+    );
+    expect(formatReportRangeShort("2026-12-20", "2027-01-10")).toBe(
+      "20 Dec 2026 – 10 Jan 2027",
     );
   });
 
