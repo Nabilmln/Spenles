@@ -30,8 +30,7 @@ describe("compact report summary", () => {
       />,
     );
     const net = container.querySelectorAll("strong")[2] as HTMLElement;
-    expect(net.textContent).toMatch(/Rp\s*50\.000/u);
-    expect(net.className).toContain("text-expense");
+    expect(net.textContent).toMatch(/−\s*Rp\s*50\.000/u);
   });
 
   it("marks a positive net difference as surplus", () => {
@@ -42,7 +41,7 @@ describe("compact report summary", () => {
     );
     const net = container.querySelectorAll("strong")[2] as HTMLElement;
     expect(net.textContent).toMatch(/Rp\s*1\.000/u);
-    expect(net.className).toContain("text-income");
+    expect(net.textContent).not.toContain("−");
   });
 });
 

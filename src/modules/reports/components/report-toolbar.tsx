@@ -56,10 +56,12 @@ export function ReportToolbar({
             <CalendarRange aria-hidden="true" size={18} />
           </span>
           <span className="grid min-w-0 flex-1 gap-[.05rem]">
-            <span className="truncate text-[.66rem] font-semibold uppercase tracking-[.06em] text-muted">
+            <span className="text-[.66rem] font-semibold uppercase tracking-[.06em] text-muted">
               Select date
             </span>
-            <span className="truncate text-[.84rem] font-semibold">{rangeLabel}</span>
+            <span className="leading-snug text-[.84rem] font-semibold [overflow-wrap:anywhere]">
+              {rangeLabel}
+            </span>
           </span>
           <ChevronDown aria-hidden="true" className="shrink-0 text-muted" size={16} />
         </button>

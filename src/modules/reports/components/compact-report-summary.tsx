@@ -14,32 +14,30 @@ const cardCellClass = cn(
 );
 const labelClass = "m-0 text-[.68rem] font-medium text-foreground";
 const valueClass =
-  "wrap-anywhere text-[.65rem] tracking-[-.01em] [overflow-wrap:anywhere]";
+  "wrap-anywhere text-[.65rem] tracking-[-.01em] text-foreground [overflow-wrap:anywhere]";
+
+function nominal(value: bigint) {
+  return value < 0n ? `− ${formatIdr(-value)}` : formatIdr(value);
+}
 
 export function CompactReportSummary({
   totals,
 }: {
   totals: ReportTotals;
 }) {
-  const net = BigInt(totals.netIdr);
-  const netClass = net > 0n ? "text-income" : net < 0n ? "text-expense" : "";
   return (
     <section aria-label="Period overview" className="grid grid-cols-3 gap-[.4rem]">
       <article className={cardCellClass}>
         <p className={labelClass}>Income</p>
-        <strong className={cn(valueClass, "text-income")}>
-          +{formatIdr(totals.incomeIdr)}
-        </strong>
+        <strong className={valueClass}>{nominal(BigInt(totals.incomeIdr))}</strong>
       </article>
       <article className={cardCellClass}>
         <p className={labelClass}>Expense</p>
-        <strong className={cn(valueClass, "text-expense")}>
-          −{formatIdr(totals.expenseIdr)}
-        </strong>
+        <strong className={valueClass}>{nominal(BigInt(totals.expenseIdr))}</strong>
       </article>
       <article className={cardCellClass}>
         <p className={labelClass}>Net</p>
-        <strong className={cn(valueClass, netClass)}>{formatIdr(net)}</strong>
+        <strong className={valueClass}>{nominal(BigInt(totals.netIdr))}</strong>
       </article>
     </section>
   );
