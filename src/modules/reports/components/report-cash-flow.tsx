@@ -1,7 +1,4 @@
-import { formatIdr } from "@/lib/money/format-idr";
 import { formatDateLongNoYear, formatMonthYearLabel } from "@/lib/dates/format-id";
-import { cardClass, eyebrowClass } from "@/components/ui/styles";
-import { ChartShell } from "@/modules/dashboard";
 import { ReportCashFlowChart } from "./report-cash-flow-chart";
 import type { ReportMonth } from "../types";
 
@@ -46,31 +43,27 @@ export function buildCashFlowPoints(series: ReportMonth[]): CashFlowPoint[] {
 
 export function ReportCashFlow({
   points,
-  incomeIdr,
-  expenseIdr,
-  daily,
 }: {
   points: CashFlowPoint[];
-  incomeIdr: string;
-  expenseIdr: string;
-  daily: boolean;
 }) {
-  const zero = points.every(
-    (point) => BigInt(point.incomeIdr) === 0n && BigInt(point.expenseIdr) === 0n,
+  const hasData = points.some(
+    (point) =>
+      BigInt(point.incomeIdr) > 0n || BigInt(point.expenseIdr) > 0n,
   );
   return (
-    <section aria-labelledby="report-cash-flow-title" className={cardClass}>
-      <p className={`${eyebrowClass} mb-[.5rem]`}>Cash Flow</p>
-      {zero ? (
-        <p className="m-0 mb-[.75rem] text-muted" role="status">
-          No data available for this period.
-        </p>
-      ) : null}
-      <ChartShell
-        chart={<ReportCashFlowChart points={points} />}
-        summary={`Income ${formatIdr(incomeIdr)} · Expense ${formatIdr(expenseIdr)}`}
-        title={daily ? "Daily trends" : "Monthly trends"}
-      />
+    <section aria-label="Cash flow">
+      {hasData ? (
+        <ReportCashFlowChart points={points} />
+      ) : (
+        <div
+          className="grid h-[15rem] place-items-center rounded-[.9rem] bg-surface-subtle text-center"
+          role="status"
+        >
+          <p className="m-0 px-4 text-[.82rem] text-muted">
+            No data available for this period.
+          </p>
+        </div>
+      )}
     </section>
   );
 }

@@ -1,11 +1,17 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { CalendarRange, ChevronDown, FileSpreadsheet, FileText, X } from "lucide-react";
-import { buttonClass, iconButtonClass } from "@/components/ui/styles";
+import { useState } from "react";
+import {
+  CalendarRange,
+  ChevronDown,
+  FileSpreadsheet,
+  FileText,
+} from "lucide-react";
+import { BottomSheet } from "@/components/ui/bottom-sheet";
+import { CalendarRangeSelector } from "@/components/ui/calendar-range-selector";
+import { buttonClass } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import { formatReportRange } from "../lib/report-date";
-import { ReportDateRangePicker } from "./report-date-range-picker";
 
 type Sheet = "none" | "range" | "export";
 
@@ -24,7 +30,6 @@ export function ReportToolbar({
   csvHref: string;
 }) {
   const [sheet, setSheet] = useState<Sheet>("none");
-  const exportCloseRef = useRef<HTMLButtonElement>(null);
   const rangeLabel = formatReportRange(from, to);
 
   function applyRange(nextFrom: string, nextTo: string) {
@@ -81,66 +86,46 @@ export function ReportToolbar({
         </button>
       </div>
 
-      {sheet === "range" ? (
-        <div className="fixed inset-0 z-60 flex items-end justify-center bg-[rgb(15_17_21/55%)] p-4" onClick={() => setSheet("none")}>
-          <div
-            aria-labelledby="report-range-title"
-            aria-modal="true"
-            className="w-full max-w-[30rem] max-h-[86vh] overflow-y-auto border border-border bg-surface p-[1.25rem] rounded-[1.1rem] shadow-card"
-            onClick={(event) => event.stopPropagation()}
-            role="dialog"
-          >
-            <ReportDateRangePicker
-              currentFrom={from}
-              currentTo={to}
-              onApply={applyRange}
-              onCancel={() => setSheet("none")}
-            />
-          </div>
-        </div>
-      ) : null}
+      <BottomSheet
+        open={sheet === "range"}
+        onClose={() => setSheet("none")}
+        title="Select date range"
+        ariaLabel="Select date range"
+      >
+        <CalendarRangeSelector
+          from={from}
+          to={to}
+          maxDays={366}
+          onApply={applyRange}
+          onCancel={() => setSheet("none")}
+        />
+      </BottomSheet>
 
-      {sheet === "export" ? (
-        <div className="fixed inset-0 z-60 flex items-end justify-center bg-[rgb(15_17_21/55%)] p-4" onClick={() => setSheet("none")}>
-          <div
-            aria-labelledby="report-export-title"
-            aria-modal="true"
-            className="w-full max-w-[30rem] max-h-[86vh] overflow-y-auto border border-border bg-surface p-[1.25rem] rounded-[1.1rem] shadow-card"
-            onClick={(event) => event.stopPropagation()}
-            role="dialog"
-          >
-            <div className="mb-4 flex items-center justify-between gap-[.75rem]">
-              <h2 id="report-export-title" className="m-0 text-[1.08rem]">Export report</h2>
-              <button
-                aria-label="Close export menu"
-                className={iconButtonClass}
-                onClick={() => setSheet("none")}
-                ref={exportCloseRef}
-                type="button"
-              >
-                <X aria-hidden="true" size={19} />
-              </button>
-            </div>
-            <p className="m-0 mb-4 text-muted">
-              The {rangeLabel} range will be used for the export.
-            </p>
-            <div className="grid gap-[.65rem]">
-              <a className={cn(buttonClass("secondary"), "w-full justify-start")} href={pdfHref}>
-                <FileText aria-hidden="true" className="shrink-0" size={18} />
-                Export PDF
-              </a>
-              <a className={cn(buttonClass("secondary"), "w-full justify-start")} href={csvHref}>
-                <FileSpreadsheet aria-hidden="true" className="shrink-0" size={18} />
-                Export CSV
-              </a>
-            </div>
-            <p className="mt-4 rounded-[.7rem] bg-surface-subtle p-3 text-[.76rem] text-muted">
-              Your data stays private. PDF supports up to 366 days and max. 500
-              detail transactions; CSV max. 10,000 transactions.
-            </p>
-          </div>
+      <BottomSheet
+        open={sheet === "export"}
+        onClose={() => setSheet("none")}
+        title="Export report"
+        ariaLabel="Export report"
+        zIndex="z-[85]"
+      >
+        <p className="m-0 mb-4 text-muted">
+          The {rangeLabel} range will be used for the export.
+        </p>
+        <div className="grid gap-[.65rem]">
+          <a className={cn(buttonClass("secondary"), "w-full justify-start")} href={pdfHref}>
+            <FileText aria-hidden="true" className="shrink-0" size={18} />
+            Export PDF
+          </a>
+          <a className={cn(buttonClass("secondary"), "w-full justify-start")} href={csvHref}>
+            <FileSpreadsheet aria-hidden="true" className="shrink-0" size={18} />
+            Export CSV
+          </a>
         </div>
-      ) : null}
+        <p className="mt-4 rounded-[.7rem] bg-surface-subtle p-3 text-[.76rem] text-muted">
+          Your data stays private. PDF supports up to 366 days and max. 500
+          detail transactions; CSV max. 10,000 transactions.
+        </p>
+      </BottomSheet>
     </div>
   );
 }

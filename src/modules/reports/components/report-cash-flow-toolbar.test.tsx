@@ -50,12 +50,9 @@ describe("report cash flow card", () => {
     render(
       <ReportCashFlow
         points={buildCashFlowPoints([{ month: "2026-08", incomeIdr: "100", expenseIdr: "50" }])}
-        incomeIdr="100"
-        expenseIdr="50"
-        daily={false}
       />,
     );
-    expect(screen.getByText("Cash Flow")).toBeInTheDocument();
+    expect(screen.getByRole("region", { name: "Cash flow" })).toBeInTheDocument();
     expect(screen.getByTestId("cash-flow-chart")).toBeInTheDocument();
   });
 
@@ -63,9 +60,6 @@ describe("report cash flow card", () => {
     render(
       <ReportCashFlow
         points={buildCashFlowPoints([{ month: "2026-08", incomeIdr: "0", expenseIdr: "0" }])}
-        incomeIdr="0"
-        expenseIdr="0"
-        daily={false}
       />,
     );
     expect(screen.getByText("No data available for this period.")).toBeInTheDocument();

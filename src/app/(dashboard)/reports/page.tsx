@@ -70,12 +70,7 @@ export default async function ReportsPage({
 
       <CompactReportSummary totals={totals} />
 
-      <ReportCashFlow
-        points={buildCashFlowPoints(analysis.series)}
-        incomeIdr={analysis.summary.incomeIdr}
-        expenseIdr={analysis.summary.expenseIdr}
-        daily={analysis.daily}
-      />
+      <ReportCashFlow points={buildCashFlowPoints(analysis.series)} />
 
       <ReportInsightCard insight={analysis.insight} />
 
