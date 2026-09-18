@@ -1,10 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { LoaderCircle } from "lucide-react";
 import { cardClass } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import { formatIdr } from "@/lib/money/format-idr";
+import { getCategoryBreakdownAction } from "../actions/category-breakdown";
 import {
   ReportCategoryChart,
   type ReportCategorySlice,
@@ -52,24 +54,49 @@ export function CategoryAnalysis({
   totalIdr: string;
   categories: CategoryBreakdownItem[];
 }) {
-  const router = useRouter();
-  const total = BigInt(totalIdr);
-  const slices: ReportCategorySlice[] = categories.map((category, index) => ({
-    name: category.name,
-    amountIdr: category.amountIdr,
-    shareBps: category.shareBps,
-    fill: SLICE_COLORS[index % SLICE_COLORS.length],
-  }));
+  const [activeType, setActiveType] = useState<"income" | "expense">(type);
+  const [activeTotalIdr, setActiveTotalIdr] = useState(totalIdr);
+  const [activeCategories, setActiveCategories] =
+    useState<CategoryBreakdownItem[]>(categories);
+  const [pendingType, setPendingType] = useState<"income" | "expense" | null>(
+    null,
+  );
 
-  function select(nextType: "income" | "expense") {
-    const url = new URL(window.location.href);
-    url.searchParams.set("categoryType", nextType);
-    router.push(`${url.pathname}?${url.searchParams.toString()}`);
+  const total = BigInt(activeTotalIdr);
+  const slices: ReportCategorySlice[] = activeCategories.map(
+    (category, index) => ({
+      name: category.name,
+      amountIdr: category.amountIdr,
+      shareBps: category.shareBps,
+      fill: SLICE_COLORS[index % SLICE_COLORS.length],
+    }),
+  );
+  const busy = pendingType !== null;
+
+  async function select(nextType: "income" | "expense") {
+    if (nextType === activeType || busy) return;
+    setPendingType(nextType);
+    const result = await getCategoryBreakdownAction({
+      from,
+      to,
+      categoryType: nextType,
+    });
+    if (result.ok) {
+      setActiveType(result.type);
+      setActiveTotalIdr(result.totalIdr);
+      setActiveCategories(result.categories);
+      const url = new URL(window.location.href);
+      url.searchParams.set("categoryType", nextType);
+      window.history.replaceState(null, "", `${url.pathname}${url.search}`);
+    }
+    setPendingType(null);
   }
 
   return (
     <section
-      aria-label={type === "income" ? "Income by Category" : "Expense by Category"}
+      aria-label={
+        activeType === "income" ? "Income by Category" : "Expense by Category"
+      }
       className={cn(cardClass, "shadow-none")}
     >
       <div
@@ -78,29 +105,35 @@ export function CategoryAnalysis({
         aria-label="Transaction type"
       >
         {typeOptions.map((option) => {
-          const active = type === option.value;
+          const active = activeType === option.value;
+          const loading = pendingType === option.value;
           return (
             <button
               aria-pressed={active}
               className={cn(
-                "flex-1 cursor-pointer rounded-[.55rem] px-[.8rem] py-[.4rem] text-[.82rem] font-medium text-muted transition-[background,color] duration-150 hover:text-foreground",
+                "flex flex-1 cursor-pointer items-center justify-center gap-[.4rem] rounded-[.55rem] px-[.8rem] py-[.4rem] text-[.82rem] font-medium text-muted transition-[background,color] duration-150 hover:text-foreground",
                 active && "bg-surface text-foreground shadow-card",
+                busy && !active && "cursor-wait opacity-70",
               )}
+              disabled={busy}
               key={option.value}
               onClick={() => select(option.value)}
               type="button"
             >
+              {loading && (
+                <LoaderCircle className="animate-spin" aria-hidden="true" />
+              )}
               {option.label}
             </button>
           );
         })}
       </div>
 
-      {categories.length ? (
-        <>
+      {activeCategories.length ? (
+        <div aria-busy={busy} className={cn(busy && "opacity-60")}>
           <ReportCategoryChart slices={slices} />
           <div className="grid mt-[.75rem]">
-            {categories.map((category) => {
+            {activeCategories.map((category) => {
               const share = percent(category.amountIdr, total);
               return (
                 <Link
@@ -110,15 +143,27 @@ export function CategoryAnalysis({
                 >
                   <span className="truncate">{category.name}</span>
                   <strong>{formatIdr(category.amountIdr)}</strong>
-                  <small className="text-[.78rem] text-muted">{share.toLocaleString("en-US")}%</small>
+                  <small className="text-[.78rem] text-muted">
+                    {share.toLocaleString("en-US")}%
+                  </small>
                 </Link>
               );
             })}
           </div>
-        </>
+        </div>
+      ) : busy ? (
+        <div
+          className="mt-4 grid min-h-[10rem] place-items-center rounded-[.8rem] border border-dashed border-border bg-surface-subtle p-4 text-center text-[.84rem] text-muted"
+          role="status"
+        >
+          Loading...
+        </div>
       ) : (
-        <div className="mt-4 grid min-h-[10rem] place-items-center rounded-[.8rem] border border-dashed border-border bg-surface-subtle p-4 text-center text-[.84rem] text-muted" role="status">
-          No {type === "income" ? "income" : "expense"} in this period yet.
+        <div
+          className="mt-4 grid min-h-[10rem] place-items-center rounded-[.8rem] border border-dashed border-border bg-surface-subtle p-4 text-center text-[.84rem] text-muted"
+          role="status"
+        >
+          No {activeType === "income" ? "income" : "expense"} in this period yet.
         </div>
       )}
     </section>

@@ -1,11 +1,15 @@
-import { cleanup, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { CategoryAnalysis } from "./category-analysis";
 import { CompactReportSummary } from "./compact-report-summary";
 import { ReportInsightCard } from "./report-insight-card";
 
-vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: vi.fn() }),
+const { getCategoryBreakdownAction } = vi.hoisted(() => ({
+  getCategoryBreakdownAction: vi.fn(),
+}));
+
+vi.mock("../actions/category-breakdown", () => ({
+  getCategoryBreakdownAction,
 }));
 
 afterEach(cleanup);
@@ -137,5 +141,41 @@ describe("category analysis", () => {
     expect(
       screen.getByText("No expense in this period yet."),
     ).toBeInTheDocument();
+  });
+
+  it("switches to income data in place without reloading", async () => {
+    getCategoryBreakdownAction.mockResolvedValue({
+      ok: true,
+      type: "income",
+      totalIdr: "100000",
+      categories: [
+        {
+          categoryId: "cat-3",
+          name: "Gaji",
+          amountIdr: "100000",
+          shareBps: 10000,
+        },
+      ],
+    });
+    render(<CategoryAnalysis {...base} type="expense" totalIdr="50000" />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Income" }));
+
+    expect(getCategoryBreakdownAction).toHaveBeenCalledWith({
+      categoryType: "income",
+      from: "2026-08-01",
+      to: "2026-08-07",
+    });
+    expect(
+      await screen.findByRole("link", { name: /Gaji/ }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Income" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(
+      screen.getByRole("region", { name: "Income by Category" }),
+    ).toBeInTheDocument();
+    expect(window.location.search).toContain("categoryType=income");
   });
 });
