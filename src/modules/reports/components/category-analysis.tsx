@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { cardClass } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import { formatIdr } from "@/lib/money/format-idr";
@@ -51,6 +52,7 @@ export function CategoryAnalysis({
   totalIdr: string;
   categories: CategoryBreakdownItem[];
 }) {
+  const router = useRouter();
   const total = BigInt(totalIdr);
   const slices: ReportCategorySlice[] = categories.map((category, index) => ({
     name: category.name,
@@ -62,7 +64,7 @@ export function CategoryAnalysis({
   function select(nextType: "income" | "expense") {
     const url = new URL(window.location.href);
     url.searchParams.set("categoryType", nextType);
-    window.location.assign(url.toString());
+    router.push(`${url.pathname}?${url.searchParams.toString()}`);
   }
 
   return (

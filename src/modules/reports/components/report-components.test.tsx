@@ -1,8 +1,12 @@
 import { cleanup, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { CategoryAnalysis } from "./category-analysis";
 import { CompactReportSummary } from "./compact-report-summary";
 import { ReportInsightCard } from "./report-insight-card";
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+}));
 
 afterEach(cleanup);
 

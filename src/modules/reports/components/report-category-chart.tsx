@@ -47,7 +47,7 @@ export function ReportCategoryChart({
         <PieChart margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
           <Pie
             data={slices}
-            dataKey="amountIdr"
+            dataKey="shareBps"
             nameKey="name"
             innerRadius="55%"
             outerRadius="85%"
