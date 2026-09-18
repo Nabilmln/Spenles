@@ -1,9 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { cardClass, eyebrowClass } from "@/components/ui/styles";
+import { cardClass } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import { formatIdr } from "@/lib/money/format-idr";
+import {
+  ReportCategoryChart,
+  type ReportCategorySlice,
+} from "./report-category-chart";
 
 export type CategoryBreakdownItem = {
   categoryId: string;
@@ -12,14 +16,27 @@ export type CategoryBreakdownItem = {
   shareBps: number;
 };
 
+const SLICE_COLORS = [
+  "#4f46e5",
+  "#0ea5e9",
+  "#22c55e",
+  "#f59e0b",
+  "#ef4444",
+  "#a855f7",
+  "#ec4899",
+  "#14b8a6",
+  "#84cc16",
+  "#64748b",
+] as const;
+
+const typeOptions = [
+  { value: "expense", label: "Expense" },
+  { value: "income", label: "Income" },
+] as const;
+
 function percent(amount: string, total: bigint) {
   return total === 0n ? 0 : Number((BigInt(amount) * 10_000n) / total) / 100;
 }
-
-const toggleBase =
-  "flex-1 min-h-[2.6rem] cursor-pointer rounded-[.65rem] border border-border bg-surface-subtle px-[.8rem] font-medium text-muted transition-colors";
-
-const toggleActive = "border-primary-600 bg-primary-600 text-white";
 
 export function CategoryAnalysis({
   from,
@@ -35,11 +52,17 @@ export function CategoryAnalysis({
   categories: CategoryBreakdownItem[];
 }) {
   const total = BigInt(totalIdr);
+  const slices: ReportCategorySlice[] = categories.map((category, index) => ({
+    name: category.name,
+    amountIdr: category.amountIdr,
+    shareBps: category.shareBps,
+    fill: SLICE_COLORS[index % SLICE_COLORS.length],
+  }));
 
   function select(nextType: "income" | "expense") {
     const url = new URL(window.location.href);
     url.searchParams.set("categoryType", nextType);
-    window.location.href = url.toString();
+    window.location.assign(url.toString());
   }
 
   return (
@@ -47,48 +70,50 @@ export function CategoryAnalysis({
       aria-label={type === "income" ? "Income by Category" : "Expense by Category"}
       className={cn(cardClass, "shadow-none")}
     >
-      <div className="mb-4 flex items-center justify-between gap-4 max-[540px]:flex-col max-[540px]:items-stretch">
-        <p className={`${eyebrowClass} mb-0`}>{type === "income" ? "Income" : "Expense"}</p>
-        <div className="flex gap-[.5rem] max-[540px]:w-full" role="group" aria-label="Transaction type">
-          <button
-            aria-pressed={type === "expense"}
-            className={cn(toggleBase, type === "expense" && toggleActive)}
-            onClick={() => select("expense")}
-            type="button"
-          >
-            Expense
-          </button>
-          <button
-            aria-pressed={type === "income"}
-            className={cn(toggleBase, type === "income" && toggleActive)}
-            onClick={() => select("income")}
-            type="button"
-          >
-            Income
-          </button>
-        </div>
+      <div
+        className="mb-4 inline-flex w-full rounded-[.7rem] bg-surface-subtle p-[.25rem]"
+        role="group"
+        aria-label="Transaction type"
+      >
+        {typeOptions.map((option) => {
+          const active = type === option.value;
+          return (
+            <button
+              aria-pressed={active}
+              className={cn(
+                "flex-1 cursor-pointer rounded-[.55rem] px-[.8rem] py-[.4rem] text-[.82rem] font-medium text-muted transition-[background,color] duration-150 hover:text-foreground",
+                active && "bg-surface text-foreground shadow-card",
+              )}
+              key={option.value}
+              onClick={() => select(option.value)}
+              type="button"
+            >
+              {option.label}
+            </button>
+          );
+        })}
       </div>
 
       {categories.length ? (
-        <div className="grid">
-          {categories.map((category) => {
-            const share = percent(category.amountIdr, total);
-            return (
-              <Link
-                className="grid grid-cols-[minmax(8rem,1fr)_minmax(6rem,2fr)_auto_auto] items-center gap-[.9rem] border-b border-border p-[.8rem_0] last:border-b-0 max-[720px]:grid-cols-[minmax(0,1fr)_auto]"
-                href={`/reports/categories/${category.categoryId}?from=${from}&to=${to}`}
-                key={category.categoryId}
-              >
-                <span>{category.name}</span>
-                <span className="h-[.55rem] overflow-hidden rounded-full bg-surface-subtle max-[720px]:col-span-full max-[720px]:row-start-2" aria-hidden="true">
-                  <i className="block h-full rounded-[inherit] bg-primary-600" style={{ width: `${Math.min(share, 100)}%` }} />
-                </span>
-                <strong>{formatIdr(category.amountIdr)}</strong>
-                <small className="text-[.78rem] text-muted">{share.toLocaleString("en-US")}%</small>
-              </Link>
-            );
-          })}
-        </div>
+        <>
+          <ReportCategoryChart slices={slices} />
+          <div className="grid mt-[.75rem]">
+            {categories.map((category) => {
+              const share = percent(category.amountIdr, total);
+              return (
+                <Link
+                  className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-[.9rem] border-b border-border p-[.8rem_0] last:border-b-0"
+                  href={`/reports/categories/${category.categoryId}?from=${from}&to=${to}`}
+                  key={category.categoryId}
+                >
+                  <span className="truncate">{category.name}</span>
+                  <strong>{formatIdr(category.amountIdr)}</strong>
+                  <small className="text-[.78rem] text-muted">{share.toLocaleString("en-US")}%</small>
+                </Link>
+              );
+            })}
+          </div>
+        </>
       ) : (
         <div className="mt-4 grid min-h-[10rem] place-items-center rounded-[.8rem] border border-dashed border-border bg-surface-subtle p-4 text-center text-[.84rem] text-muted" role="status">
           No {type === "income" ? "income" : "expense"} in this period yet.
