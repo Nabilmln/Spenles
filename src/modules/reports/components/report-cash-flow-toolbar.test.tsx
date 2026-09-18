@@ -8,10 +8,13 @@ import { ReportToolbar } from "./report-toolbar";
 afterEach(cleanup);
 
 vi.mock("@/modules/dashboard", () => ({
-  IncomeExpenseChart: () => <div data-testid="cash-flow-chart" />,
   ChartShell: ({ chart }: { chart: ReactNode }) => (
     <figure>{chart}</figure>
   ),
+}));
+
+vi.mock("./report-cash-flow-chart", () => ({
+  ReportCashFlowChart: () => <div data-testid="cash-flow-chart" />,
 }));
 
 describe("cash flow grouping", () => {

@@ -1,5 +1,5 @@
 import { requireSessionUser } from "@/lib/auth/require-session";
-import { pageDescriptionClass, pageStackClass } from "@/components/ui/styles";
+import { pageStackClass } from "@/components/ui/styles";
 import {
   getReportAnalysis,
   getReportCategoryBreakdown,
@@ -61,8 +61,6 @@ export default async function ReportsPage({
 
   return (
     <div className={`${pageStackClass} max-w-[78rem]`}>
-      <p className={pageDescriptionClass}>Monitor income and expenses per period, then export a report when needed. All data is private to your session.</p>
-
       <ReportToolbar
         from={from}
         to={to}

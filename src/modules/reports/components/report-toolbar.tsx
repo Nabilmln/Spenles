@@ -1,13 +1,16 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { CalendarRange, FileSpreadsheet, FileText, X } from "lucide-react";
+import { CalendarRange, ChevronDown, FileSpreadsheet, FileText, X } from "lucide-react";
 import { buttonClass, iconButtonClass } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import { formatReportRange } from "../lib/report-date";
 import { ReportDateRangePicker } from "./report-date-range-picker";
 
 type Sheet = "none" | "range" | "export";
+
+const triggerClass =
+  "cursor-pointer rounded-[.78rem] border border-border bg-surface font-medium text-foreground transition-[border,box-shadow] duration-150 hover:border-primary-500 focus:border-primary-500 focus:shadow-[0_0_0_3px_rgb(79_70_229/12%)] focus:outline-none";
 
 export function ReportToolbar({
   from,
@@ -37,22 +40,44 @@ export function ReportToolbar({
       <div className="flex gap-[.6rem]">
         <button
           aria-label={`Select date range: ${rangeLabel}`}
-          className="inline-flex min-h-[2.85rem] flex-[1_1_auto] cursor-pointer items-center justify-center gap-[.5rem] rounded-[.72rem] border border-border bg-surface p-[.65rem_1rem] font-medium text-foreground"
+          className={cn(
+            triggerClass,
+            "flex min-h-[3.05rem] flex-[1_1_auto] items-center gap-[.6rem] p-[.5rem_1rem] text-left",
+          )}
           onClick={() => setSheet("range")}
           type="button"
         >
-          <CalendarRange aria-hidden="true" className="shrink-0 text-primary-600" size={18} />
-          <span className="text-[.85rem]">{rangeLabel}</span>
+          <span className="grid size-9 shrink-0 place-items-center rounded-[.65rem] bg-primary-50 text-primary-600">
+            <CalendarRange aria-hidden="true" size={18} />
+          </span>
+          <span className="grid min-w-0 flex-1 gap-[.05rem]">
+            <span className="truncate text-[.66rem] font-semibold uppercase tracking-[.06em] text-muted">
+              Select date
+            </span>
+            <span className="truncate text-[.84rem] font-semibold">{rangeLabel}</span>
+          </span>
+          <ChevronDown aria-hidden="true" className="shrink-0 text-muted" size={16} />
         </button>
         <button
           aria-haspopup="menu"
           aria-label="Export report"
-          className="inline-flex min-h-[2.85rem] shrink-0 cursor-pointer items-center justify-center gap-[.5rem] rounded-[.72rem] border border-border bg-surface p-[.65rem_1rem] font-medium text-foreground"
+          className={cn(
+            triggerClass,
+            "flex min-h-[3.05rem] shrink-0 items-center gap-[.6rem] p-[.5rem_.85rem]",
+          )}
           onClick={() => setSheet("export")}
           type="button"
         >
-          <FileText aria-hidden="true" className="shrink-0 text-primary-600" size={18} />
-          <span>Export</span>
+          <span className="grid size-9 shrink-0 place-items-center rounded-[.65rem] bg-primary-50 text-primary-600">
+            <FileText aria-hidden="true" size={18} />
+          </span>
+          <span className="grid text-left gap-[.05rem]">
+            <span className="truncate text-[.66rem] font-semibold uppercase tracking-[.06em] text-muted">
+              Export
+            </span>
+            <span className="truncate text-[.84rem] font-semibold">Report</span>
+          </span>
+          <ChevronDown aria-hidden="true" className="shrink-0 text-muted" size={16} />
         </button>
       </div>
 

@@ -1,7 +1,8 @@
 import { formatIdr } from "@/lib/money/format-idr";
 import { formatDateLongNoYear, formatMonthYearLabel } from "@/lib/dates/format-id";
 import { cardClass, eyebrowClass } from "@/components/ui/styles";
-import { ChartShell, IncomeExpenseChart } from "@/modules/dashboard";
+import { ChartShell } from "@/modules/dashboard";
+import { ReportCashFlowChart } from "./report-cash-flow-chart";
 import type { ReportMonth } from "../types";
 
 export type CashFlowPoint = {
@@ -66,9 +67,9 @@ export function ReportCashFlow({
         </p>
       ) : null}
       <ChartShell
-        chart={<IncomeExpenseChart points={points} />}
+        chart={<ReportCashFlowChart points={points} />}
         summary={`Income ${formatIdr(incomeIdr)} · Expense ${formatIdr(expenseIdr)}`}
-        title={daily ? "Daily comparison" : "Monthly comparison"}
+        title={daily ? "Daily trends" : "Monthly trends"}
       />
     </section>
   );
