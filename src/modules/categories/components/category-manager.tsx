@@ -92,18 +92,14 @@ export function CategoryManager({
         </button>
       </div>
 
-      <div className="flex items-start justify-between gap-4 max-[560px]:flex-col">
-        <div>
-          <h2 className="m-0 text-[1.08rem] tracking-[-.02em]">
-            {tab === "expense" ? "Expense categories" : "Income categories"}
-          </h2>
-          <p className="mt-[.2rem] text-[.82rem] text-muted">
-            Archived categories remain attached to past transactions.
-          </p>
-        </div>
+<div className="grid grid-cols-[1fr_auto_1fr] items-center gap-4 max-[560px]:grid-cols-1">
+        <div aria-hidden="true" />
+        <h2 className="m-0 text-center text-[1.08rem] tracking-[-.02em]">
+          {tab === "expense" ? "Expense categories" : "Income categories"}
+        </h2>
         <button
           aria-label="Add Category"
-          className={`${buttonClass("primary")} min-w-0 max-[560px]:w-full`}
+          className={`${buttonClass("primary")} justify-self-end min-w-0 max-[560px]:w-full`}
           onClick={openCreate}
           type="button"
         >
