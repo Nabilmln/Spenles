@@ -1,23 +1,21 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { formatMonthYearLabel } from "@/lib/dates/format-id";
 import { buttonClass, cardClass } from "@/components/ui/styles";
 import {
-  AverageSpendingCard,
-  buildCategoryChartContract,
-  buildDailyCashFlowContract,
-  buildDailyExpenseChartContract,
-  buildFourDayExpenseChartContract,
-  buildMonthlyCashFlowContract,
-  buildWeeklyCashFlowContract,
-  CashFlowOverviewCard,
-  CategoryExpenseCard,
-  compareFinancialValue,
   countCalendarDays,
   currentJakartaMonthKey,
-  DashboardAccountCard,
-  DashboardSectionError,
-  FinancialOverview,
+  DashboardAveragesSection,
+  DashboardBalanceSection,
+  DashboardCardSkeleton,
+  DashboardCashFlowSection,
+  DashboardCategorySection,
+  DashboardComparisonSection,
+  DashboardMonthlyExpenseSection,
+  DashboardRecentActivitySection,
+  DashboardSavingsSection,
+  DashboardTopSpendingSection,
   fourDayJakartaInterval,
   getCategoryExpenseAggregates,
   getDailyExpenseAggregates,
@@ -26,21 +24,14 @@ import {
   getRecentActivityTransactions,
   getSelectedAndPreviousTotals,
   getWeeklyIncomeExpenseAggregates,
-  IncomeVsExpenseComparison,
   lastDaysJakartaInterval,
   lastMonthsJakartaInterval,
   lastWeeksJakartaInterval,
-  MobileBalanceCard,
-  MonthlyExpenseCard,
   monthIntervalForKey,
-  RecentActivityCard,
   safeParseDashboardFilters,
-  SavingsSummaryCard,
   ServicesSection,
   shiftMonthKey,
-  TopSpendingCard,
   type DashboardSearchParams,
-  type IncomeExpensePoint,
 } from "@/modules/dashboard";
 import {
   getPeriodSavings,
@@ -69,12 +60,6 @@ export const revalidate = 0;
 type DashboardPageProps = {
   searchParams: Promise<DashboardSearchParams>;
 };
-
-function isFulfilled<T>(
-  result: PromiseSettledResult<T>,
-): result is PromiseFulfilledResult<T> {
-  return result.status === "fulfilled";
-}
 
 function monthLabelFor(monthKey: string) {
   const [year, month] = monthKey.split("-").map(Number);
@@ -114,172 +99,77 @@ export default async function DashboardPage({
   const cardInterval = monthIntervalForKey(cardMonth);
   const prevCardInterval = monthIntervalForKey(shiftMonthKey(cardMonth, -1));
   const now = new Date();
-  const recentInterval = fourDayJakartaInterval(now);
   const cashFlowDaysInterval = lastDaysJakartaInterval(7, now);
   const cashFlowWeeksInterval = lastWeeksJakartaInterval(4, now);
   const cashFlowMonthsInterval = lastMonthsJakartaInterval(12, now);
   const calendarDays = countCalendarDays(cardInterval);
   const prevCalendarDays = countCalendarDays(prevCardInterval);
 
-  const [
-    dailyResult,
-    recentResult,
-    activityResult,
-    monthlyResult,
-    cashFlowDailyResult,
-    cashFlowWeeklyResult,
-    cashFlowMonthlyResult,
-    categoryResult,
-    totalsResult,
-    savingsResult,
-    savingsBalanceResult,
-    accountsResult,
-  ] = await Promise.allSettled([
-    getDailyExpenseAggregates(user.id, cardInterval),
-    getDailyExpenseAggregates(user.id, recentInterval),
-    getRecentActivityTransactions(user.id),
-    getMonthlyAggregates(user.id, cardInterval),
-    getDailyIncomeExpenseAggregates(user.id, cashFlowDaysInterval),
-    getWeeklyIncomeExpenseAggregates(user.id, cashFlowWeeksInterval),
-    getMonthlyAggregates(user.id, cashFlowMonthsInterval),
-    getCategoryExpenseAggregates(user.id, cardInterval),
-    getSelectedAndPreviousTotals(user.id, cardInterval, prevCardInterval),
-    getPeriodSavings(user.id, cardInterval.start, cardInterval.end),
-    getSavingsBalanceTotal(user.id),
-    listOwnedAccounts(user.id),
-  ]);
+  const totalsPromise = getSelectedAndPreviousTotals(
+    user.id,
+    cardInterval,
+    prevCardInterval,
+  );
+  const accountsPromise = listOwnedAccounts(user.id);
+  const categoryPromise = getCategoryExpenseAggregates(user.id, cardInterval);
+  const activityPromise = getRecentActivityTransactions(user.id);
+  const dailyPromise = getDailyExpenseAggregates(user.id, cardInterval);
+  const recentPromise = getDailyExpenseAggregates(
+    user.id,
+    fourDayJakartaInterval(now),
+  );
+  const cashFlowDailyPromise = getDailyIncomeExpenseAggregates(
+    user.id,
+    cashFlowDaysInterval,
+  );
+  const cashFlowWeeklyPromise = getWeeklyIncomeExpenseAggregates(
+    user.id,
+    cashFlowWeeksInterval,
+  );
+  const cashFlowMonthlyPromise = getMonthlyAggregates(
+    user.id,
+    cashFlowMonthsInterval,
+  );
+  const savingsPromise = getPeriodSavings(
+    user.id,
+    cardInterval.start,
+    cardInterval.end,
+  );
+  const savingsBalancePromise = getSavingsBalanceTotal(user.id);
 
-  const daily = isFulfilled(dailyResult)
-    ? buildDailyExpenseChartContract(cardInterval, dailyResult.value)
-    : null;
-  const recent = buildFourDayExpenseChartContract(
-    now,
-    isFulfilled(recentResult) ? recentResult.value : [],
-  );
-  const overview = isFulfilled(monthlyResult)
-    ? monthlyResult.value.reduce(
-        (acc, row) => ({
-          income: acc.income + row.income,
-          expense: acc.expense + row.expense,
-        }),
-        { income: 0n, expense: 0n },
-      )
-    : { income: 0n, expense: 0n };
-
-  function toCashFlowSeries(
-    contract: {
-      points: IncomeExpensePoint[];
-      totalIncome: bigint;
-      totalExpense: bigint;
-    } | null,
-  ) {
-    return contract
-      ? {
-          points: contract.points,
-          totalIncome: contract.totalIncome.toString(),
-          totalExpense: contract.totalExpense.toString(),
-        }
-      : { points: [], totalIncome: "0", totalExpense: "0" };
-  }
-
-  const cashFlowDaily = toCashFlowSeries(
-    isFulfilled(cashFlowDailyResult)
-      ? buildDailyCashFlowContract(cashFlowDaysInterval, cashFlowDailyResult.value)
-      : null,
-  );
-  const cashFlowWeekly = toCashFlowSeries(
-    isFulfilled(cashFlowWeeklyResult)
-      ? buildWeeklyCashFlowContract(cashFlowWeeksInterval, cashFlowWeeklyResult.value)
-      : null,
-  );
-  const cashFlowMonthly = toCashFlowSeries(
-    isFulfilled(cashFlowMonthlyResult)
-      ? buildMonthlyCashFlowContract(cashFlowMonthsInterval, cashFlowMonthlyResult.value)
-      : null,
-  );
-
-  const categoryRows = isFulfilled(categoryResult)
-    ? categoryResult.value
-    : [];
-  const categoryContract = buildCategoryChartContract(categoryRows);
-
-  const totals = isFulfilled(totalsResult) ? totalsResult.value : null;
-  const averageDaily = totals
-    ? totals.selected.expense / BigInt(calendarDays)
-    : 0n;
-  const prevAverageDaily = totals
-    ? totals.previous.expense / BigInt(prevCalendarDays)
-    : 0n;
-  const averageComparison = compareFinancialValue(
-    averageDaily,
-    prevAverageDaily,
-  );
-  const incomeComparison = totals
-    ? compareFinancialValue(totals.selected.income, totals.previous.income)
-    : null;
-  const expenseComparison = totals
-    ? compareFinancialValue(totals.selected.expense, totals.previous.expense)
-    : null;
-  const savingsNet = isFulfilled(savingsResult)
-    ? savingsResult.value.net
-    : 0n;
-  const savingsBalance = isFulfilled(savingsBalanceResult)
-    ? savingsBalanceResult.value
-    : 0n;
-  const activeAccounts = isFulfilled(accountsResult)
-    ? accountsResult.value.filter((account) => account.status === "active")
-    : [];
-  const totalBalance = activeAccounts.reduce(
-    (sum, account) => sum + BigInt(account.balance),
-    0n,
-  );
   const servicesProfile: Profile =
     profile ?? profileFallback(user.id);
+  const displayName = profile?.displayName ?? "Pengguna Spenles";
 
   return (
     <div>
       <div className="dashboard-grid grid gap-3 min-[861px]:grid-cols-8 min-[1024px]:grid-cols-12">
         <div className="min-w-0 min-[861px]:col-span-4 min-[1024px]:col-span-4">
-          <div className="hidden min-[861px]:block">
-            <FinancialOverview
-              name={profile?.displayName ?? "Pengguna Spenles"}
-              income={overview.income.toString()}
-              expense={overview.expense.toString()}
+          <Suspense fallback={<DashboardCardSkeleton label="Financial summary" />}>
+            <DashboardBalanceSection
+              accountsPromise={accountsPromise}
+              name={displayName}
+              totalsPromise={totalsPromise}
             />
-          </div>
-          <div className="min-[861px]:hidden">
-            <MobileBalanceCard
-              accounts={activeAccounts}
-              balance={totalBalance}
-              income={overview.income}
-              expense={overview.expense}
-            />
-          </div>
+          </Suspense>
         </div>
 
         <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
-          {totals ? (
-            <IncomeVsExpenseComparison
-              income={totals.selected.income}
-              expense={totals.selected.expense}
-              incomeChangeBps={incomeComparison?.changeBps ?? null}
-              expenseChangeBps={expenseComparison?.changeBps ?? null}
+          <Suspense fallback={<DashboardCardSkeleton label="Monthly comparison" />}>
+            <DashboardComparisonSection
               previousLabel={prevCardInterval.label}
+              totalsPromise={totalsPromise}
             />
-          ) : (
-            <DashboardSectionError title="Monthly comparison not available yet" />
-          )}
+          </Suspense>
         </div>
 
         <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
-          {isFulfilled(savingsResult) && isFulfilled(savingsBalanceResult) ? (
-            <SavingsSummaryCard
-              balance={savingsBalance}
-              periodNet={savingsNet}
+          <Suspense fallback={<DashboardCardSkeleton label="Savings summary" />}>
+            <DashboardSavingsSection
+              balancePromise={savingsBalancePromise}
+              savingsPromise={savingsPromise}
             />
-          ) : (
-            <DashboardSectionError title="Savings summary not available yet" />
-          )}
+          </Suspense>
         </div>
       </div>
 
@@ -290,74 +180,68 @@ export default async function DashboardPage({
           </div>
 
           <div className="hidden min-w-0 min-[861px]:col-span-8 min-[861px]:block min-[1024px]:col-span-8">
-            {daily ? (
-              <MonthlyExpenseCard
-                currentMonth={cardMonth}
+            <Suspense fallback={<DashboardCardSkeleton label="Monthly expenses" />}>
+              <DashboardMonthlyExpenseSection
+                cardInterval={cardInterval}
+                cardMonth={cardMonth}
+                dailyPromise={dailyPromise}
                 monthLabel={monthLabelFor(cardMonth)}
-                monthPoints={daily.points}
                 nextMonth={shiftMonthKey(cardMonth, 1)}
+                now={now}
                 prevMonth={shiftMonthKey(cardMonth, -1)}
-                recentPoints={recent.points}
-                totalExpense={daily.totalExpense}
-                totalIncome={overview.income}
+                recentPromise={recentPromise}
+                totalsPromise={totalsPromise}
               />
-            ) : (
-              <DashboardSectionError title="Monthly expenses not available yet" />
-            )}
+            </Suspense>
           </div>
 
           <div className="hidden min-w-0 min-[861px]:col-span-8 min-[861px]:block min-[1024px]:col-span-8">
-            <CashFlowOverviewCard
-              daily={cashFlowDaily}
-              monthly={cashFlowMonthly}
-              weekly={cashFlowWeekly}
-            />
+            <Suspense fallback={<DashboardCardSkeleton label="Cash flow" />}>
+              <DashboardCashFlowSection
+                dailyPromise={cashFlowDailyPromise}
+                daysInterval={cashFlowDaysInterval}
+                monthlyPromise={cashFlowMonthlyPromise}
+                monthsInterval={cashFlowMonthsInterval}
+                weeklyPromise={cashFlowWeeklyPromise}
+                weeksInterval={cashFlowWeeksInterval}
+              />
+            </Suspense>
           </div>
 
           <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
-            {isFulfilled(categoryResult) ? (
-              <CategoryExpenseCard
+            <Suspense fallback={<DashboardCardSkeleton label="Category expenses" />}>
+              <DashboardCategorySection
+                categoryPromise={categoryPromise}
                 periodLabel={monthLabelFor(cardMonth)}
-                points={categoryContract.points}
-                totalExpense={categoryContract.totalExpense}
               />
-            ) : (
-              <DashboardSectionError title="Category expenses not available yet" />
-            )}
+            </Suspense>
           </div>
 
           <div className="min-w-0 min-[861px]:col-span-4 min-[1024px]:col-span-4">
-            {isFulfilled(activityResult) ? (
-              <RecentActivityCard rows={activityResult.value} />
-            ) : (
-              <DashboardSectionError title="Recent activity not available yet" />
-            )}
+            <Suspense fallback={<DashboardCardSkeleton label="Recent activity" />}>
+              <DashboardRecentActivitySection activityPromise={activityPromise} />
+            </Suspense>
           </div>
 
           <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
-            {isFulfilled(categoryResult) ? (
-              <TopSpendingCard
+            <Suspense fallback={<DashboardCardSkeleton label="Top spending" />}>
+              <DashboardTopSpendingSection
+                categoryPromise={categoryPromise}
                 periodLabel={monthLabelFor(cardMonth)}
-                rows={categoryRows}
               />
-            ) : (
-              <DashboardSectionError title="Top categories not available yet" />
-            )}
+            </Suspense>
           </div>
 
           <div className="hidden min-w-0 min-[861px]:col-span-4 min-[861px]:block min-[1024px]:col-span-4">
-            <div className="grid gap-3">
-              {totals ? (
-                <AverageSpendingCard
-                  value={averageDaily}
-                  changeBps={averageComparison.changeBps}
-                  previousLabel={prevCardInterval.label}
-                />
-              ) : (
-                <DashboardSectionError title="Daily average not available yet" />
-              )}
-              <DashboardAccountCard rows={activeAccounts} />
-            </div>
+            <Suspense fallback={<DashboardCardSkeleton label="Daily average" />}>
+              <DashboardAveragesSection
+                accountsPromise={accountsPromise}
+                calendarDays={calendarDays}
+                prevCalendarDays={prevCalendarDays}
+                previousLabel={prevCardInterval.label}
+                totalsPromise={totalsPromise}
+              />
+            </Suspense>
           </div>
         </div>
       </div>

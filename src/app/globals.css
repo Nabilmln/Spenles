@@ -126,6 +126,13 @@ body {
   outline-offset: 2px;
 }
 
+/* recharts renders chart surfaces with tabindex for the accessibility
+   layer; remove the focus rectangle scoped to the chart svg only. */
+.recharts-surface:focus-visible,
+.recharts-wrapper:focus-visible {
+  outline: none;
+}
+
 .card {
   padding: 0.9rem;
   border: 1px solid var(--border);

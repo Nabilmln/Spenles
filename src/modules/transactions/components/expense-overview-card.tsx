@@ -10,18 +10,15 @@ export function ExpenseOverviewCard({
 
   return (
     <section aria-label="Expense overview">
-      {hasData ? (
-        <TransactionTrendChart points={points} />
-      ) : (
-        <div
-          className="grid h-[12.5rem] place-items-center rounded-[.9rem] bg-surface-subtle text-center"
+      <TransactionTrendChart points={points} />
+      {!hasData ? (
+        <p
           role="status"
+          className="m-0 px-[.1rem] pt-[.6rem] text-center text-[.76rem] text-muted"
         >
-          <p className="m-0 px-4 text-[.82rem] text-muted">
-            No transaction data yet.
-          </p>
-        </div>
-      )}
+          No transaction data yet.
+        </p>
+      ) : null}
     </section>
   );
 }
