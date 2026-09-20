@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   CalendarDays,
@@ -232,38 +232,45 @@ export function MakeBillWizard({
   const billTaxBps =
     billTaxMode === "percentage" ? percentageToBasisPoints(taxPercent) : 0;
 
-  let preview: ReturnType<typeof calculateSplitBill> | null = null;
-  try {
-    preview = calculateSplitBill({
-      discountMode: "none",
-      fixedDiscountAmount: 0n,
-      discountBps: 0,
-      billTaxMode,
-      fixedBillTaxAmount:
-        billTaxMode === "fixed" ? BigInt(fixedBillTaxAmount || "0") : 0n,
-      billTaxBps,
-      serviceChargeBps: 0,
-      participants: selectedFriends.map((friend, index) => ({
-        id: friend.id,
-        name: friend.name,
-        position: index + 1,
-      })),
-      items: items.map((item, index) => ({
-        id: item.id,
-        name: item.name,
-        position: index + 1,
-        quantity: Number(item.quantity),
-        unitPrice: BigInt(item.unitPrice || "0"),
-        itemTaxBps: 0,
-        assignments: item.participantIds.map((participantId) => ({
-          id: `${item.id}:${participantId}`,
-          participantId,
+  const preview = useMemo(() => {
+    try {
+      return calculateSplitBill({
+        discountMode: "none",
+        fixedDiscountAmount: 0n,
+        discountBps: 0,
+        billTaxMode,
+        fixedBillTaxAmount:
+          billTaxMode === "fixed" ? BigInt(fixedBillTaxAmount || "0") : 0n,
+        billTaxBps,
+        serviceChargeBps: 0,
+        participants: selectedFriends.map((friend, index) => ({
+          id: friend.id,
+          name: friend.name,
+          position: index + 1,
         })),
-      })),
-    });
-  } catch {
-    preview = null;
-  }
+        items: items.map((item, index) => ({
+          id: item.id,
+          name: item.name,
+          position: index + 1,
+          quantity: Number(item.quantity),
+          unitPrice: BigInt(item.unitPrice || "0"),
+          itemTaxBps: 0,
+          assignments: item.participantIds.map((participantId) => ({
+            id: `${item.id}:${participantId}`,
+            participantId,
+          })),
+        })),
+      });
+    } catch {
+      return null;
+    }
+  }, [
+    billTaxMode,
+    fixedBillTaxAmount,
+    billTaxBps,
+    selectedFriends,
+    items,
+  ]);
 
   const step1Valid = selectedFriends.length >= 1;
 
