@@ -6,7 +6,7 @@ export default defineConfig({
     exclude: [
       ...configDefaults.exclude,
       "**/*.integration.test.ts",
-      "e2e/**/*.spec.ts",
+      "e2e/**",
     ],
     setupFiles: ["./vitest.setup.ts"],
     restoreMocks: true,
