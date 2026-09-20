@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { fieldClass } from "@/components/ui/styles";
 import type { SplitBillTaxMode } from "../types/split-bill";
-import { RupiahInput } from "./money-input";
+import { AmountInput } from "@/components/ui/amount-input";
 
 export function MakeBillTaxSheet({
   open,
@@ -67,7 +67,7 @@ export function MakeBillTaxSheet({
             <label className="text-[.86rem] font-medium" htmlFor="make-bill-tax-fixed">
               Tax (Rp)
             </label>
-            <RupiahInput
+            <AmountInput
               id="make-bill-tax-fixed"
               value={fixedValue}
               onChange={onFixedChange}

@@ -12,5 +12,4 @@ export * from "./components/transaction-action-sheet";
 export * from "./components/transaction-filters";
 export * from "./components/transaction-form";
 export * from "./components/transaction-history-section";
-export * from "./components/transaction-list";
 export * from "./components/transaction-summary";

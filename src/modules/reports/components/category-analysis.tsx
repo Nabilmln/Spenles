@@ -54,14 +54,18 @@ export function CategoryAnalysis({
   totalIdr: string;
   categories: CategoryBreakdownItem[];
 }) {
-  const [activeType, setActiveType] = useState<"income" | "expense">(type);
-  const [activeTotalIdr, setActiveTotalIdr] = useState(totalIdr);
-  const [activeCategories, setActiveCategories] =
-    useState<CategoryBreakdownItem[]>(categories);
+  const [view, setView] = useState<{
+    type: "income" | "expense";
+    totalIdr: string;
+    categories: CategoryBreakdownItem[];
+  } | null>(null);
   const [pendingType, setPendingType] = useState<"income" | "expense" | null>(
     null,
   );
 
+  const activeType = view?.type ?? type;
+  const activeTotalIdr = view?.totalIdr ?? totalIdr;
+  const activeCategories = view?.categories ?? categories;
   const total = BigInt(activeTotalIdr);
   const slices: ReportCategorySlice[] = activeCategories.map(
     (category, index) => ({
@@ -82,9 +86,11 @@ export function CategoryAnalysis({
       categoryType: nextType,
     });
     if (result.ok) {
-      setActiveType(result.type);
-      setActiveTotalIdr(result.totalIdr);
-      setActiveCategories(result.categories);
+      setView({
+        type: result.type,
+        totalIdr: result.totalIdr,
+        categories: result.categories,
+      });
       const url = new URL(window.location.href);
       url.searchParams.set("categoryType", nextType);
       window.history.replaceState(null, "", `${url.pathname}${url.search}`);

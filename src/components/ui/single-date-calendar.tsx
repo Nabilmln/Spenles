@@ -7,11 +7,9 @@ import {
   monthShift,
   todayJakartaDate,
 } from "@/lib/dates/calendar";
-import { formatDateLong, formatMonthYearLabel } from "@/lib/dates/format-id";
+import { formatDateLong, formatMonthYearLabel, WEEK_DAYS } from "@/lib/dates/format-id";
 import { iconButtonClass } from "./styles";
 import { cn } from "@/lib/utils";
-
-const WEEK_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export function SingleDateCalendar({
   value,

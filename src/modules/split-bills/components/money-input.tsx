@@ -1,35 +1,8 @@
 "use client";
 
 import { useId } from "react";
-import { AmountInput } from "@/components/ui/amount-input";
 import { Input } from "@/components/ui/input";
 import { stripLeadingZeros } from "@/lib/money/input-format";
-
-export function RupiahInput({
-  value,
-  onChange,
-  id,
-  className,
-  ...props
-}: {
-  value: string;
-  onChange: (value: string) => void;
-  id?: string;
-  className?: string;
-} & Omit<
-  React.InputHTMLAttributes<HTMLInputElement>,
-  "value" | "onChange" | "defaultValue"
->) {
-  return (
-    <AmountInput
-      id={id}
-      className={className}
-      value={value}
-      onChange={onChange}
-      {...props}
-    />
-  );
-}
 
 export function QuantityInput({
   value,

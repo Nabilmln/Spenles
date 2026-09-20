@@ -3,11 +3,12 @@ import "server-only";
 import { sql } from "drizzle-orm";
 import { db } from "@/db";
 import type { Database } from "@/db/types";
+import type { AccountType } from "../constants/account-types";
 
 export type AccountBalanceRow = {
   id: string;
   name: string;
-  type: "cash" | "bank" | "e_wallet" | "savings" | "other";
+  type: AccountType;
   status: "active" | "archived";
   systemKey: string | null;
   openingBalance: string;

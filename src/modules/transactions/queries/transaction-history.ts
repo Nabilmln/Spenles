@@ -61,24 +61,34 @@ export async function listTransactionHistory(
   conditions.push(intervalClause(filters));
   const txWhere = conditions.filter(Boolean).join(" and ");
 
-  const result = await database.execute<RawHistoryRow>(sql`
-    select
-      t.id,
-      t.type::text as type,
-      t.amount::text as amount,
-      t.transaction_at as at,
-      t.note,
-      c.name as category_name,
-      c.id::text as category_id,
-      c.icon::text as category_icon
-    from transactions t
-    inner join categories c on c.id = t.category_id and c.user_id = ${userId}
-    inner join accounts a on a.id = t.account_id and a.user_id = ${userId}
-    where t.user_id = ${userId} and ${sql.raw(txWhere)}
-    order by t.transaction_at desc, t.id desc
-    limit ${pageSize}
-    offset ${offset}
-  `);
+  const [result, txCount] = await Promise.all([
+    database
+      .execute<RawHistoryRow>(sql`
+        select
+          t.id,
+          t.type::text as type,
+          t.amount::text as amount,
+          t.transaction_at as at,
+          t.note,
+          c.name as category_name,
+          c.id::text as category_id,
+          c.icon::text as category_icon
+        from transactions t
+        inner join categories c on c.id = t.category_id and c.user_id = ${userId}
+        inner join accounts a on a.id = t.account_id and a.user_id = ${userId}
+        where t.user_id = ${userId} and ${sql.raw(txWhere)}
+        order by t.transaction_at desc, t.id desc
+        limit ${pageSize}
+        offset ${offset}
+      `),
+    database
+      .execute<{ count: string }>(sql`
+        select count(*)::text as count
+        from transactions t
+        inner join categories c on c.id = t.category_id and c.user_id = ${userId}
+        where t.user_id = ${userId} and ${sql.raw(txWhere)}
+      `),
+  ]);
 
   const rows = result.rows.map((row) => ({
     id: row.id,
@@ -92,16 +102,6 @@ export async function listTransactionHistory(
     sourceAccountName: null,
     destinationAccountName: null,
   }));
-
-  const [txCount] = await Promise.all([
-    database
-      .execute<{ count: string }>(sql`
-        select count(*)::text as count
-        from transactions t
-        inner join categories c on c.id = t.category_id and c.user_id = ${userId}
-        where t.user_id = ${userId} and ${sql.raw(txWhere)}
-      `),
-  ]);
 
   const total = Number(txCount.rows[0]?.count ?? "0");
 

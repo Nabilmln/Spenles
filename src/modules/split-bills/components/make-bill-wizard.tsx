@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   CalendarDays,
@@ -13,6 +13,7 @@ import {
 import { useToast } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { AmountInput } from "@/components/ui/amount-input";
 import {
   cardClass,
   fieldClass,
@@ -42,7 +43,7 @@ import { MakeBillDateSheet } from "./make-bill-date-sheet";
 import { MakeBillFriendPickerSheet } from "./make-bill-friend-picker-sheet";
 import { MakeBillOverviewSheet, type MakeBillOverviewItem } from "./make-bill-overview-sheet";
 import { MakeBillTaxSheet } from "./make-bill-tax-sheet";
-import { QuantityInput, RupiahInput } from "./money-input";
+import { QuantityInput } from "./money-input";
 import { SplitBillResultSheet } from "./split-bill-result-sheet";
 
 type ItemDraft = {
@@ -52,6 +53,57 @@ type ItemDraft = {
   unitPrice: string;
   participantIds: string[];
 };
+
+type InitialRemap = {
+  selected: FriendRow[];
+  items: {
+    id: string;
+    name: string;
+    quantity: number;
+    unitPrice: string;
+    participantIds: string[];
+  }[];
+};
+
+function buildInitialRemap(
+  friends: FriendRow[],
+  initial: MakeBillDraftInitial,
+): InitialRemap {
+  const friendByName = new Map<string, FriendRow>();
+  for (const friend of friends) {
+    const key = friend.name.trim().toLowerCase();
+    if (!friendByName.has(key)) friendByName.set(key, friend);
+  }
+  const friendIdByDraftId = new Map<string, string>();
+  const selected: FriendRow[] = [];
+  for (const participant of initial.participants) {
+    const matched = friendByName.get(participant.name.trim().toLowerCase());
+    if (matched) {
+      friendIdByDraftId.set(participant.id, matched.id);
+      selected.push(matched);
+    } else {
+      friendIdByDraftId.set(participant.id, participant.id);
+      selected.push({
+        id: participant.id,
+        name: participant.name,
+        createdAt: "1970-01-01T00:00:00.000Z",
+      });
+    }
+  }
+  return {
+    selected,
+    items: initial.items.map((item) => ({
+      id: item.id,
+      name: item.name,
+      quantity: item.quantity,
+      unitPrice: item.unitPrice,
+      participantIds: item.participantIds.map(
+        (participantId) =>
+          friendIdByDraftId.get(participantId) ?? participantId,
+      ),
+    })),
+  };
+}
 
 export type MakeBillDraftInitial = {
   id: string;
@@ -134,43 +186,9 @@ export function MakeBillWizard({
   const [saving, setSaving] = useState(false);
   const [finalizing, setFinalizing] = useState(false);
 
-  const initialRemap = useMemo(() => {
-    if (!initial) return null;
-    const friendByName = new Map<string, FriendRow>();
-    for (const friend of friends) {
-      const key = friend.name.trim().toLowerCase();
-      if (!friendByName.has(key)) friendByName.set(key, friend);
-    }
-    const friendIdByDraftId = new Map<string, string>();
-    const selected: FriendRow[] = [];
-    for (const participant of initial.participants) {
-      const matched = friendByName.get(participant.name.trim().toLowerCase());
-      if (matched) {
-        friendIdByDraftId.set(participant.id, matched.id);
-        selected.push(matched);
-      } else {
-        friendIdByDraftId.set(participant.id, participant.id);
-        selected.push({
-          id: participant.id,
-          name: participant.name,
-          createdAt: "1970-01-01T00:00:00.000Z",
-        });
-      }
-    }
-    return {
-      selected,
-      items: initial.items.map((item) => ({
-        id: item.id,
-        name: item.name,
-        quantity: item.quantity,
-        unitPrice: item.unitPrice,
-        participantIds: item.participantIds.map(
-          (participantId) =>
-            friendIdByDraftId.get(participantId) ?? participantId,
-        ),
-      })),
-    };
-  }, [friends, initial]);
+  const [initialRemap] = useState<InitialRemap | null>(() =>
+    initial ? buildInitialRemap(friends, initial) : null,
+  );
 
   const [step, setStep] = useState(initial ? 2 : 1);
   const [selectedFriends, setSelectedFriends] = useState<FriendRow[]>(
@@ -213,44 +231,6 @@ export function MakeBillWizard({
 
   const billTaxBps =
     billTaxMode === "percentage" ? percentageToBasisPoints(taxPercent) : 0;
-
-  const payload = useMemo(
-    () => ({
-      merchantName: merchantName.trim(),
-      billDate,
-      note,
-      discountMode: "none" as const,
-      fixedDiscountAmount: "0",
-      discountBps: 0,
-      billTaxMode,
-      fixedBillTaxAmount:
-        billTaxMode === "fixed" ? fixedBillTaxAmount || "0" : "0",
-      billTaxBps,
-      serviceChargeBps: 0,
-      participants: selectedFriends.map((friend) => ({
-        id: friend.id,
-        name: friend.name,
-      })),
-      items: items.map((item) => ({
-        id: item.id,
-        name: item.name,
-        quantity: item.quantity,
-        unitPrice: item.unitPrice,
-        itemTaxBps: 0,
-        participantIds: item.participantIds,
-      })),
-    }),
-    [
-      merchantName,
-      billDate,
-      note,
-      billTaxMode,
-      fixedBillTaxAmount,
-      billTaxBps,
-      selectedFriends,
-      items,
-    ],
-  );
 
   let preview: ReturnType<typeof calculateSplitBill> | null = null;
   try {
@@ -327,7 +307,34 @@ export function MakeBillWizard({
 
   function buildFormData() {
     const formData = new FormData();
-    formData.set("payload", JSON.stringify(payload));
+    formData.set(
+      "payload",
+      JSON.stringify({
+        merchantName: merchantName.trim(),
+        billDate,
+        note,
+        discountMode: "none" as const,
+        fixedDiscountAmount: "0",
+        discountBps: 0,
+        billTaxMode,
+        fixedBillTaxAmount:
+          billTaxMode === "fixed" ? fixedBillTaxAmount || "0" : "0",
+        billTaxBps,
+        serviceChargeBps: 0,
+        participants: selectedFriends.map((friend) => ({
+          id: friend.id,
+          name: friend.name,
+        })),
+        items: items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          quantity: item.quantity,
+          unitPrice: item.unitPrice,
+          itemTaxBps: 0,
+          participantIds: item.participantIds,
+        })),
+      }),
+    );
     if (savedRef) {
       formData.set("id", savedRef.id);
       formData.set("expectedRevision", String(savedRef.revision));
@@ -650,7 +657,7 @@ export function MakeBillWizard({
                         >
                           Unit price
                         </label>
-                        <RupiahInput
+                        <AmountInput
                           id={`make-bill-item-price-${item.id}`}
                           min="1"
                           value={item.unitPrice}
@@ -664,7 +671,7 @@ export function MakeBillWizard({
                         >
                           Total price
                         </label>
-                        <RupiahInput
+                        <AmountInput
                           id={`make-bill-item-total-${item.id}`}
                           min="1"
                           value={total}

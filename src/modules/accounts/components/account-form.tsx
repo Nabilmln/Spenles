@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { fieldClass, fieldLabelClass } from "@/components/ui/styles";
 import type { AccountActionState } from "../actions/account-actions";
-import { ACCOUNT_TYPES } from "../constants/account-types";
+import { ACCOUNT_TYPES, type AccountType } from "../constants/account-types";
 
 export function AccountForm({
   action,
@@ -20,7 +20,7 @@ export function AccountForm({
   initial?: {
     id: string;
     name: string;
-    type: "cash" | "bank" | "e_wallet" | "savings" | "other";
+    type: AccountType;
     openingBalance: string;
   };
 }) {

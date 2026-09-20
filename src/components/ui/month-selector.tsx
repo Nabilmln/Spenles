@@ -12,10 +12,8 @@ import {
   monthShift,
   todayJakartaDate,
 } from "@/lib/dates/calendar";
-import { formatDateLong, formatMonthYearLabel } from "@/lib/dates/format-id";
+import { formatDateLong, formatMonthYearLabel, WEEK_DAYS } from "@/lib/dates/format-id";
 import { iconButtonClass } from "./styles";
-
-const WEEK_DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
 export function MonthSelector({
   month,

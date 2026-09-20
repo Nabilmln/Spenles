@@ -30,6 +30,16 @@ export const MONTHS_SHORT = [
   "Dec",
 ] as const;
 
+export const WEEK_DAYS = [
+  "Mon",
+  "Tue",
+  "Wed",
+  "Thu",
+  "Fri",
+  "Sat",
+  "Sun",
+] as const;
+
 const WEEKDAYS = [
   "Sunday",
   "Monday",

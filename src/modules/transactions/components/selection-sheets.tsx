@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { Check } from "lucide-react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { cn } from "@/lib/utils";
@@ -25,8 +26,14 @@ export function CategorySelectionSheet({
   selectedId: string;
   onSelect: (id: string) => void;
 }) {
-  const sorted = [...categories].sort((left, right) =>
-    left.name.toLocaleLowerCase().localeCompare(right.name.toLocaleLowerCase()),
+  const sorted = useMemo(
+    () =>
+      [...categories].sort((left, right) =>
+        left.name
+          .toLocaleLowerCase()
+          .localeCompare(right.name.toLocaleLowerCase()),
+      ),
+    [categories],
   );
 
   return (
