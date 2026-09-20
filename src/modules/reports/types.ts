@@ -58,36 +58,12 @@ export type ReportInsight = {
   inclusiveDays: number;
 };
 
-export type ReportAccount = {
-  accountId: string;
-  name: string;
-  type: string;
-  openingBalanceIdr: string;
-  incomeIdr: string;
-  expenseIdr: string;
-  incomingTransfersIdr: string;
-  outgoingTransfersIdr: string;
-  closingBalanceIdr: string;
-};
-
-export type ReportBudget = {
-  categoryName: string;
-  amountIdr: string;
-  usageIdr: string;
-  remainingIdr: string;
-  percentageBps: string;
-  status: "safe" | "warning" | "exceeded";
-};
-
 export type FinancialReport = {
   displayName: string;
   generatedAt: Date;
   filters: ReportFilters;
   summary: ReportSummary;
-  months: ReportMonth[];
   categories: ReportCategory[];
-  accounts: ReportAccount[];
-  budgets: ReportBudget[];
   transactions: ReportTransaction[];
   transactionCount: number;
 };

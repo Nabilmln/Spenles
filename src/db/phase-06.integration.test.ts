@@ -159,10 +159,6 @@ describe("Phase 06 authenticated reports and exports", () => {
       "100000",
       "25000",
     ]);
-    const source = report.accounts.find((row) => row.accountId === accountA);
-    const destination = report.accounts.find((row) => row.accountId === accountA2);
-    expect(source?.closingBalanceIdr).toBe("55000");
-    expect(destination?.closingBalanceIdr).toBe("20000");
   });
 
   it("exports only active owned CSV rows in deterministic order", async () => {

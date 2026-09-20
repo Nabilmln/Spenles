@@ -19,24 +19,9 @@ function report(): FinancialReport {
       includeDetails: false,
     },
     summary: { incomeIdr: "100000", expenseIdr: "25000", netIdr: "75000" },
-    months: [{ month: "2026-08", incomeIdr: "100000", expenseIdr: "25000" }],
     categories: [
       { categoryId: "category-1", name: "Makan", amountIdr: "25000" },
     ],
-    accounts: [
-      {
-        accountId: "account-1",
-        name: "Kas Utama",
-        type: "cash",
-        openingBalanceIdr: "0",
-        incomeIdr: "100000",
-        expenseIdr: "25000",
-        incomingTransfersIdr: "0",
-        outgoingTransfersIdr: "0",
-        closingBalanceIdr: "75000",
-      },
-    ],
-    budgets: [],
     transactions: [],
     transactionCount: 2,
   };
@@ -52,9 +37,7 @@ describe("PDF report rendering", () => {
   it("renders a valid zero-data report", async () => {
     const value = report();
     value.summary = { incomeIdr: "0", expenseIdr: "0", netIdr: "0" };
-    value.months = [];
     value.categories = [];
-    value.accounts = [];
     value.transactionCount = 0;
     const result = await renderFinancialReportPdf(value);
     expect(result.subarray(0, 5).toString()).toBe("%PDF-");

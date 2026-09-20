@@ -47,10 +47,16 @@ export default async function ReportsPage({
   const categoryType =
     raw.categoryType === "income" ? "income" : "expense";
 
-  const [analysis, categoryBreakdown] = await Promise.all([
-    getReportAnalysis(user.id, from, to),
-    getReportCategoryBreakdown(user.id, from, to, categoryType),
-  ]);
+  const analysis = await getReportAnalysis(user.id, from, to);
+  const categoryBreakdown = await getReportCategoryBreakdown(
+    user.id,
+    from,
+    to,
+    categoryType,
+    categoryType === "income"
+      ? analysis.summary.incomeIdr
+      : analysis.summary.expenseIdr,
+  );
 
   const totals = {
     incomeIdr: analysis.summary.incomeIdr,

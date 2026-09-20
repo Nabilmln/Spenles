@@ -5,14 +5,11 @@ import { db } from "@/db";
 import type { Database } from "@/db/types";
 import { conditionalSumSql } from "@/db/sql-helpers";
 import { formatRangeLong } from "@/lib/dates/format-id";
-import { calculateBudgetMetrics } from "@/modules/budgets/services/budget-metrics";
 import { inclusiveDayCount } from "@/modules/reports/lib/report-date";
 import { REPORT_DETAIL_LIMIT } from "../constants";
 import type {
   ExportFilters,
   FinancialReport,
-  ReportAccount,
-  ReportBudget,
   ReportCategory,
   ReportFilters,
   ReportMonth,
@@ -34,24 +31,6 @@ type TransactionRow = {
   updated_at: Date;
   account_name: string;
   category_name: string;
-};
-type AccountRow = {
-  account_id: string;
-  name: string;
-  type: string;
-  opening_balance: string;
-  income: string;
-  expense: string;
-  incoming_transfers: string;
-  outgoing_transfers: string;
-  closing_balance: string;
-};
-type BudgetRow = {
-  category_name: string;
-  amount: string;
-  warning_threshold_bps: number | null;
-  warning_days_remaining: number | null;
-  usage: string;
 };
 
 function transactionFilterSql(userId: string, filters: ExportFilters) {
@@ -294,187 +273,6 @@ async function getTransactions(
   }));
 }
 
-async function getAccounts(
-  userId: string,
-  filters: ReportFilters,
-  database: Database,
-): Promise<ReportAccount[]> {
-  const result = await database.execute<AccountRow>(sql`
-    select
-      owned_account.id as account_id,
-      owned_account.name,
-      owned_account.type::text,
-      (
-        owned_account.opening_balance
-        + coalesce((
-          select sum(case when historical_transaction.type = 'income'
-            then historical_transaction.amount else -historical_transaction.amount end)
-          from transactions as historical_transaction
-          where historical_transaction.user_id = ${userId}
-            and historical_transaction.account_id = owned_account.id
-            and historical_transaction.deleted_at is null
-            and historical_transaction.transaction_at < ${filters.interval.start}
-        ), 0)
-        + coalesce((
-          select sum(case
-            when historical_transfer.destination_account_id = owned_account.id
-              then historical_transfer.amount
-            else -historical_transfer.amount end)
-          from transfers as historical_transfer
-          where historical_transfer.user_id = ${userId}
-            and (
-              historical_transfer.source_account_id = owned_account.id
-              or historical_transfer.destination_account_id = owned_account.id
-            )
-            and historical_transfer.transferred_at < ${filters.interval.start}
-        ), 0)
-      )::text as opening_balance,
-      coalesce((
-        select sum(period_transaction.amount)
-        from transactions as period_transaction
-        where period_transaction.user_id = ${userId}
-          and period_transaction.account_id = owned_account.id
-          and period_transaction.deleted_at is null
-          and period_transaction.type = 'income'
-          and period_transaction.transaction_at >= ${filters.interval.start}
-          and period_transaction.transaction_at < ${filters.interval.end}
-          and (${filters.type ?? null}::text is null or ${filters.type ?? null}::text = 'income')
-          and (${filters.categoryId ?? null}::uuid is null
-            or period_transaction.category_id = ${filters.categoryId ?? null}::uuid)
-      ), 0)::text as income,
-      coalesce((
-        select sum(period_transaction.amount)
-        from transactions as period_transaction
-        where period_transaction.user_id = ${userId}
-          and period_transaction.account_id = owned_account.id
-          and period_transaction.deleted_at is null
-          and period_transaction.type = 'expense'
-          and period_transaction.transaction_at >= ${filters.interval.start}
-          and period_transaction.transaction_at < ${filters.interval.end}
-          and (${filters.type ?? null}::text is null or ${filters.type ?? null}::text = 'expense')
-          and (${filters.categoryId ?? null}::uuid is null
-            or period_transaction.category_id = ${filters.categoryId ?? null}::uuid)
-      ), 0)::text as expense,
-      coalesce((
-        select sum(period_transfer.amount)
-        from transfers as period_transfer
-        where period_transfer.user_id = ${userId}
-          and period_transfer.destination_account_id = owned_account.id
-          and period_transfer.transferred_at >= ${filters.interval.start}
-          and period_transfer.transferred_at < ${filters.interval.end}
-      ), 0)::text as incoming_transfers,
-      coalesce((
-        select sum(period_transfer.amount)
-        from transfers as period_transfer
-        where period_transfer.user_id = ${userId}
-          and period_transfer.source_account_id = owned_account.id
-          and period_transfer.transferred_at >= ${filters.interval.start}
-          and period_transfer.transferred_at < ${filters.interval.end}
-      ), 0)::text as outgoing_transfers,
-      (
-        owned_account.opening_balance
-        + coalesce((
-          select sum(case when closing_transaction.type = 'income'
-            then closing_transaction.amount else -closing_transaction.amount end)
-          from transactions as closing_transaction
-          where closing_transaction.user_id = ${userId}
-            and closing_transaction.account_id = owned_account.id
-            and closing_transaction.deleted_at is null
-            and closing_transaction.transaction_at < ${filters.interval.end}
-        ), 0)
-        + coalesce((
-          select sum(case
-            when closing_transfer.destination_account_id = owned_account.id
-              then closing_transfer.amount
-            else -closing_transfer.amount end)
-          from transfers as closing_transfer
-          where closing_transfer.user_id = ${userId}
-            and (
-              closing_transfer.source_account_id = owned_account.id
-              or closing_transfer.destination_account_id = owned_account.id
-            )
-            and closing_transfer.transferred_at < ${filters.interval.end}
-        ), 0)
-      )::text as closing_balance
-    from accounts as owned_account
-    where owned_account.user_id = ${userId}
-      and (${filters.accountId ?? null}::uuid is null
-        or owned_account.id = ${filters.accountId ?? null}::uuid)
-    order by lower(owned_account.name), owned_account.id
-  `);
-  return result.rows.map((row) => ({
-    accountId: row.account_id,
-    name: row.name,
-    type: row.type,
-    openingBalanceIdr: row.opening_balance,
-    incomeIdr: row.income,
-    expenseIdr: row.expense,
-    incomingTransfersIdr: row.incoming_transfers,
-    outgoingTransfersIdr: row.outgoing_transfers,
-    closingBalanceIdr: row.closing_balance,
-  }));
-}
-
-async function getBudgets(
-  userId: string,
-  filters: ReportFilters,
-  database: Database,
-): Promise<ReportBudget[]> {
-  if (
-    filters.interval.kind !== "month" ||
-    filters.type ||
-    filters.categoryId ||
-    filters.accountId
-  ) {
-    return [];
-  }
-  const result = await database.execute<BudgetRow>(sql`
-    select
-      owned_category.name as category_name,
-      owned_budget.amount::text,
-      owned_budget.warning_threshold_bps,
-      owned_budget.warning_days_remaining,
-      coalesce(sum(owned_transaction.amount), 0)::text as usage
-    from budgets as owned_budget
-    inner join categories as owned_category
-      on owned_category.id = owned_budget.category_id
-      and owned_category.user_id = ${userId}
-    left join transactions as owned_transaction
-      on owned_transaction.user_id = ${userId}
-      and owned_transaction.category_id = owned_budget.category_id
-      and owned_transaction.type = 'expense'
-      and owned_transaction.deleted_at is null
-      and owned_transaction.transaction_at >= ${filters.interval.start}
-      and owned_transaction.transaction_at < ${filters.interval.end}
-    where owned_budget.user_id = ${userId}
-      and owned_budget.status = 'active'
-      and owned_budget.period_type = 'monthly'
-    group by
-      owned_budget.id,
-      owned_category.name,
-      owned_category.normalized_name
-    order by owned_category.normalized_name, owned_budget.id
-  `);
-  return result.rows.map((row) => {
-    const metrics = calculateBudgetMetrics({
-      amount: BigInt(row.amount),
-      usage: BigInt(row.usage),
-      warning: row.warning_threshold_bps !== null
-        ? { type: "threshold", thresholdBps: row.warning_threshold_bps }
-        : { type: "days", daysRemaining: row.warning_days_remaining ?? 3 },
-      daysRemainingInPeriod: 30,
-    });
-    return {
-      categoryName: row.category_name,
-      amountIdr: row.amount,
-      usageIdr: row.usage,
-      remainingIdr: metrics.remaining.toString(),
-      percentageBps: metrics.percentageBps.toString(),
-      status: metrics.status,
-    };
-  });
-}
-
 export async function getFinancialReport(
   userId: string,
   displayName: string,
@@ -482,20 +280,9 @@ export async function getFinancialReport(
   database: Database = db,
   generatedAt = new Date(),
 ): Promise<FinancialReport> {
-  const [
-    summary,
-    months,
-    categories,
-    accounts,
-    budgets,
-    detailRows,
-    transactionCount,
-  ] = await Promise.all([
+  const [summary, categories, detailRows, transactionCount] = await Promise.all([
     getTotals(userId, filters, database),
-    getMonths(userId, filters, database),
     getCategories(userId, filters, database),
-    getAccounts(userId, filters, database),
-    getBudgets(userId, filters, database),
     filters.includeDetails
       ? getTransactions(userId, filters, REPORT_DETAIL_LIMIT + 1, database)
       : Promise.resolve([]),
@@ -512,10 +299,7 @@ export async function getFinancialReport(
     generatedAt,
     filters,
     summary,
-    months,
     categories,
-    accounts,
-    budgets,
     transactions: detailRows,
     transactionCount,
   };
@@ -556,10 +340,9 @@ export async function getReportAnalysis(
   const filters: ReportFilters = { interval, includeDetails: false };
   const inclusiveDays = inclusiveDayCount(from, to);
   const daily = inclusiveDays > 0 && inclusiveDays <= 62;
-  const [summary, months, categories, dayRows] = await Promise.all([
+  const [summary, months, dayRows] = await Promise.all([
     getTotals(userId, filters, database),
     daily ? Promise.resolve([]) : getMonths(userId, filters, database),
-    getCategories(userId, filters, database),
     daily ? getDays(userId, filters, database) : Promise.resolve([]),
   ]);
   const expense = BigInt(summary.expenseIdr);
@@ -575,7 +358,6 @@ export async function getReportAnalysis(
   return {
     summary,
     months,
-    categories,
     daily,
     series,
     insight: { inclusiveDays, averageDailyExpenseIdr },
@@ -600,6 +382,7 @@ export async function getReportCategoryBreakdown(
   from: string,
   to: string,
   type: "income" | "expense",
+  totalIdr?: string,
   database: Database = db,
 ) {
   const { interval } = customInterval(from, to);
@@ -608,11 +391,15 @@ export async function getReportCategoryBreakdown(
     type,
     includeDetails: false,
   };
-  const [categories, summary] = await Promise.all([
-    getCategories(userId, filters, database),
-    getTotals(userId, filters, database),
-  ]);
-  const total = BigInt(summary[type === "income" ? "incomeIdr" : "expenseIdr"]);
+  const categories = await getCategories(userId, filters, database);
+  const total =
+    totalIdr !== undefined
+      ? BigInt(totalIdr)
+      : BigInt(
+          (
+            await getTotals(userId, filters, database)
+          )[type === "income" ? "incomeIdr" : "expenseIdr"],
+        );
   return {
     type,
     totalIdr: total.toString(),

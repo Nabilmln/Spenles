@@ -26,11 +26,13 @@ export async function GET(request: Request) {
   }
 
   try {
-    const filtersOwned = await validateOwnedReportFilters(user.id, filters);
+    const [filtersOwned, profile] = await Promise.all([
+      validateOwnedReportFilters(user.id, filters),
+      getProfile(user.id),
+    ]);
     if (!filtersOwned) {
       return safeExportError(400, "Invalid report parameters.");
     }
-    const profile = await getProfile(user.id);
     if (!profile) return safeExportError(500, "Report could not be created.");
     const report = await getFinancialReport(
       user.id,

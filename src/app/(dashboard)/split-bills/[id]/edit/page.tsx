@@ -18,10 +18,12 @@ export default async function EditSplitBillPage({
   const user = await requireSessionUser();
   const parsedId = splitBillIdSchema.safeParse((await params).id);
   if (!parsedId.success) notFound();
-  const source = await getOwnedSplitBillSource(user.id, parsedId.data);
+  const [source, friends] = await Promise.all([
+    getOwnedSplitBillSource(user.id, parsedId.data),
+    listFriends(user.id),
+  ]);
   if (!source) notFound();
   if (source.bill.status !== "draft") redirect("/split-bills");
-  const friends = await listFriends(user.id);
   return (
     <div className={`${pageStackClass} ${narrowPageClass}`}>
       <MakeBillWizard
