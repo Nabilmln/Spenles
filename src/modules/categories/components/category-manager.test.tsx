@@ -167,6 +167,17 @@ describe("category manager", () => {
     expect(screen.getByRole("radio", { name: "Dining icon" })).not.toBeChecked();
   });
 
+  it("renders the category icon circle with its configured color", () => {
+    const { container } = renderManager([
+      expense({ id: "exp-red", name: "Kesehatan", color: "red" }),
+      expense({ color: null }),
+    ]);
+
+    const rows = container.querySelectorAll("[role=listitem]");
+    expect(rows[0].firstElementChild).toHaveClass("bg-red-50");
+    expect(rows[1].firstElementChild).toHaveClass("bg-primary-50");
+  });
+
   it("opens the icon picker with accessible radio labels", () => {
     const onChange = vi.fn();
     render(<CategoryIconPicker value="utensils" onChange={onChange} />);

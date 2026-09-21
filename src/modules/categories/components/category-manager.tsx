@@ -39,6 +39,17 @@ function emptyCategory(type: "income" | "expense"): CategoryItem {
   };
 }
 
+const CATEGORY_ICON_COLOR_CLASS: Record<string, string> = {
+  blue: "bg-primary-50 text-primary-600",
+  green: "bg-[color-mix(in_srgb,var(--income)_10%,transparent)] text-income",
+  red: "bg-red-50 text-red-600",
+  amber: "bg-amber-50 text-amber-600",
+  purple: "bg-purple-50 text-purple-600",
+  pink: "bg-pink-50 text-pink-600",
+  cyan: "bg-cyan-50 text-cyan-600",
+  slate: "bg-slate-50 text-slate-600",
+};
+
 export function CategoryManager({
   categories,
   deletableIds,
@@ -136,11 +147,10 @@ export function CategoryManager({
                 <span
                   className={cn(
                     "grid size-[2.2rem] shrink-0 place-items-center rounded-full bg-primary-50 text-primary-600",
-                    item.color === "green" &&
-                      "bg-[color-mix(in_srgb,var(--income)_10%,transparent)] text-income",
+                    item.color &&
+                      CATEGORY_ICON_COLOR_CLASS[item.color],
                     item.status === "archived" && "opacity-55",
                   )}
-                  data-color={item.color ?? undefined}
                 >
                   <Icon aria-hidden="true" size={18} />
                 </span>
