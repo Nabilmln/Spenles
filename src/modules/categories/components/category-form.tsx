@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { Check, ChevronRight } from "lucide-react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { Button } from "@/components/ui/button";
@@ -32,6 +33,7 @@ export function CategoryForm({
   action,
   initial,
   formId,
+  onClose,
 }: {
   action: (state: CategoryActionState, data: FormData) => Promise<CategoryActionState>;
   initial?: {
@@ -42,14 +44,22 @@ export function CategoryForm({
     color: string | null;
   };
   formId?: string;
+  onClose?: () => void;
 }) {
-  const [, formAction, pending] = useToastActionState(action, {});
+  const router = useRouter();
+  const [state, formAction, pending] = useToastActionState(action, {});
   const key = initial?.id ?? "new";
-  const [type, setType] = useState<"income" | "expense">("expense");
+  const [type, setType] = useState<"income" | "expense">(initial?.type ?? "expense");
   const [icon, setIcon] = useState<string | null>(initial?.icon ?? null);
   const [color, setColor] = useState<string>(initial?.color ?? "");
   const [typeSheetOpen, setTypeSheetOpen] = useState(false);
   const [colorSheetOpen, setColorSheetOpen] = useState(false);
+
+  useEffect(() => {
+    if (!state.success) return;
+    router.refresh();
+    onClose?.();
+  }, [state.success, router, onClose]);
 
   return (
     <form action={formAction} className="grid gap-4" id={formId}>

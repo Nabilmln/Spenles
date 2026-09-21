@@ -8,6 +8,7 @@ import { buttonClass, iconButtonClass } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import {
   archiveCategoryAction,
+  createCategoryAction,
   deleteCategoryAction,
   updateCategoryAction,
   type CategoryStatusActionState,
@@ -221,10 +222,11 @@ function CategoryEditorSheet({
     >
       {item ? (
         <CategoryForm
-          action={updateCategoryAction}
+          action={item.id ? updateCategoryAction : createCategoryAction}
           formId={
             item.id ? `category-edit-${item.id}` : "category-create-form"
           }
+          onClose={onClose}
           initial={
             item.id
               ? {

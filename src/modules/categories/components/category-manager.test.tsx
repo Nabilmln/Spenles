@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { CategoryIconPicker } from "./category-icon-picker";
 import { CategoryManager } from "./category-manager";
@@ -44,7 +44,12 @@ vi.mock("../actions/category-actions", () => ({
   archiveCategoryAction: async () => ({}),
   restoreCategoryAction: async () => ({}),
   deleteCategoryAction: async () => ({}),
-  updateCategoryAction: async () => ({}),
+  updateCategoryAction: async () => ({ success: "Category updated successfully." }),
+  createCategoryAction: async () => ({ success: "Category created successfully." }),
+}));
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ refresh: vi.fn(), push: vi.fn(), replace: vi.fn() }),
 }));
 
 describe("category manager", () => {
@@ -112,6 +117,43 @@ describe("category manager", () => {
     const dialog = screen.getByRole("dialog", { name: "Delete category?" });
     expect(screen.queryByRole("button", { name: "Delete permanently" })).not.toBeInTheDocument();
     expect(dialog).toHaveTextContent(/cannot be permanently deleted/u);
+  });
+
+  it("closes the edit sheet after a successful save", async () => {
+    renderManager([expense()]);
+    fireEvent.click(screen.getByRole("button", { name: "Actions for Makanan" }));
+    fireEvent.click(screen.getByRole("button", { name: "Edit category" }));
+    const dialog = screen.getByRole("dialog", { name: "Edit category" });
+    expect(dialog).toBeInTheDocument();
+
+    const item = dialog.querySelector("input[name=name]");
+    await waitFor(() => {
+      expect(item).not.toBeNull();
+    });
+    fireEvent.change(item as HTMLInputElement, { target: { value: "Makan baru" } });
+    fireEvent.submit(dialog.querySelector("form") as HTMLFormElement);
+
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: "Edit category" })).not.toBeInTheDocument();
+    });
+  });
+
+  it("closes the create sheet after a successful add", async () => {
+    renderManager([]);
+    fireEvent.click(screen.getByRole("button", { name: "Add Category" }));
+    const dialog = screen.getByRole("dialog", { name: "Add category" });
+    expect(dialog).toBeInTheDocument();
+
+    const item = dialog.querySelector("input[name=name]");
+    await waitFor(() => {
+      expect(item).not.toBeNull();
+    });
+    fireEvent.change(item as HTMLInputElement, { target: { value: "Kesehatan baru" } });
+    fireEvent.submit(dialog.querySelector("form") as HTMLFormElement);
+
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: "Add category" })).not.toBeInTheDocument();
+    });
   });
 
   it("lets an existing category change its icon in the edit sheet", () => {
