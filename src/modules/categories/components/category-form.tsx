@@ -46,6 +46,7 @@ export function CategoryForm({
   const [, formAction, pending] = useToastActionState(action, {});
   const key = initial?.id ?? "new";
   const [type, setType] = useState<"income" | "expense">("expense");
+  const [icon, setIcon] = useState<string | null>(initial?.icon ?? null);
   const [color, setColor] = useState<string>(initial?.color ?? "");
   const [typeSheetOpen, setTypeSheetOpen] = useState(false);
   const [colorSheetOpen, setColorSheetOpen] = useState(false);
@@ -73,7 +74,7 @@ export function CategoryForm({
           </button>
         </div>
       ) : null}
-      <CategoryIconPicker value={initial?.icon ?? null} />
+      <CategoryIconPicker value={icon} onChange={setIcon} />
       <div className={fieldClass}>
         <label htmlFor={`category-color-${key}`} className={fieldLabelClass}>Color</label>
         <button

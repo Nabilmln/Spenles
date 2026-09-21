@@ -297,6 +297,7 @@ describe("Phase 03 dashboard queries", () => {
       "Recent 2",
     ]);
     expect(rows.every((row) => row.amountIdr !== "500")).toBe(true);
+    expect(rows.every((row) => row.categoryId.length > 0)).toBe(true);
   });
 
   it("returns no User A totals when queried with User B ownership", async () => {

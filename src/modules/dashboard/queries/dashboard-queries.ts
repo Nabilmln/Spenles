@@ -42,6 +42,8 @@ type RecentRow = {
   note: string | null;
   account_name: string;
   category_name: string;
+  category_id: string;
+  category_icon: string | null;
 };
 
 export async function getSelectedAndPreviousTotals(
@@ -192,7 +194,9 @@ export async function getRecentActivityTransactions(
       owned_transaction.transaction_at,
       owned_transaction.note,
       owned_account.name as account_name,
-      owned_category.name as category_name
+      owned_category.name as category_name,
+      owned_category.id as category_id,
+      owned_category.icon as category_icon
     from transactions as owned_transaction
     inner join accounts as owned_account
       on owned_account.id = owned_transaction.account_id
@@ -221,6 +225,8 @@ export async function getRecentActivityTransactions(
       note: row.note,
       accountName: row.account_name,
       categoryName: row.category_name,
+      categoryId: row.category_id,
+      categoryIcon: row.category_icon,
     }),
   );
 }

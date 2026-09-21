@@ -114,6 +114,17 @@ describe("category manager", () => {
     expect(dialog).toHaveTextContent(/cannot be permanently deleted/u);
   });
 
+  it("lets an existing category change its icon in the edit sheet", () => {
+    renderManager([expense({ icon: "utensils" })]);
+    fireEvent.click(screen.getByRole("button", { name: "Actions for Makanan" }));
+    fireEvent.click(screen.getByRole("button", { name: "Edit category" }));
+
+    expect(screen.getByRole("radio", { name: "Dining icon" })).toBeChecked();
+    fireEvent.click(screen.getByRole("radio", { name: "Car icon" }));
+    expect(screen.getByRole("radio", { name: "Car icon" })).toBeChecked();
+    expect(screen.getByRole("radio", { name: "Dining icon" })).not.toBeChecked();
+  });
+
   it("opens the icon picker with accessible radio labels", () => {
     const onChange = vi.fn();
     render(<CategoryIconPicker value="utensils" onChange={onChange} />);

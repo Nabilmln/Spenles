@@ -80,6 +80,8 @@ export function RecentActivityCard({
                       transactionAt: row.transactionAt,
                       note: row.note,
                       categoryName: row.categoryName,
+                      categoryId: row.categoryId,
+                      categoryIcon: row.categoryIcon,
                     }}
                   />
                 ))}

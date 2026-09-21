@@ -119,4 +119,6 @@ export type RecentDashboardTransaction = {
   note: string | null;
   accountName: string;
   categoryName: string;
+  categoryId: string;
+  categoryIcon: string | null;
 };

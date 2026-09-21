@@ -72,6 +72,8 @@ describe("mobile dashboard cards", () => {
             note: "Makan siang",
             accountName: "Kas Utama",
             categoryName: "Makanan",
+            categoryId: "cat-1",
+            categoryIcon: "utensils",
           },
           {
             id: "t2",
@@ -81,6 +83,8 @@ describe("mobile dashboard cards", () => {
             note: null,
             accountName: "Kas Utama",
             categoryName: "Gaji",
+            categoryId: "cat-2",
+            categoryIcon: "wallet",
           },
         ]}
       />,
@@ -94,6 +98,29 @@ describe("mobile dashboard cards", () => {
       "href",
       "/transactions",
     );
+  });
+
+  it("uses each row's category icon instead of the fallback arrow in recent activity", () => {
+    const { container } = render(
+      <RecentActivityCard
+        rows={[
+          {
+            id: "t1",
+            type: "expense",
+            amountIdr: "12500",
+            transactionAt: new Date(),
+            note: "Makan siang",
+            accountName: "Kas Utama",
+            categoryName: "Makanan",
+            categoryId: "cat-1",
+            categoryIcon: "utensils",
+          },
+        ]}
+      />,
+    );
+
+    expect(container.querySelector(".lucide-utensils")).toBeInTheDocument();
+    expect(container.querySelector(".lucide-arrow-right-left")).not.toBeInTheDocument();
   });
 
   it("renders an empty state when there are no recent transactions", () => {
