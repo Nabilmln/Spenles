@@ -73,7 +73,6 @@ describe("report toolbar", () => {
         from="2026-08-01"
         to="2026-08-07"
         pdfHref="/pdf"
-        pdfPreviewHref="/pdf?preview=1"
       />,
     );
 
@@ -88,7 +87,6 @@ describe("report toolbar", () => {
         from="2026-08-01"
         to="2026-08-07"
         pdfHref="/pdf"
-        pdfPreviewHref="/pdf?preview=1"
       />,
     );
 
@@ -101,20 +99,37 @@ describe("report toolbar", () => {
     expect(screen.getByRole("dialog", { name: "Select date range" })).toBeInTheDocument();
   });
 
-  it("opens the export sheet with a PDF preview and a download button", () => {
+  it("opens the export sheet with a blob PDF preview and a download button", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async () =>
+        new Response(new Blob(["%PDF-test"], { type: "application/pdf" })),
+      ),
+    );
+    const createObjectURL = vi.fn(() => "blob:report-preview");
+    const revokeObjectURL = vi.fn();
+    Object.defineProperty(URL, "createObjectURL", {
+      configurable: true,
+      value: createObjectURL,
+    });
+    Object.defineProperty(URL, "revokeObjectURL", {
+      configurable: true,
+      value: revokeObjectURL,
+    });
+
     render(
       <ReportToolbar
         from="2026-08-01"
         to="2026-08-07"
         pdfHref="/pdf"
-        pdfPreviewHref="/pdf?preview=1"
       />,
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Export report" }));
     expect(screen.getByRole("dialog", { name: "Export report" })).toBeInTheDocument();
-    const preview = screen.getByTitle("Report preview");
-    expect(preview).toHaveAttribute("src", "/pdf?preview=1");
+    const preview = await screen.findByTitle("Report preview");
+    expect(preview).toHaveAttribute("src", "blob:report-preview");
+    expect(fetch).toHaveBeenCalledWith("/pdf");
     const download = screen.getByRole("link", { name: "Download PDF" });
     expect(download).toHaveAttribute("href", "/pdf");
     expect(screen.queryByRole("link", { name: "Export CSV" })).toBeNull();

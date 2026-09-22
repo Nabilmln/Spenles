@@ -71,14 +71,9 @@ test("authentication, private navigation, transaction, and exports", async ({
   );
   expect(pdf.status()).toBe(200);
   expect(pdf.headers()["content-type"]).toContain("application/pdf");
+  expect(pdf.headers()["content-disposition"]).toContain("attachment");
   expect(pdf.headers()["cache-control"]).toContain("no-store");
   expect((await pdf.body()).subarray(0, 5).toString()).toBe("%PDF-");
-
-  const preview = await page.request.get(
-    `/api/reports/pdf?period=month&month=${month}&preview=1`,
-  );
-  expect(preview.status()).toBe(200);
-  expect(preview.headers()["content-disposition"]).toContain("inline");
 
   const backup = await page.request.get("/api/exports/backup");
   expect(backup.status()).toBe(200);

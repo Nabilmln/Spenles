@@ -17,10 +17,6 @@ export function attachmentHeaders(contentType: string, fileName: string) {
   return exportHeaders(contentType, fileName, "attachment");
 }
 
-export function inlineHeaders(contentType: string, fileName: string) {
-  return exportHeaders(contentType, fileName, "inline");
-}
-
 export function assertExportSize(value: string | Uint8Array) {
   const bytes =
     typeof value === "string" ? Buffer.byteLength(value, "utf8") : value.byteLength;

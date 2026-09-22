@@ -90,19 +90,6 @@ describe("GET /api/reports/pdf", () => {
     });
   });
 
-  it("returns inline content-disposition for preview mode", async () => {
-    const response = await GET(
-      new Request(
-        "http://localhost/api/reports/pdf?period=month&month=2026-08&preview=1",
-      ),
-    );
-    expect(response.status).toBe(200);
-    expect(response.headers.get("content-disposition")).toContain("inline");
-    expect(response.headers.get("content-disposition")).toContain(
-      "spenles-report-2026-08.pdf",
-    );
-  });
-
   it("rejects a report with too many detail rows at the 500-row limit", async () => {
     mocks.getFinancialReport.mockRejectedValue(
       new ExportLimitError("Report details exceed the 500-transaction limit."),
