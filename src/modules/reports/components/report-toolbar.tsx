@@ -7,7 +7,6 @@ import { CalendarRangeSelector } from "@/components/ui/calendar-range-selector";
 import { buttonClass } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import { formatReportRange, formatReportRangeShort } from "../lib/report-date";
-import { ReportPdfPreview } from "./report-pdf-preview";
 
 type Sheet = "none" | "range" | "export";
 
@@ -18,10 +17,12 @@ export function ReportToolbar({
   from,
   to,
   pdfHref,
+  pdfPreviewHref,
 }: {
   from: string;
   to: string;
   pdfHref: string;
+  pdfPreviewHref: string;
 }) {
   const [sheet, setSheet] = useState<Sheet>("none");
   const rangeLabel = formatReportRange(from, to);
@@ -118,7 +119,11 @@ export function ReportToolbar({
         <p className="m-0 mb-4 text-muted">
           Preview the {rangeLabel} report below before downloading.
         </p>
-        <ReportPdfPreview href={pdfHref} />
+        <iframe
+          className="h-[min(52dvh,26rem)] w-full rounded-[.7rem] border border-border bg-surface-subtle"
+          src={pdfPreviewHref}
+          title="Report preview"
+        />
         <p className="mt-4 rounded-[.7rem] bg-surface-subtle p-3 text-[.76rem] text-muted">
           Your data stays private. PDF supports up to 366 days and max. 500
           detail transactions.

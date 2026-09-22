@@ -15,3 +15,8 @@ export const PRIVATE_EXPORT_HEADERS = {
   Pragma: "no-cache",
   "X-Content-Type-Options": "nosniff",
 } as const;
+
+export const PRIVATE_PREVIEW_HEADERS = {
+  "Cache-Control": "private, max-age=300",
+  "X-Content-Type-Options": "nosniff",
+} as const;

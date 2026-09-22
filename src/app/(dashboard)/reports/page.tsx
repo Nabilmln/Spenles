@@ -23,7 +23,7 @@ function currentMonthStart() {
 
 function exportHrefs(from: string, to: string) {
   const pdf = `/api/reports/pdf?period=custom&from=${from}&to=${to}`;
-  return { pdf };
+  return { pdf, pdfPreview: `${pdf}&preview=1` };
 }
 
 export default async function ReportsPage({
@@ -69,6 +69,7 @@ export default async function ReportsPage({
         from={from}
         to={to}
         pdfHref={exports.pdf}
+        pdfPreviewHref={exports.pdfPreview}
       />
 
       <CompactReportSummary totals={totals} />
