@@ -5,7 +5,7 @@ import { Font, renderToBuffer } from "@react-pdf/renderer";
 import { EXPORT_MAX_BYTES } from "../constants";
 import { FinancialReportDocument } from "../components/financial-report-document";
 import type { FinancialReport } from "../types";
-import { ExportLimitError } from "./csv";
+import { ExportLimitError } from "./export-error";
 
 let fontsRegistered = false;
 

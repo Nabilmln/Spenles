@@ -1,12 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import {
-  CalendarRange,
-  ChevronDown,
-  FileSpreadsheet,
-  FileText,
-} from "lucide-react";
+import { CalendarRange, ChevronDown, Download, FileText } from "lucide-react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { CalendarRangeSelector } from "@/components/ui/calendar-range-selector";
 import { buttonClass } from "@/components/ui/styles";
@@ -22,12 +17,12 @@ export function ReportToolbar({
   from,
   to,
   pdfHref,
-  csvHref,
+  pdfPreviewHref,
 }: {
   from: string;
   to: string;
   pdfHref: string;
-  csvHref: string;
+  pdfPreviewHref: string;
 }) {
   const [sheet, setSheet] = useState<Sheet>("none");
   const rangeLabel = formatReportRange(from, to);
@@ -67,7 +62,7 @@ export function ReportToolbar({
           <ChevronDown aria-hidden="true" className="shrink-0 text-muted" size={16} />
         </button>
         <button
-          aria-haspopup="menu"
+          aria-haspopup="dialog"
           aria-label="Export report"
           className={cn(
             triggerClass,
@@ -110,23 +105,28 @@ export function ReportToolbar({
         title="Export report"
         ariaLabel="Export report"
         zIndex="z-[85]"
+        footer={
+          <a
+            className={cn(buttonClass("primary"), "w-full")}
+            download
+            href={pdfHref}
+          >
+            <Download aria-hidden="true" size={18} />
+            Download PDF
+          </a>
+        }
       >
         <p className="m-0 mb-4 text-muted">
-          The {rangeLabel} range will be used for the export.
+          Preview the {rangeLabel} report below before downloading.
         </p>
-        <div className="grid gap-[.65rem]">
-          <a className={cn(buttonClass("secondary"), "w-full justify-start")} href={pdfHref}>
-            <FileText aria-hidden="true" className="shrink-0" size={18} />
-            Export PDF
-          </a>
-          <a className={cn(buttonClass("secondary"), "w-full justify-start")} href={csvHref}>
-            <FileSpreadsheet aria-hidden="true" className="shrink-0" size={18} />
-            Export CSV
-          </a>
-        </div>
+        <iframe
+          className="h-[min(52dvh,26rem)] w-full rounded-[.7rem] border border-border bg-surface-subtle"
+          src={pdfPreviewHref}
+          title="Report preview"
+        />
         <p className="mt-4 rounded-[.7rem] bg-surface-subtle p-3 text-[.76rem] text-muted">
           Your data stays private. PDF supports up to 366 days and max. 500
-          detail transactions; CSV max. 10,000 transactions.
+          detail transactions.
         </p>
       </BottomSheet>
     </div>

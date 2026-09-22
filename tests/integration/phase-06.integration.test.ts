@@ -8,11 +8,10 @@ import { ensureUserFoundationWithDatabase } from "@/modules/onboarding/services/
 import { getPersonalDataBackupJson } from "@/modules/reports/queries/backup-query";
 import {
   getFinancialReport,
-  listCsvTransactions,
   validateOwnedReportFilters,
 } from "@/modules/reports/queries/report-queries";
 import { REPORT_DETAIL_LIMIT } from "@/modules/reports/constants";
-import { ExportLimitError } from "@/modules/reports/services/csv";
+import { ExportLimitError } from "@/modules/reports/services/export-error";
 import { parseReportParams } from "@/modules/reports/schemas/export-params";
 import {
   createOwnedTransaction,
@@ -158,16 +157,6 @@ describe("Phase 06 authenticated reports and exports", () => {
     expect(report.transactions.map((row) => row.amountIdr).sort()).toEqual([
       "100000",
       "25000",
-    ]);
-  });
-
-  it("exports only active owned CSV rows in deterministic order", async () => {
-    const rows = await listCsvTransactions(userA, filters, 10_001, database);
-    expect(rows).toHaveLength(2);
-    expect(rows.every((row) => row.note !== "Milik user B")).toBe(true);
-    expect(rows.map((row) => row.transactionAt.toISOString())).toEqual([
-      "2026-08-02T02:00:00.000Z",
-      "2026-08-03T03:00:00.000Z",
     ]);
   });
 

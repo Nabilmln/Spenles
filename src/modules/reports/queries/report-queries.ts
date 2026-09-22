@@ -15,7 +15,7 @@ import type {
   ReportMonth,
   ReportTransaction,
 } from "../types";
-import { ExportLimitError } from "../services/csv";
+import { ExportLimitError } from "../services/export-error";
 
 type TotalsRow = { income: string; expense: string };
 type MonthRow = { month: string; income: string; expense: string };
@@ -48,10 +48,6 @@ function transactionFilterSql(userId: string, filters: ExportFilters) {
   }
   if (filters.accountId) {
     conditions.push(sql`owned_transaction.account_id = ${filters.accountId}`);
-  }
-  if (filters.search) {
-    const escaped = filters.search.replace(/[\\%_]/gu, "\\$&");
-    conditions.push(sql`owned_transaction.note ilike ${`%${escaped}%`} escape '\\'`);
   }
   return sql.join(conditions, sql` and `);
 }
@@ -303,15 +299,6 @@ export async function getFinancialReport(
     transactions: detailRows,
     transactionCount,
   };
-}
-
-export async function listCsvTransactions(
-  userId: string,
-  filters: ExportFilters,
-  limit: number,
-  database: Database = db,
-) {
-  return getTransactions(userId, filters, limit, database);
 }
 
 function customInterval(from: string, to: string) {

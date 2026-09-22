@@ -31,8 +31,8 @@ menampilkan data terbaru.
 - **Split bill** dengan rincian tanggung jawab per orang yang deterministik:
   subtotal, diskon, pajak, service charge, dan total final yang tersimpan
   sebagai snapshot bernomor versi.
-- **Laporan dan ekspor**: laporan PDF privat, ekspor transaksi CSV yang aman
-  untuk spreadsheet, dan backup data pribadi JSON ber-versi.
+- **Laporan dan ekspor**: laporan PDF privat dengan preview di aplikasi
+  sebelum diunduh, dan backup data pribadi JSON ber-versi.
 
 ## Masalah dan solusi
 
@@ -49,7 +49,7 @@ menampilkan data terbaru.
   otomatis tanggung jawab tiap orang termasuk pajak dan service charge,
   lengkap dengan snapshot final.
 - **Tidak punya gambaran arah keuangan** — dashboard arus kas, grafik,
-  anggaran bulanan, dan laporan PDF/CSV memberikan ringkasan yang jelas per
+  anggaran bulanan, dan laporan PDF memberikan ringkasan yang jelas per
   periode.
 
 ## Manfaat

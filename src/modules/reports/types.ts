@@ -16,7 +16,6 @@ export type ExportFilters = {
   type?: TransactionType;
   categoryId?: string;
   accountId?: string;
-  search?: string;
 };
 
 export type ReportFilters = ExportFilters & {

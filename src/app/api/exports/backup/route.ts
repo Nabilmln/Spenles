@@ -12,7 +12,7 @@ import {
   attachmentHeaders,
   safeExportError,
 } from "@/modules/reports/services/export-response";
-import { ExportLimitError } from "@/modules/reports/services/csv";
+import { ExportLimitError } from "@/modules/reports/services/export-error";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";

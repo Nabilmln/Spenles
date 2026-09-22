@@ -68,7 +68,14 @@ describe("report cash flow card", () => {
 
 describe("report toolbar", () => {
   it("shows the current range and opens the range sheet", () => {
-    render(<ReportToolbar from="2026-08-01" to="2026-08-07" pdfHref="/pdf" csvHref="/csv" />);
+    render(
+      <ReportToolbar
+        from="2026-08-01"
+        to="2026-08-07"
+        pdfHref="/pdf"
+        pdfPreviewHref="/pdf?preview=1"
+      />,
+    );
 
     expect(screen.getByText("1 Aug – 7 Aug 2026")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /Select date range/ }));
@@ -76,7 +83,14 @@ describe("report toolbar", () => {
   });
 
   it("keeps the range sheet open while picking calendar days", () => {
-    render(<ReportToolbar from="2026-08-01" to="2026-08-07" pdfHref="/pdf" csvHref="/csv" />);
+    render(
+      <ReportToolbar
+        from="2026-08-01"
+        to="2026-08-07"
+        pdfHref="/pdf"
+        pdfPreviewHref="/pdf?preview=1"
+      />,
+    );
 
     fireEvent.click(screen.getByRole("button", { name: /Select date range/ }));
     const dialog = screen.getByRole("dialog", { name: "Select date range" });
@@ -87,19 +101,22 @@ describe("report toolbar", () => {
     expect(screen.getByRole("dialog", { name: "Select date range" })).toBeInTheDocument();
   });
 
-  it("opens the export sheet with PDF and CSV links", () => {
+  it("opens the export sheet with a PDF preview and a download button", () => {
     render(
       <ReportToolbar
         from="2026-08-01"
         to="2026-08-07"
         pdfHref="/pdf"
-        csvHref="/csv"
+        pdfPreviewHref="/pdf?preview=1"
       />,
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Export report" }));
     expect(screen.getByRole("dialog", { name: "Export report" })).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Export PDF" })).toHaveAttribute("href", "/pdf");
-    expect(screen.getByRole("link", { name: "Export CSV" })).toHaveAttribute("href", "/csv");
+    const preview = screen.getByTitle("Report preview");
+    expect(preview).toHaveAttribute("src", "/pdf?preview=1");
+    const download = screen.getByRole("link", { name: "Download PDF" });
+    expect(download).toHaveAttribute("href", "/pdf");
+    expect(screen.queryByRole("link", { name: "Export CSV" })).toBeNull();
   });
 });

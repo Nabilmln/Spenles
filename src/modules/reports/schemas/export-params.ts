@@ -5,11 +5,7 @@ import {
   REPORT_MAX_DAYS,
   REPORT_TIMEZONE,
 } from "../constants";
-import type {
-  ExportFilters,
-  ReportFilters,
-  ReportInterval,
-} from "../types";
+import type { ReportFilters, ReportInterval } from "../types";
 
 const dateSchema = z
   .string()
@@ -208,31 +204,5 @@ export function parseReportParams(
     categoryId: parsed.categoryId,
     accountId: parsed.accountId,
     includeDetails: parsed.values.details === "true",
-  };
-}
-
-export function parseCsvParams(
-  params: URLSearchParams,
-  now = new Date(),
-): ExportFilters | null {
-  const parsed = parseShared(
-    params,
-    new Set([...sharedKeys, "q"]),
-    now,
-  );
-  if (!parsed) return null;
-  const searchResult = z
-    .string()
-    .trim()
-    .max(100)
-    .optional()
-    .safeParse(parsed.values.q);
-  if (!searchResult.success) return null;
-  return {
-    interval: parsed.interval,
-    type: parsed.type,
-    categoryId: parsed.categoryId,
-    accountId: parsed.accountId,
-    search: searchResult.data || undefined,
   };
 }

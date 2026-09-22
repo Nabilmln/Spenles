@@ -74,12 +74,11 @@ test("authentication, private navigation, transaction, and exports", async ({
   expect(pdf.headers()["cache-control"]).toContain("no-store");
   expect((await pdf.body()).subarray(0, 5).toString()).toBe("%PDF-");
 
-  const csv = await page.request.get(
-    `/api/exports/transactions.csv?period=month&month=${month}`,
+  const preview = await page.request.get(
+    `/api/reports/pdf?period=month&month=${month}&preview=1`,
   );
-  expect(csv.status()).toBe(200);
-  expect(csv.headers()["content-type"]).toContain("text/csv");
-  expect((await csv.text()).startsWith("\uFEFF")).toBe(true);
+  expect(preview.status()).toBe(200);
+  expect(preview.headers()["content-disposition"]).toContain("inline");
 
   const backup = await page.request.get("/api/exports/backup");
   expect(backup.status()).toBe(200);

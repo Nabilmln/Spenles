@@ -5,9 +5,10 @@ import {
   validateOwnedReportFilters,
 } from "@/modules/reports/queries/report-queries";
 import { parseReportParams } from "@/modules/reports/schemas/export-params";
-import { ExportLimitError } from "@/modules/reports/services/csv";
+import { ExportLimitError } from "@/modules/reports/services/export-error";
 import {
   attachmentHeaders,
+  inlineHeaders,
   safeExportError,
 } from "@/modules/reports/services/export-response";
 import { renderFinancialReportPdf } from "@/modules/reports/services/pdf";
@@ -20,7 +21,10 @@ export async function GET(request: Request) {
   const user = await getSessionUser();
   if (!user) return safeExportError(401, "Authentication is required.");
 
-  const filters = parseReportParams(new URL(request.url).searchParams);
+  const url = new URL(request.url);
+  const preview = url.searchParams.get("preview") === "1";
+  url.searchParams.delete("preview");
+  const filters = parseReportParams(url.searchParams);
   if (!filters) {
     return safeExportError(400, "Invalid report parameters.");
   }
@@ -40,12 +44,12 @@ export async function GET(request: Request) {
       filters,
     );
     const pdf = await renderFinancialReportPdf(report);
+    const fileName = `spenles-report-${filters.interval.filePart}.pdf`;
     return new Response(new Uint8Array(pdf), {
       status: 200,
-      headers: attachmentHeaders(
-        "application/pdf",
-        `spenles-report-${filters.interval.filePart}.pdf`,
-      ),
+      headers: preview
+        ? inlineHeaders("application/pdf", fileName)
+        : attachmentHeaders("application/pdf", fileName),
     });
   } catch (error) {
     if (error instanceof ExportLimitError) {

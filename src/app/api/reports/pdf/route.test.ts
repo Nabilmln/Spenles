@@ -20,7 +20,7 @@ vi.mock("@/modules/reports/services/pdf", () => ({
   renderFinancialReportPdf: mocks.renderFinancialReportPdf,
 }));
 
-import { ExportLimitError } from "@/modules/reports/services/csv";
+import { ExportLimitError } from "@/modules/reports/services/export-error";
 import { GET } from "./route";
 
 describe("GET /api/reports/pdf", () => {
@@ -69,6 +69,9 @@ describe("GET /api/reports/pdf", () => {
     );
     expect(response.headers.get("content-type")).toBe("application/pdf");
     expect(response.headers.get("content-disposition")).toContain(
+      "attachment",
+    );
+    expect(response.headers.get("content-disposition")).toContain(
       expectedFileName,
     );
     },
@@ -85,6 +88,19 @@ describe("GET /api/reports/pdf", () => {
     await expect(response.json()).resolves.toEqual({
       error: "Invalid report parameters.",
     });
+  });
+
+  it("returns inline content-disposition for preview mode", async () => {
+    const response = await GET(
+      new Request(
+        "http://localhost/api/reports/pdf?period=month&month=2026-08&preview=1",
+      ),
+    );
+    expect(response.status).toBe(200);
+    expect(response.headers.get("content-disposition")).toContain("inline");
+    expect(response.headers.get("content-disposition")).toContain(
+      "spenles-report-2026-08.pdf",
+    );
   });
 
   it("rejects a report with too many detail rows at the 500-row limit", async () => {

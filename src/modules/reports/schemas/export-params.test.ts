@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseCsvParams, parseReportParams } from "./export-params";
+import { parseReportParams } from "./export-params";
 
 const now = new Date("2026-08-06T03:00:00.000Z");
 
@@ -41,15 +41,5 @@ describe("report and export parameters", () => {
     "period=month&month=2026-08&details=yes",
   ])("rejects invalid or ambiguous report params: %s", (query) => {
     expect(parseReportParams(new URLSearchParams(query), now)).toBeNull();
-  });
-
-  it("validates CSV filters and ignores empty optional form values", () => {
-    const parsed = parseCsvParams(
-      new URLSearchParams(
-        "period=year&year=2025&type=&category=&account=&q=%20kopi%20",
-      ),
-      now,
-    );
-    expect(parsed).toMatchObject({ search: "kopi" });
   });
 });

@@ -1,12 +1,24 @@
 import { EXPORT_MAX_BYTES, PRIVATE_EXPORT_HEADERS } from "../constants";
-import { ExportLimitError } from "./csv";
+import { ExportLimitError } from "./export-error";
 
-export function attachmentHeaders(contentType: string, fileName: string) {
+export function exportHeaders(
+  contentType: string,
+  fileName: string,
+  disposition: "attachment" | "inline" = "attachment",
+) {
   return {
     ...PRIVATE_EXPORT_HEADERS,
     "Content-Type": contentType,
-    "Content-Disposition": `attachment; filename="${fileName}"`,
+    "Content-Disposition": `${disposition}; filename="${fileName}"`,
   };
+}
+
+export function attachmentHeaders(contentType: string, fileName: string) {
+  return exportHeaders(contentType, fileName, "attachment");
+}
+
+export function inlineHeaders(contentType: string, fileName: string) {
+  return exportHeaders(contentType, fileName, "inline");
 }
 
 export function assertExportSize(value: string | Uint8Array) {

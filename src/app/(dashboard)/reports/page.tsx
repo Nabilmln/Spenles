@@ -22,10 +22,8 @@ function currentMonthStart() {
 }
 
 function exportHrefs(from: string, to: string) {
-  return {
-    pdf: `/api/reports/pdf?period=custom&from=${from}&to=${to}`,
-    csv: `/api/exports/transactions.csv?period=custom&from=${from}&to=${to}`,
-  };
+  const pdf = `/api/reports/pdf?period=custom&from=${from}&to=${to}`;
+  return { pdf, pdfPreview: `${pdf}&preview=1` };
 }
 
 export default async function ReportsPage({
@@ -71,7 +69,7 @@ export default async function ReportsPage({
         from={from}
         to={to}
         pdfHref={exports.pdf}
-        csvHref={exports.csv}
+        pdfPreviewHref={exports.pdfPreview}
       />
 
       <CompactReportSummary totals={totals} />
