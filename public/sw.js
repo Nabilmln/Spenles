@@ -3,7 +3,7 @@
  * server-rendered, authenticated pages always fetch fresh data. Requests from
  * browser extensions (e.g. chrome-extension://) are never touched. */
 
-const RUNTIME_CACHE = "spenles-runtime-v1";
+const RUNTIME_CACHE = "spenles-runtime-v2";
 
 self.addEventListener("install", () => {
   self.skipWaiting();

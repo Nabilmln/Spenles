@@ -7,16 +7,23 @@ export function ErrorState({
   title = "Something went wrong",
   message = "We could not load this page.",
   retry,
+  digest,
 }: {
   title?: string;
   message?: string;
   retry?: () => void;
+  digest?: string;
 }) {
   return (
     <div className={statePanelClass} role="alert">
       <h2>{title}</h2>
       <p className="m-0 text-muted">{message}</p>
       {retry ? <Button onClick={retry}>Try again</Button> : null}
+      {digest ? (
+        <p className="m-0 text-muted font-mono text-xs">
+          Error code: {digest}
+        </p>
+      ) : null}
     </div>
   );
 }
