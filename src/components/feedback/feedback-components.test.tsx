@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { EmptyState } from "./empty-state";
-import { LoadingState } from "./loading-state";
+import { ContentSkeleton } from "./content-skeleton";
 
 describe("foundational feedback components", () => {
   it("renders an honest Phase 01 empty state", () => {
@@ -27,7 +27,8 @@ describe("foundational feedback components", () => {
   });
 
   it("announces loading status", () => {
-    render(<LoadingState label="Menyiapkan akun..." />);
-    expect(screen.getByRole("status")).toHaveTextContent("Menyiapkan akun...");
+    render(<ContentSkeleton />);
+    expect(screen.getByRole("status")).toHaveTextContent("Memuat konten...");
+    expect(screen.getByRole("status")).toHaveAttribute("aria-live", "polite");
   });
 });

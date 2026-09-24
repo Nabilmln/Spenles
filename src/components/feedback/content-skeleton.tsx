@@ -11,8 +11,8 @@ export function ContentCardSkeleton({
       aria-hidden="true"
       className={cn(cardClass, "grid content-center gap-3 px-[1.1rem] shadow-none", className)}
     >
-      <span className="h-[.9rem] w-1/3 animate-pulse rounded-[.35rem] bg-surface-subtle" />
-      <span className="h-[1.2rem] w-1/2 animate-pulse rounded-[.35rem] bg-surface-subtle" />
+      <span className="h-[.9rem] w-1/3 animate-pulse motion-reduce:animate-none rounded-[.35rem] bg-surface-subtle" />
+      <span className="h-[1.2rem] w-1/2 animate-pulse motion-reduce:animate-none rounded-[.35rem] bg-surface-subtle" />
     </div>
   );
 }

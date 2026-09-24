@@ -1,5 +1,5 @@
-import { LoadingState } from "@/components/feedback/loading-state";
+import { ContentSkeleton } from "@/components/feedback/content-skeleton";
 
 export default function SplitBillsLoading() {
-  return <LoadingState label="Loading split bill..." />;
+  return <ContentSkeleton />;
 }

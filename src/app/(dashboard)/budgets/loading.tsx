@@ -1,4 +1,5 @@
-import { LoadingState } from "@/components/feedback/loading-state";
+import { ContentSkeleton } from "@/components/feedback/content-skeleton";
+
 export default function BudgetsLoading() {
-  return <LoadingState label="Loading budgets..." />;
+  return <ContentSkeleton />;
 }
