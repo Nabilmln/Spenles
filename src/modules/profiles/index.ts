@@ -1,2 +1,2 @@
 export { ProfileForm } from "./components/profile-form";
-export { getProfile } from "./queries/get-profile";
+export { getProfile, getProfileFresh } from "./queries/get-profile";

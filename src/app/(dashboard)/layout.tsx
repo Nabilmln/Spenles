@@ -1,7 +1,7 @@
 import { AppShell } from "@/components/layout/app-shell";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { ensureUserFoundation } from "@/modules/onboarding";
-import { getProfile } from "@/modules/profiles";
+import { getProfile, getProfileFresh } from "@/modules/profiles";
 
 export const dynamic = "force-dynamic";
 
@@ -12,11 +12,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   let profile = await getProfile(user.id);
   if (!profile) {
-    // Re-provision and read again once. ensureUserFoundation is idempotent and
-    // getProfile is not React-cached, so this covers transient write/read skew
-    // on the serverless HTTP driver before failing loudly.
+    // Re-provision and read again once. getProfile is React-cached per request,
+    // so the retry uses a fresh uncached read to cover transient write/read
+    // skew on the serverless HTTP driver before failing loudly.
     await ensureUserFoundation({ id: user.id, name: displayName });
-    profile = await getProfile(user.id);
+    profile = await getProfileFresh(user.id);
   }
   if (!profile) {
     throw new Error(
