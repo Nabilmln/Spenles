@@ -5,33 +5,33 @@ export type DefaultCategoryDefinition = {
 };
 
 export function normalizeSeedCategoryName(name: string) {
-  return name.normalize("NFKC").trim().replace(/\s+/gu, " ").toLocaleLowerCase("id-ID");
+  return name.normalize("NFKC").trim().replace(/\s+/gu, " ").toLocaleLowerCase("en-US");
 }
 
 export const DEFAULT_EXPENSE_CATEGORIES = [
-  { name: "Makanan dan Minuman", type: "expense", systemKey: "expense-food-and-drink" },
-  { name: "Transportasi", type: "expense", systemKey: "expense-transportation" },
-  { name: "Belanja", type: "expense", systemKey: "expense-shopping" },
-  { name: "Tagihan", type: "expense", systemKey: "expense-bills" },
-  { name: "Tempat Tinggal", type: "expense", systemKey: "expense-housing" },
-  { name: "Kesehatan", type: "expense", systemKey: "expense-health" },
-  { name: "Pendidikan", type: "expense", systemKey: "expense-education" },
-  { name: "Hiburan", type: "expense", systemKey: "expense-entertainment" },
-  { name: "Keluarga", type: "expense", systemKey: "expense-family" },
-  { name: "Donasi", type: "expense", systemKey: "expense-donation" },
-  { name: "Perjalanan", type: "expense", systemKey: "expense-travel" },
-  { name: "Lainnya", type: "expense", systemKey: "expense-other" },
+  { name: "Food & Drinks", type: "expense", systemKey: "expense-food-and-drink" },
+  { name: "Transportation", type: "expense", systemKey: "expense-transportation" },
+  { name: "Shopping", type: "expense", systemKey: "expense-shopping" },
+  { name: "Bills", type: "expense", systemKey: "expense-bills" },
+  { name: "Housing", type: "expense", systemKey: "expense-housing" },
+  { name: "Health", type: "expense", systemKey: "expense-health" },
+  { name: "Education", type: "expense", systemKey: "expense-education" },
+  { name: "Entertainment", type: "expense", systemKey: "expense-entertainment" },
+  { name: "Family", type: "expense", systemKey: "expense-family" },
+  { name: "Donations", type: "expense", systemKey: "expense-donation" },
+  { name: "Travel", type: "expense", systemKey: "expense-travel" },
+  { name: "Other", type: "expense", systemKey: "expense-other" },
 ] as const satisfies readonly DefaultCategoryDefinition[];
 
 export const DEFAULT_INCOME_CATEGORIES = [
-  { name: "Gaji", type: "income", systemKey: "income-salary" },
+  { name: "Salary", type: "income", systemKey: "income-salary" },
   { name: "Bonus", type: "income", systemKey: "income-bonus" },
-  { name: "Bisnis", type: "income", systemKey: "income-business" },
+  { name: "Business", type: "income", systemKey: "income-business" },
   { name: "Freelance", type: "income", systemKey: "income-freelance" },
-  { name: "Investasi", type: "income", systemKey: "income-investment" },
-  { name: "Hadiah", type: "income", systemKey: "income-gift" },
-  { name: "Penjualan", type: "income", systemKey: "income-sales" },
-  { name: "Lainnya", type: "income", systemKey: "income-other" },
+  { name: "Investment", type: "income", systemKey: "income-investment" },
+  { name: "Gift", type: "income", systemKey: "income-gift" },
+  { name: "Sales", type: "income", systemKey: "income-sales" },
+  { name: "Other", type: "income", systemKey: "income-other" },
 ] as const satisfies readonly DefaultCategoryDefinition[];
 
 export const DEFAULT_CATEGORIES = [

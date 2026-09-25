@@ -17,13 +17,20 @@ describe("default category definitions", () => {
     expect(new Set(keys).size).toBe(keys.length);
   });
 
-  it("keeps income and expense variants of Lainnya separate", () => {
+  it("keeps income and expense variants of Other separate", () => {
     const otherCategories = DEFAULT_CATEGORIES.filter(
-      (category) => category.name === "Lainnya",
+      (category) => category.name === "Other",
     );
     expect(otherCategories.map((category) => category.type).sort()).toEqual([
       "expense",
       "income",
     ]);
+  });
+
+  it("uses English display labels for default categories", () => {
+    const names = DEFAULT_CATEGORIES.map((category) => category.name);
+    expect(names).not.toContain("Makanan dan Minuman");
+    expect(names).toContain("Food & Drinks");
+    expect(names).toContain("Salary");
   });
 });
