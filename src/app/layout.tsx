@@ -1,16 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins } from "next/font/google";
 import { cookies } from "next/headers";
 import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
 import { ToastProvider } from "@/components/ui/toast";
+import "@fontsource/poppins/latin-400.css";
+import "@fontsource/poppins/latin-500.css";
+import "@fontsource/poppins/latin-600.css";
+import "@fontsource/poppins/latin-700.css";
+import "@fontsource/poppins/latin-800.css";
 import "./globals.css";
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  display: "swap",
-  variable: "--font-poppins",
-});
 
 export const metadata: Metadata = {
   title: "Spenles",
@@ -52,7 +49,7 @@ export default async function RootLayout({
 
   return (
     <html lang="id" className={`theme-${theme}`} suppressHydrationWarning>
-      <body className={poppins.variable}>
+      <body>
         <ToastProvider>{children}</ToastProvider>
         <ServiceWorkerRegister />
       </body>
