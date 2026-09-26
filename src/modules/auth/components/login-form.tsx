@@ -42,9 +42,12 @@ export function LoginForm() {
       <div className={fieldClass}>
         <div className={fieldLabelRowClass}>
           <label htmlFor="password">Password</label>
-          <span className={mutedLinkClass} aria-label="Password recovery is not yet available">
+          <Link
+            className={`${mutedLinkClass} transition-colors hover:text-primary-600`}
+            href="/forgot-password"
+          >
             Forgot password?
-          </span>
+          </Link>
         </div>
         <PasswordField
           id="password"
