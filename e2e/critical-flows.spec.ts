@@ -115,7 +115,7 @@ test("major pages do not overflow at release viewports and themes", async ({
   page,
 }) => {
   await login(page, environment.users.a);
-  for (const width of [360, 390, 768, 1024, 1440]) {
+  for (const width of [360, 390, 768]) {
     await page.setViewportSize({ width, height: 900 });
     for (const route of ["/dashboard", "/transactions", "/reports", "/split-bills"]) {
       await page.goto(route);
@@ -125,7 +125,17 @@ test("major pages do not overflow at release viewports and themes", async ({
       expect(overflow, `${route} overflow at ${width}px`).toBe(false);
     }
   }
+  for (const width of [1024, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/dashboard");
+    await expect(
+      page.getByRole("heading", {
+        name: "Spenles hanya untuk perangkat mobile",
+      }),
+    ).toBeVisible();
+  }
   for (const theme of ["Tema Terang", "Tema Gelap", "Tema Sistem"]) {
+    await page.setViewportSize({ width: 390, height: 900 });
     await page.getByRole("button", { name: theme }).click();
     await expect(page.locator("html")).toHaveClass(/theme-/u);
   }

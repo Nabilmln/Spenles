@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
+import { MobileOnlyGate } from "@/components/layout/mobile-only-gate";
 import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
 import { ToastProvider } from "@/components/ui/toast";
 import "@fontsource/poppins/latin-400.css";
@@ -50,7 +51,10 @@ export default async function RootLayout({
   return (
     <html lang="id" className={`theme-${theme}`} suppressHydrationWarning>
       <body>
-        <ToastProvider>{children}</ToastProvider>
+        <ToastProvider>
+          <div className="min-[861px]:hidden">{children}</div>
+          <MobileOnlyGate />
+        </ToastProvider>
         <ServiceWorkerRegister />
       </body>
     </html>
