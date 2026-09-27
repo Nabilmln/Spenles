@@ -1,13 +1,20 @@
 # Spenles
 
-Spenles adalah aplikasi web pengelolaan keuangan pribadi untuk satu pengguna
-(proyek privat). Aplikasi berbahasa Indonesia, berbasis IDR, dan dikembangkan
-dengan pendekatan mobile-first. Tujuan utamanya adalah mencatat arus kas
+Spenles adalah aplikasi web pengelolaan keuangan pribadi untuk banyak pengguna
+dengan akun dan data privat masing-masing. Bahasa UI yang dituju adalah
+Inggris (sebagian teks saat ini masih campuran), berbasis IDR, dan dikembangkan
+sebagai PWA untuk penggunaan di ponsel. Tujuan utamanya adalah mencatat arus kas
 harian, mengelola pengeluaran per kategori, membagi tagihan, dan menyajikan
 laporan finansial dengan perhitungan yang deterministik dan dapat diaudit.
 
 Aplikasi ini bukan platform bank, pembayaran, investasi, atau akuntansi
 profesional.
+
+Pada layar selebar 861 px atau lebih, situs menampilkan landing page tentang
+Spenles. Tombol “Try Spenles on your phone” menuju petunjuk penggunaan PWA di
+ponsel dan tombol untuk menyalin alamat situs. Aplikasi keuangan tetap khusus
+untuk tampilan mobile. Lihat `PRODUCT.md` untuk konteks produk ringkas dan
+`DESIGN.md` untuk sistem visual.
 
 Spenles adalah **Progressive Web App (PWA)**: berbasis web, tetapi dapat
 diinstal di perangkat pengguna dan dibuka berdiri sendiri (standalone) dari

@@ -18,26 +18,34 @@ The application allows users to:
 ## Product defaults
 
 - Product name: Spenles
-- Application language: Indonesian
+- Intended application language: English (current copy is mixed)
 - Default currency: IDR
 - Default timezone: Asia/Jakarta
 - Primary system color: Blue
-- Platform: Responsive web application
-- Design approach: Mobile-first
+- Platform: Installable web PWA
+- Design approach: Mobile-only finance app below 861px; informational desktop
+  landing page with a mobile setup path at wider viewports
 
 ## Required documents
 
 Before implementing a task, read:
 
-1. `docs/00-INDEX.md`
-2. `docs/product/PRD.md`
-3. `docs/product/SCOPE.md`
-4. `docs/product/BUSINESS-RULES.md`
-5. `docs/architecture/TECH-STACK.md`
-6. `docs/architecture/SYSTEM-ARCHITECTURE.md`
-7. `docs/database/DATABASE-SCHEMA.md`
-8. `docs/quality/DEFINITION-OF-DONE.md`
-9. The active phase document under `docs/planning/`
+1. `PRODUCT.md` for durable product context and current versus planned behavior
+2. `DESIGN.md` for the shared visual system when working on UI
+3. `docs/00-INDEX.md`
+4. `docs/product/PRD.md`
+5. `docs/product/SCOPE.md`
+6. `docs/product/BUSINESS-RULES.md`
+7. `docs/architecture/TECH-STACK.md`
+8. `docs/architecture/SYSTEM-ARCHITECTURE.md`
+9. `docs/database/DATABASE-SCHEMA.md`
+10. `docs/quality/DEFINITION-OF-DONE.md`
+11. The active phase document under `docs/planning/`
+
+`PRODUCT.md` is a concise orientation record. The detailed product documents
+under `docs/` remain the authority for approved requirements and rules. The
+`docs/` directory is intentionally local and ignored by Git; do not assume it
+is available in another checkout.
 
 Do not implement features from another phase unless explicitly requested.
 
@@ -66,7 +74,8 @@ Report unresolved conflicts before creating a new business rule.
 - Use Neon Auth for authentication.
 - Use Tailwind CSS.
 - Use Zod for server-side validation.
-- Use React Hook Form for complex forms.
+- Current forms use React form actions and local state; add a form library only
+  when a concrete form requires it and its dependency is approved.
 - Use Recharts for charts.
 - Do not introduce another ORM.
 - Do not introduce another authentication provider.
@@ -112,6 +121,10 @@ Report unresolved conflicts before creating a new business rule.
 - Add seed data for default income and expense categories.
 
 ## Documentation rules
+
+Use English for new user-facing app copy. Existing mixed-language strings are
+known drift; do not copy them as the product language requirement. Keep current
+behavior and planned features visibly distinct in product and planning docs.
 
 Update the relevant documentation when:
 

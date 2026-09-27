@@ -1,9 +1,9 @@
-import { redirect } from "next/navigation";
+import { MobileHomeRedirect } from "@/components/landing/mobile-home-redirect";
 import { getSessionUser } from "@/lib/auth/require-session";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const user = await getSessionUser();
-  redirect(user ? "/dashboard" : "/login");
+  return <MobileHomeRedirect destination={user ? "/dashboard" : "/login"} />;
 }

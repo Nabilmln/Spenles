@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
-import { MobileOnlyGate } from "@/components/layout/mobile-only-gate";
+import { DesktopLanding } from "@/components/landing/desktop-landing";
 import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
 import { ToastProvider } from "@/components/ui/toast";
 import "@fontsource/poppins/latin-400.css";
@@ -53,7 +53,7 @@ export default async function RootLayout({
       <body>
         <ToastProvider>
           <div className="min-[861px]:hidden">{children}</div>
-          <MobileOnlyGate />
+          <div className="hidden min-[861px]:block"><DesktopLanding /></div>
         </ToastProvider>
         <ServiceWorkerRegister />
       </body>

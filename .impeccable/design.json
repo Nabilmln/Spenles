@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-27T08:26:37Z",
+  "title": "Design System: Spenles",
+  "extensions": {
+    "colorMeta": {
+      "primary-600": { "role": "primary", "displayName": "Clear Indigo", "canonical": "#4f46e5", "tonalRamp": ["#1e1b4b", "#312e81", "#3730a3", "#4338ca", "#4f46e5", "#818cf8", "#c7d2fe", "#eef2ff"] },
+      "background": { "role": "neutral", "displayName": "Cool Paper", "canonical": "#f5f5f7", "tonalRamp": ["#17171a", "#303035", "#515159", "#777780", "#a5a5ac", "#ccccd1", "#e6e6e9", "#f5f5f7"] },
+      "surface": { "role": "neutral", "displayName": "White Surface", "canonical": "#ffffff", "tonalRamp": ["#1a1a1a", "#333333", "#555555", "#777777", "#999999", "#bbbbbb", "#dddddd", "#ffffff"] },
+      "foreground": { "role": "neutral", "displayName": "Deep Ink", "canonical": "#0f0f12", "tonalRamp": ["#0f0f12", "#29292e", "#484850", "#676770", "#8b8b93", "#b2b2b8", "#d9d9dc", "#f4f4f5"] },
+      "dark-background": { "role": "neutral", "displayName": "Dark Canvas", "canonical": "#08080a", "tonalRamp": ["#08080a", "#1f1f24", "#383840", "#565660", "#777780", "#a3a3ac", "#d0d0d5", "#f1f1f3"] },
+      "dark-foreground": { "role": "neutral", "displayName": "Soft White Text", "canonical": "#ededf0", "tonalRamp": ["#151518", "#303036", "#4f4f57", "#707078", "#9898a0", "#bdbdc4", "#d9d9de", "#ededf0"] },
+      "income": { "role": "semantic", "displayName": "Income Green", "canonical": "#22c55e", "tonalRamp": ["#052e16", "#14532d", "#166534", "#15803d", "#16a34a", "#22c55e", "#86efac", "#dcfce7"] },
+      "expense": { "role": "semantic", "displayName": "Expense Red", "canonical": "#ef4444", "tonalRamp": ["#450a0a", "#7f1d1d", "#991b1b", "#b91c1c", "#dc2626", "#ef4444", "#fca5a5", "#fee2e2"] },
+      "warning": { "role": "semantic", "displayName": "Warning Amber", "canonical": "#f59e0b", "tonalRamp": ["#451a03", "#78350f", "#92400e", "#b45309", "#d97706", "#f59e0b", "#fcd34d", "#fef3c7"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Landing Display", "purpose": "Hero headline on the desktop introduction." },
+      "headline": { "displayName": "Landing Headline", "purpose": "Desktop section headings." },
+      "title": { "displayName": "App Title", "purpose": "Entity and section headings in the app." },
+      "body": { "displayName": "Body", "purpose": "Explanations and form content." },
+      "label": { "displayName": "Label", "purpose": "Fields, navigation, and controls." }
+    },
+    "shadows": [
+      { "name": "card", "value": "0 1px 3px rgb(0 0 0 / 7%), 0 6px 20px rgb(0 0 0 / 6%)", "purpose": "Low ambient depth for light app cards." },
+      { "name": "floating-navigation", "value": "0 10px 40px rgb(15 15 18 / 18%)", "purpose": "Lift the mobile navigation above content." },
+      { "name": "brand-mark", "value": "0 4px 16px rgb(79 70 229 / 40%)", "purpose": "Small glow on the shared brand icon." }
+    ],
+    "motion": [
+      { "name": "control-state", "value": "150ms ease", "purpose": "App button and field state transitions." },
+      { "name": "landing-action", "value": "200ms ease", "purpose": "Desktop call-to-action hover transition." },
+      { "name": "reduced-motion", "value": "0.01ms", "purpose": "Near-instant animation duration when reduced motion is requested." }
+    ],
+    "breakpoints": [
+      { "name": "compact-mobile", "value": "540px" },
+      { "name": "mobile-desktop-boundary", "value": "861px" },
+      { "name": "landing-section-stack", "value": "980px" },
+      { "name": "landing-hero-stack", "value": "1220px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "App Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Compact indigo action used throughout the mobile app.",
+      "html": "<button class=\"ds-app-button\">Save changes</button>",
+      "css": ".ds-app-button{display:inline-flex;align-items:center;justify-content:center;min-height:2.6rem;padding:.55rem .9rem;border:1px solid transparent;border-radius:.65rem;background:var(--primary-600,#4f46e5);color:#fff;font:500 .88rem Poppins,system-ui,sans-serif;cursor:pointer;box-shadow:0 2px 12px rgb(79 70 229 / 25%);transition:background 150ms ease,box-shadow 150ms ease,transform 150ms ease}.ds-app-button:hover{background:var(--primary-700,#4338ca);box-shadow:0 4px 18px rgb(79 70 229 / 35%)}.ds-app-button:active{transform:translateY(1px)}.ds-app-button:focus-visible{outline:2px solid var(--focus,#4f46e5);outline-offset:2px}"
+    },
+    {
+      "name": "App Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Low-emphasis app action that appears on interaction.",
+      "html": "<button class=\"ds-ghost-button\">View details</button>",
+      "css": ".ds-ghost-button{display:inline-flex;align-items:center;justify-content:center;min-height:2.6rem;padding:.55rem .9rem;border:1px solid transparent;border-radius:.65rem;background:transparent;color:var(--foreground,#0f0f12);font:500 .88rem Poppins,system-ui,sans-serif;cursor:pointer;transition:background 150ms ease}.ds-ghost-button:hover{background:var(--surface-subtle,#f0f0f3)}.ds-ghost-button:focus-visible{outline:2px solid var(--focus,#4f46e5);outline-offset:2px}"
+    },
+    {
+      "name": "App Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Softly filled field with clear indigo focus.",
+      "html": "<input class=\"ds-field\" aria-label=\"Description\" placeholder=\"Description\">",
+      "css": ".ds-field{min-height:2.6rem;padding:.6rem .8rem;border:1px solid var(--border,#e2e2e8);border-radius:.65rem;background:var(--surface-subtle,#f0f0f3);color:var(--foreground,#0f0f12);font:400 1rem Poppins,system-ui,sans-serif;transition:border 150ms ease,box-shadow 150ms ease}.ds-field:hover{border-color:var(--primary-100,#e0e7ff)}.ds-field:focus-visible{border-color:var(--primary-500,#6366f1);box-shadow:0 0 0 3px rgb(79 70 229 / 12%);outline:none}"
+    },
+    {
+      "name": "Standard Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "White working surface with a fine border and low ambient shadow.",
+      "html": "<div class=\"ds-card\"><strong>Monthly overview</strong><p>Track what matters at a glance.</p></div>",
+      "css": ".ds-card{padding:.9rem;border:1px solid var(--border,#e2e2e8);border-radius:.85rem;background:var(--surface,#fff);color:var(--foreground,#0f0f12);font-family:Poppins,system-ui,sans-serif;box-shadow:0 1px 3px rgb(0 0 0 / 7%),0 6px 20px rgb(0 0 0 / 6%)}.ds-card strong{font-size:.95rem;font-weight:500}.ds-card p{margin:.4rem 0 0;color:var(--muted,#4f505c);font-size:.85rem}.ds-card:focus-within{outline:2px solid var(--focus,#4f46e5);outline-offset:2px}"
+    },
+    {
+      "name": "Mobile Navigation",
+      "kind": "nav",
+      "description": "Floating mobile bar with a pale selected pill.",
+      "html": "<nav class=\"ds-mobile-nav\" aria-label=\"Main navigation\"><a class=\"ds-mobile-link ds-active\" href=\"#home\">Home</a><a class=\"ds-mobile-link\" href=\"#accounts\">Accounts</a><a class=\"ds-mobile-link\" href=\"#transactions\">Transactions</a></nav>",
+      "css": ".ds-mobile-nav{display:flex;align-items:center;gap:.2rem;width:max-content;padding:.35rem .5rem;border:1px solid var(--border,#e2e2e8);border-radius:999px;background:var(--surface,#fff);box-shadow:0 10px 40px rgb(15 15 18 / 18%);font-family:Poppins,system-ui,sans-serif}.ds-mobile-link{padding:.7rem .8rem;border-radius:999px;color:var(--muted,#4f505c);font-size:.72rem;text-decoration:none;transition:background 200ms ease,color 200ms ease}.ds-mobile-link:hover{background:var(--surface-subtle,#f0f0f3)}.ds-mobile-link.ds-active{background:var(--primary-50,#eef2ff);color:var(--primary-700,#4338ca);font-weight:500}.ds-mobile-link:focus-visible{outline:2px solid var(--focus,#4f46e5);outline-offset:2px}"
+    },
+    {
+      "name": "Landing Action",
+      "kind": "button",
+      "refersTo": "landing-action",
+      "description": "Dark pill used to lead desktop visitors to phone setup steps.",
+      "html": "<a class=\"ds-landing-action\" href=\"#get-started\">Try Spenles on your phone <span aria-hidden=\"true\">→</span></a>",
+      "css": ".ds-landing-action{display:inline-flex;align-items:center;justify-content:center;gap:.7rem;min-height:3.625rem;padding:.85rem 1.5rem;border-radius:999px;background:#19191c;color:#fff;font:600 .84rem Poppins,system-ui,sans-serif;text-decoration:none;transition:background 200ms ease,transform 200ms ease,box-shadow 200ms ease}.ds-landing-action:hover{background:#353541;transform:translateY(-2px);box-shadow:0 10px 22px rgb(20 20 24 / 14%)}.ds-landing-action:focus-visible{outline:3px solid #4f46e5;outline-offset:4px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Clear Money, Calm Hands",
+    "overview": "Spenles makes everyday financial information feel approachable and legible. Its mobile app uses compact white surfaces, gentle borders, and a restrained indigo accent so amounts, actions, and status remain easy to scan. Poppins gives the interface a friendly, steady voice. The desktop introduction uses the same brand mark, font, accent, and rounded forms at a more spacious scale. Its dark call to action and illustrative phone previews provide emphasis without replacing the mobile app's visual identity.",
+    "keyCharacteristics": [
+      "Light neutral canvas with crisp white working surfaces.",
+      "Indigo identifies primary action and selected state; financial colors carry meaning.",
+      "Rounded controls and cards with soft, selective depth.",
+      "Compact mobile task layouts and spacious desktop storytelling."
+    ],
+    "rules": [
+      { "name": "The Accent Meaning Rule", "body": "Reserve indigo for brand, action, focus, and selected state; preserve income, expense, and warning colors for their semantic roles.", "section": "colors" },
+      { "name": "The Amount Clarity Rule", "body": "Give monetary figures clear contrast and tabular alignment; supporting labels remain visibly quieter.", "section": "typography" },
+      { "name": "The Quiet Depth Rule", "body": "Use a border or surface shift first; reserve strong elevation for floating elements and focal previews.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use the shared Poppins, indigo, white surface, and rounded-control language when extending either surface.",
+      "Do keep financial figures stronger than supporting labels.",
+      "Do preserve visible focus and reduced-motion behavior when adding interactions."
+    ],
+    "donts": [
+      "Don't use income, expense, or warning colors as arbitrary decoration.",
+      "Don't turn the spacious landing composition into the density standard for mobile tasks.",
+      "Don't add stronger shadows to every card; depth has a specific floating or focal purpose."
+    ]
+  }
+}
