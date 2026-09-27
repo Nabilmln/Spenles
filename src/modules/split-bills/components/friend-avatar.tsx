@@ -16,7 +16,7 @@ export function FriendAvatar({
   return (
     <span
       aria-hidden="true"
-      className={`grid place-items-center rounded-full bg-primary-600 font-medium text-white shadow-[0_2px_8px_rgb(79_70_229/25%)] ${sizeClasses}`}
+      className={`grid place-items-center rounded-full bg-primary-600 font-medium text-white shadow-[0_2px_8px_rgb(23_23_23/25%)] ${sizeClasses}`}
     >
       {initial}
     </span>

@@ -20,12 +20,12 @@ export type CategoryBreakdownItem = {
 };
 
 const SLICE_COLORS = [
-  "#4f46e5",
+  "#171717",
   "#0ea5e9",
   "#22c55e",
   "#f59e0b",
   "#ef4444",
-  "#a855f7",
+  "#787872",
   "#ec4899",
   "#14b8a6",
   "#84cc16",

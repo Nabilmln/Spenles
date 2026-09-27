@@ -76,7 +76,7 @@ export function CategoryForm({
           <button
             type="button"
             id={`category-type-${key}`}
-            className="flex w-full min-h-[2.6rem] cursor-pointer items-center justify-between gap-[.5rem] rounded-[.65rem] border border-border bg-surface-subtle px-[.8rem] py-[.6rem] text-left font-medium text-foreground transition-[border,box-shadow] duration-150 hover:border-primary-500 focus:border-primary-500 focus:shadow-[0_0_0_3px_rgb(79_70_229/12%)] focus:outline-none"
+            className="flex w-full min-h-[2.6rem] cursor-pointer items-center justify-between gap-[.5rem] rounded-[.65rem] border border-border bg-surface-subtle px-[.8rem] py-[.6rem] text-left font-medium text-foreground transition-[border,box-shadow] duration-150 hover:border-primary-500 focus:border-primary-500 focus:shadow-[0_0_0_3px_rgb(23_23_23/12%)] focus:outline-none"
             onClick={() => setTypeSheetOpen(true)}
           >
             <span>{CATEGORY_TYPES.find((option) => option.value === type)?.label ?? type}</span>
@@ -90,7 +90,7 @@ export function CategoryForm({
         <button
           type="button"
           id={`category-color-${key}`}
-          className="flex w-full min-h-[2.6rem] cursor-pointer items-center justify-between gap-[.5rem] rounded-[.65rem] border border-border bg-surface-subtle px-[.8rem] py-[.6rem] text-left font-medium text-foreground transition-[border,box-shadow] duration-150 hover:border-primary-500 focus:border-primary-500 focus:shadow-[0_0_0_3px_rgb(79_70_229/12%)] focus:outline-none"
+          className="flex w-full min-h-[2.6rem] cursor-pointer items-center justify-between gap-[.5rem] rounded-[.65rem] border border-border bg-surface-subtle px-[.8rem] py-[.6rem] text-left font-medium text-foreground transition-[border,box-shadow] duration-150 hover:border-primary-500 focus:border-primary-500 focus:shadow-[0_0_0_3px_rgb(23_23_23/12%)] focus:outline-none"
           onClick={() => setColorSheetOpen(true)}
         >
           <span className="flex min-w-0 items-center gap-[.5rem]">

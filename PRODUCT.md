@@ -55,9 +55,10 @@ investment, or professional accounting service.
 
 ## Brand Commitments
 
-The product name is **Spenles**. Existing planning documents specify blue as
-the primary system color. `DESIGN.md` records the visual system shared by the
-desktop landing and mobile app.
+The product name is **Spenles**. Ink black and neutral paper surfaces are the
+shared visual direction for the desktop landing and mobile app. The open S
+logo has no drawn tile in the interface; install icons use an opaque paper
+background required by mobile platforms. `DESIGN.md` records the system.
 
 ## Evidence on Hand
 

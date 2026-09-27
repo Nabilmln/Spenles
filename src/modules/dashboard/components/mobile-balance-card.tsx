@@ -29,7 +29,7 @@ export function MobileBalanceCard({
   return (
     <section
       aria-label="Total balance"
-      className="relative grid min-w-0 gap-[1rem] overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-primary-600 to-primary-700 p-[1.25rem] text-white shadow-[0_12px_40px_rgb(79_70_229/28%)]"
+      className="relative grid min-w-0 gap-[1rem] overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-primary-600 to-primary-700 p-[1.25rem] text-white shadow-[0_12px_40px_rgb(23_23_23/28%)]"
     >
       <div
         aria-hidden="true"

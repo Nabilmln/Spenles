@@ -44,7 +44,7 @@ export function ProfileSheet({
       <div className="mb-[1.1rem] grid place-items-center gap-[.6rem]">
         <span
           aria-hidden="true"
-          className="grid size-[4.5rem] place-items-center rounded-full bg-primary-600 text-[1.5rem] font-semibold text-white shadow-[0_4px_16px_rgb(79_70_229/35%)]"
+          className="grid size-[4.5rem] place-items-center rounded-full bg-primary-600 text-[1.5rem] font-semibold text-white shadow-[0_4px_16px_rgb(23_23_23/35%)]"
         >
           {initial}
         </span>

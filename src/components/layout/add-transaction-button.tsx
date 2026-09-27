@@ -15,7 +15,7 @@ export function AddTransactionButton() {
         onClick={() => setOpen(true)}
         type="button"
       >
-        <span className="grid size-[2.2rem] place-items-center rounded-full bg-primary-600 text-white shadow-[0_6px_20px_rgb(79_70_229/45%)] transition-transform duration-150 active:scale-95">
+        <span className="grid size-[2.2rem] place-items-center rounded-full bg-primary-600 text-white shadow-[0_6px_20px_rgb(23_23_23/45%)] transition-transform duration-150 active:scale-95">
           <Plus size={18} strokeWidth={2.75} aria-hidden="true" />
         </span>
       </button>

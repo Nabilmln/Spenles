@@ -24,7 +24,7 @@ export function ProfileMenu({
         aria-expanded={open}
         aria-label="Open profile"
       >
-        <span className="grid size-[2.3rem] place-items-center rounded-full bg-primary-600 text-[.9rem] font-medium text-white shadow-[0_2px_10px_rgb(79_70_229/35%)]" aria-hidden="true">{initial}</span>
+        <span className="grid size-[2.3rem] place-items-center rounded-full bg-primary-600 text-[.9rem] font-medium text-white shadow-[0_2px_10px_rgb(23_23_23/35%)]" aria-hidden="true">{initial}</span>
         <span className="hidden min-[861px]:block">
           <strong className="block max-w-[10rem] truncate text-left text-[.85rem] leading-[1.2]">{profile.displayName}</strong>
           <small className="block max-w-[10rem] truncate text-left text-[.7rem] text-muted">{email}</small>

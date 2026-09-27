@@ -11,7 +11,10 @@ Aplikasi ini bukan platform bank, pembayaran, investasi, atau akuntansi
 profesional.
 
 Pada layar selebar 861 px atau lebih, situs menampilkan landing page tentang
-Spenles. Tombol “Try Spenles on your phone” menuju petunjuk penggunaan PWA di
+Spenles dengan lima bagian: pengenalan, alasan penggunaan, fitur utama
+(split bill, budget, laporan), insight pemasukan/pengeluaran, dan panduan
+ponsel. Tampilan memakai warna hitam dan putih serta logo S tanpa bingkai.
+Tombol “Try Spenles on your phone” menuju petunjuk penggunaan PWA di
 ponsel dan tombol untuk menyalin alamat situs. Aplikasi keuangan tetap khusus
 untuk tampilan mobile. Lihat `PRODUCT.md` untuk konteks produk ringkas dan
 `DESIGN.md` untuk sistem visual.

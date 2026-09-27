@@ -11,7 +11,7 @@ import { formatReportRange, formatReportRangeShort } from "../lib/report-date";
 type Sheet = "none" | "range" | "export";
 
 const triggerClass =
-  "cursor-pointer rounded-[.78rem] border border-border bg-surface font-medium text-foreground transition-[border,box-shadow] duration-150 hover:border-primary-500 focus:border-primary-500 focus:shadow-[0_0_0_3px_rgb(79_70_229/12%)] focus:outline-none";
+  "cursor-pointer rounded-[.78rem] border border-border bg-surface font-medium text-foreground transition-[border,box-shadow] duration-150 hover:border-primary-500 focus:border-primary-500 focus:shadow-[0_0_0_3px_rgb(23_23_23/12%)] focus:outline-none";
 
 export function ReportToolbar({
   from,

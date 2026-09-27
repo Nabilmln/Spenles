@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "brand:icons": "node scripts/generate-brand-icons.mjs",
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",

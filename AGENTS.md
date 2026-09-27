@@ -21,7 +21,7 @@ The application allows users to:
 - Intended application language: English (current copy is mixed)
 - Default currency: IDR
 - Default timezone: Asia/Jakarta
-- Primary system color: Blue
+- Primary system color: Ink black with neutral paper surfaces
 - Platform: Installable web PWA
 - Design approach: Mobile-only finance app below 861px; informational desktop
   landing page with a mobile setup path at wider viewports

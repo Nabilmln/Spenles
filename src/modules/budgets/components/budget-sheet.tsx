@@ -56,7 +56,7 @@ function segmentedClass(active: boolean) {
   return cn(
     "flex-1 min-h-[2.6rem] cursor-pointer items-center justify-center rounded-[.7rem] border border-transparent px-[.5rem] py-[.55rem] text-[.82rem] font-medium text-muted transition-[background,color] duration-150",
     active
-      ? "bg-primary-600 text-white shadow-[0_2px_10px_rgb(79_70_229/25%)]"
+      ? "bg-primary-600 text-white shadow-[0_2px_10px_rgb(23_23_23/25%)]"
       : "bg-surface-subtle hover:bg-surface-subtle hover:text-foreground",
   );
 }

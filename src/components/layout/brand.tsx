@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { WalletCards } from "lucide-react";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export function Brand({
@@ -7,7 +7,7 @@ export function Brand({
   tone = "default",
 }: {
   showLabel?: boolean;
-  tone?: "default" | "light";
+  tone?: "default" | "light" | "ink";
 }) {
   return (
     <Link
@@ -15,21 +15,24 @@ export function Brand({
       className="relative z-[1] inline-flex items-center gap-[.65rem] text-[.95rem] font-semibold tracking-[-.02em]"
       aria-label="Spenles"
     >
-      <span
-        className={cn(
-          "grid size-[2.35rem] shrink-0 place-items-center rounded-[.7rem]",
-          tone === "light"
-            ? "bg-white text-primary-600"
-            : "bg-primary-600 text-white shadow-[0_4px_16px_rgb(79_70_229/40%)]",
-        )}
+      <Image
+        src="/brand-mark.svg"
+        alt=""
         aria-hidden="true"
-      >
-        <WalletCards size={18} />
-      </span>
+        width={38}
+        height={38}
+        className={cn(
+          "size-[2.35rem] shrink-0",
+          tone === "default" && "spenles-brand-auto",
+          tone === "light" && "brightness-0 invert",
+        )}
+      />
       <span
         className={cn(
           "whitespace-nowrap transition-opacity duration-200",
-          showLabel ? "opacity-100" : "opacity-0 group-hover/sidebar:opacity-100",
+          showLabel
+            ? "opacity-100"
+            : "opacity-0 group-hover/sidebar:opacity-100",
           tone === "light" ? "text-white" : undefined,
         )}
       >
