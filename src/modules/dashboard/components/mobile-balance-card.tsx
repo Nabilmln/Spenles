@@ -16,7 +16,7 @@ export function MobileBalanceCard({
   const [hidden, setHidden] = useState(false);
 
   return (
-    <section aria-label="Balance" className="min-w-0">
+    <section aria-label="Balance" className="mx-auto w-full max-w-[30rem] overflow-hidden">
       <div className="relative aspect-[3/2] w-full text-white">
         <Image
           src="/illustrations/cardholder-clean-v2.png"

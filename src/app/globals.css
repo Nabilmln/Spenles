@@ -36,7 +36,7 @@
   --primary-500: #555551;
   --primary-600: #1d1d1b;
   --primary-700: #111110;
-  --income: #22c55e;
+  --income: #15803d;
   --expense: #ef4444;
   --warning: #f59e0b;
   --analytics: #3b82c4;
@@ -48,7 +48,7 @@
   --border: #e2e2e8;
   --focus: #333330;
   --backdrop: #0c0c0e;
-  --shadow: 0 1px 3px rgb(0 0 0 / 7%), 0 6px 20px rgb(0 0 0 / 6%);
+  --shadow: 0 5px 18px rgb(15 15 18 / 4%);
   --font-poppins: "Poppins";
   color-scheme: light;
 }
@@ -127,9 +127,9 @@ body {
 }
 
 .card {
-  padding: 0.9rem;
+  padding: 1rem;
   border: 1px solid var(--border);
-  border-radius: 0.85rem;
+  border-radius: 0.9rem;
   background: var(--surface);
   box-shadow: var(--shadow);
 }
@@ -143,87 +143,14 @@ body {
   font-size: 0.85rem;
 }
 
-@keyframes dashboard-card-in {
+@keyframes toast-in {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-.dashboard-grid > * {
-  animation: dashboard-card-in 0.5s ease-out both;
-}
-.dashboard-grid > *:nth-child(2) {
-  animation-delay: 0.06s;
-}
-.dashboard-grid > *:nth-child(3) {
-  animation-delay: 0.12s;
-}
-.dashboard-grid > *:nth-child(4) {
-  animation-delay: 0.18s;
-}
-.dashboard-grid > *:nth-child(5) {
-  animation-delay: 0.24s;
-}
-.dashboard-grid > *:nth-child(6) {
-  animation-delay: 0.3s;
-}
-.dashboard-grid > *:nth-child(7) {
-  animation-delay: 0.36s;
-}
-.dashboard-grid > *:nth-child(8) {
-  animation-delay: 0.42s;
-}
-.dashboard-grid > *:nth-child(9) {
-  animation-delay: 0.48s;
-}
-.dashboard-grid > *:nth-child(10) {
-  animation-delay: 0.54s;
-}
-
-.page-stagger > * {
-  animation: dashboard-card-in 0.5s ease-out both;
-}
-.page-stagger > *:nth-child(2) {
-  animation-delay: 0.05s;
-}
-.page-stagger > *:nth-child(3) {
-  animation-delay: 0.1s;
-}
-.page-stagger > *:nth-child(4) {
-  animation-delay: 0.15s;
-}
-.page-stagger > *:nth-child(5) {
-  animation-delay: 0.2s;
-}
-.page-stagger > *:nth-child(6) {
-  animation-delay: 0.25s;
-}
-.page-stagger > *:nth-child(7) {
-  animation-delay: 0.3s;
-}
-.page-stagger > *:nth-child(8) {
-  animation-delay: 0.35s;
-}
-.page-stagger > *:nth-child(9) {
-  animation-delay: 0.4s;
-}
-.page-stagger > *:nth-child(10) {
-  animation-delay: 0.45s;
-}
-
-@keyframes toast-in {
-  from {
-    opacity: 0;
-    transform: translateX(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
   }
 }
 .toast-in {

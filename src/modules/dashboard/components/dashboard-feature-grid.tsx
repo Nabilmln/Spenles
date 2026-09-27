@@ -9,7 +9,7 @@ export function DashboardFeatureGrid() {
     >
       {DASHBOARD_SERVICES.map(({ href, label, icon: Icon }) => (
         <Link
-          className="grid min-h-[4.2rem] grid-cols-1 content-center items-center justify-items-center gap-[.4rem] rounded-[1rem] border border-border bg-surface p-[.55rem_.35rem] text-center text-[.72rem] font-medium text-foreground shadow-card transition-[transform,background] duration-150 active:scale-[.97] hover:bg-surface-subtle [&_svg]:text-primary-600"
+          className="grid min-h-[4.6rem] grid-cols-1 content-center items-center justify-items-center gap-[.45rem] rounded-[.9rem] border border-border bg-surface p-[.6rem_.25rem] text-center text-[.73rem] font-medium leading-[1.2] text-foreground transition-[transform,background,border-color] duration-150 active:scale-[.97] hover:border-primary-300 hover:bg-surface-subtle focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 [&_svg]:text-primary-600"
           href={href}
           key={href}
         >

@@ -22,8 +22,8 @@ export function NavigationLinks() {
           <Link
             aria-current={active ? "page" : undefined}
             className={cn(
-              "relative flex min-h-[2.9rem] min-w-[2.9rem] items-center justify-center gap-[.35rem] rounded-full px-2.5 text-muted transition-[background,color,box-shadow,width] duration-200",
-              active && "bg-primary-50 font-medium text-primary-700",
+              "relative flex min-h-[2.9rem] min-w-[2.9rem] items-center justify-center gap-[.35rem] rounded-full px-2.5 text-white/70 transition-[background,color,box-shadow,width] duration-200 hover:bg-white/10 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white",
+              active && "bg-white/16 font-medium text-white",
             )}
             href={href}
             key={href}

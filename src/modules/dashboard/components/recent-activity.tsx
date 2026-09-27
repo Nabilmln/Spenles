@@ -51,7 +51,7 @@ export function RecentActivityCard({
   return (
     <section aria-labelledby="recent-activity-title" className={`${cardClass} flex h-full flex-col shadow-none`}>
       <div className="mb-[.65rem] flex items-center justify-between gap-3">
-        <h2 id="recent-activity-title" className="m-0 text-[1.05rem] tracking-[-.02em]">Recent activity</h2>
+        <h2 id="recent-activity-title" className="m-0 text-[1.05rem] font-semibold tracking-[-.02em]">Recent activity</h2>
         <Link
           className="inline-flex items-center whitespace-nowrap text-[.76rem] font-medium text-primary-600 hover:text-primary-700"
           href="/transactions"
@@ -65,7 +65,7 @@ export function RecentActivityCard({
         <div className="grid flex-1 gap-[.9rem]">
           {orderedDays.map((day) => (
             <section key={day}>
-              <h3 className="my-[.7rem_.1rem] text-[.7rem] font-semibold uppercase tracking-[.08em] text-muted [&:first-child]:mt-[.35rem]">
+              <h3 className="my-[.7rem_.1rem] text-[.72rem] font-medium text-muted [&:first-child]:mt-[.35rem]">
                 {groupLabel(today, day)}
               </h3>
               <div className="grid gap-[.6rem]">

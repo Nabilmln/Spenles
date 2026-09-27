@@ -24,7 +24,7 @@ function CashFlowTooltip({
   const point = payload?.[0]?.payload;
   if (!active || !point) return null;
   return (
-    <div className="grid gap-[.15rem] rounded-[.65rem] border border-border bg-surface p-[.55rem_.7rem] text-[.75rem] text-foreground shadow-card">
+    <div className="grid gap-[.15rem] rounded-[.7rem] border border-border bg-surface p-[.65rem_.8rem] text-[.75rem] text-foreground shadow-[0_6px_18px_rgb(15_15_18/8%)]">
       <strong>{point.label}</strong>
       <span>
         Income <span className="font-semibold">{formatIdr(point.incomeIdr)}</span>
@@ -42,7 +42,7 @@ export function ReportCashFlowChart({
   points: CashFlowPoint[];
 }) {
   return (
-    <div aria-hidden="true" className="mt-4 h-[15rem] w-full max-[540px]:h-[13rem]">
+    <div aria-hidden="true" className="mt-4 h-[17rem] w-full max-[540px]:h-[15rem]">
       <ResponsiveContainer height="100%" width="100%">
         <LineChart data={points} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
           <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" horizontal={false} />

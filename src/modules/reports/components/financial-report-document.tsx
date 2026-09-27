@@ -11,15 +11,15 @@ import { formatIdr } from "@/lib/money/format-idr";
 import { REPORT_TIMEZONE } from "../constants";
 import type { FinancialReport } from "../types";
 
-const BRAND_COLOR = "#f05a24";
-const INCOME_COLOR = "#22c55e";
+const BRAND_COLOR = "#171717";
+const INCOME_COLOR = "#15803d";
 const EXPENSE_COLOR = "#ef4444";
-const SAVINGS_COLOR = "#2563eb";
-const TEXT_COLOR = "#172033";
-const MUTED_COLOR = "#657187";
-const BORDER_COLOR = "#dce2ec";
-const ROW_BORDER_COLOR = "#e8edf4";
-const HEADER_BG = "#f6f8fc";
+const SAVINGS_COLOR = "#555551";
+const TEXT_COLOR = "#0f0f12";
+const MUTED_COLOR = "#4f505c";
+const BORDER_COLOR = "#e2e2e8";
+const ROW_BORDER_COLOR = "#ededf0";
+const HEADER_BG = "#f5f5f7";
 
 const styles = StyleSheet.create({
   page: {

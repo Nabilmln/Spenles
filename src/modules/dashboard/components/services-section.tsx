@@ -36,12 +36,12 @@ export function ServicesSection({
   return (
     <section aria-label="Services">
       <div className="mb-[.55rem] flex items-center justify-between gap-3">
-        <h3 className="m-0 text-[.72rem] font-semibold uppercase tracking-[.12em] text-muted">
+        <h3 className="m-0 text-[1rem] font-semibold tracking-[-.02em] text-foreground">
           Services
         </h3>
         <button
           type="button"
-          className="inline-flex items-center gap-[.2rem] whitespace-nowrap text-[.78rem] font-medium text-primary-600 hover:text-primary-700"
+          className="inline-flex min-h-9 items-center gap-[.2rem] whitespace-nowrap text-[.78rem] font-medium text-primary-600 hover:text-primary-700 focus-visible:outline-2 focus-visible:outline-primary-600"
           onClick={() => setOpen(true)}
         >
           More Services
@@ -63,7 +63,7 @@ export function ServicesSection({
             if (item.kind === "sheet") {
               return (
                 <button
-                  className="flex min-h-[3.6rem] items-center gap-[.65rem] rounded-[1rem] border border-border bg-surface p-[.6rem_.75rem] text-left text-[.82rem] font-medium text-foreground transition-[background] duration-150 hover:bg-surface-subtle [&_svg]:shrink-0 [&_svg]:text-primary-600"
+                  className="flex min-h-[3.6rem] items-center gap-[.65rem] rounded-[.8rem] border border-border bg-surface p-[.6rem_.75rem] text-left text-[.82rem] font-medium text-foreground transition-[background,border-color] duration-150 hover:border-primary-300 hover:bg-surface-subtle [&_svg]:shrink-0 [&_svg]:text-primary-600"
                   key={item.id}
                   type="button"
                   onClick={() => handleItem(item.id)}
@@ -75,7 +75,7 @@ export function ServicesSection({
             }
             return (
               <Link
-                className="flex min-h-[3.6rem] items-center gap-[.65rem] rounded-[1rem] border border-border bg-surface p-[.6rem_.75rem] text-left text-[.82rem] font-medium text-foreground transition-[background] duration-150 hover:bg-surface-subtle [&_svg]:shrink-0 [&_svg]:text-primary-600"
+                className="flex min-h-[3.6rem] items-center gap-[.65rem] rounded-[.8rem] border border-border bg-surface p-[.6rem_.75rem] text-left text-[.82rem] font-medium text-foreground transition-[background,border-color] duration-150 hover:border-primary-300 hover:bg-surface-subtle [&_svg]:shrink-0 [&_svg]:text-primary-600"
                 href={item.href}
                 key={item.href}
                 onClick={() => setOpen(false)}

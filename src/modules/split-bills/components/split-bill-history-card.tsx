@@ -32,7 +32,7 @@ export function SplitBillHistoryCard({
   onAction: (row: SplitBillHistoryRow) => void;
 }) {
   return (
-    <article className="grid items-center gap-[.8rem] rounded-[1.1rem] border border-border bg-surface shadow-card p-[.85rem] grid-cols-[auto_minmax(0,1fr)_auto_auto]">
+    <article className="grid items-center gap-[.8rem] rounded-[.9rem] border border-border bg-surface p-[.85rem] grid-cols-[auto_minmax(0,1fr)_auto_auto]">
       <span className="relative shrink-0">
         <span className="grid size-[2.7rem] place-items-center rounded-full text-primary-600 bg-[color-mix(in_srgb,var(--primary-600)_10%,transparent)]">
           <ReceiptText size={20} aria-hidden="true" />
@@ -48,7 +48,7 @@ export function SplitBillHistoryCard({
       </span>
 
       <div className="grid min-w-0 gap-[.15rem]">
-        <strong className="text-[.9rem] [overflow-wrap:anywhere]">
+        <strong className="text-[.9rem] font-semibold [overflow-wrap:anywhere]">
           {row.merchantName}
         </strong>
         <ParticipantAvatarStack
@@ -57,9 +57,9 @@ export function SplitBillHistoryCard({
         />
       </div>
 
-      <div className="grid justify-items-end gap-[.15rem]">
+      <div className="grid min-w-0 justify-items-end gap-[.15rem] text-right">
         {row.finalAmount ? (
-          <strong className="whitespace-nowrap text-[.85rem] [overflow-wrap:anywhere] text-foreground">
+          <strong className="max-w-[7rem] text-[.85rem] font-semibold tabular-nums [overflow-wrap:anywhere] text-foreground">
             {formatIdr(row.finalAmount)}
           </strong>
         ) : null}
@@ -71,7 +71,7 @@ export function SplitBillHistoryCard({
       <button
         type="button"
         onClick={() => onAction(row)}
-        className="grid size-[2.4rem] shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-surface-subtle"
+        className="grid size-[2.4rem] shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-surface-subtle focus-visible:outline-2 focus-visible:outline-primary-600"
         aria-label="Split bill actions"
       >
         <MoreHorizontal size={18} aria-hidden="true" />

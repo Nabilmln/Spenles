@@ -9,7 +9,7 @@ export function ExpenseOverviewCard({
   const hasData = points.some((point) => BigInt(point.expenseIdr) > 0n);
 
   return (
-    <section aria-label="Expense overview">
+    <section aria-label="Expense overview" className="rounded-[.9rem] border border-border bg-surface p-[.75rem_.65rem_.85rem]">
       <TransactionTrendChart points={points} />
       {!hasData ? (
         <p

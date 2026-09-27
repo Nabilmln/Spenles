@@ -69,7 +69,7 @@ function ToastCard({
 
   return (
     <div
-      className="toast-in pointer-events-auto flex items-start gap-3 rounded-[.8rem] border border-border bg-surface p-[.8rem] shadow-card"
+      className="toast-in pointer-events-auto flex items-start gap-3 rounded-[.9rem] border border-border bg-surface p-[.85rem_1rem] text-foreground shadow-[0_8px_28px_rgb(15_15_18/12%)]"
       role={toast.variant === "error" ? "alert" : "status"}
     >
       <Icon
@@ -79,10 +79,10 @@ function ToastCard({
         )}
         aria-hidden="true"
       />
-      <p className="m-0 flex-1 text-[.85rem]">{toast.message}</p>
+      <p className="m-0 flex-1 text-[.84rem] leading-[1.4]">{toast.message}</p>
       <button
         type="button"
-        className="grid size-[1.6rem] shrink-0 place-items-center rounded-[.45rem] text-muted transition-colors hover:bg-surface-subtle hover:text-foreground"
+        className="grid size-8 shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-surface-subtle hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary-600"
         onClick={() => onDismiss(toast.id)}
         aria-label="Close notification"
       >
@@ -101,9 +101,7 @@ function Toaster({
 }) {
   return (
     <div
-      aria-live="polite"
-      aria-atomic="false"
-      className="pointer-events-none fixed top-4 right-4 z-50 grid w-[min(22rem,calc(100vw-2rem))] gap-2"
+      className="pointer-events-none fixed bottom-[calc(env(safe-area-inset-bottom)+6rem)] left-1/2 z-50 grid w-[min(22rem,calc(100vw-2rem))] -translate-x-1/2 gap-2 min-[861px]:bottom-4"
     >
       {toasts.map((toast) => (
         <ToastCard key={toast.id} onDismiss={onDismiss} toast={toast} />

@@ -3,7 +3,7 @@ export const buttonBase =
 
 export const buttonVariant: Record<string, string> = {
   primary:
-    "bg-primary-600 text-white hover:enabled:bg-primary-700 shadow-[0_2px_12px_rgb(23_23_23/25%)] hover:enabled:shadow-[0_4px_18px_rgb(23_23_23/35%)]",
+    "bg-primary-600 text-white hover:enabled:bg-primary-700",
   secondary:
     "border-primary-600 bg-primary-600 text-white hover:enabled:bg-primary-700",
   blue: "bg-blue-600 text-white hover:enabled:bg-blue-700 shadow-[0_2px_12px_rgb(37_99_235/25%)] hover:enabled:shadow-[0_4px_18px_rgb(37_99_235/35%)]",
@@ -21,24 +21,24 @@ export function buttonClass(
 }
 
 export const cardClass =
-  "card rounded-[.85rem] border border-border bg-surface p-[.9rem] shadow-card";
+  "card rounded-[.9rem] border border-border bg-surface p-[1rem] shadow-card";
 
 export const financialCardClass =
-  "relative grid min-w-0 overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-primary-600 to-primary-700 p-[1.25rem] text-white shadow-[0_12px_40px_rgb(23_23_23/28%)]";
+  "relative grid min-w-0 overflow-hidden rounded-[.95rem] bg-primary-700 p-[1.25rem] text-white";
 
 export const financialCardOrbTop =
-  "pointer-events-none absolute -top-14 -right-14 size-44 rounded-full bg-white/10";
+  "pointer-events-none absolute hidden";
 
 export const financialCardOrbBottom =
-  "pointer-events-none absolute -bottom-20 -left-10 size-40 rounded-full bg-white/5";
+  "pointer-events-none absolute hidden";
 
 export const inputClass =
-  "w-full min-h-[2.6rem] rounded-[.65rem] border border-border bg-surface-subtle px-[.8rem] py-[.6rem] text-base text-foreground transition-[border,box-shadow] duration-150 focus:border-primary-500 focus:shadow-[0_0_0_3px_rgb(23_23_23/12%)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-65";
+  "w-full min-h-[2.6rem] rounded-[.65rem] border border-border bg-surface-subtle px-[.8rem] py-[.6rem] text-base text-foreground transition-[border,background] duration-150 focus:border-primary-600 focus:bg-surface focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:cursor-not-allowed disabled:opacity-65";
 
 export const textareaClass = `${inputClass} min-h-[7rem] resize-y`;
 
 export const iconButtonClass =
-  "grid size-[2.5rem] shrink-0 cursor-pointer place-items-center rounded-[.65rem] border border-border bg-surface text-muted hover:text-primary-600 hover:border-primary-100 transition-[border,color,background] duration-150";
+  "grid size-[2.5rem] shrink-0 cursor-pointer place-items-center rounded-[.65rem] border border-border bg-surface text-muted hover:text-primary-600 hover:border-primary-300 transition-[border,color,background] duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600";
 
 export const inputDisplayClass =
   "flex min-h-[2.6rem] items-center rounded-[.65rem] border border-border bg-surface-subtle px-[.8rem] py-[.6rem] text-[.88rem] font-medium text-muted";
@@ -73,7 +73,7 @@ export const textLinkClass =
 export const eyebrowClass =
   "mb-[.5rem] text-[.7rem] font-semibold uppercase tracking-[.14em] text-primary-600";
 
-export const pageStackClass = "page-stagger grid gap-[1.5rem]";
+export const pageStackClass = "grid gap-[1.5rem]";
 
 export const pageHeadingRowClass =
   "flex items-start justify-between gap-4 max-[540px]:flex-col max-[540px]:items-stretch";

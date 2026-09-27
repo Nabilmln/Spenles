@@ -30,17 +30,17 @@ export function TransactionSummary({
   return (
     <section
       aria-label="Period summary"
-      className="mt-2 grid grid-cols-3 gap-[.4rem]"
+      className="mt-2 grid grid-cols-3 gap-[.5rem]"
     >
       {cards.map((card) => (
         <article
-          className={cn(cardClass, "grid min-w-0 justify-items-center text-center shadow-none")}
+          className={cn(cardClass, "grid min-h-[5.35rem] min-w-0 content-center justify-items-center gap-1 px-1.5! text-center shadow-none")}
           key={card.key}
         >
-          <p className="m-0 text-[.68rem] font-medium text-foreground">
+          <p className="m-0 text-[.69rem] font-medium text-muted">
             {card.label}
           </p>
-          <strong className="wrap-anywhere text-[.65rem] tracking-[-.01em] text-foreground [overflow-wrap:anywhere]">
+          <strong className="text-[clamp(.7rem,2.8vw,.87rem)] font-semibold leading-[1.2] tracking-[-.02em] text-foreground tabular-nums [overflow-wrap:anywhere]">
             {values[card.key]}
           </strong>
         </article>

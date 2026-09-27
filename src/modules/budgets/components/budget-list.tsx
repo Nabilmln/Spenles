@@ -90,7 +90,7 @@ export function BudgetList({
           );
           return (
             <li key={row.id} className="min-w-0">
-              <article className="card grid min-w-0 gap-[.7rem] rounded-[.9rem] border border-border bg-surface p-[.95rem] shadow-card">
+              <article className="card grid min-w-0 gap-[.7rem] rounded-[.9rem] border border-border bg-surface p-[.95rem] shadow-none">
                 <header className="flex items-start justify-between gap-2">
                   <div className="flex min-w-0 items-start gap-[.75rem]">
                     <span className="grid size-[2.6rem] shrink-0 place-items-center rounded-[.8rem] bg-primary-50 text-primary-600">
@@ -116,15 +116,15 @@ export function BudgetList({
                     type="button"
                     aria-label="Budget actions"
                     aria-haspopup="dialog"
-                    className="grid size-[2.4rem] shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-surface-subtle"
+                    className="grid size-[2.4rem] shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-surface-subtle focus-visible:outline-2 focus-visible:outline-primary-600"
                     onClick={() => setActionRow(row)}
                   >
                     <MoreHorizontal size={18} aria-hidden="true" />
                   </button>
                 </header>
 
-                <div className="flex flex-wrap items-baseline justify-end gap-x-[.3rem] gap-y-[.15rem] text-[.76rem]">
-                  <span className="min-w-0 font-medium">{formatIdr(row.usage)}</span>
+                <div className="flex flex-wrap items-baseline justify-end gap-x-[.3rem] gap-y-[.15rem] text-[.79rem] tabular-nums">
+                  <span className="min-w-0 font-semibold">{formatIdr(row.usage)}</span>
                   <span className="min-w-0 text-muted">
                     {" "}/ {formatIdr(row.amount)}
                   </span>
@@ -146,10 +146,10 @@ export function BudgetList({
                     className={cn(
                       "absolute inset-y-0 left-0",
                       row.budgetStatus === "exceeded"
-                        ? "bg-gradient-to-r from-expense to-[#f87171]"
+                        ? "bg-expense"
                         : row.budgetStatus === "warning"
-                          ? "bg-gradient-to-r from-warning to-[#fbbf24]"
-                          : "bg-gradient-to-r from-primary-600 to-primary-500",
+                          ? "bg-warning"
+                          : "bg-primary-600",
                     )}
                     style={{ width: `${progress}%` }}
                   />

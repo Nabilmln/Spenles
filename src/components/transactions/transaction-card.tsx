@@ -60,11 +60,11 @@ export function TransactionCard({
   return (
     <article
       className={cn(
-        "grid items-center gap-[.8rem] rounded-[1.1rem] border border-border bg-surface shadow-card",
+        "grid min-w-0 items-center gap-[.7rem] rounded-[.85rem] border border-border bg-surface",
         showActions
           ? "grid-cols-[auto_minmax(0,1fr)_auto_auto]"
           : "grid-cols-[auto_minmax(0,1fr)_auto]",
-        compact ? "p-[.7rem_.85rem]" : "p-[.85rem]",
+        compact ? "bg-surface-subtle p-[.7rem_.8rem]" : "p-[.85rem]",
       )}
     >
       <span
@@ -77,7 +77,7 @@ export function TransactionCard({
       </span>
 
       <div className="grid min-w-0">
-        <strong className="truncate text-[.9rem]">{transaction.categoryName}</strong>
+        <strong className="truncate text-[.9rem] font-semibold">{transaction.categoryName}</strong>
         <span className="truncate text-[.74rem] font-medium text-muted">
           {isTransfer && transaction.sourceAccountName && transaction.destinationAccountName
             ? `${transaction.sourceAccountName} \u2192 ${transaction.destinationAccountName}`
@@ -88,16 +88,16 @@ export function TransactionCard({
         ) : null}
       </div>
 
-      <div className="grid justify-items-end gap-[.15rem]">
+      <div className="grid min-w-0 justify-items-end gap-[.15rem] text-right">
         <strong
           className={cn(
-            "whitespace-nowrap text-[.85rem] [overflow-wrap:anywhere]",
+            "max-w-[7rem] text-[.84rem] font-semibold tabular-nums [overflow-wrap:anywhere]",
             amountColor,
           )}
         >
           {prefix}{prefix ? " " : ""}{formatIdr(transaction.amount)}
         </strong>
-        <span className="text-[.7rem] text-muted">
+        <span className="max-w-[7rem] text-[.68rem] leading-tight text-muted">
           {formatJakartaDateLong(transaction.transactionAt)}
         </span>
       </div>
@@ -105,7 +105,7 @@ export function TransactionCard({
       {showActions ? (
         <button
           type="button"
-          className="grid size-[2.4rem] shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-surface-subtle"
+          className="grid size-[2.4rem] shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-surface-subtle focus-visible:outline-2 focus-visible:outline-primary-600"
           onClick={() => onAction?.(transaction.id, transaction.type)}
           aria-label="Transaction actions"
         >

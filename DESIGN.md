@@ -8,7 +8,7 @@ colors:
   primary-500: "#555551"
   primary-600: "#1d1d1b"
   primary-700: "#111110"
-  income: "#22c55e"
+  income: "#15803d"
   expense: "#ef4444"
   warning: "#f59e0b"
   analytics: "#3b82c4"
@@ -48,6 +48,10 @@ typography:
     fontFamily: "Poppins, ui-sans-serif, system-ui, sans-serif"
     fontSize: "0.85rem"
     fontWeight: 500
+  pdf:
+    fontFamily: "Noto Sans, sans-serif"
+    fontSize: "9pt"
+    fontWeight: 400
 rounded:
   control: "0.65rem"
   card: "0.85rem"
@@ -149,6 +153,8 @@ The app uses short, readable labels and modest body text. The landing page enlar
 
 The mobile app is the working surface below 861px. It uses stacked cards, compact spacing, a bottom floating navigation bar, and page groups with a 1.5rem rhythm. Individual cards usually use a 0.9rem inset. A few controls adapt further at 540px.
 
+Visual refinement keeps each menu's sections, order, controls, and interactions intact. Pages load without staggered card entrances; motion is reserved for state feedback.
+
 At 861px and above, the desktop landing has five sections: centered introduction with three phone previews; reasons to use Spenles; feature stories led by split bills, budgets, and reports; a dark income/expense insights panel; and phone setup. The three-phone hero compresses at the mobile boundary; the insights panel stacks below 980px. These compositions are specific to the landing, while type, color, shape, and depth are shared.
 
 ## Elevation & Depth
@@ -157,8 +163,8 @@ The app uses pale canvas contrast and fine borders for most separation. A low am
 
 ### Shadow Vocabulary
 
-- **Card:** `0 1px 3px rgb(0 0 0 / 7%), 0 6px 20px rgb(0 0 0 / 6%)` on standard light cards.
-- **Floating navigation:** `0 10px 40px rgb(15 15 18 / 18%)` on the mobile navigation bar.
+- **Card:** `0 5px 18px rgb(15 15 18 / 4%)` on standard light cards.
+- **Floating navigation:** `0 10px 32px rgb(15 15 18 / 22%)` on the mobile navigation bar.
 
 **The Quiet Depth Rule.** Use a border or surface shift first; reserve strong elevation for floating elements and focal previews.
 
@@ -170,27 +176,28 @@ Working controls use gently rounded corners, with cards slightly rounder than co
 
 ### Buttons
 
-- **App primary:** Ink fill, white medium-weight text, compact control radius, and a minimum height of 2.6rem. Hover shifts the fill and shadow; active state shifts down one pixel. Disabled state reduces opacity.
+- **App primary:** Ink fill, white medium-weight text, compact control radius, and a minimum height of 2.6rem. Hover deepens the fill; active state shifts down one pixel. Disabled state reduces opacity.
 - **App ghost:** Transparent fill and foreground text, gaining a subtle surface on hover.
 - **Landing action:** Dark ink fill and white text in a pill, with greater height and padding. Its hover state lifts slightly.
 - **Focus:** Keyboard focus remains visible. The landing uses a strong neutral outline.
 
 ### Cards / Containers
 
-- **Standard card:** White surface, fine border, 0.85rem corners, 0.9rem padding, and the low card shadow.
+- **Standard card:** White surface, fine border, 0.9rem corners, 1rem padding, and a very light card shadow when needed. Account cards use solid graphite without decorative gradients or circles.
 - **Financial card:** A large cutout charcoal cardholder contains one graphite card marked only “VISA,” with no issuer identity or fake card details. The leather carries a lower-left “Balance:” label, live total, and adjacent visibility control. The dashboard card omits income and expense totals. No rectangular dark panel surrounds the cutout. The illustration is decorative and does not imply an issued payment card.
 - **Statistics:** Mobile transaction and report trends use line charts. The transaction line sits in a taller chart with a restrained blue fill fading to transparent beneath it. Blue marks expenses; green marks income. Labels and values carry meaning beyond color.
+- **PDF reports:** Exported reports use the same ink, paper, and semantic colors. Noto Sans is embedded for dependable PDF glyph coverage; it is not an app interface font.
 - **Landing insights:** A large dark panel frames example income and expense reporting; the phone setup section returns to a pale surface.
 
 ### Inputs / Fields
 
 - **Style:** Subtle gray fill, fine border, 0.65rem corners, and at least 2.6rem height.
-- **Focus:** Ink border with a soft neutral ring. Disabled fields reduce opacity and signal the inactive state.
+- **Focus:** Ink border with a visible neutral outline. Disabled fields reduce opacity and signal the inactive state.
 - **Labels:** Medium-weight text stays near the field; helper and error text use quieter or semantic colors.
 
 ### Navigation
 
-- **Mobile app:** A floating rounded bar holds icon links and expands the active label in a pale neutral pill.
+- **Mobile app:** A solid graphite floating bar holds the existing icon links and expands the active label in a quiet translucent pill. The add button is white with an ink icon.
 - **Brand:** The shared open S in ink anchors app and landing navigation without a drawn tile. Favicon and install icons use the same vector; opaque PWA canvases and centered Android maskable exports meet platform requirements.
 - **Landing:** Simple text links and one dark action keep the desktop header light.
 
