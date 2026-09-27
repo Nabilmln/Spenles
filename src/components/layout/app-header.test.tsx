@@ -1,7 +1,6 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { usePathname } from "next/navigation";
-import { setThemeAction } from "@/modules/profiles/actions/update-profile";
 import { HeaderContent } from "./header-content";
 
 const pushMock = vi.fn();
@@ -18,9 +17,7 @@ vi.mock("next/link", () => ({
   ),
 }));
 
-vi.mock("@/modules/profiles/actions/update-profile", () => ({
-  setThemeAction: vi.fn(),
-}));
+vi.mock("@/modules/profiles/actions/update-profile", () => ({ updateProfileAction: vi.fn() }));
 
 vi.mock("@/modules/auth/actions/logout", () => ({
   logoutAction: vi.fn(),
@@ -32,7 +29,6 @@ const profile = {
   displayName: "Budi",
   defaultCurrency: "IDR",
   timezone: "Asia/Jakarta",
-  theme: "light" as const,
   createdAt: new Date(),
   updatedAt: new Date(),
 };
@@ -41,7 +37,6 @@ afterEach(cleanup);
 beforeEach(() => {
   pushMock.mockClear();
   backMock.mockClear();
-  vi.mocked(setThemeAction).mockClear();
 });
 
 function renderHeader() {
@@ -49,15 +44,12 @@ function renderHeader() {
 }
 
 describe("HeaderContent shared mobile header", () => {
-  it("shows back button, page title, theme toggle and profile menu on secondary pages", () => {
+  it("shows back button, page title and profile menu on secondary pages", () => {
     renderHeader();
     expect(
       screen.getByRole("button", { name: "Back to Transactions" }),
     ).toBeInTheDocument();
     expect(screen.getByText("Transactions")).toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Enable dark mode" }),
-    ).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Open profile" })).toBeInTheDocument();
   });
 
@@ -90,20 +82,14 @@ describe("HeaderContent shared mobile header", () => {
     expect(backMock).not.toHaveBeenCalled();
   });
 
-  it("toggles the theme from the header", () => {
-    renderHeader();
-    fireEvent.click(screen.getByRole("button", { name: "Enable dark mode" }));
-    expect(setThemeAction).toHaveBeenCalledWith("dark");
-    expect(document.documentElement.className).toBe("theme-dark");
-  });
 });
 
 describe("HeaderContent home tab", () => {
-  it("shows the brand without a back button on the dashboard", () => {
+  it("shows the profile without a back button on the dashboard", () => {
     vi.mocked(usePathname).mockReturnValue("/dashboard");
     renderHeader();
     expect(screen.queryByRole("button", { name: /Back to/ })).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "Spenles" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Open profile" })).toBeInTheDocument();
     expect(screen.queryByText("Home")).not.toBeInTheDocument();
   });
 });

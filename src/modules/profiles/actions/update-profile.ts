@@ -1,12 +1,11 @@
 "use server";
 
-import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
 import { db } from "@/db";
 import { profiles } from "@/db/schema";
 import { requireSessionUser } from "@/lib/auth/require-session";
-import { profileSchema, themeSchema } from "../schemas/profile";
+import { profileSchema } from "../schemas/profile";
 
 export type ProfileActionState = {
   success?: string;
@@ -23,7 +22,6 @@ export async function updateProfileAction(
     displayName: formData.get("displayName"),
     defaultCurrency: formData.get("defaultCurrency"),
     timezone: formData.get("timezone"),
-    theme: formData.get("theme"),
   });
 
   if (!parsed.success) {
@@ -36,7 +34,6 @@ export async function updateProfileAction(
       displayName: parsed.data.displayName,
       defaultCurrency: parsed.data.defaultCurrency,
       timezone: parsed.data.timezone,
-      theme: parsed.data.theme,
       updatedAt: new Date(),
     })
     .where(eq(profiles.userId, user.id))
@@ -46,35 +43,6 @@ export async function updateProfileAction(
     return { error: "Profile not found or could not be updated." };
   }
 
-  const cookieStore = await cookies();
-  cookieStore.set("spenles-theme", parsed.data.theme, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 365,
-  });
   revalidatePath("/", "layout");
   return { success: "Profile settings saved." };
-}
-
-export async function setThemeAction(theme: string) {
-  const parsed = themeSchema.safeParse(theme);
-  if (!parsed.success) return;
-
-  const user = await requireSessionUser();
-  await db
-    .update(profiles)
-    .set({ theme: parsed.data, updatedAt: new Date() })
-    .where(eq(profiles.userId, user.id));
-
-  const cookieStore = await cookies();
-  cookieStore.set("spenles-theme", parsed.data, {
-    httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 365,
-  });
-  revalidatePath("/", "layout");
 }

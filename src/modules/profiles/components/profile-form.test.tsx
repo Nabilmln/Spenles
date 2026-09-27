@@ -2,10 +2,7 @@ import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ProfileForm } from "./profile-form";
 
-vi.mock("../actions/update-profile", () => ({
-  updateProfileAction: vi.fn(async () => ({})),
-}));
-
+vi.mock("../actions/update-profile", () => ({ updateProfileAction: vi.fn(async () => ({})) }));
 afterEach(cleanup);
 
 const profile = {
@@ -14,17 +11,16 @@ const profile = {
   displayName: "Budi",
   defaultCurrency: "IDR",
   timezone: "Asia/Jakarta",
-  theme: "light" as const,
   createdAt: new Date(),
   updatedAt: new Date(),
 };
 
-describe("ProfileForm theme field", () => {
-  it("does not expose a system/laptop theme option in the visible UI", () => {
+describe("ProfileForm", () => {
+  it("keeps the account settings and excludes theme controls", () => {
     render(<ProfileForm profile={profile} email="budi@example.com" />);
-    const options = screen.getByLabelText("Theme").children;
-    const labels = Array.from(options).map((option) => option.textContent);
-    expect(labels).toEqual(["Light", "Dark"]);
-    expect(labels).not.toContain("Ikuti sistem");
+    expect(screen.getByLabelText("Display name")).toHaveValue("Budi");
+    expect(screen.getByLabelText("Email")).toHaveValue("budi@example.com");
+    expect(screen.getByRole("button", { name: "Save changes" })).toBeInTheDocument();
+    expect(screen.queryByLabelText("Theme")).not.toBeInTheDocument();
   });
 });

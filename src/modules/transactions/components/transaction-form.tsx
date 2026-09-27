@@ -38,7 +38,7 @@ type FlowType = "expense" | "income" | "savings";
 function sheetFieldClass() {
   return cn(
     inputClass,
-    "flex min-h-[2.9rem] cursor-pointer items-center justify-between gap-[.5rem] rounded-[.72rem] bg-white! p-[.72rem_.85rem] text-left dark:bg-surface!",
+    "flex min-h-[2.9rem] cursor-pointer items-center justify-between gap-[.5rem] rounded-[.72rem] bg-white! p-[.72rem_.85rem] text-left",
   );
 }
 
@@ -318,7 +318,7 @@ function AmountField({
       <label className={cn(fieldLabelClass, "text-[.8rem]")}>Amount</label>
       <button
         type="button"
-        className={cn(inputClass, "flex min-h-[2.9rem] cursor-pointer items-center justify-between gap-[.5rem] rounded-[.72rem] bg-white! p-[.72rem_.85rem] text-left dark:bg-surface!")}
+        className={cn(inputClass, "flex min-h-[2.9rem] cursor-pointer items-center justify-between gap-[.5rem] rounded-[.72rem] bg-white! p-[.72rem_.85rem] text-left")}
         disabled={disabled}
         onClick={onOpen}
         aria-haspopup="dialog"

@@ -1,6 +1,6 @@
 {
-  "id": "d98f56ab-34a0-4ab4-a33b-f31e5d424a7a",
-  "prevId": "494d9ad1-b352-481c-8ad9-497a059ce8d8",
+  "id": "357e9555-4ef8-45f8-b8e2-322ca9b3e099",
+  "prevId": "d98f56ab-34a0-4ab4-a33b-f31e5d424a7a",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -818,14 +818,6 @@
           "primaryKey": false,
           "notNull": true,
           "default": "'Asia/Jakarta'"
-        },
-        "theme": {
-          "name": "theme",
-          "type": "theme_preference",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true,
-          "default": "'system'"
         },
         "created_at": {
           "name": "created_at",
@@ -3117,15 +3109,6 @@
       "values": [
         "income",
         "expense"
-      ]
-    },
-    "public.theme_preference": {
-      "name": "theme_preference",
-      "schema": "public",
-      "values": [
-        "system",
-        "light",
-        "dark"
       ]
     },
     "public.split_bill_discount_mode": {

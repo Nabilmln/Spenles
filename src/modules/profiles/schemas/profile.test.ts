@@ -5,22 +5,14 @@ const validProfile = {
   displayName: "Sari",
   defaultCurrency: "IDR",
   timezone: "Asia/Jakarta",
-  theme: "system",
 };
 
 describe("profileSchema", () => {
-  it("accepts Phase 01 defaults", () => {
+  it("accepts supported profile settings", () => {
     expect(profileSchema.safeParse(validProfile).success).toBe(true);
   });
 
-  it("rejects unsupported currency, timezone, and theme", () => {
-    expect(
-      profileSchema.safeParse({
-        ...validProfile,
-        defaultCurrency: "USD",
-        timezone: "UTC",
-        theme: "blue",
-      }).success,
-    ).toBe(false);
+  it("rejects unsupported currency and timezone", () => {
+    expect(profileSchema.safeParse({ ...validProfile, defaultCurrency: "USD", timezone: "UTC" }).success).toBe(false);
   });
 });

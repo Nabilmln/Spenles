@@ -43,7 +43,7 @@ export function SplitBillFilterBar({
         aria-label="Search merchant"
         className={cn(
           inputClass,
-          "flex-1 min-w-0 rounded-full bg-white! dark:bg-surface!",
+          "flex-1 min-w-0 rounded-full bg-white!",
         )}
         defaultValue={filters.q}
         name="q"
@@ -56,7 +56,7 @@ export function SplitBillFilterBar({
         aria-label="Open filters"
         className={cn(
           iconButtonClass,
-          "relative size-[2.9rem] min-h-[2.9rem] rounded-full bg-white! dark:bg-surface!",
+          "relative size-[2.9rem] min-h-[2.9rem] rounded-full bg-white!",
         )}
         onClick={() => setOpen(true)}
         type="button"

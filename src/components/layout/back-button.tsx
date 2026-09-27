@@ -31,7 +31,7 @@ export function BackButton({
       <ChevronLeft
         size={22}
         aria-hidden="true"
-        className="shrink-0 text-primary-600 dark:text-primary-700"
+        className="shrink-0 text-primary-600"
       />
       {title ? (
         <span className="min-w-0 truncate text-[.95rem] font-medium">

@@ -1,140 +1,42 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import {
-  FileBarChart,
-  Home,
-  ListTree,
-  ReceiptText,
-  Target,
-  UserRound,
-  UsersRound,
-  WalletCards,
-} from "lucide-react";
+import { Home, ReceiptText, WalletCards } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import type { Profile } from "@/db/schema";
 import { AddTransactionButton } from "./add-transaction-button";
-import { ProfileSheet } from "./profile-sheet";
 
 const links = [
   { href: "/dashboard", label: "Home", icon: Home },
-  { href: "/transactions", label: "Transactions", icon: ReceiptText },
-  { href: "/accounts", label: "Accounts", icon: WalletCards },
-  { href: "/categories", label: "Categories", icon: ListTree },
-  { href: "/budgets", label: "Budgets", icon: Target },
-  { href: "/split-bills", label: "Split Bill", icon: UsersRound },
-  { href: "/reports", label: "Reports", icon: FileBarChart },
-];
-
-const mobileLinks = [
-  { href: "/dashboard", label: "Home", icon: Home },
   { href: "/accounts", label: "Accounts", icon: WalletCards },
   { href: "/transactions", label: "Transactions", icon: ReceiptText },
 ];
 
-const linkBase =
-  "relative flex h-[2.6rem] items-center gap-[.75rem] rounded-[.65rem] px-[.6rem] text-[.85rem] font-medium text-muted transition-[background,color] duration-150 hover:bg-surface-subtle hover:text-foreground overflow-hidden max-[860px]:min-h-[3.5rem] max-[860px]:flex-col max-[860px]:justify-center max-[860px]:gap-[.2rem] max-[860px]:rounded-[.8rem] max-[860px]:px-[.25rem] max-[860px]:py-[.35rem] max-[860px]:text-[.68rem] max-[860px]:h-auto";
-
-const linkActive =
-  "text-primary-600 bg-primary-50 dark:text-primary-700 dark:bg-primary-50";
-
-export function NavigationLinks({
-  mobile = false,
-  profile,
-  email,
-}: {
-  mobile?: boolean;
-  profile?: Profile;
-  email?: string;
-}) {
+export function NavigationLinks() {
   const pathname = usePathname();
-  const [profileOpen, setProfileOpen] = useState(false);
-
-  if (mobile) {
-    return (
-      <>
-        {mobileLinks.map(({ href, label, icon: Icon }) => (
-          <MobileLink active={pathname === href} href={href} icon={Icon} key={href} label={label} />
-        ))}
-        <AddTransactionButton />
-      </>
-    );
-  }
-
   return (
-    <nav className="mt-[1.75rem] grid gap-[.2rem]" aria-label="Navigasi utama">
+    <>
       {links.map(({ href, label, icon: Icon }) => {
-        const active = pathname === href || pathname.startsWith(`${href}/`);
+        const active = pathname === href;
         return (
           <Link
             aria-current={active ? "page" : undefined}
-            className={cn(linkBase, active && linkActive)}
+            className={cn(
+              "relative flex min-h-[2.9rem] min-w-[2.9rem] items-center justify-center gap-[.35rem] rounded-full px-2.5 text-muted transition-[background,color,box-shadow,width] duration-200",
+              active && "bg-primary-50 font-medium text-primary-700",
+            )}
             href={href}
             key={href}
           >
-            <Icon aria-hidden="true" size={17} className="shrink-0" />
-            <span className="whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-150">{label}</span>
-            {active && (
-              <span
-                className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-[60%] rounded-r-full bg-primary-600"
-                aria-hidden="true"
-              />
-            )}
+            <Icon aria-hidden="true" size={20} className="shrink-0" />
+            <span className={cn(
+              "overflow-hidden whitespace-nowrap text-[.72rem] transition-[max-width,opacity] duration-200",
+              active ? "max-w-[5.5rem] opacity-100" : "max-w-0 opacity-0",
+            )}>{label}</span>
           </Link>
         );
       })}
-      <button
-        type="button"
-        className={cn(linkBase, "w-full text-left")}
-        onClick={() => setProfileOpen(true)}
-      >
-        <UserRound aria-hidden="true" size={17} className="shrink-0" />
-        <span className="whitespace-nowrap opacity-0 group-hover/sidebar:opacity-100 transition-opacity duration-150">Profile</span>
-      </button>
-      {profile && (
-        <ProfileSheet
-          open={profileOpen}
-          onClose={() => setProfileOpen(false)}
-          profile={profile}
-          email={email ?? ""}
-        />
-      )}
-    </nav>
-  );
-}
-
-function MobileLink({
-  active,
-  href,
-  label,
-  icon: Icon,
-}: {
-  active: boolean;
-  href: string;
-  label: string;
-  icon: typeof Home;
-}) {
-  return (
-    <Link
-      aria-current={active ? "page" : undefined}
-      className={cn(
-        "relative flex min-h-[2.9rem] min-w-[2.9rem] items-center justify-center gap-[.35rem] rounded-full px-2.5 text-muted transition-[background,color,box-shadow,width] duration-200",
-        active &&
-          "bg-primary-50 font-medium text-primary-700 dark:bg-primary-50 dark:text-primary-700",
-      )}
-      href={href}
-    >
-      <Icon aria-hidden="true" size={20} className="shrink-0" />
-      <span
-        className={cn(
-          "overflow-hidden whitespace-nowrap text-[.72rem] transition-[max-width,opacity] duration-200",
-          active ? "max-w-[5.5rem] opacity-100" : "max-w-0 opacity-0",
-        )}
-      >
-        {label}
-      </span>
-    </Link>
+      <AddTransactionButton />
+    </>
   );
 }

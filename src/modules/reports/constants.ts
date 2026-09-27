@@ -7,7 +7,7 @@ export const REPORT_MAX_DAYS = 366;
 export const REPORT_DETAIL_LIMIT = 500;
 export const EXPORT_MAX_BYTES = 3_500_000;
 export const BACKUP_RECORD_LIMIT = 25_000;
-export const BACKUP_SCHEMA_VERSION = "1.0";
+export const BACKUP_SCHEMA_VERSION = "1.1";
 
 export const PRIVATE_EXPORT_HEADERS = {
   "Cache-Control": "private, no-store, max-age=0",

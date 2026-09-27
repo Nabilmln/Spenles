@@ -79,22 +79,7 @@ export function Select({
   }, [options, currentValue]);
 
   const [open, setOpen] = useState(false);
-  const [anchorStyle, setAnchorStyle] = useState<React.CSSProperties>({});
-  const triggerRef = useRef<HTMLButtonElement>(null);
   const listboxRef = useRef<HTMLDivElement>(null);
-
-  function openPanel() {
-    setOpen(true);
-    if (typeof window !== "undefined" && window.innerWidth >= 861 && triggerRef.current) {
-      const rect = triggerRef.current.getBoundingClientRect();
-      setAnchorStyle({
-        position: "fixed",
-        top: rect.bottom + 8,
-        left: rect.left,
-        width: Math.max(rect.width, 12),
-      });
-    }
-  }
 
   useEffect(() => {
     if (open) {
@@ -169,10 +154,9 @@ export function Select({
           if (open) {
             setOpen(false);
           } else {
-            openPanel();
+            setOpen(true);
           }
         }}
-        ref={triggerRef}
         type="button"
       >
         <span className={cn("min-w-0 flex-1 truncate text-[.88rem]", !currentValue && placeholder && "font-medium text-muted")}>
@@ -183,17 +167,16 @@ export function Select({
 
       {open ? (
         <div
-          className="fixed inset-0 z-[70] flex items-end justify-center bg-[rgb(15_17_21/45%)] p-4 pb-[max(1rem,env(safe-area-inset-bottom))] min-[861px]:pointer-events-none min-[861px]:items-start min-[861px]:justify-start min-[861px]:bg-transparent min-[861px]:p-0"
+          className="fixed inset-0 z-[70] flex items-end justify-center bg-[rgb(15_17_21/45%)] p-4 pb-[max(1rem,env(safe-area-inset-bottom))]"
           onClick={() => setOpen(false)}
         >
           <div
             aria-label={ariaLabel}
-            className="grid w-[min(28rem,100%)] max-h-[70vh] grid-rows-[auto_minmax(0,1fr)] overflow-hidden rounded-[1.15rem_1.15rem_1rem_1rem] border border-border bg-surface shadow-card min-[861px]:absolute min-[861px]:z-[5] min-[861px]:w-[min(24rem,calc(100vw-2rem))]"
+            className="grid w-[min(28rem,100%)] max-h-[70vh] grid-rows-[auto_minmax(0,1fr)] overflow-hidden rounded-[1.15rem_1.15rem_1rem_1rem] border border-border bg-surface shadow-card"
             id={listboxId}
             onClick={(event) => event.stopPropagation()}
             ref={listboxRef}
             role="listbox"
-            style={anchorStyle}
           >
             <div className="px-4 pt-4 pb-[.4rem] text-[.76rem] font-medium uppercase tracking-[.04em] text-muted" aria-hidden="true">
               {ariaLabel}

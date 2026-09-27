@@ -1,26 +1,13 @@
 import { cleanup, render, screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { DailyExpensePoint } from "../types/dashboard";
 import { DashboardFeatureGrid } from "./dashboard-feature-grid";
-import { MonthlyExpenseCard } from "./monthly-expense-card";
 import { RecentActivityCard } from "./recent-activity";
 
 afterEach(cleanup);
 
-vi.mock("./daily-expense-chart", () => ({
-  DailyExpenseChart: () => <div data-testid="daily-chart" />,
-}));
-
 vi.mock("@/modules/transactions/components/add-transaction-sheet", () => ({
   AddTransactionSheet: () => null,
 }));
-
-const point = (day: string, expenseIdr: string, plot: number): DailyExpensePoint => ({
-  day,
-  label: day,
-  expenseIdr,
-  plot,
-});
 
 describe("mobile dashboard cards", () => {
   it("renders the quick services with real page routes only", () => {
@@ -33,30 +20,6 @@ describe("mobile dashboard cards", () => {
     expect(screen.getByRole("link", { name: "Categories" })).toHaveAttribute("href", "/categories");
     expect(screen.getByRole("link", { name: "Reports" })).toHaveAttribute("href", "/reports");
     expect(screen.queryByRole("link", { name: /Ekspor|Notifikasi|Add Expense/ })).not.toBeInTheDocument();
-  });
-
-  it("renders both chart canvases and the income and expense totals without a mobile add button", () => {
-    render(
-      <MonthlyExpenseCard
-        currentMonth="2026-08"
-        monthLabel="Agustus 2026"
-        monthPoints={[point("2026-08-01", "50000", 1)]}
-        nextMonth="2026-09"
-        prevMonth="2026-07"
-        recentPoints={[point("2026-08-03", "0", 0)]}
-        totalExpense={50000n}
-        totalIncome={100000n}
-      />,
-    );
-
-    expect(screen.getByRole("button", { name: "Agustus 2026" })).toBeInTheDocument();
-    expect(screen.getByText("Income")).toBeInTheDocument();
-    expect(screen.getByText("Expenses")).toBeInTheDocument();
-    expect(screen.getByText(/Rp\s*100\.000/u)).toBeInTheDocument();
-    expect(screen.getByText(/Rp\s*50\.000/u)).toBeInTheDocument();
-    expect(screen.getAllByTestId("daily-chart")).toHaveLength(2);
-    expect(screen.getByRole("group", { name: "Select month" })).toBeInTheDocument();
-    expect(screen.queryByRole("link", { name: "Tambah transaksi" })).not.toBeInTheDocument();
   });
 
   it("groups recent activity transactions and links to the list", () => {

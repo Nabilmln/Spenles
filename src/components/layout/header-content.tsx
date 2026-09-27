@@ -4,8 +4,6 @@ import { usePathname } from "next/navigation";
 import type { Profile } from "@/db/schema";
 import { BackButton } from "./back-button";
 import { ProfileMenu } from "./profile-menu";
-import { Brand } from "./brand";
-import { ThemeToggle } from "@/components/theme/theme-toggle";
 
 type HeaderMeta = {
   title?: string;
@@ -60,20 +58,12 @@ export function HeaderContent({
         <>
           <BackButton fallback={meta.back} title={meta.title} />
           <div className="flex-1" />
-          <ThemeToggle currentTheme={profile.theme} />
           <ProfileMenu profile={profile} email={email} />
         </>
       ) : (
         <>
-          <div className="hidden min-[861px]:block"><Brand /></div>
-          <div className="min-[861px]:hidden">
-            <ProfileMenu profile={profile} email={email} />
-          </div>
+          <ProfileMenu profile={profile} email={email} />
           <div className="flex-1" />
-          <ThemeToggle currentTheme={profile.theme} />
-          <div className="hidden min-[861px]:block">
-            <ProfileMenu profile={profile} email={email} />
-          </div>
         </>
       )}
     </>

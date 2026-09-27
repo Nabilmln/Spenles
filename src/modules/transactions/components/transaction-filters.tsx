@@ -53,7 +53,7 @@ function segmentedClass(active: boolean) {
 function fieldButtonClass() {
   return cn(
     inputClass,
-    "flex min-h-[2.9rem] items-center justify-between gap-[.5rem] rounded-[.72rem] bg-white! p-[.72rem_.85rem] dark:bg-surface!",
+    "flex min-h-[2.9rem] items-center justify-between gap-[.5rem] rounded-[.72rem] bg-white! p-[.72rem_.85rem]",
   );
 }
 
@@ -100,7 +100,7 @@ export function TransactionFilterBar({
     >
       <input
         aria-label="Search description or category"
-        className={cn(inputClass, "flex-1 min-w-0 rounded-full bg-white! dark:bg-surface!")}
+        className={cn(inputClass, "flex-1 min-w-0 rounded-full bg-white!")}
         defaultValue={filters.q}
         name="q"
         placeholder="Search transactions..."
@@ -110,7 +110,7 @@ export function TransactionFilterBar({
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-label="Open filters"
-        className={cn(iconButtonClass, "relative size-[2.9rem] min-h-[2.9rem] rounded-full bg-white! dark:bg-surface!")}
+        className={cn(iconButtonClass, "relative size-[2.9rem] min-h-[2.9rem] rounded-full bg-white!")}
         onClick={() => setOpen(true)}
         type="button"
       >

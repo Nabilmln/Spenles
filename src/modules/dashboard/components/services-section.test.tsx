@@ -29,7 +29,6 @@ const profile = {
   displayName: "Budi",
   defaultCurrency: "IDR",
   timezone: "Asia/Jakarta",
-  theme: "light" as const,
   createdAt: new Date(),
   updatedAt: new Date(),
 };

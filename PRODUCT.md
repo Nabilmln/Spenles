@@ -29,7 +29,7 @@ investment, or professional accounting service.
 
 - The finance app renders below 861px. At wider viewports, the site shows a
   landing page about Spenles instead of the finance interface.
-- The desktop landing's “Try Spenles on your phone” action leads to setup
+- The desktop landing's â€œTry Spenles on your phoneâ€ action leads to setup
   steps on the page: open the site on a phone, create an account or sign in,
   and record a first transaction. Visitors can copy the site link.
 - Users enter and review amounts in IDR. Financial periods use Asia/Jakarta.
@@ -57,7 +57,7 @@ investment, or professional accounting service.
 
 The product name is **Spenles**. Ink black and neutral paper surfaces are the
 shared visual direction for the desktop landing and mobile app. The open S
-logo has no drawn tile in the interface; install icons use an opaque paper
+logo has no drawn tile in the interface; users do not choose a theme. Install icons use an opaque paper
 background required by mobile platforms. `DESIGN.md` records the system.
 
 ## Evidence on Hand

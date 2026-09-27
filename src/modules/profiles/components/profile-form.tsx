@@ -5,7 +5,6 @@ import type { Profile } from "@/db/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormMessage } from "@/components/ui/form-message";
-import { Select } from "@/components/ui/select";
 import {
   fieldClass,
   fieldHintClass,
@@ -69,20 +68,6 @@ export function ProfileForm({
             Spenles only supports Asia/Jakarta.
           </span>
         </div>
-      </div>
-      <div className={fieldClass}>
-        <label htmlFor="theme" className={fieldLabelClass}>Theme</label>
-        <Select
-          id="theme"
-          name="theme"
-          defaultValue={profile.theme === "system" ? "light" : profile.theme}
-        >
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
-        </Select>
-        <span className={fieldHintClass}>
-          Quickly change the theme via the sun or moon icon in the top-right corner.
-        </span>
       </div>
       <Button type="submit" disabled={pending}>
         {pending ? "Saving..." : "Save changes"}

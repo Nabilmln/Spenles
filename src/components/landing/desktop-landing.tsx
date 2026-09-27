@@ -324,7 +324,7 @@ export function DesktopLanding() {
   return (
     <div className={styles.landing} lang="en">
       <header className={styles.header}>
-        <Brand showLabel tone="ink" />
+        <Brand showLabel />
         <nav aria-label="Landing page" className={styles.headerNav}>
           <a href="#why-spenles">Why Spenles</a>
           <a href="#features">Features</a>
@@ -580,7 +580,7 @@ export function DesktopLanding() {
         </section>
       </main>
       <footer className={styles.footer}>
-        <Brand showLabel tone="ink" />
+        <Brand showLabel />
         <span>Personal finance, made easier to see.</span>
         <a href="#get-started">
           Get started <ArrowRight aria-hidden="true" size={15} />

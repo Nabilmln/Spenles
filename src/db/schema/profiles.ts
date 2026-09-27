@@ -1,11 +1,5 @@
-import { check, pgEnum, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import { check, pgTable, text, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
-
-export const themePreference = pgEnum("theme_preference", [
-  "system",
-  "light",
-  "dark",
-]);
 
 export const profiles = pgTable(
   "profiles",
@@ -19,7 +13,6 @@ export const profiles = pgTable(
     timezone: varchar("timezone", { length: 64 })
       .notNull()
       .default("Asia/Jakarta"),
-    theme: themePreference("theme").notNull().default("system"),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),

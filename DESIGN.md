@@ -20,12 +20,6 @@ colors:
   landing-ink: "#171717"
   landing-background: "#ffffff"
   brand-icon-field: "#f7f7f5"
-  dark-background: "#08080a"
-  dark-surface: "#101013"
-  dark-surface-subtle: "#17171c"
-  dark-foreground: "#ededf0"
-  dark-muted: "#a3a3af"
-  dark-border: "#1f1f26"
 typography:
   display:
     fontFamily: "Poppins, ui-sans-serif, system-ui, sans-serif"
@@ -114,7 +108,7 @@ The desktop landing uses the same open S mark, ink, font, and rounded forms at a
 
 ## Colors
 
-The palette combines white and paper neutrals with dark ink for actions. The app has explicit light and dark themes; the landing page is light by design.
+The palette combines white and paper neutrals with dark ink for actions. The mobile app and landing share one light ink-and-paper style.
 
 ### Primary
 
@@ -126,7 +120,6 @@ The palette combines white and paper neutrals with dark ink for actions. The app
 - **White Surface:** Cards, fields where appropriate, and elevated panels remain bright and readable.
 - **Deep Ink:** Foreground text and the landing call to action use near-black neutrals for strong hierarchy.
 - **Quiet Gray:** Muted text and fine borders support detail without competing with amounts.
-- **Dark App Surfaces:** The app's dark theme swaps the canvas, cards, borders, and text to near-black and soft white. The desktop landing keeps its light palette.
 
 ### Semantic
 
@@ -159,7 +152,7 @@ At 861px and above, the desktop landing has five sections: centered introduction
 
 ## Elevation & Depth
 
-The app uses pale canvas contrast and fine borders for most separation. A low ambient card shadow adds lift to working surfaces. Stronger shadows are reserved for floating mobile navigation, dialogs, and prominent landing phone previews. Dark panels use tonal contrast instead of many nested shadows.
+The app uses pale canvas contrast and fine borders for most separation. A low ambient card shadow adds lift to working surfaces. Stronger shadows are reserved for floating mobile navigation, dialogs, and prominent landing phone previews. Dark feature panels use tonal contrast instead of many nested shadows.
 
 ### Shadow Vocabulary
 

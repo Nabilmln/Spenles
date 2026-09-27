@@ -68,10 +68,10 @@ export const fieldHintClass = "text-[.76rem] font-medium text-muted";
 export const mutedLinkClass = "text-[.76rem] font-medium text-muted";
 
 export const textLinkClass =
-  "font-medium text-primary-600 hover:text-primary-700 dark:text-primary-700 transition-colors duration-150";
+  "font-medium text-primary-600 hover:text-primary-700 transition-colors duration-150";
 
 export const eyebrowClass =
-  "mb-[.5rem] text-[.7rem] font-semibold uppercase tracking-[.14em] text-primary-600 dark:text-primary-700";
+  "mb-[.5rem] text-[.7rem] font-semibold uppercase tracking-[.14em] text-primary-600";
 
 export const pageStackClass = "page-stagger grid gap-[1.5rem]";
 

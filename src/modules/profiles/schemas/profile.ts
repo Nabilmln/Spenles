@@ -9,7 +9,4 @@ export const profileSchema = z.object({
     .max(100, "Display name must be at most 100 characters."),
   defaultCurrency: z.literal("IDR"),
   timezone: z.literal(JAKARTA_TIMEZONE),
-  theme: z.enum(["system", "light", "dark"]),
 });
-
-export const themeSchema = profileSchema.shape.theme;

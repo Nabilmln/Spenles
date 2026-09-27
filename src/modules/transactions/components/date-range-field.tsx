@@ -55,7 +55,7 @@ export function DateRangeField({
         aria-label="Select date range"
         className={cn(
           inputClass,
-          "flex min-h-[2.9rem] items-center justify-between gap-[.5rem] rounded-[.72rem] bg-white! p-[.72rem_.85rem] dark:bg-surface!",
+          "flex min-h-[2.9rem] items-center justify-between gap-[.5rem] rounded-[.72rem] bg-white! p-[.72rem_.85rem]",
         )}
         onClick={() => setOpen(true)}
         type="button"

@@ -22,7 +22,7 @@ describe("GET /api/exports/backup", () => {
     mocks.getPersonalDataBackupRecordCount.mockResolvedValue(5);
     mocks.getPersonalDataBackupJson.mockResolvedValue(
       JSON.stringify({
-        schemaVersion: "1.0",
+        schemaVersion: "1.1",
         application: "Spenles",
         data: { profile: { displayName: "User A" } },
       }),
@@ -48,7 +48,7 @@ describe("GET /api/exports/backup", () => {
       expect.any(Date),
     );
     const body = await response.json();
-    expect(body.schemaVersion).toBe("1.0");
+    expect(body.schemaVersion).toBe("1.1");
     expect(JSON.stringify(body)).not.toMatch(
       /password|session|token|secret|credential/iu,
     );

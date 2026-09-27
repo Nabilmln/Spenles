@@ -30,7 +30,6 @@ export async function getPersonalDataBackupJson(
           'displayName', owned_profile.display_name,
           'defaultCurrency', owned_profile.default_currency,
           'timezone', owned_profile.timezone,
-          'theme', owned_profile.theme,
           'createdAt', owned_profile.created_at,
           'updatedAt', owned_profile.updated_at
         ),
