@@ -1,9 +1,9 @@
 "use client";
 
 import {
-  Area,
-  AreaChart,
   CartesianGrid,
+  Line,
+  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -39,16 +39,10 @@ export function TransactionTrendChart({
   return (
     <div aria-hidden="true" className="h-[12.5rem] w-full">
       <ResponsiveContainer height="100%" width="100%">
-        <AreaChart
+        <LineChart
           data={points}
           margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
         >
-          <defs>
-            <linearGradient id="txExpenseFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--primary-600)" stopOpacity={1} />
-              <stop offset="100%" stopColor="var(--primary-600)" stopOpacity={0} />
-            </linearGradient>
-          </defs>
           <CartesianGrid
             stroke="var(--border)"
             strokeDasharray="3 3"
@@ -65,27 +59,26 @@ export function TransactionTrendChart({
           <YAxis domain={[0, 1]} hide />
           <Tooltip
             content={<TrendTooltip />}
-            cursor={{ stroke: "var(--primary-600)", strokeWidth: 1, strokeDasharray: "3 3" }}
+            cursor={{ stroke: "var(--analytics)", strokeWidth: 1, strokeDasharray: "3 3" }}
           />
-          <Area
+          <Line
             type="linear"
             dataKey="expensePlot"
-            stroke="var(--primary-600)"
+            stroke="var(--analytics)"
             strokeWidth={2}
             strokeLinecap="round"
             strokeLinejoin="round"
-            fill="url(#txExpenseFill)"
-            dot={{ r: 3, fill: "none", stroke: "var(--primary-600)", strokeWidth: 1.5 }}
+            dot={{ r: 3, fill: "#ffffff", stroke: "var(--analytics)", strokeWidth: 1.5 }}
             activeDot={{
               r: 5,
-              fill: "none",
-              stroke: "var(--primary-600)",
+              fill: "#ffffff",
+              stroke: "var(--analytics)",
               strokeWidth: 2,
             }}
             animationDuration={600}
             animationEasing="ease-out"
           />
-        </AreaChart>
+        </LineChart>
       </ResponsiveContainer>
     </div>
   );

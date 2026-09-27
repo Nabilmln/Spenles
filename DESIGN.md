@@ -11,6 +11,7 @@ colors:
   income: "#22c55e"
   expense: "#ef4444"
   warning: "#f59e0b"
+  analytics: "#3b82c4"
   background: "#f5f5f7"
   surface: "#ffffff"
   surface-subtle: "#f0f0f3"
@@ -177,7 +178,8 @@ Working controls use gently rounded corners, with cards slightly rounder than co
 ### Cards / Containers
 
 - **Standard card:** White surface, fine border, 0.85rem corners, 0.9rem padding, and the low card shadow.
-- **Financial card:** Broader corners, ink gradient, white text, and stronger depth for summary information.
+- **Financial card:** A charcoal cardholder with one plain, unbranded card provides texture behind the mobile balance. Live figures and the visibility control stay readable above it.
+- **Statistics:** Mobile transaction and report trends use line charts. A restrained blue marks expenses; green marks income. Labels and values carry meaning beyond color.
 - **Landing insights:** A large dark panel frames example income and expense reporting; the phone setup section returns to a pale surface.
 
 ### Inputs / Fields

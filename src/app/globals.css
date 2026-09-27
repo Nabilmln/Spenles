@@ -10,6 +10,7 @@
   --color-income: var(--income);
   --color-expense: var(--expense);
   --color-warning: var(--warning);
+  --color-analytics: var(--analytics);
   --color-background: var(--background);
   --color-surface: var(--surface);
   --color-surface-subtle: var(--surface-subtle);
@@ -38,6 +39,7 @@
   --income: #22c55e;
   --expense: #ef4444;
   --warning: #f59e0b;
+  --analytics: #3b82c4;
   --background: #f5f5f7;
   --surface: #ffffff;
   --surface-subtle: #f0f0f3;

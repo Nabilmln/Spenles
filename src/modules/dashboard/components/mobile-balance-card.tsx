@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Eye, EyeOff, Wallet } from "lucide-react";
 import { useState } from "react";
 import { formatIdr } from "@/lib/money/format-idr";
@@ -29,16 +30,20 @@ export function MobileBalanceCard({
   return (
     <section
       aria-label="Total balance"
-      className="relative grid min-w-0 gap-[1rem] overflow-hidden rounded-[1.5rem] bg-gradient-to-br from-primary-600 to-primary-700 p-[1.25rem] text-white shadow-[0_12px_40px_rgb(23_23_23/28%)]"
+      className="relative grid min-w-0 gap-[1rem] overflow-hidden rounded-[1.25rem] bg-[#171717] p-[1.25rem] text-white shadow-[0_12px_36px_rgb(23_23_23/20%)]"
     >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-14 -right-14 size-44 rounded-full bg-white/10"
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-20 -left-10 size-40 rounded-full bg-white/5"
-      />
+      {accounts.length > 0 ? (
+        <Image
+          src="/illustrations/cardholder-graphite.png"
+          alt=""
+          aria-hidden="true"
+          fill
+          priority
+          sizes="(max-width: 860px) 100vw, 0px"
+          className="pointer-events-none object-cover opacity-85"
+        />
+      ) : null}
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-black/10" />
 
       <div className="relative z-[1] flex items-center justify-between gap-3">
         <p className="m-0 text-[.7rem] font-semibold uppercase tracking-[.14em] text-white/70">
