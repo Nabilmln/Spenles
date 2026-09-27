@@ -179,7 +179,7 @@ Working controls use gently rounded corners, with cards slightly rounder than co
 
 - **Standard card:** White surface, fine border, 0.85rem corners, 0.9rem padding, and the low card shadow.
 - **Financial card:** A large cutout charcoal cardholder contains one graphite card marked only “VISA,” with no issuer identity or fake card details. The leather carries a lower-left “Balance:” label, live total, and adjacent visibility control. The dashboard card omits income and expense totals. No rectangular dark panel surrounds the cutout. The illustration is decorative and does not imply an issued payment card.
-- **Statistics:** Mobile transaction and report trends use line charts. A restrained blue marks expenses; green marks income. Labels and values carry meaning beyond color.
+- **Statistics:** Mobile transaction and report trends use line charts. The transaction line sits in a taller chart with a restrained blue fill fading to transparent beneath it. Blue marks expenses; green marks income. Labels and values carry meaning beyond color.
 - **Landing insights:** A large dark panel frames example income and expense reporting; the phone setup section returns to a pale surface.
 
 ### Inputs / Fields

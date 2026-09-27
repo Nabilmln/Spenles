@@ -1,9 +1,10 @@
 "use client";
 
 import {
+  Area,
   CartesianGrid,
+  ComposedChart,
   Line,
-  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -37,12 +38,18 @@ export function TransactionTrendChart({
   points: IncomeExpensePoint[];
 }) {
   return (
-    <div aria-hidden="true" className="h-[12.5rem] w-full">
+    <div aria-hidden="true" className="h-[17rem] w-full">
       <ResponsiveContainer height="100%" width="100%">
-        <LineChart
+        <ComposedChart
           data={points}
           margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
         >
+          <defs>
+            <linearGradient id="expense-trend-fill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="var(--analytics)" stopOpacity={0.22} />
+              <stop offset="100%" stopColor="var(--analytics)" stopOpacity={0} />
+            </linearGradient>
+          </defs>
           <CartesianGrid
             stroke="var(--border)"
             strokeDasharray="3 3"
@@ -61,6 +68,15 @@ export function TransactionTrendChart({
             content={<TrendTooltip />}
             cursor={{ stroke: "var(--analytics)", strokeWidth: 1, strokeDasharray: "3 3" }}
           />
+          <Area
+            type="linear"
+            dataKey="expensePlot"
+            stroke="none"
+            fill="url(#expense-trend-fill)"
+            fillOpacity={1}
+            isAnimationActive={false}
+            activeDot={false}
+          />
           <Line
             type="linear"
             dataKey="expensePlot"
@@ -75,10 +91,9 @@ export function TransactionTrendChart({
               stroke: "var(--analytics)",
               strokeWidth: 2,
             }}
-            animationDuration={600}
-            animationEasing="ease-out"
+            isAnimationActive={false}
           />
-        </LineChart>
+        </ComposedChart>
       </ResponsiveContainer>
     </div>
   );
