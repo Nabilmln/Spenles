@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import type { Profile } from "@/db/schema";
 import { BackButton } from "./back-button";
+import { Brand } from "./brand";
 import { ProfileMenu } from "./profile-menu";
 
 type HeaderMeta = {
@@ -62,8 +63,9 @@ export function HeaderContent({
         </>
       ) : (
         <>
-          <ProfileMenu profile={profile} email={email} />
+          <Brand showLabel={false} />
           <div className="flex-1" />
+          <ProfileMenu profile={profile} email={email} />
         </>
       )}
     </>

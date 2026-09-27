@@ -90,6 +90,7 @@ describe("HeaderContent home tab", () => {
     renderHeader();
     expect(screen.queryByRole("button", { name: /Back to/ })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Open profile" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Spenles" })).toHaveAttribute("href", "/");
     expect(screen.queryByText("Home")).not.toBeInTheDocument();
   });
 });

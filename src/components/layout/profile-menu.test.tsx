@@ -39,6 +39,7 @@ describe("ProfileMenu", () => {
     renderMenu();
     const trigger = screen.getByRole("button", { name: "Open profile" });
     expect(trigger).toBeInTheDocument();
+    expect(trigger.querySelector("img")).toHaveAttribute("src", expect.stringContaining("default-"));
     expect(screen.queryByRole("dialog", { name: "Profile" })).not.toBeInTheDocument();
 
     fireEvent.click(trigger);

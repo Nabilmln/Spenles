@@ -19,20 +19,14 @@ export function MobileBalanceCard({
     <section aria-label="Balance" className="mx-auto w-full max-w-[30rem] overflow-hidden">
       <div className="relative aspect-[3/2] w-full text-white">
         <Image
-          src="/illustrations/cardholder-clean-v2.png"
+          src="/illustrations/cardholder-graphic-visa.png"
           alt=""
           aria-hidden="true"
           fill
           priority
           sizes="(max-width: 860px) 100vw, 0px"
-          className="pointer-events-none scale-[1.18] object-contain"
+          className="pointer-events-none scale-[1.08] object-contain"
         />
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute right-[10%] top-[10%] text-[clamp(.7rem,3.8vw,1rem)] font-black italic tracking-[-.04em] text-white/90"
-        >
-          VISA
-        </span>
 
         <div className="absolute bottom-[13%] left-[11%] right-[11%] min-w-0">
           <p className="m-0 text-[.72rem] font-medium text-white/80">

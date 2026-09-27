@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from "react";
 import type { Profile } from "@/db/schema";
+import { defaultProfileAvatar } from "./default-profile-avatar";
 import { ProfileSheet } from "./profile-sheet";
 
 export function ProfileMenu({
@@ -12,19 +14,19 @@ export function ProfileMenu({
   email: string;
 }) {
   const [open, setOpen] = useState(false);
-  const initial = profile.displayName.slice(0, 1).toUpperCase();
+  const avatar = defaultProfileAvatar(profile.userId);
 
   return (
     <div className="relative z-40">
       <button
         type="button"
-        className="flex min-h-[2.75rem] items-center gap-[.65rem] rounded-full border-0 bg-transparent p-0 text-foreground"
+        className="grid size-11 place-items-center rounded-full border-0 bg-transparent p-0 text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-label="Open profile"
       >
-        <span className="grid size-[2.3rem] place-items-center rounded-full bg-primary-600 text-[.9rem] font-medium text-white shadow-[0_2px_10px_rgb(23_23_23/35%)]" aria-hidden="true">{initial}</span>
+        <Image src={avatar} alt="" aria-hidden="true" width={40} height={40} className="size-10 rounded-full object-cover ring-1 ring-border" />
       </button>
 
       <ProfileSheet

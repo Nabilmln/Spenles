@@ -184,7 +184,7 @@ Working controls use gently rounded corners, with cards slightly rounder than co
 ### Cards / Containers
 
 - **Standard card:** White surface, fine border, 0.9rem corners, 1rem padding, and a very light card shadow when needed. Account cards use solid graphite without decorative gradients or circles.
-- **Financial card:** A large cutout charcoal cardholder contains one graphite card marked only “VISA,” with no issuer identity or fake card details. The leather carries a lower-left “Balance:” label, live total, and adjacent visibility control. The dashboard card omits income and expense totals. No rectangular dark panel surrounds the cutout. The illustration is decorative and does not imply an issued payment card.
+- **Financial card:** A large transparent cutout illustration shows one graphite card with lightly textured surfaces and “VISA” lettering baked into the image. It has no issuer identity or fake card details. The front pocket leaves room for the live lower-left “Balance:” label, total, and adjacent visibility control rendered by the UI. The dashboard card omits income and expense totals. No rectangular dark panel surrounds the cutout. The illustration is decorative and does not imply an issued payment card.
 - **Statistics:** Mobile transaction and report trends use line charts. The transaction line sits in a taller chart with a restrained blue fill fading to transparent beneath it. Blue marks expenses; green marks income. Labels and values carry meaning beyond color.
 - **PDF reports:** Exported reports use the same ink, paper, and semantic colors. Noto Sans is embedded for dependable PDF glyph coverage; it is not an app interface font.
 - **Landing insights:** A large dark panel frames example income and expense reporting; the phone setup section returns to a pale surface.
@@ -197,6 +197,7 @@ Working controls use gently rounded corners, with cards slightly rounder than co
 
 ### Navigation
 
+- **Mobile header:** The dashboard shows the bare open S logo at left and the profile portrait at right on the page canvas, without a header fill. Secondary screens keep their back control at left and the portrait at right. Five coordinated 3D illustrated portraits are assigned as stable default avatars by user ID; the same portrait appears in the profile sheet. Avatar customization is a later feature.
 - **Mobile app:** A solid graphite floating bar holds the existing icon links and expands the active label in a quiet translucent pill. The add button is white with an ink icon.
 - **Brand:** The shared open S in ink anchors app and landing navigation without a drawn tile. Favicon and install icons use the same vector; opaque PWA canvases and centered Android maskable exports meet platform requirements.
 - **Landing:** Simple text links and one dark action keep the desktop header light.

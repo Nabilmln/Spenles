@@ -1,11 +1,13 @@
 "use client";
 
+import Image from "next/image";
 import { useFormStatus } from "react-dom";
 import { LogOut } from "lucide-react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { ProfileForm } from "@/modules/profiles/components/profile-form";
 import { logoutAction } from "@/modules/auth/actions/logout";
 import type { Profile } from "@/db/schema";
+import { defaultProfileAvatar } from "./default-profile-avatar";
 
 function LogoutButton() {
   const { pending } = useFormStatus();
@@ -32,8 +34,6 @@ export function ProfileSheet({
   profile: Profile;
   email: string;
 }) {
-  const initial = profile.displayName.slice(0, 1).toUpperCase();
-
   return (
     <BottomSheet
       open={open}
@@ -42,12 +42,14 @@ export function ProfileSheet({
       ariaLabel="Profile"
     >
       <div className="mb-[1.1rem] grid place-items-center gap-[.6rem]">
-        <span
+        <Image
+          src={defaultProfileAvatar(profile.userId)}
+          alt=""
           aria-hidden="true"
-          className="grid size-[4.5rem] place-items-center rounded-full bg-primary-600 text-[1.5rem] font-semibold text-white shadow-[0_4px_16px_rgb(23_23_23/35%)]"
-        >
-          {initial}
-        </span>
+          width={72}
+          height={72}
+          className="size-[4.5rem] rounded-full object-cover ring-1 ring-border"
+        />
         <div className="grid text-center">
           <strong className="text-[1.05rem]">{profile.displayName}</strong>
           <small className="text-[.8rem] text-muted">{email}</small>
