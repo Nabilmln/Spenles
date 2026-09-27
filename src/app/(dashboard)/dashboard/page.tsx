@@ -3,16 +3,12 @@ import { Suspense } from "react";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { buttonClass, cardClass } from "@/components/ui/styles";
 import {
-  currentJakartaMonthKey,
   DashboardBalanceSection,
   DashboardCardSkeleton,
   DashboardRecentActivitySection,
   getRecentActivityTransactions,
-  getSelectedAndPreviousTotals,
-  monthIntervalForKey,
   safeParseDashboardFilters,
   ServicesSection,
-  shiftMonthKey,
   type DashboardSearchParams,
 } from "@/modules/dashboard";
 import { listOwnedAccounts } from "@/modules/accounts";
@@ -55,19 +51,13 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     );
   }
 
-  const cardMonth = filtersResult.data.selection.kind === "month"
-    ? filtersResult.data.selection.month
-    : currentJakartaMonthKey();
-  const cardInterval = monthIntervalForKey(cardMonth);
-  const prevCardInterval = monthIntervalForKey(shiftMonthKey(cardMonth, -1));
-  const totalsPromise = getSelectedAndPreviousTotals(user.id, cardInterval, prevCardInterval);
   const accountsPromise = listOwnedAccounts(user.id);
   const activityPromise = getRecentActivityTransactions(user.id);
 
   return (
     <div className="grid gap-[1.55rem]">
       <Suspense fallback={<DashboardCardSkeleton label="Financial summary" />}>
-        <DashboardBalanceSection accountsPromise={accountsPromise} totalsPromise={totalsPromise} />
+        <DashboardBalanceSection accountsPromise={accountsPromise} />
       </Suspense>
       <ServicesSection profile={profile ?? profileFallback(user.id)} email={user.email ?? ""} />
       <Suspense fallback={<DashboardCardSkeleton label="Recent activity" />}>

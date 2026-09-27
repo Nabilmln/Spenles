@@ -3,9 +3,7 @@ import type { AccountBalanceRow } from "@/modules/accounts";
 import { DashboardSectionError } from "./dashboard-section-error";
 import { MobileBalanceCard } from "./mobile-balance-card";
 import { RecentActivityCard } from "./recent-activity";
-import type { AggregateTotals, RecentDashboardTransaction } from "../types/dashboard";
-
-type Totals = { selected: AggregateTotals; previous: AggregateTotals };
+import type { RecentDashboardTransaction } from "../types/dashboard";
 
 export function DashboardCardSkeleton({ label }: { label: string }) {
   return (
@@ -21,23 +19,18 @@ export function DashboardCardSkeleton({ label }: { label: string }) {
   );
 }
 
-export async function DashboardBalanceSection({ totalsPromise, accountsPromise }: {
-  totalsPromise: Promise<Totals>;
+export async function DashboardBalanceSection({ accountsPromise }: {
   accountsPromise: Promise<AccountBalanceRow[]>;
 }) {
-  let income = 0n;
-  let expense = 0n;
   let activeAccounts: AccountBalanceRow[] = [];
   try {
-    const [totals, accounts] = await Promise.all([totalsPromise, accountsPromise]);
-    income = totals.selected.income;
-    expense = totals.selected.expense;
+    const accounts = await accountsPromise;
     activeAccounts = accounts.filter((account) => account.status === "active");
   } catch {
     // The balance card retains its zero fallback state.
   }
   const totalBalance = activeAccounts.reduce((sum, account) => sum + BigInt(account.balance), 0n);
-  return <MobileBalanceCard accounts={activeAccounts} balance={totalBalance} income={income} expense={expense} />;
+  return <MobileBalanceCard balance={totalBalance} />;
 }
 
 export async function DashboardRecentActivitySection({ activityPromise }: {

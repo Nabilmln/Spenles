@@ -10,46 +10,23 @@ const findAmount = (value: string) =>
   ).length > 0;
 
 describe("MobileBalanceCard", () => {
-  it("renders the total balance with income and expense", () => {
+  it("renders the balance without income and expense totals", () => {
     render(
       <MobileBalanceCard
-        accounts={[{ name: "Kas Utama", type: "cash" }]}
         balance={5_487_508n}
-        income={2_000_000n}
-        expense={800_000n}
       />,
     );
 
-    expect(screen.getByText("Total balance")).toBeInTheDocument();
-    expect(screen.getByText("Kas Utama")).toBeInTheDocument();
+    expect(screen.getByText("Balance:")).toBeInTheDocument();
     expect(findAmount("Rp5.487.508")).toBe(true);
-    expect(findAmount("Rp2.000.000")).toBe(true);
-    expect(findAmount("Rp800.000")).toBe(true);
-  });
-
-  it("summarizes multiple accounts in the account row", () => {
-    render(
-      <MobileBalanceCard
-        accounts={[
-          { name: "Kas Utama", type: "cash" },
-          { name: "Rekening BCA", type: "bank" },
-        ]}
-        balance={1n}
-        income={1n}
-        expense={1n}
-      />,
-    );
-
-    expect(screen.getByText("Kas Utama +1 more")).toBeInTheDocument();
+    expect(screen.queryByText("Income")).not.toBeInTheDocument();
+    expect(screen.queryByText("Expense")).not.toBeInTheDocument();
   });
 
   it("toggles the nominal visibility", () => {
     render(
       <MobileBalanceCard
-        accounts={[{ name: "Kas Utama", type: "cash" }]}
         balance={5_487_508n}
-        income={2_000_000n}
-        expense={800_000n}
       />,
     );
 
