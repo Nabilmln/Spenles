@@ -1,97 +1,43 @@
-import Link from "next/link";
-import { JAKARTA_OFFSET_MS } from "@/lib/dates/jakarta";
-import { formatLongDateUtc } from "@/lib/dates/format-id";
 import { cardClass } from "@/components/ui/styles";
 import { TransactionCard } from "@/components/transactions/transaction-card";
 import { RecordExpenseButton } from "./record-expense-button";
 import type { RecentDashboardTransaction } from "../types/dashboard";
 
-const DAY_MS = 86_400_000;
 const MAX_ITEMS = 5;
-const pad = (value: number) => String(value).padStart(2, "0");
-
-function jakartaDayKey(date: Date) {
-  const shifted = new Date(date.getTime() + JAKARTA_OFFSET_MS);
-  return `${shifted.getUTCFullYear()}-${pad(shifted.getUTCMonth() + 1)}-${pad(shifted.getUTCDate())}`;
-}
-
-function todayKey() {
-  return jakartaDayKey(new Date());
-}
-
-function dayOffset(today: string, day: string) {
-  const start = new Date(`${today}T00:00:00Z`).getTime();
-  const target = new Date(`${day}T00:00:00Z`).getTime();
-  return Math.round((start - target) / DAY_MS);
-}
-
-function groupLabel(today: string, day: string) {
-  const offset = dayOffset(today, day);
-  if (offset === 0) return "Today";
-  if (offset === 1) return "Yesterday";
-  if (offset === 2) return "2 days ago";
-  return formatLongDateUtc(day);
-}
 
 export function RecentActivityCard({
   rows,
 }: {
   rows: RecentDashboardTransaction[];
 }) {
-  const today = todayKey();
-  const groups = new Map<string, RecentDashboardTransaction[]>();
-  for (const row of rows.slice(0, MAX_ITEMS)) {
-    const day = jakartaDayKey(row.transactionAt);
-    const bucket = groups.get(day) ?? [];
-    bucket.push(row);
-    groups.set(day, bucket);
-  }
-  const orderedDays = [...groups.keys()].sort().reverse();
+  const recentRows = rows.slice(0, MAX_ITEMS);
 
   return (
     <section aria-labelledby="recent-activity-title" className={`${cardClass} flex h-full flex-col shadow-none`}>
-      <div className="mb-[.65rem] flex items-center justify-between gap-3">
-        <h2 id="recent-activity-title" className="m-0 text-[1.05rem] font-semibold tracking-[-.02em]">Recent activity</h2>
-        <Link
-          className="inline-flex items-center whitespace-nowrap text-[.76rem] font-medium text-primary-600 hover:text-primary-700"
-          href="/transactions"
-        >
-          View all
-          <span aria-hidden="true" className="ml-[.2rem] text-[0.95rem] leading-none">&gt;</span>
-        </Link>
-      </div>
+      <h2 id="recent-activity-title" className="m-0! mb-[.65rem]! text-[1.175rem]! font-semibold tracking-[-.02em]">Recent Activity</h2>
 
-      {orderedDays.length ? (
-        <div className="grid flex-1 gap-[.9rem]">
-          {orderedDays.map((day) => (
-            <section key={day}>
-              <h3 className="my-[.7rem_.1rem] text-[.72rem] font-medium text-muted [&:first-child]:mt-[.35rem]">
-                {groupLabel(today, day)}
-              </h3>
-              <div className="grid gap-[.6rem]">
-                {groups.get(day)!.map((row) => (
-                  <TransactionCard
-                    compact
-                    key={row.id}
-                    transaction={{
-                      id: row.id,
-                      type: row.type,
-                      amount: row.amountIdr,
-                      transactionAt: row.transactionAt,
-                      note: row.note,
-                      categoryName: row.categoryName,
-                      categoryId: row.categoryId,
-                      categoryIcon: row.categoryIcon,
-                    }}
-                  />
-                ))}
-              </div>
-            </section>
+      {recentRows.length ? (
+        <div className="grid flex-1 gap-[.6rem]">
+          {recentRows.map((row) => (
+            <TransactionCard
+              compact
+              key={row.id}
+              transaction={{
+                id: row.id,
+                type: row.type,
+                amount: row.amountIdr,
+                transactionAt: row.transactionAt,
+                note: row.note,
+                categoryName: row.categoryName,
+                categoryId: row.categoryId,
+                categoryIcon: row.categoryIcon,
+              }}
+            />
           ))}
         </div>
       ) : (
         <div
-          className="mt-3 grid min-h-[5rem] flex-1 place-items-center rounded-[.8rem] border border-dashed border-border bg-surface-subtle p-4 text-center"
+          className="mt-3 grid min-h-[5rem] flex-1 place-items-center rounded-[1.05rem] border border-dashed border-border bg-surface-subtle p-4 text-center"
           role="status"
         >
           <div className="grid gap-[.2rem]">

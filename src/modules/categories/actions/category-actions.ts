@@ -32,7 +32,7 @@ export async function createCategoryAction(
     name: formData.get("name"),
     type: formData.get("type"),
     icon: optionalValue(formData, "icon"),
-    color: optionalValue(formData, "color"),
+    color: null,
   });
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
   try {
@@ -71,7 +71,7 @@ export async function updateCategoryAction(
     name: formData.get("name"),
     type: existing.type,
     icon: optionalValue(formData, "icon"),
-    color: optionalValue(formData, "color"),
+    color: existing.color,
   });
   if (!parsed.success) return { error: parsed.error.issues[0]?.message };
   try {

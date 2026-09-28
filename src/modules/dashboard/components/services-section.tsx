@@ -63,7 +63,7 @@ export function ServicesSection({
             if (item.kind === "sheet") {
               return (
                 <button
-                  className="flex min-h-[3.6rem] items-center gap-[.65rem] rounded-[.8rem] border border-border bg-surface p-[.6rem_.75rem] text-left text-[.82rem] font-medium text-foreground transition-[background,border-color] duration-150 hover:border-primary-300 hover:bg-surface-subtle [&_svg]:shrink-0 [&_svg]:text-primary-600"
+                  className="flex min-h-[3.6rem] items-center gap-[.65rem] rounded-[1.05rem] border border-border bg-surface p-[.6rem_.75rem] text-left text-[.82rem] font-medium text-foreground transition-[background,border-color] duration-150 hover:border-primary-300 hover:bg-surface-subtle [&_svg]:shrink-0 [&_svg]:text-primary-600"
                   key={item.id}
                   type="button"
                   onClick={() => handleItem(item.id)}
@@ -75,7 +75,7 @@ export function ServicesSection({
             }
             return (
               <Link
-                className="flex min-h-[3.6rem] items-center gap-[.65rem] rounded-[.8rem] border border-border bg-surface p-[.6rem_.75rem] text-left text-[.82rem] font-medium text-foreground transition-[background,border-color] duration-150 hover:border-primary-300 hover:bg-surface-subtle [&_svg]:shrink-0 [&_svg]:text-primary-600"
+                className="flex min-h-[3.6rem] items-center gap-[.65rem] rounded-[1.05rem] border border-border bg-surface p-[.6rem_.75rem] text-left text-[.82rem] font-medium text-foreground transition-[background,border-color] duration-150 hover:border-primary-300 hover:bg-surface-subtle [&_svg]:shrink-0 [&_svg]:text-primary-600"
                 href={item.href}
                 key={item.href}
                 onClick={() => setOpen(false)}

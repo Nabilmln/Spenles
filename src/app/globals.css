@@ -11,6 +11,7 @@
   --color-expense: var(--expense);
   --color-warning: var(--warning);
   --color-analytics: var(--analytics);
+  --color-amount: var(--amount);
   --color-background: var(--background);
   --color-surface: var(--surface);
   --color-surface-subtle: var(--surface-subtle);
@@ -40,7 +41,8 @@
   --expense: #ef4444;
   --warning: #f59e0b;
   --analytics: #3b82c4;
-  --background: #f5f5f7;
+  --amount: #21659d;
+  --background: #f0f1f3;
   --surface: #ffffff;
   --surface-subtle: #f0f0f3;
   --foreground: #0f0f12;
@@ -129,7 +131,7 @@ body {
 .card {
   padding: 1rem;
   border: 1px solid var(--border);
-  border-radius: 0.9rem;
+  border-radius: 1.15rem;
   background: var(--surface);
   box-shadow: var(--shadow);
 }

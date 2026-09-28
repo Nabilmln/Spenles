@@ -21,10 +21,10 @@ export function buttonClass(
 }
 
 export const cardClass =
-  "card rounded-[.9rem] border border-border bg-surface p-[1rem] shadow-card";
+  "card rounded-[1.15rem] border border-border bg-surface p-[1rem] shadow-card";
 
 export const financialCardClass =
-  "relative grid min-w-0 overflow-hidden rounded-[.95rem] bg-primary-700 p-[1.25rem] text-white";
+  "relative grid min-w-0 overflow-hidden rounded-[1.2rem] bg-primary-700 p-[1.25rem] text-white";
 
 export const financialCardOrbTop =
   "pointer-events-none absolute hidden";
@@ -46,7 +46,7 @@ export const inputDisplayClass =
 export const formMessageClass = "m-0 text-[.82rem] text-expense";
 
 export const emptyStateClass =
-  "flex items-center gap-4 rounded-[.85rem] border border-dashed border-border bg-surface-subtle p-[clamp(1rem,3vw,1.75rem)] max-[540px]:items-start";
+  "flex items-center gap-4 rounded-[1.1rem] border border-dashed border-border bg-surface-subtle p-[clamp(1rem,3vw,1.75rem)] max-[540px]:items-start";
 
 export const emptyIconClass =
   "grid size-11 shrink-0 place-items-center rounded-full bg-primary-50 text-primary-600";

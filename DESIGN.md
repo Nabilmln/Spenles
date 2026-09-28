@@ -12,7 +12,8 @@ colors:
   expense: "#ef4444"
   warning: "#f59e0b"
   analytics: "#3b82c4"
-  background: "#f5f5f7"
+  amount: "#21659d"
+  background: "#f0f1f3"
   surface: "#ffffff"
   surface-subtle: "#f0f0f3"
   foreground: "#0f0f12"
@@ -54,13 +55,13 @@ typography:
     fontWeight: 400
 rounded:
   control: "0.65rem"
-  card: "0.85rem"
+  card: "1.15rem"
   feature-card: "1.5rem"
   pill: "999px"
 spacing:
   compact: "0.5rem"
   control-inline: "0.9rem"
-  card-inset: "0.9rem"
+  card-inset: "1rem"
   section-gap: "1.5rem"
 components:
   button-primary:
@@ -121,14 +122,14 @@ The palette combines white and paper neutrals with dark ink for actions. The mob
 
 ### Neutral
 
-- **Cool Paper:** The background and subtle surface separate the canvas from white cards without heavy outlines.
+- **Cool Paper:** A light gray `#f0f1f3` canvas separates the app from its white cards without heavy outlines.
 - **White Surface:** Cards, fields where appropriate, and elevated panels remain bright and readable.
 - **Deep Ink:** Foreground text and the landing call to action use near-black neutrals for strong hierarchy.
 - **Quiet Gray:** Muted text and fine borders support detail without competing with amounts.
 
 ### Semantic
 
-- **Income Green, Expense Red, Warning Amber:** These colors communicate financial or warning meaning in the app. They are not decorative accents.
+- **Income Green, Expense Red, Warning Amber:** These colors communicate financial or warning meaning in charts and status feedback. Blue `#21659d` marks transaction amounts in lists; signs and text labels still distinguish income, payments, and transfers.
 
 **The Accent Meaning Rule.** Reserve ink for brand, action, focus, and selected state; preserve income, expense, and warning colors for their semantic roles.
 
@@ -151,7 +152,7 @@ The app uses short, readable labels and modest body text. The landing page enlar
 
 ## Layout
 
-The mobile app is the working surface below 861px. It uses stacked cards, compact spacing, a bottom floating navigation bar, and page groups with a 1.5rem rhythm. Individual cards usually use a 0.9rem inset. A few controls adapt further at 540px.
+The mobile app is the working surface below 861px. It uses stacked cards, compact spacing, a bottom floating navigation bar, and page groups with a 1.5rem rhythm. Individual cards usually use a 1rem inset. A few controls adapt further at 540px.
 
 Visual refinement keeps each menu's sections, order, controls, and interactions intact. Pages load without staggered card entrances; motion is reserved for state feedback.
 
@@ -183,7 +184,8 @@ Working controls use gently rounded corners, with cards slightly rounder than co
 
 ### Cards / Containers
 
-- **Standard card:** White surface, fine border, 0.9rem corners, 1rem padding, and a very light card shadow when needed. Account cards use solid graphite without decorative gradients or circles.
+- **Standard card:** White surface, fine border, 1.15rem corners, 1rem padding, and a very light card shadow when needed. Account cards use solid graphite without decorative gradients or circles.
+- **Transaction rows:** Category icons use ink on one quiet gray circle regardless of saved category color. Transaction amounts use the accessible blue amount token. Recent activity has no duplicate day headings or title action because each row shows its date and transactions remain available through navigation.
 - **Financial card:** A large transparent cutout illustration shows one graphite card with lightly textured surfaces and “VISA” lettering baked into the image. It has no issuer identity or fake card details. The front pocket leaves room for the live lower-left “Balance:” label, total, and adjacent visibility control rendered by the UI. The dashboard card omits income and expense totals. No rectangular dark panel surrounds the cutout. The illustration is decorative and does not imply an issued payment card.
 - **Statistics:** Mobile transaction and report trends use line charts. The transaction line sits in a taller chart with a restrained blue fill fading to transparent beneath it. Blue marks expenses; green marks income. Labels and values carry meaning beyond color.
 - **PDF reports:** Exported reports use the same ink, paper, and semantic colors. Noto Sans is embedded for dependable PDF glyph coverage; it is not an app interface font.

@@ -35,12 +35,6 @@ function renderCardIcon(row: TransactionCardRow): ReactNode {
   return createElement(resolveIcon(row), { size: 20, "aria-hidden": true });
 }
 
-function iconAccentClass(row: TransactionCardRow): string {
-  if (row.type === "transfer") return "text-primary-600 bg-[color-mix(in_srgb,var(--primary-600)_10%,transparent)]";
-  if (row.type === "income") return "text-income bg-[color-mix(in_srgb,var(--income)_10%,transparent)]";
-  return "text-expense bg-[color-mix(in_srgb,var(--expense)_10%,transparent)]";
-}
-
 export function TransactionCard({
   transaction,
   compact = false,
@@ -53,14 +47,12 @@ export function TransactionCard({
   onAction?: (id: string, type: TransactionCardRow["type"]) => void;
 }) {
   const isTransfer = transaction.type === "transfer";
-  const income = transaction.type === "income";
-  const amountColor = isTransfer ? "text-foreground" : income ? "text-income" : "text-expense";
-  const prefix = isTransfer ? "" : income ? "+" : "\u2212";
+  const prefix = isTransfer ? "" : transaction.type === "income" ? "+" : "\u2212";
 
   return (
     <article
       className={cn(
-        "grid min-w-0 items-center gap-[.7rem] rounded-[.85rem] border border-border bg-surface",
+        "grid min-w-0 items-center gap-[.7rem] rounded-[1.1rem] border border-border bg-surface",
         showActions
           ? "grid-cols-[auto_minmax(0,1fr)_auto_auto]"
           : "grid-cols-[auto_minmax(0,1fr)_auto]",
@@ -68,16 +60,13 @@ export function TransactionCard({
       )}
     >
       <span
-        className={cn(
-          "grid size-[2.7rem] shrink-0 place-items-center rounded-full",
-          iconAccentClass(transaction),
-        )}
+        className="grid size-[2.7rem] shrink-0 place-items-center rounded-full bg-primary-50 text-foreground"
       >
         {renderCardIcon(transaction)}
       </span>
 
       <div className="grid min-w-0">
-        <strong className="truncate text-[.9rem] font-semibold">{transaction.categoryName}</strong>
+        <strong className="line-clamp-2 min-w-0 text-[.9rem] font-semibold leading-tight">{transaction.categoryName}</strong>
         <span className="truncate text-[.74rem] font-medium text-muted">
           {isTransfer && transaction.sourceAccountName && transaction.destinationAccountName
             ? `${transaction.sourceAccountName} \u2192 ${transaction.destinationAccountName}`
@@ -90,10 +79,7 @@ export function TransactionCard({
 
       <div className="grid min-w-0 justify-items-end gap-[.15rem] text-right">
         <strong
-          className={cn(
-            "max-w-[7rem] text-[.84rem] font-semibold tabular-nums [overflow-wrap:anywhere]",
-            amountColor,
-          )}
+          className="max-w-[7rem] text-[.84rem] font-semibold tabular-nums text-amount [overflow-wrap:anywhere]"
         >
           {prefix}{prefix ? " " : ""}{formatIdr(transaction.amount)}
         </strong>

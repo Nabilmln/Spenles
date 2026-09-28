@@ -32,7 +32,7 @@ export function SplitBillHistoryCard({
   onAction: (row: SplitBillHistoryRow) => void;
 }) {
   return (
-    <article className="grid items-center gap-[.8rem] rounded-[.9rem] border border-border bg-surface p-[.85rem] grid-cols-[auto_minmax(0,1fr)_auto_auto]">
+    <article className="grid items-center gap-[.8rem] rounded-[1.15rem] border border-border bg-surface p-[.85rem] grid-cols-[auto_minmax(0,1fr)_auto_auto]">
       <span className="relative shrink-0">
         <span className="grid size-[2.7rem] place-items-center rounded-full text-primary-600 bg-[color-mix(in_srgb,var(--primary-600)_10%,transparent)]">
           <ReceiptText size={20} aria-hidden="true" />

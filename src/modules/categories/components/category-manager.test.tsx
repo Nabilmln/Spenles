@@ -167,15 +167,18 @@ describe("category manager", () => {
     expect(screen.getByRole("radio", { name: "Dining icon" })).not.toBeChecked();
   });
 
-  it("renders the category icon circle with its configured color", () => {
+  it("renders category icons in the same neutral color even for saved colored categories", () => {
     const { container } = renderManager([
       expense({ id: "exp-red", name: "Kesehatan", color: "red" }),
       expense({ color: null }),
     ]);
 
     const rows = container.querySelectorAll("[role=listitem]");
-    expect(rows[0].firstElementChild).toHaveClass("bg-red-50");
+    expect(rows[0].firstElementChild).toHaveClass("bg-primary-50", "text-foreground");
     expect(rows[1].firstElementChild).toHaveClass("bg-primary-50");
+    fireEvent.click(screen.getByRole("button", { name: "Actions for Kesehatan" }));
+    fireEvent.click(screen.getByRole("button", { name: "Edit category" }));
+    expect(screen.queryByText("Color")).not.toBeInTheDocument();
   });
 
   it("opens the icon picker with accessible radio labels", () => {

@@ -12,7 +12,7 @@ export function AccountTotalCard({ total }: { total: bigint }) {
   return (
     <section
       aria-label="Total amount across accounts"
-      className="flex items-center justify-between gap-3 rounded-[.9rem] border border-border bg-surface px-[1.1rem] py-[.95rem]"
+      className="flex items-center justify-between gap-3 rounded-[1.15rem] border border-border bg-surface px-[1.1rem] py-[.95rem]"
     >
       <p className="m-0 min-w-0 text-[.82rem] font-medium text-muted">
         Total Amount

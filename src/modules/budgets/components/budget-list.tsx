@@ -90,7 +90,7 @@ export function BudgetList({
           );
           return (
             <li key={row.id} className="min-w-0">
-              <article className="card grid min-w-0 gap-[.7rem] rounded-[.9rem] border border-border bg-surface p-[.95rem] shadow-none">
+              <article className="card grid min-w-0 gap-[.7rem] rounded-[1.15rem] border border-border bg-surface p-[.95rem] shadow-none">
                 <header className="flex items-start justify-between gap-2">
                   <div className="flex min-w-0 items-start gap-[.75rem]">
                     <span className="grid size-[2.6rem] shrink-0 place-items-center rounded-[.8rem] bg-primary-50 text-primary-600">

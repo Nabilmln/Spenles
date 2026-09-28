@@ -22,7 +22,7 @@ describe("mobile dashboard cards", () => {
     expect(screen.queryByRole("link", { name: /Ekspor|Notifikasi|Add Expense/ })).not.toBeInTheDocument();
   });
 
-  it("groups recent activity transactions and links to the list", () => {
+  it("shows recent rows without redundant date groups or a title action", () => {
     const now = new Date();
     render(
       <RecentActivityCard
@@ -53,14 +53,11 @@ describe("mobile dashboard cards", () => {
       />,
     );
 
-    expect(screen.getByRole("heading", { name: "Recent activity" })).toBeInTheDocument();
-    expect(screen.getByText("Today")).toBeInTheDocument();
-    expect(screen.getByText("Yesterday")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Recent Activity" })).toBeInTheDocument();
+    expect(screen.queryByText("Today")).not.toBeInTheDocument();
+    expect(screen.queryByText("Yesterday")).not.toBeInTheDocument();
     expect(screen.getByText("Makan siang")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /View all/ })).toHaveAttribute(
-      "href",
-      "/transactions",
-    );
+    expect(screen.queryByRole("link", { name: /View all/ })).not.toBeInTheDocument();
   });
 
   it("uses each row's category icon instead of the fallback arrow in recent activity", () => {
@@ -84,6 +81,8 @@ describe("mobile dashboard cards", () => {
 
     expect(container.querySelector(".lucide-utensils")).toBeInTheDocument();
     expect(container.querySelector(".lucide-arrow-right-left")).not.toBeInTheDocument();
+    expect(container.querySelector(".lucide-utensils")?.parentElement).toHaveClass("text-foreground", "bg-primary-50");
+    expect(screen.getByText(/12\.500/)).toHaveClass("text-amount");
   });
 
   it("renders an empty state when there are no recent transactions", () => {
