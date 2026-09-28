@@ -1,7 +1,5 @@
 import {
-  ArrowDownRight,
   ArrowRight,
-  ArrowUpRight,
   ChartNoAxesCombined,
   Check,
   CirclePlus,
@@ -16,6 +14,45 @@ import {
 import { Brand } from "@/components/layout/brand";
 import { CopySiteLink } from "./copy-site-link";
 import styles from "./desktop-landing.module.css";
+
+const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const income = [49, 56, 53, 63, 59, 68, 64, 73, 70, 77, 74, 84];
+const expenses = [27, 34, 31, 43, 39, 47, 45, 54, 49, 59, 55, 64];
+
+function linePath(values: number[]) {
+  const points = values.map((value, index) => ({
+    x: 8 + (index * 584) / (values.length - 1),
+    y: 150 - value * 1.38,
+  }));
+  return points.reduce((path, point, index) => {
+    if (index === 0) return `M ${point.x} ${point.y}`;
+    const previous = points[index - 1];
+    const before = points[index - 2] ?? previous;
+    const next = points[index + 1] ?? point;
+    return `${path} C ${previous.x + (point.x - before.x) / 6} ${previous.y + (point.y - before.y) / 6}, ${point.x - (next.x - previous.x) / 6} ${point.y - (next.y - previous.y) / 6}, ${point.x} ${point.y}`;
+  }, "");
+}
+
+function IllustrativeLineChart({ id }: { id: string }) {
+  const expensePath = linePath(expenses);
+  return (
+    <svg className={styles.lineChart} viewBox="0 0 600 160" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="var(--analytics)" stopOpacity="0.18" />
+          <stop offset="100%" stopColor="var(--analytics)" stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      {months.map((month, index) => (
+        <line key={month} x1={8 + (index * 584) / 11} x2={8 + (index * 584) / 11} y1="8" y2="150" className={styles.lineChartGuide} />
+      ))}
+      <line x1="8" x2="592" y1="150" y2="150" className={styles.lineChartGuide} />
+      <path d={`${expensePath} L 592 150 L 8 150 Z`} fill={`url(#${id})`} />
+      <path d={linePath(income)} className={styles.lineChartIncome} />
+      <path d={expensePath} className={styles.lineChartExpense} />
+    </svg>
+  );
+}
 
 function PhoneStatus() {
   return (
@@ -121,11 +158,11 @@ function BalancePhone() {
       </div>
       <div className={styles.phoneQuickActions}>
         <div>
-          <ArrowDownRight size={17} />
+          <CirclePlus size={17} />
           Income
         </div>
         <div>
-          <ArrowUpRight size={17} />
+          <ShoppingBag size={17} />
           Expense
         </div>
         <div>
@@ -166,30 +203,22 @@ function ReportPhone() {
     <PhoneFrame active="reports" className={styles.heroPhoneLeft}>
       <PhoneHeader title="Reports" icon={<ChartNoAxesCombined size={17} />} />
       <div className={styles.phoneIntro}>
-        <small>This month</small>
+        <small>Year at a glance</small>
         <strong>See the whole picture.</strong>
         <span>Income and expenses, side by side.</span>
       </div>
       <div className={styles.reportPhoneCard}>
         <div className={styles.phoneCardLabel}>
           <span>Cash flow</span>
-          <span>Last 6 months</span>
+          <span>Jan–Dec example</span>
         </div>
-        <div className={styles.miniChart} aria-hidden="true">
-          {[44, 58, 49, 71, 61, 80].map((height, index) => (
-            <div key={index}>
-              <i style={{ height: `${height}%` }} />
-              <b style={{ height: `${Math.max(24, height - 24)}%` }} />
-            </div>
-          ))}
+        <div className={styles.miniChart}>
+          <IllustrativeLineChart id="phone-report-fill" />
         </div>
         <div className={styles.chartMonths}>
-          <span>Apr</span>
-          <span>May</span>
+          <span>Jan</span>
           <span>Jun</span>
-          <span>Jul</span>
-          <span>Aug</span>
-          <span>Sep</span>
+          <span>Dec</span>
         </div>
       </div>
       <div className={styles.phoneSummaryRow}>
@@ -221,7 +250,7 @@ function BudgetPhone() {
           <small>Budget remaining</small>
           <strong>Rp 1,550,000</strong>
         </div>
-        <span className={styles.budgetPhoneTrack}>
+        <span className={styles.budgetPhoneTrack} role="progressbar" aria-label="Illustrative budget used" aria-valuenow={48} aria-valuemin={0} aria-valuemax={100}>
           <i />
         </span>
         <div className={styles.budgetPhoneMeta}>
@@ -254,14 +283,6 @@ function BudgetPhone() {
 }
 
 function InsightPreview() {
-  const bars = [
-    { month: "Apr", income: 58, expense: 34 },
-    { month: "May", income: 67, expense: 41 },
-    { month: "Jun", income: 63, expense: 38 },
-    { month: "Jul", income: 75, expense: 47 },
-    { month: "Aug", income: 70, expense: 43 },
-    { month: "Sep", income: 86, expense: 50 },
-  ];
   return (
     <div
       className={styles.insightPreview}
@@ -269,10 +290,10 @@ function InsightPreview() {
     >
       <div className={styles.insightPreviewHeader}>
         <div>
-          <span>Monthly report</span>
+          <span>Yearly overview</span>
           <strong>Income & expenses</strong>
         </div>
-        <span>Sep 2026</span>
+        <span>Jan–Dec example</span>
       </div>
       <div className={styles.insightTotals}>
         <div>
@@ -286,17 +307,12 @@ function InsightPreview() {
       </div>
       <div
         className={styles.insightChart}
-        aria-label="Illustrative six-month comparison"
+        aria-label="Illustrative income and expense trends from January through December"
       >
-        {bars.map((bar) => (
-          <div className={styles.insightChartColumn} key={bar.month}>
-            <div className={styles.insightBarPair}>
-              <i style={{ height: `${bar.income}%` }} />
-              <b style={{ height: `${bar.expense}%` }} />
-            </div>
-            <span>{bar.month}</span>
-          </div>
-        ))}
+        <IllustrativeLineChart id="insight-report-fill" />
+        <div className={styles.insightChartMonths}>
+          {months.map((month) => <span key={month}>{month}</span>)}
+        </div>
       </div>
       <div className={styles.insightLegend}>
         <span>
@@ -312,7 +328,7 @@ function InsightPreview() {
           <strong>Food & drinks</strong>
         </div>
         <span>
-          See breakdown <ArrowRight size={14} />
+          See breakdown
         </span>
       </div>
       <span className={styles.insightCaption}>Illustrative figures</span>
@@ -332,7 +348,7 @@ export function DesktopLanding() {
           <a href="#get-started">Get started</a>
         </nav>
         <a className={styles.headerAction} href="#get-started">
-          Try Spenles <ArrowUpRight aria-hidden="true" size={16} />
+          Try Spenles
         </a>
       </header>
       <main>
@@ -349,8 +365,7 @@ export function DesktopLanding() {
                 <ArrowRight aria-hidden="true" size={18} />
               </a>
               <a className={styles.secondaryAction} href="#features">
-                Explore the features{" "}
-                <ArrowDownRight aria-hidden="true" size={17} />
+                Explore the features
               </a>
             </div>
           </div>
@@ -475,7 +490,7 @@ export function DesktopLanding() {
                   <span>Food & drinks</span>
                   <strong>Rp 340,000 left</strong>
                 </div>
-                <span className={styles.budgetDemoTrack}>
+                <span className={styles.budgetDemoTrack} role="progressbar" aria-label="Illustrative food and drinks budget used" aria-valuenow={57.5} aria-valuemin={0} aria-valuemax={100}>
                   <i />
                 </span>
                 <small>Rp 460,000 of Rp 800,000 used</small>
@@ -498,17 +513,11 @@ export function DesktopLanding() {
                   <span>Monthly cash flow</span>
                   <ChartNoAxesCombined size={17} />
                 </div>
-                <div className={styles.reportDemoBars}>
-                  <i />
-                  <i />
-                  <i />
-                  <i />
-                  <i />
-                  <i />
-                  <i />
+                <div className={styles.reportDemoChart}>
+                  <IllustrativeLineChart id="feature-report-fill" />
                 </div>
                 <span>
-                  Apr <b>May</b> Jun <b>Jul</b> Aug <b>Sep</b>
+                  Jan <b>Jun</b> Dec
                 </span>
               </div>
             </article>
@@ -583,7 +592,7 @@ export function DesktopLanding() {
         <Brand showLabel />
         <span>Personal finance, made easier to see.</span>
         <a href="#get-started">
-          Get started <ArrowRight aria-hidden="true" size={15} />
+          Get started
         </a>
       </footer>
     </div>

@@ -128,12 +128,6 @@
   font-size: 0.82rem;
   font-weight: 600;
 }
-.secondaryAction svg {
-  transition: transform 180ms ease;
-}
-.secondaryAction:hover svg {
-  transform: translate(2px, 2px);
-}
 .heroVisual {
   position: relative;
   margin-top: 3.5rem;
@@ -460,32 +454,36 @@
   font-weight: 400;
 }
 .miniChart {
-  display: flex;
-  align-items: end;
-  justify-content: space-around;
   height: 135px;
   margin-top: 13px;
-  border-bottom: 1px solid #e9e9e5;
 }
-.miniChart > div {
-  display: flex;
-  align-items: end;
-  gap: 3px;
-  width: 18px;
+.lineChart {
+  display: block;
+  width: 100%;
   height: 100%;
+  overflow: visible;
 }
-.miniChart i,
-.miniChart b {
-  width: 7px;
-  border-radius: 3px 3px 0 0;
-  background: #292929;
+.lineChartGuide {
+  stroke: #e3e7eb;
+  stroke-width: 1;
 }
-.miniChart b {
-  background: #c7c7c1;
+.lineChartIncome,
+.lineChartExpense {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.6;
+  vector-effect: non-scaling-stroke;
+}
+.lineChartIncome {
+  stroke: #292929;
+}
+.lineChartExpense {
+  stroke: var(--analytics);
 }
 .chartMonths {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   margin-top: 6px;
   color: #777773;
   font-size: 7px;
@@ -524,21 +522,38 @@
 .budgetPhoneTrack,
 .budgetDemoTrack {
   display: block;
-  height: 8px;
-  overflow: hidden;
-  border-radius: 9px;
-  background: #e8e8e4;
+  height: 17px;
+  padding: 3px;
+  border: 1px solid #d7e2e9;
+  border-radius: 999px;
+  background: repeating-linear-gradient(110deg, #e5f0f7 0 2px, #f7fafc 2px 5px);
+  box-shadow: inset 0 1px 2px rgb(25 45 60 / 6%);
 }
 .budgetPhoneTrack {
   margin-top: 15px;
 }
 .budgetPhoneTrack i,
 .budgetDemoTrack i {
+  position: relative;
   display: block;
   width: 48%;
   height: 100%;
-  border-radius: inherit;
-  background: #202020;
+  border-radius: 999px;
+  background: var(--analytics);
+}
+.budgetPhoneTrack i::after,
+.budgetDemoTrack i::after {
+  position: absolute;
+  top: 50%;
+  right: -5px;
+  width: 14px;
+  height: 14px;
+  transform: translateY(-50%);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--analytics);
+  box-shadow: 0 0 0 1px #c6dbea;
+  content: "";
 }
 .budgetPhoneMeta {
   display: flex;
@@ -762,7 +777,10 @@
   font-size: 0.8rem;
 }
 .budgetDemoTrack {
-  height: 7px;
+  height: 17px;
+}
+.budgetDemoTrack i {
+  width: 57.5%;
 }
 .budgetDemo small {
   display: block;
@@ -787,37 +805,9 @@
   justify-content: space-between;
   font-weight: 600;
 }
-.reportDemoBars {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
+.reportDemoChart {
   height: 70px;
   margin: 0.75rem 0 0.4rem;
-  border-bottom: 1px solid #ddd;
-}
-.reportDemoBars i {
-  width: 13px;
-  height: 48%;
-  border-radius: 3px 3px 0 0;
-  background: #2d2d2a;
-}
-.reportDemoBars i:nth-child(2) {
-  height: 74%;
-}
-.reportDemoBars i:nth-child(3) {
-  height: 55%;
-}
-.reportDemoBars i:nth-child(4) {
-  height: 92%;
-}
-.reportDemoBars i:nth-child(5) {
-  height: 65%;
-}
-.reportDemoBars i:nth-child(6) {
-  height: 78%;
-}
-.reportDemoBars i:nth-child(7) {
-  height: 63%;
 }
 .reportDemo > span {
   display: flex;
@@ -959,42 +949,21 @@
   font-size: clamp(0.9rem, 1.2vw, 1.15rem);
 }
 .insightChart {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.6rem;
-  height: 185px;
   margin-top: 1.6rem;
-  border-bottom: 1px solid #e7e7e3;
+  height: 213px;
 }
-.insightChartColumn {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: end;
-  min-width: 0;
+.insightChart > .lineChart {
+  height: 185px;
 }
-.insightBarPair {
-  display: flex;
-  align-items: end;
-  justify-content: center;
-  gap: 5px;
-  width: 100%;
-  height: 155px;
+.insightChartMonths {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  margin-top: 0.25rem;
 }
-.insightBarPair i,
-.insightBarPair b {
-  width: min(18px, 30%);
-  border-radius: 4px 4px 0 0;
-  background: #202020;
-}
-.insightBarPair b {
-  background: #b8b8b2;
-}
-.insightChartColumn > span {
-  padding-block: 0.55rem;
+.insightChartMonths span {
   color: #83837e;
-  font-size: 0.7rem;
+  font-size: 0.63rem;
+  text-align: center;
 }
 .insightLegend {
   display: flex;
@@ -1016,7 +985,7 @@
   background: #202020;
 }
 .insightLegend span:last-child i {
-  background: #b8b8b2;
+  background: var(--analytics);
 }
 .insightCategory {
   display: flex;
@@ -1269,8 +1238,7 @@
     scroll-behavior: auto;
   }
   .headerAction,
-  .primaryAction,
-  .secondaryAction svg {
+  .primaryAction {
     transition: none;
   }
 }
