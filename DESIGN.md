@@ -11,8 +11,8 @@ colors:
   income: "#15803d"
   expense: "#ef4444"
   warning: "#f59e0b"
-  analytics: "#3b82c4"
-  amount: "#21659d"
+  analytics: "#168fe5"
+  amount: "#0b70bc"
   background: "#f0f1f3"
   surface: "#ffffff"
   surface-subtle: "#f0f0f3"
@@ -129,7 +129,7 @@ The palette combines white and paper neutrals with dark ink for actions. The mob
 
 ### Semantic
 
-- **Income Green, Expense Red, Warning Amber:** These colors communicate financial or warning meaning in charts and status feedback. Blue `#21659d` marks transaction amounts in lists; signs and text labels still distinguish income, payments, and transfers.
+- **Income Green, Expense Red, Warning Amber:** These colors communicate financial or warning meaning in charts and status feedback. Bright sky blue `#168fe5` marks the expense trend; its accessible text companion `#0b70bc` marks transaction amounts in lists. Signs and text labels still distinguish income, payments, and transfers.
 
 **The Accent Meaning Rule.** Reserve ink for brand, action, focus, and selected state; preserve income, expense, and warning colors for their semantic roles.
 
@@ -187,7 +187,7 @@ Working controls use gently rounded corners, with cards slightly rounder than co
 - **Standard card:** White surface, fine border, 1.15rem corners, 1rem padding, and a very light card shadow when needed. Account cards use solid graphite without decorative gradients or circles.
 - **Transaction rows:** Category icons use ink on one quiet gray circle regardless of saved category color. Transaction amounts use the accessible blue amount token. Recent activity has no duplicate day headings or title action because each row shows its date and transactions remain available through navigation.
 - **Financial card:** A large transparent cutout illustration shows one graphite card with lightly textured surfaces and “VISA” lettering baked into the image. It has no issuer identity or fake card details. The front pocket leaves room for the live lower-left “Balance:” label, total, and adjacent visibility control rendered by the UI. The dashboard card omits income and expense totals. No rectangular dark panel surrounds the cutout. The illustration is decorative and does not imply an issued payment card.
-- **Statistics:** Mobile transaction and report trends use line charts. The transaction line sits in a taller chart with a restrained blue fill fading to transparent beneath it. Blue marks expenses; green marks income. Labels and values carry meaning beyond color.
+- **Statistics:** Mobile transaction and report trends use line charts. The transaction overview shows month-to-date cumulative expenses under a Total Expenses label, with the first and last calendar dates of the current Jakarta month at the chart ends. Its blue basis curve and restrained fill fade to transparent, without a surrounding card or axis baseline. Future-dated transactions do not enter the current total, and the line ends at today. Blue marks expenses; green marks income in reports. Labels and values carry meaning beyond color.
 - **PDF reports:** Exported reports use the same ink, paper, and semantic colors. Noto Sans is embedded for dependable PDF glyph coverage; it is not an app interface font.
 - **Landing insights:** A large dark panel frames example income and expense reporting; the phone setup section returns to a pale surface.
 

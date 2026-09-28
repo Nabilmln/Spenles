@@ -17,9 +17,10 @@ import type { Database } from "@/db/types";
 import { conditionalSumSql } from "@/db/sql-helpers";
 import { accounts, categories, transactions } from "@/db/schema";
 import { getPeriodSavings } from "@/modules/accounts";
-import { buildDailyCashFlowContract } from "@/modules/dashboard";
 import { getDailyIncomeExpenseAggregates } from "@/modules/dashboard";
-import { lastDaysJakartaInterval } from "@/modules/dashboard";
+import { monthIntervalForKey } from "@/modules/dashboard";
+import { jakartaNowDate } from "@/lib/dates/jakarta";
+import { buildMonthlyExpenseOverview } from "../services/expense-overview";
 import type { TransactionFilters } from "../schemas/transaction-filters";
 import { categoryJoin, conditions, dateInterval } from "./transaction-search";
 
@@ -79,14 +80,15 @@ export async function getTransaction(userId: string, id: string) {
 
 export async function getExpenseOverview(
   userId: string,
-  days = 7,
   database: Database = db,
 ) {
-  const interval = lastDaysJakartaInterval(days);
+  const asOfDate = jakartaNowDate();
+  const interval = monthIntervalForKey(asOfDate.slice(0, 7));
   const rows = await getDailyIncomeExpenseAggregates(userId, interval, database);
-  const contract = buildDailyCashFlowContract(interval, rows);
+  const contract = buildMonthlyExpenseOverview(interval, rows, asOfDate);
   return {
     points: contract.points,
+    asOfDate,
     totalIncome: contract.totalIncome,
     totalExpense: contract.totalExpense,
   };

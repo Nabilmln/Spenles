@@ -2,7 +2,6 @@
 
 import {
   Area,
-  CartesianGrid,
   ComposedChart,
   Line,
   ResponsiveContainer,
@@ -14,6 +13,15 @@ import { formatIdr } from "@/lib/money/format-idr";
 import type { IncomeExpensePoint } from "@/modules/dashboard";
 
 type TooltipEntry = { payload?: IncomeExpensePoint };
+
+function formatAxisDate(day: string) {
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  }).format(new Date(`${day}T00:00:00Z`));
+}
 
 function TrendTooltip({
   active,
@@ -27,74 +35,80 @@ function TrendTooltip({
   return (
     <div className="grid gap-[.15rem] rounded-[.65rem] border border-border bg-surface p-[.55rem_.7rem] text-[.75rem] text-foreground shadow-card">
       <strong>{point.label}</strong>
-      <span className="text-muted">{formatIdr(point.expenseIdr)}</span>
+      <span className="font-medium text-amount">{formatIdr(point.expenseIdr)}</span>
     </div>
   );
 }
 
 export function TransactionTrendChart({
   points,
+  asOfDate,
+  hasData,
 }: {
   points: IncomeExpensePoint[];
+  asOfDate: string;
+  hasData: boolean;
 }) {
+  const visiblePoints = points.map((point) => ({
+    ...point,
+    visibleExpensePlot: point.period <= asOfDate ? point.expensePlot : null,
+  }));
+  const firstDay = points[0]?.period;
+  const lastDay = points.at(-1)?.period;
+
   return (
-    <div aria-hidden="true" className="h-[17rem] w-full">
-      <ResponsiveContainer height="100%" width="100%">
-        <ComposedChart
-          data={points}
-          margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
-        >
-          <defs>
-            <linearGradient id="expense-trend-fill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor="var(--analytics)" stopOpacity={0.22} />
-              <stop offset="100%" stopColor="var(--analytics)" stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <CartesianGrid
-            stroke="var(--border)"
-            strokeDasharray="3 3"
-            horizontal={false}
-          />
-          <XAxis
-            dataKey="label"
-            fontSize={11}
-            stroke="var(--foreground)"
-            tickLine={false}
-            tickMargin={6}
-            interval="preserveStartEnd"
-          />
-          <YAxis domain={[0, 1]} hide />
-          <Tooltip
-            content={<TrendTooltip />}
-            cursor={{ stroke: "var(--analytics)", strokeWidth: 1, strokeDasharray: "3 3" }}
-          />
-          <Area
-            type="linear"
-            dataKey="expensePlot"
-            stroke="none"
-            fill="url(#expense-trend-fill)"
-            fillOpacity={1}
-            isAnimationActive={false}
-            activeDot={false}
-          />
-          <Line
-            type="linear"
-            dataKey="expensePlot"
-            stroke="var(--analytics)"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            dot={{ r: 3, fill: "#ffffff", stroke: "var(--analytics)", strokeWidth: 1.5 }}
-            activeDot={{
-              r: 5,
-              fill: "#ffffff",
-              stroke: "var(--analytics)",
-              strokeWidth: 2,
-            }}
-            isAnimationActive={false}
-          />
-        </ComposedChart>
-      </ResponsiveContainer>
+    <div aria-label="Cumulative expenses this month" role="group" className="mt-4 min-w-0">
+      <div className="h-[17rem] w-full">
+        <ResponsiveContainer height="100%" width="100%">
+          <ComposedChart
+            data={visiblePoints}
+            margin={{ top: 12, right: 5, left: 5, bottom: 0 }}
+          >
+            <defs>
+              <linearGradient id="expense-trend-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="var(--analytics)" stopOpacity={0.18} />
+                <stop offset="100%" stopColor="var(--analytics)" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <XAxis dataKey="period" hide axisLine={false} tickLine={false} />
+            <YAxis domain={[0, 1]} hide />
+            <Tooltip
+              content={<TrendTooltip />}
+              cursor={{ stroke: "var(--analytics)", strokeWidth: 1, strokeOpacity: 0.45 }}
+            />
+            {hasData ? (
+              <>
+                <Area
+                  type="basis"
+                  dataKey="visibleExpensePlot"
+                  stroke="none"
+                  fill="url(#expense-trend-fill)"
+                  fillOpacity={1}
+                  isAnimationActive={false}
+                  activeDot={false}
+                />
+                <Line
+                  type="basis"
+                  dataKey="visibleExpensePlot"
+                  stroke="var(--analytics)"
+                  strokeWidth={2.5}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  dot={false}
+                  activeDot={{ r: 4, fill: "#ffffff", stroke: "var(--analytics)", strokeWidth: 2 }}
+                  isAnimationActive={false}
+                />
+              </>
+            ) : null}
+          </ComposedChart>
+        </ResponsiveContainer>
+      </div>
+      {firstDay && lastDay ? (
+        <div className="flex justify-between gap-3 text-[.72rem] text-muted">
+          <time dateTime={firstDay}>{formatAxisDate(firstDay)}</time>
+          <time dateTime={lastDay}>{formatAxisDate(lastDay)}</time>
+        </div>
+      ) : null}
     </div>
   );
 }

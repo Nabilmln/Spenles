@@ -98,7 +98,7 @@ async function OverviewPanel({
   overview: ReturnType<typeof getExpenseOverview>;
 }) {
   const result = await overview;
-  return <ExpenseOverviewCard points={result.points} />;
+  return <ExpenseOverviewCard points={result.points} asOfDate={result.asOfDate} totalExpense={result.totalExpense} />;
 }
 
 async function SummaryPanel({
