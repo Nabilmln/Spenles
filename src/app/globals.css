@@ -128,6 +128,17 @@ body {
   outline: none;
 }
 
+.chart-vertical-guides {
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  background-image: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--border) 70%, transparent) 1px,
+    transparent 1px
+  );
+  background-position: 5px 0;
+  background-size: 20% 100%;
+}
+
 .card {
   padding: 1rem;
   border: 1px solid var(--border);

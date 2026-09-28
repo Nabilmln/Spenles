@@ -58,7 +58,7 @@ export function TransactionTrendChart({
 
   return (
     <div aria-label="Cumulative expenses this month" role="group" className="mt-4 min-w-0">
-      <div className="h-[17rem] w-full">
+      <div className="chart-vertical-guides h-[17rem] w-full">
         <ResponsiveContainer height="100%" width="100%">
           <ComposedChart
             data={visiblePoints}
