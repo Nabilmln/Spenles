@@ -90,51 +90,48 @@ export function BudgetList({
           );
           return (
             <li key={row.id} className="min-w-0">
-              <article className="card grid min-w-0 gap-[.7rem] rounded-[1.15rem] border border-border bg-surface p-[.95rem] shadow-none">
+              <article className="grid min-w-0 gap-[.95rem] rounded-[1.3rem] border border-border bg-surface p-[1.05rem]">
                 <header className="flex items-start justify-between gap-2">
                   <div className="flex min-w-0 items-start gap-[.75rem]">
-                    <span className="grid size-[2.6rem] shrink-0 place-items-center rounded-[.8rem] bg-primary-50 text-primary-600">
+                    <span className="grid size-[2.6rem] shrink-0 place-items-center rounded-full bg-surface-subtle text-foreground">
                       <Icon size={20} aria-hidden="true" />
                     </span>
                     <div className="min-w-0">
-                      <h2 className="m-0 truncate text-[.95rem] font-semibold tracking-[-.02em]">
+                      <h2 className="m-0 truncate text-[1rem] font-semibold tracking-[-.02em]">
                         {row.categoryName}
                       </h2>
-                      <div className="mt-[.3rem] flex min-w-0 flex-wrap gap-[.3rem]">
-                        {periodSegments(row).map((segment) => (
-                          <span
-                            className="inline-flex min-h-[1.4rem] min-w-0 max-w-full items-center justify-center truncate rounded-full border border-border bg-surface-subtle px-[.5rem] text-[.68rem] font-medium text-muted"
-                            key={segment}
-                          >
-                            {segment}
-                          </span>
-                        ))}
-                      </div>
+                      <p className="m-0 mt-[.2rem] text-[.72rem] text-muted">
+                        {periodSegments(row).join(" · ")}
+                      </p>
                     </div>
                   </div>
                   <button
                     type="button"
                     aria-label="Budget actions"
                     aria-haspopup="dialog"
-                    className="grid size-[2.4rem] shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-surface-subtle focus-visible:outline-2 focus-visible:outline-primary-600"
+                    className="grid size-[2.4rem] shrink-0 place-items-center rounded-full bg-surface-subtle text-foreground transition-colors hover:bg-primary-100 focus-visible:outline-2 focus-visible:outline-primary-600"
                     onClick={() => setActionRow(row)}
                   >
                     <MoreHorizontal size={18} aria-hidden="true" />
                   </button>
                 </header>
 
-                <div className="flex flex-wrap items-baseline justify-end gap-x-[.3rem] gap-y-[.15rem] text-[.79rem] tabular-nums">
-                  <span className="min-w-0 font-semibold">{formatIdr(row.usage)}</span>
-                  <span className="min-w-0 text-muted">
-                    {" "}/ {formatIdr(row.amount)}
+                <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1 tabular-nums">
+                  <span className={cn(
+                    "text-[.74rem] font-medium",
+                    row.budgetStatus === "exceeded" ? "text-[#bd3838]" : row.budgetStatus === "warning" ? "text-[#97600c]" : "text-muted",
+                  )}>
+                    {statusLabel[row.budgetStatus]}
                   </span>
-                  <span className="ml-1 min-w-0 text-muted">
-                    {formatPercentageBps(percent)} used
-                  </span>
+                  <div className="flex flex-wrap items-baseline justify-end gap-x-[.3rem] gap-y-[.15rem] text-[.79rem]">
+                    <span className="font-semibold text-amount">{formatIdr(row.usage)}</span>
+                    <span className="text-muted">/ {formatIdr(row.amount)}</span>
+                    <span className="ml-1 text-muted">{formatPercentageBps(percent)} used</span>
+                  </div>
                 </div>
 
                 <div
-                  className="relative h-[1.35rem] overflow-hidden rounded-full bg-surface-subtle"
+                  className="budget-progress-track"
                   role="progressbar"
                   aria-label={`Budget usage for ${row.categoryName}`}
                   aria-valuemin={0}
@@ -142,23 +139,8 @@ export function BudgetList({
                   aria-valuenow={progress}
                   aria-valuetext={`${formatPercentageBps(percent)} used`}
                 >
-                  <span
-                    className={cn(
-                      "absolute inset-y-0 left-0",
-                      row.budgetStatus === "exceeded"
-                        ? "bg-expense"
-                        : row.budgetStatus === "warning"
-                          ? "bg-warning"
-                          : "bg-primary-600",
-                    )}
-                    style={{ width: `${progress}%` }}
-                  />
-                  <span
-                    className="pointer-events-none absolute inset-0 flex items-center justify-center text-[.7rem] font-semibold text-white mix-blend-difference"
-                    aria-hidden="true"
-                  >
-                    {statusLabel[row.budgetStatus]}
-                  </span>
+                  <span className="budget-progress-fill" style={{ width: `${progress}%` }} />
+                  {progress > 0 ? <span className="budget-progress-thumb" style={{ left: `clamp(4px, calc(${progress}% - 7px), calc(100% - 18px))` }} /> : null}
                 </div>
               </article>
             </li>

@@ -524,9 +524,9 @@
   display: block;
   height: 17px;
   padding: 3px;
-  border: 1px solid #d7e2e9;
+  border: 1px solid #bedced;
   border-radius: 999px;
-  background: repeating-linear-gradient(110deg, #e5f0f7 0 2px, #f7fafc 2px 5px);
+  background: repeating-linear-gradient(110deg, var(--budget-stripe) 0 2px, var(--budget-stripe-light) 2px 5px);
   box-shadow: inset 0 1px 2px rgb(25 45 60 / 6%);
 }
 .budgetPhoneTrack {

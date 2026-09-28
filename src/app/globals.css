@@ -42,6 +42,8 @@
   --warning: #f59e0b;
   --analytics: #168fe5;
   --amount: #0b70bc;
+  --budget-stripe: #b9dcf3;
+  --budget-stripe-light: #e2f2fc;
   --background: #f0f1f3;
   --surface: #ffffff;
   --surface-subtle: #f0f0f3;
@@ -137,6 +139,39 @@ body {
   );
   background-position: 5px 0;
   background-size: 20% 100%;
+}
+
+.budget-progress-track {
+  position: relative;
+  height: 18px;
+  padding: 3px;
+  border: 1px solid #bedced;
+  border-radius: 999px;
+  background: repeating-linear-gradient(
+    110deg,
+    var(--budget-stripe) 0 2px,
+    var(--budget-stripe-light) 2px 5px
+  );
+  box-shadow: inset 0 1px 2px rgb(25 45 60 / 6%);
+}
+
+.budget-progress-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--analytics);
+}
+
+.budget-progress-thumb {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  transform: translateY(-50%);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: var(--analytics);
+  box-shadow: 0 0 0 1px #a8d1eb;
 }
 
 .card {
