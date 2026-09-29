@@ -48,6 +48,7 @@ export function BottomSheet({
   ariaLabel,
   zIndex = "z-[80]",
   fullHeight = false,
+  centerTitle = false,
   footer,
   children,
 }: {
@@ -57,6 +58,7 @@ export function BottomSheet({
   ariaLabel: string;
   zIndex?: string;
   fullHeight?: boolean;
+  centerTitle?: boolean;
   footer?: React.ReactNode;
   children: React.ReactNode;
 }) {
@@ -123,7 +125,7 @@ export function BottomSheet({
           className={cn("absolute left-1/2 -translate-x-1/2", fullHeight ? "top-4" : "-top-5")}
           onClick={onClose}
         />
-        <div className="mb-[1.1rem] flex min-h-[3.75rem] shrink-0 items-center p-5 pb-0">
+        <div className={cn("mb-[1.1rem] flex min-h-[3.75rem] shrink-0 items-center p-5 pb-0", centerTitle && "justify-center text-center")}>
           <h2 className="m-0 text-[1.05rem] font-semibold tracking-[-.02em]">
             {title}
           </h2>

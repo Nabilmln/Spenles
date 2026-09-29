@@ -29,12 +29,12 @@ function KeypadButton({
         "grid min-h-[2.85rem] place-items-center rounded-full text-foreground transition-[background,transform] active:scale-[.98] focus-visible:outline-2 focus-visible:outline-primary-600 focus-visible:outline-offset-2",
         operator
           ? "bg-transparent text-[1rem] hover:bg-surface-subtle"
-          : "bg-surface text-[1.05rem] font-semibold shadow-[0_1px_3px_rgb(15_15_18/5%)] hover:bg-[#fafafa]",
+          : "bg-surface text-[1.22rem] font-semibold shadow-[0_1px_3px_rgb(15_15_18/5%)] hover:bg-[#fafafa]",
       )}
       aria-label={aria}
       onClick={onClick}
     >
-      {Icon ? <Icon aria-hidden="true" size={21} strokeWidth={2.2} /> : label}
+      {Icon ? <Icon aria-hidden="true" size={operator ? 21 : 25} strokeWidth={2.2} /> : label}
     </button>
   );
 }
@@ -102,6 +102,7 @@ export function AmountCalculatorSheet({
       title="Amount"
       ariaLabel="Amount calculator"
       zIndex="z-[85]"
+      centerTitle
       footer={
         <Button
           type="button"
@@ -119,21 +120,16 @@ export function AmountCalculatorSheet({
           {result ? formatIdr(result) : expression ? "\u2014" : formatIdr("0")}
         </p>
         <output className="min-h-[1.25rem] w-full truncate text-[.75rem] text-muted" aria-label="Calculator expression">
-          {displayExpression || "Tap the keys to enter an amount"}
+          {displayExpression}
         </output>
       </div>
       <FormMessage>{calculatorError}</FormMessage>
-      <div className="mb-[.5rem] flex items-center justify-between gap-3 px-2">
-        <span className="text-[.7rem] font-medium text-muted">Whole rupiah</span>
-        <button type="button" className="min-h-9 px-2 text-[.72rem] font-semibold text-foreground underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600" onClick={clear} aria-label="Clear">
-          Clear
-        </button>
-      </div>
-      <div className="mb-[.5rem] grid grid-cols-4 gap-[.45rem]">
+      <div className="mb-[.5rem] grid grid-cols-5 gap-[.45rem]">
         <KeypadButton label="+" aria="Add" icon={Plus} operator onClick={() => append("+")} />
         <KeypadButton label="-" aria="Subtract" icon={Minus} operator onClick={() => append("-")} />
         <KeypadButton label="*" aria="Multiply" icon={X} operator onClick={() => append("*")} />
         <KeypadButton label="/" aria="Divide" icon={Divide} operator onClick={() => append("/")} />
+        <KeypadButton label="C" aria="Clear" operator onClick={clear} />
       </div>
       <div className="grid grid-cols-3 gap-[.45rem] rounded-[1.45rem] bg-surface-subtle p-[.45rem]">
         {["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((key) => (
@@ -143,9 +139,6 @@ export function AmountCalculatorSheet({
         <KeypadButton label="0" aria="Zero" onClick={() => append("0")} />
         <KeypadButton label="Delete" aria="Delete last character" icon={Delete} onClick={backspace} />
       </div>
-      <p className="m-0 mt-3 text-center text-[.68rem] text-muted">
-        Calculations round to the nearest rupiah.
-      </p>
     </BottomSheet>
   );
 }
