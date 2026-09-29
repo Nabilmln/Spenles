@@ -1,9 +1,9 @@
 "use client";
 
 import {
-  CartesianGrid,
+  Area,
+  ComposedChart,
   Line,
-  LineChart,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -24,13 +24,13 @@ function CashFlowTooltip({
   const point = payload?.[0]?.payload;
   if (!active || !point) return null;
   return (
-    <div className="grid gap-[.15rem] rounded-[.7rem] border border-border bg-surface p-[.65rem_.8rem] text-[.75rem] text-foreground shadow-[0_6px_18px_rgb(15_15_18/8%)]">
+    <div className="grid gap-[.15rem] rounded-[.65rem] border border-border bg-surface p-[.55rem_.7rem] text-[.75rem] text-foreground shadow-card">
       <strong>{point.label}</strong>
       <span>
-        Income <span className="font-semibold">{formatIdr(point.incomeIdr)}</span>
+        Income <span className="font-medium text-income">{formatIdr(point.incomeIdr)}</span>
       </span>
       <span>
-        Expense <span className="font-semibold">{formatIdr(point.expenseIdr)}</span>
+        Expense <span className="font-medium text-amount">{formatIdr(point.expenseIdr)}</span>
       </span>
     </div>
   );
@@ -41,43 +41,64 @@ export function ReportCashFlowChart({
 }: {
   points: CashFlowPoint[];
 }) {
+  const singlePoint = points.length === 1;
   return (
-    <div aria-hidden="true" className="mt-4 h-[17rem] w-full max-[540px]:h-[15rem]">
-      <ResponsiveContainer height="100%" width="100%">
-        <LineChart data={points} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
-          <CartesianGrid stroke="var(--border)" strokeDasharray="3 3" horizontal={false} />
-          <XAxis dataKey="label" fontSize={11} stroke="var(--foreground)" tickLine={false} tickMargin={6} interval="preserveStartEnd" />
-          <YAxis domain={[0, 1]} hide />
-          <Tooltip
-            content={<CashFlowTooltip />}
-            cursor={{ stroke: "var(--muted)", strokeWidth: 1, strokeDasharray: "3 3" }}
-          />
-          <Line
-            type="linear"
-            dataKey="incomePlot"
-            stroke="var(--income)"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            dot={{ r: 3, fill: "none", stroke: "var(--income)", strokeWidth: 1.5 }}
-            activeDot={{ r: 5, fill: "none", stroke: "var(--income)", strokeWidth: 2 }}
-            animationDuration={600}
-            animationEasing="ease-out"
-          />
-          <Line
-            type="linear"
-            dataKey="expensePlot"
-            stroke="var(--analytics)"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            dot={{ r: 3, fill: "#ffffff", stroke: "var(--analytics)", strokeWidth: 1.5 }}
-            activeDot={{ r: 5, fill: "#ffffff", stroke: "var(--analytics)", strokeWidth: 2 }}
-            animationDuration={600}
-            animationEasing="ease-out"
-          />
-        </LineChart>
-      </ResponsiveContainer>
+    <div aria-label="Income (green) and expense (blue) trends" role="group" className="mt-4 min-w-0">
+      <div className="chart-vertical-guides h-[17rem] w-full">
+        <ResponsiveContainer height="100%" width="100%">
+          <ComposedChart data={points} margin={{ top: 12, right: 5, left: 5, bottom: 0 }}>
+            <defs>
+              <linearGradient id="report-expense-fill" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="var(--analytics)" stopOpacity={0.18} />
+                <stop offset="100%" stopColor="var(--analytics)" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+            <XAxis dataKey="period" hide axisLine={false} tickLine={false} />
+            <YAxis domain={[0, 1]} hide />
+            <Tooltip
+              content={<CashFlowTooltip />}
+              cursor={{ stroke: "var(--analytics)", strokeWidth: 1, strokeOpacity: 0.45 }}
+            />
+            <Area
+              type="basis"
+              dataKey="expensePlot"
+              stroke="none"
+              fill="url(#report-expense-fill)"
+              fillOpacity={1}
+              activeDot={false}
+              isAnimationActive={false}
+            />
+            <Line
+              type="basis"
+              dataKey="incomePlot"
+              stroke="var(--income)"
+              strokeWidth={2.5}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              dot={singlePoint ? { r: 4, fill: "#ffffff", stroke: "var(--income)", strokeWidth: 2 } : false}
+              activeDot={{ r: 4, fill: "#ffffff", stroke: "var(--income)", strokeWidth: 2 }}
+              isAnimationActive={false}
+            />
+            <Line
+              type="basis"
+              dataKey="expensePlot"
+              stroke="var(--analytics)"
+              strokeWidth={2.5}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              dot={singlePoint ? { r: 4, fill: "#ffffff", stroke: "var(--analytics)", strokeWidth: 2 } : false}
+              activeDot={{ r: 4, fill: "#ffffff", stroke: "var(--analytics)", strokeWidth: 2 }}
+              isAnimationActive={false}
+            />
+          </ComposedChart>
+        </ResponsiveContainer>
+      </div>
+      {points.length > 0 ? (
+        <div className="flex justify-between gap-3 text-[.72rem] text-muted">
+          <time dateTime={points[0].period} className="min-w-0 max-w-[48%] truncate">{points[0].label}</time>
+          {points.length > 1 ? <time dateTime={points.at(-1)?.period} className="min-w-0 max-w-[48%] truncate text-right">{points.at(-1)?.label}</time> : null}
+        </div>
+      ) : null}
     </div>
   );
 }
