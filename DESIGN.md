@@ -196,6 +196,7 @@ Working controls use gently rounded corners, with cards slightly rounder than co
 - **Style:** Subtle gray fill, fine border, 0.65rem corners, and at least 2.6rem height.
 - **Focus:** Ink border with a visible neutral outline. Disabled fields reduce opacity and signal the inactive state.
 - **Labels:** Medium-weight text stays near the field; helper and error text use quieter or semantic colors.
+- **Transaction calculator:** The amount is large, black, and centered above a quiet expression line. Four ink operators sit in a separate row above a three-column pad of white pill keys on a light grey surface. Whole-rupiah input keeps 000 instead of a decimal key; clear and delete remain available. Use Amount stays fixed in the sheet footer so a short phone can scroll the keypad without hiding the action. No available-balance figure appears because the calculator does not receive account balance data.
 
 ### Notifications
 

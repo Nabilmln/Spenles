@@ -1,19 +1,10 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import {
-  Delete,
-  Divide,
-  Equal,
-  Minus,
-  Plus,
-  X,
-  type LucideIcon,
-} from "lucide-react";
+import { Delete, Divide, Minus, Plus, X, type LucideIcon } from "lucide-react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { Button } from "@/components/ui/button";
 import { FormMessage } from "@/components/ui/form-message";
-import { fieldHintClass } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import { formatIdr } from "@/lib/money/format-idr";
 import { calculateExpression } from "../services/calculator";
@@ -23,20 +14,27 @@ function KeypadButton({
   aria,
   onClick,
   icon: Icon,
+  operator = false,
 }: {
   label: string;
   aria: string;
   onClick: () => void;
   icon?: LucideIcon;
+  operator?: boolean;
 }) {
   return (
     <button
       type="button"
-      className="grid min-h-[2.85rem] place-items-center rounded-[.7rem] border border-border bg-surface-subtle p-[.5rem] text-[.92rem] font-medium text-foreground hover:bg-primary-50 focus-visible:outline-2 focus-visible:outline-primary-500 focus-visible:outline-offset-2"
+      className={cn(
+        "grid min-h-[2.85rem] place-items-center rounded-full text-foreground transition-[background,transform] active:scale-[.98] focus-visible:outline-2 focus-visible:outline-primary-600 focus-visible:outline-offset-2",
+        operator
+          ? "bg-transparent text-[1rem] hover:bg-surface-subtle"
+          : "bg-surface text-[1.05rem] font-semibold shadow-[0_1px_3px_rgb(15_15_18/5%)] hover:bg-[#fafafa]",
+      )}
       aria-label={aria}
       onClick={onClick}
     >
-      {Icon ? <Icon aria-hidden="true" size={20} strokeWidth={2} /> : label}
+      {Icon ? <Icon aria-hidden="true" size={21} strokeWidth={2.2} /> : label}
     </button>
   );
 }
@@ -70,6 +68,7 @@ export function AmountCalculatorSheet({
       return null;
     }
   }, [expression]);
+  const displayExpression = expression.replaceAll("*", "\u00d7").replaceAll("/", "\u00f7");
 
   function append(char: string) {
     setExpression((current) => current + char);
@@ -103,53 +102,50 @@ export function AmountCalculatorSheet({
       title="Amount"
       ariaLabel="Amount calculator"
       zIndex="z-[85]"
+      footer={
+        <Button
+          type="button"
+          variant="primary"
+          className="min-h-[3rem] w-full rounded-full text-[.88rem]"
+          disabled={!result}
+          onClick={commit}
+        >
+          Use Amount
+        </Button>
+      }
     >
-      <div className="mb-[.85rem] grid gap-[.3rem] rounded-[.8rem] border border-border bg-surface-subtle p-[.9rem]">
-        <input
-          className="w-full min-h-[1.6rem] border-0 bg-transparent p-0 text-[.85rem] font-medium text-muted outline-none"
-          aria-label="Calculator expression"
-          value={expression}
-          onChange={(event) => setExpression(event.target.value)}
-          placeholder="25000 + 18000 + 7500"
-          readOnly
-        />
-        <p className="m-0 text-[1.15rem] font-medium tracking-[-.03em]" aria-live="polite">
-          {result ? formatIdr(result) : "—"}
+      <div className="flex min-h-[8.5rem] flex-col items-center justify-center gap-[.45rem] px-1 text-center">
+        <p className="m-0 max-w-full text-[clamp(2.15rem,10vw,3.25rem)] font-semibold leading-tight tracking-[-.035em] text-foreground tabular-nums [overflow-wrap:anywhere]" aria-live="polite">
+          {result ? formatIdr(result) : expression ? "\u2014" : formatIdr("0")}
         </p>
+        <output className="min-h-[1.25rem] w-full truncate text-[.75rem] text-muted" aria-label="Calculator expression">
+          {displayExpression || "Tap the keys to enter an amount"}
+        </output>
       </div>
       <FormMessage>{calculatorError}</FormMessage>
-      <div className="grid grid-cols-[repeat(4,minmax(0,1fr))] gap-2">
-        {["7", "8", "9"].map((key) => (
+      <div className="mb-[.5rem] flex items-center justify-between gap-3 px-2">
+        <span className="text-[.7rem] font-medium text-muted">Whole rupiah</span>
+        <button type="button" className="min-h-9 px-2 text-[.72rem] font-semibold text-foreground underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-primary-600" onClick={clear} aria-label="Clear">
+          Clear
+        </button>
+      </div>
+      <div className="mb-[.5rem] grid grid-cols-4 gap-[.45rem]">
+        <KeypadButton label="+" aria="Add" icon={Plus} operator onClick={() => append("+")} />
+        <KeypadButton label="-" aria="Subtract" icon={Minus} operator onClick={() => append("-")} />
+        <KeypadButton label="*" aria="Multiply" icon={X} operator onClick={() => append("*")} />
+        <KeypadButton label="/" aria="Divide" icon={Divide} operator onClick={() => append("/")} />
+      </div>
+      <div className="grid grid-cols-3 gap-[.45rem] rounded-[1.45rem] bg-surface-subtle p-[.45rem]">
+        {["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((key) => (
           <KeypadButton key={key} label={key} aria={key} onClick={() => append(key)} />
         ))}
-        <KeypadButton label="/" aria="Divide" icon={Divide} onClick={() => append("/")} />
-        {["4", "5", "6"].map((key) => (
-          <KeypadButton key={key} label={key} aria={key} onClick={() => append(key)} />
-        ))}
-        <KeypadButton label="*" aria="Multiply" icon={X} onClick={() => append("*")} />
-        {["1", "2", "3"].map((key) => (
-          <KeypadButton key={key} label={key} aria={key} onClick={() => append(key)} />
-        ))}
-        <KeypadButton label="-" aria="Subtract" icon={Minus} onClick={() => append("-")} />
         <KeypadButton label="000" aria="Insert three zeros" onClick={() => append("000")} />
         <KeypadButton label="0" aria="Zero" onClick={() => append("0")} />
-        <KeypadButton label="C" aria="Clear" onClick={clear} />
-        <KeypadButton label="⌫" aria="Delete last character" icon={Delete} onClick={backspace} />
-        <KeypadButton label="+" aria="Add" icon={Plus} onClick={() => append("+")} />
-        <KeypadButton label="=" aria="Calculate result" icon={Equal} onClick={commit} />
+        <KeypadButton label="Delete" aria="Delete last character" icon={Delete} onClick={backspace} />
       </div>
-      <p className={cn(fieldHintClass, "mt-[.35rem] text-[.72rem]")}>
-        Operators: +, −, ×, ÷. The result is rounded to the nearest rupiah.
+      <p className="m-0 mt-3 text-center text-[.68rem] text-muted">
+        Calculations round to the nearest rupiah.
       </p>
-      <Button
-        type="button"
-        variant="primary"
-        className="mt-[.9rem] w-full min-h-[2.6rem] p-[.55rem_.9rem] text-[.88rem]"
-        disabled={!result}
-        onClick={commit}
-      >
-        Use Amount
-      </Button>
     </BottomSheet>
   );
 }
