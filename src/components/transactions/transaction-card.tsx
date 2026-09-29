@@ -50,53 +50,57 @@ export function TransactionCard({
   const prefix = isTransfer ? "" : transaction.type === "income" ? "+" : "\u2212";
 
   return (
-    <article
-      className={cn(
-        "grid min-w-0 items-center gap-[.7rem] rounded-[1.1rem] border border-border bg-surface",
-        showActions
-          ? "grid-cols-[auto_minmax(0,1fr)_auto_auto]"
-          : "grid-cols-[auto_minmax(0,1fr)_auto]",
-        compact ? "bg-surface-subtle p-[.7rem_.8rem]" : "p-[.85rem]",
-      )}
-    >
-      <span
-        className="grid size-[2.7rem] shrink-0 place-items-center rounded-full bg-primary-50 text-foreground"
+    <article className="min-w-0 rounded-[1.25rem] bg-[#e8e9ec] p-[2px]">
+      <div
+        className={cn(
+          "grid min-w-0 items-center gap-[.7rem] rounded-[1.12rem] bg-surface",
+          showActions
+            ? "grid-cols-[auto_minmax(0,1fr)_auto_auto]"
+            : "grid-cols-[auto_minmax(0,1fr)_auto]",
+          compact ? "p-[.7rem_.8rem]" : "p-[.85rem]",
+        )}
       >
-        {renderCardIcon(transaction)}
-      </span>
-
-      <div className="grid min-w-0">
-        <strong className="line-clamp-2 min-w-0 text-[.9rem] font-semibold leading-tight">{transaction.categoryName}</strong>
-        <span className="truncate text-[.74rem] font-medium text-muted">
-          {isTransfer && transaction.sourceAccountName && transaction.destinationAccountName
-            ? `${transaction.sourceAccountName} \u2192 ${transaction.destinationAccountName}`
-            : typeLabel[transaction.type]}
+        <span
+          className="grid size-[2.7rem] shrink-0 place-items-center rounded-full bg-primary-50 text-foreground"
+        >
+          {renderCardIcon(transaction)}
         </span>
-        {transaction.note ? (
-          <span className="truncate text-[.72rem] text-muted">{transaction.note}</span>
+
+        <div className="grid min-w-0">
+          <strong className="line-clamp-2 min-w-0 text-[.9rem] font-semibold leading-tight">{transaction.categoryName}</strong>
+          <span className="truncate text-[.74rem] font-medium text-muted">
+            {isTransfer && transaction.sourceAccountName && transaction.destinationAccountName
+              ? `${transaction.sourceAccountName} \u2192 ${transaction.destinationAccountName}`
+              : typeLabel[transaction.type]}
+          </span>
+        </div>
+
+        <div className="grid min-w-0 justify-items-end gap-[.15rem] text-right">
+          <strong
+            className="max-w-[7rem] text-[.84rem] font-semibold tabular-nums text-amount [overflow-wrap:anywhere]"
+          >
+            {prefix}{prefix ? " " : ""}{formatIdr(transaction.amount)}
+          </strong>
+          <span className="max-w-[7rem] text-[.68rem] leading-tight text-muted">
+            {formatJakartaDateLong(transaction.transactionAt)}
+          </span>
+        </div>
+
+        {showActions ? (
+          <button
+            type="button"
+            className="grid size-[2.4rem] shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-surface-subtle focus-visible:outline-2 focus-visible:outline-primary-600"
+            onClick={() => onAction?.(transaction.id, transaction.type)}
+            aria-label="Transaction actions"
+          >
+            <MoreHorizontal size={18} aria-hidden="true" />
+          </button>
         ) : null}
       </div>
-
-      <div className="grid min-w-0 justify-items-end gap-[.15rem] text-right">
-        <strong
-          className="max-w-[7rem] text-[.84rem] font-semibold tabular-nums text-amount [overflow-wrap:anywhere]"
-        >
-          {prefix}{prefix ? " " : ""}{formatIdr(transaction.amount)}
-        </strong>
-        <span className="max-w-[7rem] text-[.68rem] leading-tight text-muted">
-          {formatJakartaDateLong(transaction.transactionAt)}
-        </span>
-      </div>
-
-      {showActions ? (
-        <button
-          type="button"
-          className="grid size-[2.4rem] shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-surface-subtle focus-visible:outline-2 focus-visible:outline-primary-600"
-          onClick={() => onAction?.(transaction.id, transaction.type)}
-          aria-label="Transaction actions"
-        >
-          <MoreHorizontal size={18} aria-hidden="true" />
-        </button>
+      {transaction.note ? (
+        <p className="m-0 px-[.75rem] py-[.45rem] text-[.72rem] font-medium leading-snug text-[#454650] [overflow-wrap:anywhere]">
+          {transaction.note}
+        </p>
       ) : null}
     </article>
   );
