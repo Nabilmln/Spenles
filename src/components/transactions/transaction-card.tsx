@@ -97,11 +97,9 @@ export function TransactionCard({
           </button>
         ) : null}
       </div>
-      {transaction.note ? (
-        <p className="m-0 px-[.75rem] py-[.45rem] text-[.72rem] font-medium leading-snug text-[#454650] [overflow-wrap:anywhere]">
-          {transaction.note}
-        </p>
-      ) : null}
+      <p className="m-0 min-h-[1.875rem] px-[.75rem] py-[.45rem] text-[.675rem]! font-semibold leading-snug text-[#5c5d66]! [overflow-wrap:anywhere]">
+        {transaction.note?.trim() || "No Description"}
+      </p>
     </article>
   );
 }
