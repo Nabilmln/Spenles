@@ -14,6 +14,10 @@ export function LandingMotion() {
     const reveals = [...root.querySelectorAll<HTMLElement>("[data-reveal]")];
     const budgetFill = root.querySelector<HTMLElement>("[role='progressbar'] i");
     const chartLines = [...root.querySelectorAll<SVGPathElement>(".landing-trend-line")];
+    const stack = root.querySelector<HTMLElement>("[data-scroll-stack]");
+    const stackStage = stack?.querySelector<HTMLElement>("[data-scroll-stack-stage]");
+    const stackCards = [...(stack?.querySelectorAll<HTMLElement>("[data-scroll-stack-card]") ?? [])];
+    const chartCardIndex = chartLines.map((line) => stackCards.findIndex((card) => card.contains(line)));
     let frame = 0;
 
     function clearMotion() {
@@ -26,6 +30,11 @@ export function LandingMotion() {
         line.style.removeProperty("stroke-dasharray");
         line.style.removeProperty("stroke-dashoffset");
       }
+      stack?.removeAttribute("data-stack-ready");
+      for (const card of stackCards) {
+        card.style.removeProperty("opacity");
+        card.style.removeProperty("transform");
+      }
     }
 
     function update() {
@@ -37,6 +46,20 @@ export function LandingMotion() {
       if (!root?.getClientRects().length) return;
 
       const viewport = window.innerHeight;
+      if (stack && stackStage && !stack.dataset.stackReady) {
+        stack.dataset.stackReady = "true";
+      }
+
+      const stackRect = stack?.getBoundingClientRect();
+      const stackTop = stackStage ? Number.parseFloat(getComputedStyle(stackStage).top) : 0;
+      const stackTravel = stackRect && stackStage
+        ? Math.max(1, stackRect.height - stackStage.offsetHeight)
+        : 1;
+      const stackProgress = stackRect ? clamp((stackTop - stackRect.top) / stackTravel) : 0;
+      const cardArrivals = stackCards.map((_, index) => index === 0
+        ? 1
+        : ease(clamp((stackProgress - (index - 1) * 0.25 - 0.08) / 0.13)));
+
       // The same viewport progress drives both directions of the scroll.
       const progressFor = (element: Element) => {
         const rect = element.getBoundingClientRect();
@@ -45,6 +68,15 @@ export function LandingMotion() {
       const revealProgress = reveals.map(progressFor);
       const budgetProgress = budgetFill ? progressFor(budgetFill) : 0;
       const chartProgress = chartLines.map(progressFor);
+
+      stackCards.forEach((card, index) => {
+        const arrival = cardArrivals[index];
+        const depth = cardArrivals.slice(index + 1).reduce((sum, value) => sum + value, 0);
+        const offset = index * 14 + (1 - arrival) * 90;
+        const scale = 1 - depth * 0.018;
+        card.style.opacity = arrival.toFixed(3);
+        card.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0) scale(${scale.toFixed(3)})`;
+      });
 
       reveals.forEach((element, index) => {
         const delay = Math.min(Number(element.dataset.delay) || 0, 200) / 3000;
@@ -62,11 +94,14 @@ export function LandingMotion() {
       });
 
       if (budgetFill) {
-        budgetFill.style.transform = `scaleX(${ease(clamp(budgetProgress / 0.42)).toFixed(3)})`;
+        const fill = ease(clamp(budgetProgress / 0.42)) * (cardArrivals[1] ?? 1);
+        budgetFill.style.transform = `scaleX(${fill.toFixed(3)})`;
       }
       chartLines.forEach((line, index) => {
+        const cardArrival = cardArrivals[chartCardIndex[index]] ?? 1;
+        const draw = ease(clamp(chartProgress[index] / 0.44)) * cardArrival;
         line.style.strokeDasharray = "1";
-        line.style.strokeDashoffset = (1 - ease(clamp(chartProgress[index] / 0.44))).toFixed(3);
+        line.style.strokeDashoffset = (1 - draw).toFixed(3);
       });
     }
 
