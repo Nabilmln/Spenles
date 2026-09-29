@@ -199,7 +199,7 @@ Working controls use gently rounded corners, with cards slightly rounder than co
 
 ### Notifications
 
-- **In-app feedback:** Success, error, and info messages use one white bottom sheet at a time with a striped badge, a short heading, the original action message, and a dark Done button. Success uses the analytics blue, errors retain a distinct red, and info uses ink. A floating close control and backdrop dismiss the sheet; otherwise it closes after four seconds. Messages that arrive together wait their turn. Save actions that change pages return success feedback and a destination; the shared hook queues the sheet before navigating so the result remains visible on the next page.
+- **In-app feedback:** Success, error, and info messages use one tall white bottom sheet at a time with a fully circular striped badge, a short heading, the original action message, and a dark Done button anchored at the bottom. Success uses the analytics blue, errors retain a distinct red, and info uses ink. A floating black close control with a white X and the backdrop dismiss the sheet; otherwise it closes after four seconds. Messages that arrive together wait their turn. Save actions that change pages return success feedback and a destination; the shared hook queues the sheet before navigating so the result remains visible on the next page.
 
 ### Navigation
 

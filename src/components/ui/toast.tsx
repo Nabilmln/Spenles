@@ -115,33 +115,33 @@ function ToastSheet({
         tabIndex={-1}
       />
       <section
-        className="notification-sheet-in relative w-full max-w-[28rem] rounded-t-[2rem] bg-surface px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[3.25rem] text-center text-foreground shadow-[0_-12px_40px_rgb(15_15_18/14%)] min-[861px]:mb-4 min-[861px]:rounded-[2rem]"
+        className="notification-sheet-in relative flex min-h-[min(25rem,72dvh)] w-full max-w-[28rem] flex-col items-center rounded-t-[2rem] bg-surface px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[4rem] text-center text-foreground shadow-[0_-12px_40px_rgb(15_15_18/14%)] min-[861px]:mb-4 min-[861px]:rounded-[2rem]"
         role={toast.variant === "error" ? "alert" : "status"}
         aria-label={style.title}
       >
         <button
           ref={closeButtonRef}
           type="button"
-          className="absolute -top-5 left-1/2 grid size-10 -translate-x-1/2 place-items-center rounded-full bg-surface text-foreground shadow-[0_3px_12px_rgb(15_15_18/12%)] focus-visible:outline-2 focus-visible:outline-primary-600"
+          className="absolute -top-5 left-1/2 grid size-10 -translate-x-1/2 place-items-center rounded-full bg-primary-700 text-white shadow-[0_3px_12px_rgb(15_15_18/18%)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700"
           onClick={() => onDismiss(toast.id)}
           aria-label="Close notification"
         >
           <X size={17} aria-hidden="true" />
         </button>
 
-        <div className={cn("mx-auto mb-5 grid size-[5.75rem] place-items-center rounded-[2rem]", style.stripes)} aria-hidden="true">
+        <div className={cn("mx-auto mb-5 grid size-[5.75rem] place-items-center rounded-full", style.stripes)} aria-hidden="true">
           <span className={cn("grid size-[3.7rem] place-items-center rounded-full", style.badge)}>
             <Icon size={30} strokeWidth={2.5} />
           </span>
         </div>
         <h2 className="m-0 text-[1.55rem] font-semibold tracking-[-.03em]">{style.title}</h2>
-        <p className="mx-auto mb-7 mt-2 max-w-[25rem] text-[.84rem] leading-[1.5] text-muted">
+        <p className="mx-auto mb-8 mt-2 max-w-[25rem] text-[.84rem] leading-[1.5] text-muted">
           {toast.message}
         </p>
         <button
           ref={doneButtonRef}
           type="button"
-          className="min-h-[3rem] w-full rounded-full bg-primary-700 px-5 py-3 text-[.88rem] font-medium text-white transition-colors hover:bg-primary-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+          className="mt-auto min-h-[3rem] w-full rounded-full bg-primary-700 px-5 py-3 text-[.88rem] font-medium text-white transition-colors hover:bg-primary-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
           onClick={() => onDismiss(toast.id)}
         >
           Done
