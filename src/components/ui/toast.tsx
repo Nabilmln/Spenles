@@ -11,8 +11,9 @@ import {
 } from "react";
 import { useActionState } from "react";
 import { createPortal } from "react-dom";
-import { Check, CircleAlert, Info, X } from "lucide-react";
+import { Check, CircleAlert, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SheetCloseButton } from "./sheet-close-button";
 
 type ToastVariant = "success" | "error" | "info";
 
@@ -119,15 +120,12 @@ function ToastSheet({
         role={toast.variant === "error" ? "alert" : "status"}
         aria-label={style.title}
       >
-        <button
+        <SheetCloseButton
           ref={closeButtonRef}
-          type="button"
-          className="absolute -top-5 left-1/2 grid size-10 -translate-x-1/2 place-items-center rounded-full bg-primary-700 text-white shadow-[0_3px_12px_rgb(15_15_18/18%)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-700"
+          className="absolute -top-5 left-1/2 -translate-x-1/2"
           onClick={() => onDismiss(toast.id)}
-          aria-label="Close notification"
-        >
-          <X size={17} aria-hidden="true" />
-        </button>
+          ariaLabel="Close notification"
+        />
 
         <div className={cn("mx-auto mb-5 grid size-[5.75rem] place-items-center rounded-full", style.stripes)} aria-hidden="true">
           <span className={cn("grid size-[3.7rem] place-items-center rounded-full", style.badge)}>

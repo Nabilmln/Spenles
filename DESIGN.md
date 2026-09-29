@@ -200,6 +200,7 @@ Working controls use gently rounded corners, with cards slightly rounder than co
 ### Notifications
 
 - **In-app feedback:** Success, error, and info messages use one tall white bottom sheet at a time with a fully circular striped badge, a short heading, the original action message, and a dark Done button anchored at the bottom. Success uses the analytics blue, errors retain a distinct red, and info uses ink. A floating black close control with a white X and the backdrop dismiss the sheet; otherwise it closes after four seconds. Messages that arrive together wait their turn. Save actions that change pages return success feedback and a destination; the shared hook queues the sheet before navigating so the result remains visible on the next page.
+- **Action sheets:** Form, picker, filter, profile, and action sheets all use the shared BottomSheet primitive. Its floating close control is centered above the sheet, using the same black circle and white X as notifications. The close-button style comes from one shared component while notification timing and action-sheet scrolling remain separate behaviors. The sheet title stays left aligned and its content order stays unchanged.
 
 ### Navigation
 

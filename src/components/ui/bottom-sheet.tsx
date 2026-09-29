@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SheetCloseButton } from "./sheet-close-button";
 
 const EXIT_MS = 240;
 
@@ -112,24 +112,21 @@ export function BottomSheet({
       />
       <div
         className={cn(
-          "relative flex w-full flex-col overflow-hidden rounded-t-[1.6rem] border-t border-border bg-surface shadow-[0_-10px_40px_rgb(15_15_18/20%)]",
+          "relative flex w-full flex-col rounded-t-[2rem] border-t border-border bg-surface shadow-[0_-10px_40px_rgb(15_15_18/20%)]",
           fullHeight ? "h-dvh" : "max-h-[88dvh]",
           closing ? "profile-curtain-out" : "profile-curtain-in",
         )}
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="mb-[1.1rem] flex shrink-0 items-center justify-between p-5 pb-0">
+        <SheetCloseButton
+          ariaLabel="Close"
+          className={cn("absolute left-1/2 -translate-x-1/2", fullHeight ? "top-4" : "-top-5")}
+          onClick={onClose}
+        />
+        <div className="mb-[1.1rem] flex min-h-[3.75rem] shrink-0 items-center p-5 pb-0">
           <h2 className="m-0 text-[1.05rem] font-semibold tracking-[-.02em]">
             {title}
           </h2>
-          <button
-            type="button"
-            className="grid size-[2.4rem] place-items-center rounded-full bg-surface-subtle text-foreground transition-colors hover:bg-surface-subtle"
-            onClick={onClose}
-            aria-label="Close"
-          >
-            <X size={18} aria-hidden="true" />
-          </button>
         </div>
         <div
           className={cn(
