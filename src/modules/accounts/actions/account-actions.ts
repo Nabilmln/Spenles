@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { accountIdSchema, accountSchema } from "../schemas/account";
@@ -12,7 +11,7 @@ import {
   updateOwnedAccount,
 } from "../services/account-mutations";
 
-export type AccountActionState = { error?: string; success?: string };
+export type AccountActionState = { error?: string; success?: string; redirectTo?: string };
 
 function values(formData: FormData) {
   return {
@@ -46,7 +45,7 @@ export async function createAccountAction(
     return { error: "Account could not be created." };
   }
   invalidateAccounts();
-  redirect("/accounts");
+  return { success: "Account created.", redirectTo: "/accounts" };
 }
 
 export async function createAccountFromSheetAction(
@@ -96,7 +95,7 @@ export async function updateAccountAction(
     return { error: "Account could not be updated." };
   }
   invalidateAccounts(id.data);
-  redirect(`/accounts/${id.data}`);
+  return { success: "Account updated.", redirectTo: `/accounts/${id.data}` };
 }
 
 function accountValues(formData: FormData) {

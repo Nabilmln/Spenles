@@ -1,8 +1,14 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
-import { ToastProvider, useToast } from "./toast";
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import { ToastProvider, useToast, useToastActionState } from "./toast";
 
-afterEach(cleanup);
+const push = vi.fn();
+
+afterEach(() => {
+  cleanup();
+  vi.useRealTimers();
+  push.mockClear();
+});
 
 function Trigger() {
   const toast = useToast();
@@ -15,6 +21,15 @@ function Trigger() {
   );
 }
 
+function ActionTrigger() {
+  const [, action] = useToastActionState<{ success?: string; redirectTo?: string }, FormData>(
+    async () => ({ success: "Expense recorded.", redirectTo: "/transactions" }),
+    {},
+    push,
+  );
+  return <form action={action}><button type="submit">Save expense</button></form>;
+}
+
 describe("ToastProvider", () => {
   it("shows a success notification and dismisses it", () => {
     render(
@@ -25,6 +40,7 @@ describe("ToastProvider", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "ok" }));
     expect(screen.getByRole("status")).toHaveTextContent("Saved successfully");
+    expect(screen.getByRole("dialog")).toHaveAttribute("aria-modal", "true");
 
     fireEvent.click(screen.getByRole("button", { name: "Close notification" }));
     expect(screen.queryByRole("status")).not.toBeInTheDocument();
@@ -41,7 +57,7 @@ describe("ToastProvider", () => {
     expect(screen.getByRole("alert")).toHaveTextContent("Terjadi kesalahan");
   });
 
-  it("stacks multiple notifications", () => {
+  it("shows multiple notifications one at a time", () => {
     render(
       <ToastProvider>
         <Trigger />
@@ -52,7 +68,45 @@ describe("ToastProvider", () => {
     fireEvent.click(screen.getByRole("button", { name: "info" }));
     fireEvent.click(screen.getByRole("button", { name: "err" }));
 
-    expect(screen.getAllByRole("status")).toHaveLength(2);
-    expect(screen.getAllByRole("alert")).toHaveLength(1);
+    expect(screen.getByRole("status")).toHaveTextContent("Saved successfully");
+    expect(screen.queryByText("Informasi terbaru")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Done" }));
+    expect(screen.getByRole("status")).toHaveTextContent("Informasi terbaru");
+
+    fireEvent.click(screen.getByRole("button", { name: "Done" }));
+    expect(screen.getByRole("alert")).toHaveTextContent("Terjadi kesalahan");
+  });
+
+  it("dismisses automatically after four seconds", () => {
+    vi.useFakeTimers();
+    render(
+      <ToastProvider>
+        <Trigger />
+      </ToastProvider>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "ok" }));
+    act(() => vi.advanceTimersByTime(3999));
+    expect(screen.getByRole("status")).toBeInTheDocument();
+    act(() => vi.advanceTimersByTime(1));
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+  });
+
+  it("shows successful action feedback and navigates to its destination", async () => {
+    render(
+      <ToastProvider>
+        <ActionTrigger />
+      </ToastProvider>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Save expense" }));
+    expect(await screen.findByRole("status")).toHaveTextContent("Expense recorded.");
+    expect(push).toHaveBeenCalledWith("/transactions");
+
+    fireEvent.click(screen.getByRole("button", { name: "Done" }));
+    fireEvent.click(screen.getByRole("button", { name: "Save expense" }));
+    expect(await screen.findByRole("status")).toHaveTextContent("Expense recorded.");
+    expect(push).toHaveBeenCalledTimes(2);
   });
 });

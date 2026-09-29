@@ -10,7 +10,8 @@ import {
   useState,
 } from "react";
 import { useActionState } from "react";
-import { CircleAlert, CircleCheck, Info, X } from "lucide-react";
+import { createPortal } from "react-dom";
+import { Check, CircleAlert, Info, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type ToastVariant = "success" | "error" | "info";
@@ -39,74 +40,115 @@ export function useToast(): ToastApi {
   return useContext(ToastContext) ?? NOOP_TOAST;
 }
 
-const TOAST_DURATION_MS = 5000;
+const TOAST_DURATION_MS = 4000;
 
-const variantIcon = {
-  success: CircleCheck,
-  error: CircleAlert,
-  info: Info,
+const variantStyle = {
+  success: {
+    title: "Success",
+    icon: Check,
+    badge: "bg-[#168fe5] text-white",
+    stripes: "notification-stripes-blue",
+  },
+  error: {
+    title: "Unable to complete",
+    icon: CircleAlert,
+    badge: "bg-[#bb3f43] text-white",
+    stripes: "notification-stripes-red",
+  },
+  info: {
+    title: "Notice",
+    icon: Info,
+    badge: "bg-primary-700 text-white",
+    stripes: "notification-stripes-ink",
+  },
 } as const;
 
-const variantTone = {
-  success: "text-income",
-  error: "text-expense",
-  info: "text-primary-600",
-} as const;
-
-function ToastCard({
+function ToastSheet({
   toast,
   onDismiss,
 }: {
   toast: ToastItem;
   onDismiss: (id: string) => void;
 }) {
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const doneButtonRef = useRef<HTMLButtonElement>(null);
+
   useEffect(() => {
     const timer = window.setTimeout(() => onDismiss(toast.id), TOAST_DURATION_MS);
     return () => window.clearTimeout(timer);
   }, [onDismiss, toast.id]);
 
-  const Icon = variantIcon[toast.variant];
+  useEffect(() => {
+    const previouslyFocused = document.activeElement;
+    closeButtonRef.current?.focus();
+    return () => {
+      if (previouslyFocused instanceof HTMLElement) previouslyFocused.focus();
+    };
+  }, []);
 
-  return (
+  const style = variantStyle[toast.variant];
+  const Icon = style.icon;
+
+  return createPortal(
     <div
-      className="toast-in pointer-events-auto flex items-start gap-3 rounded-[.9rem] border border-border bg-surface p-[.85rem_1rem] text-foreground shadow-[0_8px_28px_rgb(15_15_18/12%)]"
-      role={toast.variant === "error" ? "alert" : "status"}
+      className="fixed inset-0 z-[100] flex items-end justify-center"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`${style.title} notification`}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") onDismiss(toast.id);
+        if (event.key !== "Tab") return;
+        if (event.shiftKey && document.activeElement === closeButtonRef.current) {
+          event.preventDefault();
+          doneButtonRef.current?.focus();
+        } else if (!event.shiftKey && document.activeElement === doneButtonRef.current) {
+          event.preventDefault();
+          closeButtonRef.current?.focus();
+        }
+      }}
     >
-      <Icon
-        className={cn(
-          "mt-[.1rem] size-[1.1rem] shrink-0",
-          variantTone[toast.variant],
-        )}
-        aria-hidden="true"
-      />
-      <p className="m-0 flex-1 text-[.84rem] leading-[1.4]">{toast.message}</p>
       <button
         type="button"
-        className="grid size-8 shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-surface-subtle hover:text-foreground focus-visible:outline-2 focus-visible:outline-primary-600"
+        className="absolute inset-0 bg-[rgb(15_15_18/34%)]"
         onClick={() => onDismiss(toast.id)}
-        aria-label="Close notification"
+        aria-hidden="true"
+        tabIndex={-1}
+      />
+      <section
+        className="notification-sheet-in relative w-full max-w-[28rem] rounded-t-[2rem] bg-surface px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[3.25rem] text-center text-foreground shadow-[0_-12px_40px_rgb(15_15_18/14%)] min-[861px]:mb-4 min-[861px]:rounded-[2rem]"
+        role={toast.variant === "error" ? "alert" : "status"}
+        aria-label={style.title}
       >
-        <X size={15} aria-hidden="true" />
-      </button>
-    </div>
-  );
-}
+        <button
+          ref={closeButtonRef}
+          type="button"
+          className="absolute -top-5 left-1/2 grid size-10 -translate-x-1/2 place-items-center rounded-full bg-surface text-foreground shadow-[0_3px_12px_rgb(15_15_18/12%)] focus-visible:outline-2 focus-visible:outline-primary-600"
+          onClick={() => onDismiss(toast.id)}
+          aria-label="Close notification"
+        >
+          <X size={17} aria-hidden="true" />
+        </button>
 
-function Toaster({
-  toasts,
-  onDismiss,
-}: {
-  toasts: ToastItem[];
-  onDismiss: (id: string) => void;
-}) {
-  return (
-    <div
-      className="pointer-events-none fixed bottom-[calc(env(safe-area-inset-bottom)+6rem)] left-1/2 z-50 grid w-[min(22rem,calc(100vw-2rem))] -translate-x-1/2 gap-2 min-[861px]:bottom-4"
-    >
-      {toasts.map((toast) => (
-        <ToastCard key={toast.id} onDismiss={onDismiss} toast={toast} />
-      ))}
-    </div>
+        <div className={cn("mx-auto mb-5 grid size-[5.75rem] place-items-center rounded-[2rem]", style.stripes)} aria-hidden="true">
+          <span className={cn("grid size-[3.7rem] place-items-center rounded-full", style.badge)}>
+            <Icon size={30} strokeWidth={2.5} />
+          </span>
+        </div>
+        <h2 className="m-0 text-[1.55rem] font-semibold tracking-[-.03em]">{style.title}</h2>
+        <p className="mx-auto mb-7 mt-2 max-w-[25rem] text-[.84rem] leading-[1.5] text-muted">
+          {toast.message}
+        </p>
+        <button
+          ref={doneButtonRef}
+          type="button"
+          className="min-h-[3rem] w-full rounded-full bg-primary-700 px-5 py-3 text-[.88rem] font-medium text-white transition-colors hover:bg-primary-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
+          onClick={() => onDismiss(toast.id)}
+        >
+          Done
+        </button>
+      </section>
+    </div>,
+    document.body,
   );
 }
 
@@ -120,7 +162,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
 
   const show = useCallback((variant: ToastVariant, message: string) => {
     const id = String(++idRef.current);
-    setToasts((current) => [...current.slice(-4), { id, variant, message }]);
+    setToasts((current) => [...current, { id, variant, message }]);
   }, []);
 
   const api = useMemo<ToastApi>(
@@ -135,12 +177,12 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (
     <ToastContext.Provider value={api}>
       {children}
-      <Toaster onDismiss={dismiss} toasts={toasts} />
+      {toasts[0] ? <ToastSheet key={toasts[0].id} onDismiss={dismiss} toast={toasts[0]} /> : null}
     </ToastContext.Provider>
   );
 }
 
-type ActionStateFeedback = { error?: string; success?: string };
+type ActionStateFeedback = { error?: string; success?: string; redirectTo?: string };
 
 export function useToastActionState<
   State extends ActionStateFeedback,
@@ -148,6 +190,7 @@ export function useToastActionState<
 >(
   action: (previousState: State, payload: Payload) => Promise<State>,
   initialState: State,
+  onRedirect?: (path: string) => void,
 ) {
   const [state, formAction, pending] = useActionState<State, Payload>(
     action,
@@ -156,12 +199,13 @@ export function useToastActionState<
   const toast = useToast();
 
   useEffect(() => {
-    if (state.error) toast.error(state.error);
-  }, [state.error, toast]);
-
-  useEffect(() => {
-    if (state.success) toast.success(state.success);
-  }, [state.success, toast]);
+    if (state.error) {
+      toast.error(state.error);
+    } else if (state.success) {
+      toast.success(state.success);
+      if (state.redirectTo) onRedirect?.(state.redirectTo);
+    }
+  }, [state, toast, onRedirect]);
 
   return [state, formAction, pending] as const;
 }

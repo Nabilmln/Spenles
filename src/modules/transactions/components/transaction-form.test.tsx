@@ -13,6 +13,10 @@ vi.mock("@/modules/accounts/actions/transfer-actions", () => ({
   createTransferAction: vi.fn(async () => ({ error: "Transaction could not be saved." })),
 }));
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+}));
+
 afterEach(cleanup);
 
 const accounts = [

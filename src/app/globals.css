@@ -191,18 +191,30 @@ body {
   font-size: 0.85rem;
 }
 
-@keyframes toast-in {
+@keyframes notification-sheet-in {
   from {
     opacity: 0;
-    transform: translateY(8px);
+    transform: translateY(24px);
   }
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
-.toast-in {
-  animation: toast-in 0.25s ease-out both;
+.notification-sheet-in {
+  animation: notification-sheet-in 0.28s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.notification-stripes-blue {
+  background: repeating-linear-gradient(135deg, #b9dcf3 0 3px, #e7f3fb 3px 7px);
+}
+
+.notification-stripes-red {
+  background: repeating-linear-gradient(135deg, #ecc9c9 0 3px, #faeeee 3px 7px);
+}
+
+.notification-stripes-ink {
+  background: repeating-linear-gradient(135deg, #c7c8ce 0 3px, #eeeff1 3px 7px);
 }
 
 @keyframes profile-curtain-in {

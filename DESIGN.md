@@ -197,6 +197,10 @@ Working controls use gently rounded corners, with cards slightly rounder than co
 - **Focus:** Ink border with a visible neutral outline. Disabled fields reduce opacity and signal the inactive state.
 - **Labels:** Medium-weight text stays near the field; helper and error text use quieter or semantic colors.
 
+### Notifications
+
+- **In-app feedback:** Success, error, and info messages use one white bottom sheet at a time with a striped badge, a short heading, the original action message, and a dark Done button. Success uses the analytics blue, errors retain a distinct red, and info uses ink. A floating close control and backdrop dismiss the sheet; otherwise it closes after four seconds. Messages that arrive together wait their turn. Save actions that change pages return success feedback and a destination; the shared hook queues the sheet before navigating so the result remains visible on the next page.
+
 ### Navigation
 
 - **Mobile header:** The shared header stays at the top while pages scroll, using the same canvas color without a separate panel treatment. The dashboard shows the bare open S logo at left and the profile portrait at right. Secondary screens keep their back control at left with the arrow in a small white circle, and the portrait at right. Five coordinated 3D illustrated portraits are assigned as stable default avatars by user ID; the same portrait appears in the profile sheet. Avatar customization is a later feature.

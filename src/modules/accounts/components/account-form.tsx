@@ -1,5 +1,7 @@
 "use client";
 
+import { useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { useToastActionState } from "@/components/ui/toast";
 import { Button } from "@/components/ui/button";
 import { AmountInput } from "@/components/ui/amount-input";
@@ -24,7 +26,9 @@ export function AccountForm({
     openingBalance: string;
   };
 }) {
-  const [, formAction, pending] = useToastActionState(action, {});
+  const router = useRouter();
+  const handleRedirect = useCallback((path: string) => router.push(path), [router]);
+  const [, formAction, pending] = useToastActionState(action, {}, handleRedirect);
   return (
     <form action={formAction} className="grid gap-4">
       {initial ? <input type="hidden" name="id" value={initial.id} /> : null}

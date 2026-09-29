@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { preserveOrAttachNow, formatJakartaDate } from "@/lib/dates/jakarta";
 import { requireSessionUser } from "@/lib/auth/require-session";
@@ -15,7 +14,7 @@ import { getTransaction, getTransactionOptions, listTransactions } from "../quer
 import { listTransactionHistory } from "../queries/transaction-history";
 import { transactionFilterSchema, type TransactionFilters } from "../schemas/transaction-filters";
 
-export type TransactionActionState = { error?: string };
+export type TransactionActionState = { error?: string; success?: string; redirectTo?: string };
 
 export async function getTransactionOptionsAction() {
   const user = await requireSessionUser();
@@ -116,7 +115,10 @@ export async function createTransactionAction(
   revalidatePath("/accounts");
   revalidatePath("/budgets");
   revalidatePath("/dashboard");
-  redirect("/transactions");
+  return {
+    success: parsed.data.type === "income" ? "Income recorded." : "Expense recorded.",
+    redirectTo: "/transactions",
+  };
 }
 
 export async function updateTransactionAction(
@@ -151,7 +153,7 @@ export async function updateTransactionAction(
   revalidatePath("/accounts");
   revalidatePath("/budgets");
   revalidatePath("/dashboard");
-  redirect("/transactions");
+  return { success: "Transaction updated.", redirectTo: "/transactions" };
 }
 
 export async function deleteTransactionAction(formData: FormData) {

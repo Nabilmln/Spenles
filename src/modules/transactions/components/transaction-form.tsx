@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import { useToastActionState } from "@/components/ui/toast";
 import { createTransferAction } from "@/modules/accounts/actions/transfer-actions";
@@ -63,6 +64,8 @@ export function TransactionForm({
   };
   defaultDate?: string;
 }) {
+  const router = useRouter();
+  const handleRedirect = useCallback((path: string) => router.push(path), [router]);
   const [, formAction, pending] = useToastActionState<TransactionActionState, FormData>(
     async (previous, data) => {
       if (data.get("type") === "savings") {
@@ -71,6 +74,7 @@ export function TransactionForm({
       return action(previous, data);
     },
     {},
+    handleRedirect,
   );
   const [type, setType] = useState<FlowType>(initial?.type ?? "expense");
   const [amount, setAmount] = useState(initial?.amount ?? "");
