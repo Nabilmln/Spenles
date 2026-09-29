@@ -9,6 +9,22 @@ import { cn } from "@/lib/utils";
 import { formatIdr } from "@/lib/money/format-idr";
 import { calculateExpression } from "../services/calculator";
 
+const numberFormatter = new Intl.NumberFormat("id-ID");
+
+function formatExpression(expression: string) {
+  if (!expression) return "Rp 0";
+
+  const formatted = expression.replace(/\d+|[+*/-]/gu, (token) => {
+    if (/^\d+$/u.test(token)) return numberFormatter.format(BigInt(token));
+    if (token === "*") return " × ";
+    if (token === "/") return " ÷ ";
+    if (token === "-") return " − ";
+    return " + ";
+  });
+
+  return `Rp ${formatted.trim()}`;
+}
+
 function KeypadButton({
   label,
   aria,
@@ -68,7 +84,18 @@ export function AmountCalculatorSheet({
       return null;
     }
   }, [expression]);
-  const displayExpression = expression.replaceAll("*", "\u00d7").replaceAll("/", "\u00f7");
+  const displayExpression = useMemo(() => formatExpression(expression), [expression]);
+  const previewTotal = useMemo(() => {
+    if (!expression) return "0";
+    if (result) return result;
+    if (!/[+*/-]$/u.test(expression)) return null;
+
+    try {
+      return calculateExpression(expression.slice(0, -1));
+    } catch {
+      return null;
+    }
+  }, [expression, result]);
 
   function append(char: string) {
     setExpression((current) => current + char);
@@ -116,11 +143,11 @@ export function AmountCalculatorSheet({
       }
     >
       <div className="flex min-h-[8.5rem] flex-col items-center justify-center gap-[.45rem] px-1 text-center">
-        <p className="m-0 max-w-full text-[clamp(2.15rem,10vw,3.25rem)] font-semibold leading-tight tracking-[-.035em] text-foreground tabular-nums [overflow-wrap:anywhere]" aria-live="polite">
-          {result ? formatIdr(result) : expression ? "\u2014" : formatIdr("0")}
-        </p>
-        <output className="min-h-[1.25rem] w-full truncate text-[.75rem] text-muted" aria-label="Calculator expression">
+        <p className="m-0 max-w-full text-[clamp(1.65rem,7vw,2.7rem)] font-semibold leading-tight tracking-[-.035em] text-foreground tabular-nums [overflow-wrap:anywhere]" aria-label="Calculator expression" aria-live="polite">
           {displayExpression}
+        </p>
+        <output className="min-h-[1.25rem] w-full text-[.75rem] text-muted tabular-nums" aria-label="Preview total" aria-live="polite">
+          Total: {previewTotal === null ? "—" : formatIdr(previewTotal)}
         </output>
       </div>
       <FormMessage>{calculatorError}</FormMessage>

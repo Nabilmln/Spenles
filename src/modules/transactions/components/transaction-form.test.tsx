@@ -108,7 +108,26 @@ describe("TransactionForm", () => {
     fireEvent.click(screen.getByRole("button", { name: /Enter amount/ }));
     fireEvent.click(screen.getByRole("button", { name: "1" }));
     fireEvent.click(screen.getByRole("button", { name: "Insert three zeros" }));
-    expect(screen.getByText(/Rp\s*1\.000/u)).toBeInTheDocument();
+    expect(screen.getByLabelText("Calculator expression")).toHaveTextContent(/Rp\s*1\.000/u);
+  });
+
+  it("shows the full expression and a running preview total", () => {
+    renderForm();
+    fireEvent.click(screen.getByRole("button", { name: /Enter amount/ }));
+    fireEvent.click(screen.getByRole("button", { name: "7" }));
+    fireEvent.click(screen.getByRole("button", { name: "Insert three zeros" }));
+    fireEvent.click(screen.getByRole("button", { name: "Multiply" }));
+
+    expect(screen.getByLabelText("Calculator expression")).toHaveTextContent(/Rp\s*7\.000\s*×/u);
+    expect(screen.getByLabelText("Preview total")).toHaveTextContent(/Rp\s*7\.000/u);
+    expect(screen.getByRole("button", { name: "Use Amount" })).toBeDisabled();
+
+    fireEvent.click(screen.getByRole("button", { name: "4" }));
+    fireEvent.click(screen.getByRole("button", { name: "Zero" }));
+
+    expect(screen.getByLabelText("Calculator expression")).toHaveTextContent(/Rp\s*7\.000\s*×\s*40/u);
+    expect(screen.getByLabelText("Preview total")).toHaveTextContent(/Rp\s*280\.000/u);
+    expect(screen.getByRole("button", { name: "Use Amount" })).toBeEnabled();
   });
 
   it("renders the savings-specific account fields but no category", () => {
