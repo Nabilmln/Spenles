@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import { Brand } from "@/components/layout/brand";
 import { CopySiteLink } from "./copy-site-link";
+import { ScrollStack, ScrollStackItem } from "./feature-scroll-stack";
 import { LandingMotion } from "./landing-motion";
 import { GithubLogo, LinkedinLogo } from "./social-logos";
 import styles from "./desktop-landing.module.css";
@@ -46,8 +47,8 @@ function IllustrativeLineChart({ id }: { id: string }) {
       ))}
       <line x1="8" x2="592" y1="150" y2="150" className={styles.lineChartGuide} />
       <path d={`${expensePath} L 592 150 L 8 150 Z`} fill={`url(#${id})`} />
-      <path d={linePath(income)} className={styles.lineChartIncome} />
-      <path d={expensePath} className={styles.lineChartExpense} />
+      <path d={linePath(income)} className={`${styles.lineChartIncome} landing-trend-line`} pathLength={1} />
+      <path d={expensePath} className={`${styles.lineChartExpense} landing-trend-line`} pathLength={1} />
     </svg>
   );
 }
@@ -203,8 +204,8 @@ export function DesktopLanding() {
               Each task has its own clear place.
             </p>
           </div>
-          <div className={styles.featureGrid}>
-            <article className={styles.splitFeature}>
+          <ScrollStack>
+            <ScrollStackItem className={styles.splitFeature}>
               <div className={styles.featureCopy}>
                 <h3 data-reveal="left">Settle the table, down to the last rupiah.</h3>
                 <p data-reveal="left" data-delay="70">
@@ -238,8 +239,8 @@ export function DesktopLanding() {
                   <Check size={14} /> Every share adds up
                 </p>
               </div>
-            </article>
-            <article className={styles.budgetFeature}>
+            </ScrollStackItem>
+            <ScrollStackItem className={styles.budgetFeature}>
               <div className={styles.featureCopy}>
                 <h3 data-reveal="up">Give your spending a plan.</h3>
                 <p data-reveal="up" data-delay="70">
@@ -261,8 +262,8 @@ export function DesktopLanding() {
                 </span>
                 <small>Rp 460,000 of Rp 800,000 used</small>
               </div>
-            </article>
-            <article className={styles.reportFeature}>
+            </ScrollStackItem>
+            <ScrollStackItem className={styles.reportFeature}>
               <div className={styles.featureCopy}>
                 <h3 data-reveal="up">See the story behind the numbers.</h3>
                 <p data-reveal="up" data-delay="70">
@@ -286,17 +287,23 @@ export function DesktopLanding() {
                   Jan <b>Jun</b> Dec
                 </span>
               </div>
-            </article>
-          </div>
-          <div className={styles.moreFeatures}>
-            <span data-reveal="up">Everything else you need</span>
-            <ul>
-              <li data-reveal="up">Income & expense tracking</li>
-              <li data-reveal="up" data-delay="50">Accounts & transfers</li>
-              <li data-reveal="up" data-delay="100">Custom categories</li>
-              <li data-reveal="up" data-delay="150">Data backup</li>
-            </ul>
-          </div>
+            </ScrollStackItem>
+            <ScrollStackItem className={styles.moreFeatureCard}>
+              <div className={styles.featureCopy}>
+                <h3 data-reveal="left">And many more features.</h3>
+                <p data-reveal="left" data-delay="70">
+                  The everyday details have a place too, from your accounts to
+                  the records you want to keep.
+                </p>
+              </div>
+              <ul className={styles.moreFeatureList} aria-label="More Spenles features">
+                <li data-reveal="right">Income & expense tracking</li>
+                <li data-reveal="right" data-delay="50">Accounts & transfers</li>
+                <li data-reveal="right" data-delay="100">Custom categories</li>
+                <li data-reveal="right" data-delay="150">Data backup</li>
+              </ul>
+            </ScrollStackItem>
+          </ScrollStack>
         </section>
         <section
           aria-labelledby="insights-title"
