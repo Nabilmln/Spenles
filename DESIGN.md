@@ -104,7 +104,7 @@ components:
 
 Spenles makes everyday financial information feel approachable and legible. Its mobile app uses compact white surfaces, gentle borders, and ink-black actions so amounts, actions, and status remain easy to scan. Poppins gives the interface a friendly, steady voice.
 
-The desktop landing uses the same open S mark, ink, font, and rounded forms at a more spacious scale. A centered three-phone hero leads into reasons to use the product, its main tools, an income/expense insights preview, and phone setup. The mark appears without a drawn container in the interface; mobile install icons use a plain paper canvas.
+The desktop landing uses the same open S mark, ink, font, and rounded forms at a more spacious scale. A centered three-phone illustration based on the app's home, transactions, and split-bill screens leads into reasons to use the product, its main tools, an income/expense insights preview, and phone setup. Only the upper phone portions remain visible; the lower edges fade into the white section below. The mark appears without a drawn container in the interface; mobile install icons use a plain paper canvas.
 
 **Key Characteristics:**
 - Light neutral canvas with crisp white working surfaces.
@@ -156,11 +156,11 @@ The mobile app is the working surface below 861px. It uses stacked cards, compac
 
 Visual refinement keeps each menu's sections, order, controls, and interactions intact. Pages load without staggered card entrances; motion is reserved for state feedback.
 
-At 861px and above, the desktop landing has five sections: centered introduction with three phone previews; reasons to use Spenles; feature stories led by split bills, budgets, and reports; a dark income/expense insights panel; and phone setup. The three-phone hero compresses at the mobile boundary; the insights panel stacks below 980px. These compositions are specific to the landing, while type, color, shape, and depth are shared.
+At 861px and above, the desktop landing has five sections: centered introduction with a three-phone illustration; open reasons to use Spenles; feature stories led by split bills, budgets, and reports; a pale income/expense insights panel; and phone setup. The illustration shows roughly three quarters of the phones before fading into white. The insights panel stacks below 980px. These compositions are specific to the landing, while type, color, shape, and depth are shared. Individual text and preview elements enter as they reach the viewport. The page stays visible without animation support and respects reduced-motion preferences. Section spacing establishes the rhythm without divider lines or numbered feature labels.
 
 ## Elevation & Depth
 
-The app uses pale canvas contrast and fine borders for most separation. A low ambient card shadow adds lift to working surfaces. Stronger shadows are reserved for floating mobile navigation, dialogs, and prominent landing phone previews. Dark feature panels use tonal contrast instead of many nested shadows.
+The app uses pale canvas contrast and fine borders for most separation. A low ambient card shadow adds lift to working surfaces. Stronger shadows are reserved for floating mobile navigation, dialogs, and focal landing previews.
 
 ### Shadow Vocabulary
 
@@ -171,7 +171,7 @@ The app uses pale canvas contrast and fine borders for most separation. A low am
 
 ## Shapes
 
-Working controls use gently rounded corners, with cards slightly rounder than controls. Larger financial cards and landing panels use broader corners. Navigation pills and landing actions are fully rounded. Fine borders help pale surfaces remain distinct, while large dark panels can stand on tonal contrast alone.
+Working controls use gently rounded corners, with cards slightly rounder than controls. Larger financial cards and landing panels use broader corners. Navigation pills and landing actions are fully rounded. Fine borders help pale surfaces remain distinct.
 
 ## Components
 
@@ -189,7 +189,7 @@ Working controls use gently rounded corners, with cards slightly rounder than co
 - **Financial card:** A large transparent cutout illustration shows one graphite card with lightly textured surfaces and “VISA” lettering baked into the image. It has no issuer identity or fake card details. The front pocket leaves room for the live lower-left “Balance:” label, total, and adjacent visibility control rendered by the UI. The dashboard card omits income and expense totals. No rectangular dark panel surrounds the cutout. The illustration is decorative and does not imply an issued payment card.
 - **Statistics:** Mobile transaction and report trends use line charts. The transaction overview shows month-to-date cumulative expenses under a Total Expenses label, with the first and last calendar dates of the current Jakarta month at the chart ends. Its blue basis curve and restrained fill fade to transparent over faint vertical grey guides and a matching grey baseline above the dates, without a surrounding card. Future-dated transactions do not enter the current total, and the line ends at today. The Reports cash-flow chart uses the same open chart treatment, with smooth ink-black income and blue expense lines and a matching fading fill under each. Its first and last labels show the selected filter dates exactly; zero-value days or months retain their proper positions within that range. Tooltips identify both IDR series. Labels and values carry meaning beyond color.
 - **PDF reports:** Exported reports use the same ink, paper, and semantic colors. Noto Sans is embedded for dependable PDF glyph coverage; it is not an app interface font.
-- **Landing insights:** A large dark panel frames illustrative income and expense trends from January through December. Landing chart previews use smooth ink and sky-blue lines, a fading blue expense fill, and faint grey guides. Budget progress in the landing and app uses sky-blue fill, a small position marker, and a clearly blue-tinted striped remainder. Budget status stays in readable text outside the track, with semantic warning or exceeded color. The page reserves its one directional arrow for the main phone setup action; the phone setup section returns to a pale surface.
+- **Landing insights:** A pale panel holds a white preview of illustrative income and expense trends from January through December. Landing chart previews use smooth ink and sky-blue lines, a fading blue expense fill, and faint grey guides. Budget progress in the landing and app uses sky-blue fill, a small position marker, and a clearly blue-tinted striped remainder. Budget status stays in readable text outside the track, with semantic warning or exceeded color. The page reserves its one directional arrow for the main phone setup action; the phone setup section is open on white.
 
 ### Inputs / Fields
 
