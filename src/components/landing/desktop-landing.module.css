@@ -26,8 +26,7 @@
 .why,
 .features,
 .insights,
-.getStarted,
-.footer {
+.getStarted {
   width: min(100% - 7rem, 1340px);
   margin-inline: auto;
 }
@@ -878,42 +877,73 @@
   display: none;
 }
 .footer {
+  width: 100%;
+  border-radius: 38px 38px 0 0;
+  background: #171717;
+  color: #fff;
+}
+.footerInner {
+  width: min(100% - 7rem, 1340px);
+  margin-inline: auto;
+  padding-block: 4rem 2rem;
+}
+.footerTop {
   display: flex;
   justify-content: space-between;
-  gap: 2rem;
-  padding-block: 2.7rem 3.5rem;
+  align-items: start;
+  gap: 3rem;
+  padding-bottom: 4rem;
+}
+.footerIdentity :global(a) {
+  color: #fff;
+}
+.footerIdentity :global(img) {
+  filter: brightness(0) invert(1);
 }
 .footerIdentity p {
-  margin: 0.9rem 0 0;
-  color: #777a75;
-  font-size: 0.76rem;
+  margin: 1.1rem 0 0;
+  color: #b3b3b0;
+  font-size: 0.83rem;
 }
-.footerCreator {
+.footerContact {
   display: grid;
   justify-items: end;
-  gap: 0.8rem;
-  font-size: 0.76rem;
+  gap: 0.9rem;
+  font-size: 0.78rem;
   font-weight: 500;
+}
+.footerContact > span {
+  color: #b3b3b0;
 }
 .footerLinks {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.65rem;
 }
 .footerLinks a {
   display: grid;
-  width: 39px;
-  height: 39px;
+  width: 44px;
+  height: 44px;
   place-items: center;
-  border: 1px solid #dfe1df;
+  border: 1px solid #4c4c4a;
   border-radius: 50%;
-  background: #fff;
-  color: #262826;
+  background: #242423;
+  color: #fff;
   transition: background 200ms ease, color 200ms ease, transform 200ms ease;
 }
 .footerLinks a:hover {
   transform: translateY(-2px);
-  background: #171717;
-  color: #fff;
+  background: #fff;
+  color: #171717;
+}
+.footer a:focus-visible {
+  outline-color: #fff;
+}
+.footerCopyright {
+  margin: 0;
+  padding-top: 1.5rem;
+  border-top: 1px solid #3c3c3a;
+  color: #b3b3b0;
+  font-size: 0.75rem;
 }
 @media (max-width: 1220px) {
   .header,
@@ -922,7 +952,7 @@
   .features,
   .insights,
   .getStarted,
-  .footer { width: min(100% - 4rem, 1120px); }
+  .footerInner { width: min(100% - 4rem, 1120px); }
 }
 @media (max-width: 980px) {
   .header,
@@ -931,7 +961,7 @@
   .features,
   .insights,
   .getStarted,
-  .footer { width: calc(100% - 3rem); }
+  .footerInner { width: calc(100% - 3rem); }
   .headerNav { gap: 1rem; }
   .headerNav a:first-child { display: none; }
   .hero { padding-top: 4.2rem; }
@@ -947,6 +977,7 @@
   .getStarted { gap: 3rem; padding-block: 5rem 6rem; }
 }
 @media (max-width: 900px) {
+  .footerTop { gap: 2rem; }
   .splitFeature,
   .budgetFeature,
   .reportFeature,

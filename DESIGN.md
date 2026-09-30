@@ -210,6 +210,7 @@ Working controls use gently rounded corners, with cards slightly rounder than co
 - **Brand:** The shared open S in ink anchors app and landing navigation without a drawn tile. Favicon and install icons use the same vector; opaque PWA canvases and centered Android maskable exports meet platform requirements.
 - **Landing:** Simple text links and one dark action keep the desktop header light. It stays visible while scrolling, and section links leave space for its height.
 - **Landing guidance:** The hero's secondary action has a white surface and ink outline. Setup steps pair exact browser labels with small icon cues and optional keyboard shortcuts; home-screen actions use dark emphasis within quieter explanatory text.
+- **Landing footer:** A full-width ink surface with rounded top corners closes the page. The white brand mark and short product line sit opposite a labeled Developer contact group; a readable copyright line finishes the section without displaying the creator's name.
 
 ## Do's and Don'ts
 

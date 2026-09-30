@@ -359,17 +359,22 @@ export function DesktopLanding() {
         </section>
       </main>
       <footer className={styles.footer}>
-        <div className={styles.footerIdentity} data-reveal="left">
-          <Brand showLabel />
-          <p>Less complexity. More confidence.</p>
-        </div>
-        <div className={styles.footerCreator} data-reveal="right">
-          <span>Created by Nabil Maulana</span>
-          <div className={styles.footerLinks} aria-label="Creator contact links">
-            <a href="https://www.linkedin.com/in/mnabilmaulana/" target="_blank" rel="noopener noreferrer" aria-label="Nabil Maulana on LinkedIn"><LinkedinLogo /></a>
-            <a href="https://github.com/Nabilmln" target="_blank" rel="noopener noreferrer" aria-label="Nabil Maulana on GitHub"><GithubLogo /></a>
-            <a href="mailto:nabilmaulana212@gmail.com" aria-label="Email Nabil Maulana"><Mail size={19} aria-hidden="true" /></a>
+        <div className={styles.footerInner}>
+          <div className={styles.footerTop}>
+            <div className={styles.footerIdentity} data-reveal="left">
+              <Brand showLabel />
+              <p>Less complexity. More confidence.</p>
+            </div>
+            <div className={styles.footerContact} data-reveal="right">
+              <span>Developer</span>
+              <div className={styles.footerLinks} aria-label="Developer contact links">
+                <a href="https://www.linkedin.com/in/mnabilmaulana/" target="_blank" rel="noopener noreferrer" aria-label="Developer on LinkedIn"><LinkedinLogo /></a>
+                <a href="https://github.com/Nabilmln" target="_blank" rel="noopener noreferrer" aria-label="Developer on GitHub"><GithubLogo /></a>
+                <a href="mailto:nabilmaulana212@gmail.com" aria-label="Email the developer"><Mail size={19} aria-hidden="true" /></a>
+              </div>
+            </div>
           </div>
+          <p className={styles.footerCopyright}>© {new Date().getFullYear()} Spenles. All rights reserved.</p>
         </div>
       </footer>
     </div>
