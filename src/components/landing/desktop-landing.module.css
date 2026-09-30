@@ -751,14 +751,28 @@
   color: #fff;
   font-size: 0.74rem;
 }
-.setupSteps kbd,
-.setupSteps code {
-  padding: 0.12rem 0.35rem;
-  border: 1px solid #e3e5e6;
-  border-radius: 5px;
-  background: #f5f6f7;
-  font-size: 0.78rem;
-  white-space: nowrap;
+.setupSteps li p {
+  margin: 0;
+}
+.installGuides {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+.installGuides > div {
+  padding-left: 0.8rem;
+  border-left: 1px solid #d5d9d9;
+}
+.installGuides strong {
+  display: block;
+  font-size: 0.76rem;
+}
+.setupSteps .installGuides p {
+  margin-top: 0.35rem;
+  color: #62645f;
+  font-size: 0.75rem;
+  line-height: 1.6;
 }
 .setupNote {
   margin: 0.7rem 0 0;

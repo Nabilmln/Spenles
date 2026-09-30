@@ -7,7 +7,7 @@ import styles from "./desktop-landing.module.css";
 const tabs = [
   { id: "mobile", label: "From Mobile" },
   { id: "desktop", label: "From Desktop" },
-  { id: "personal", label: "Personal Use" },
+  { id: "personal", label: "Personal Setup" },
 ] as const;
 
 type TabId = (typeof tabs)[number]["id"];
@@ -73,7 +73,20 @@ export function GettingStartedTabs() {
             <ol className={styles.setupSteps}>
               <SetupStep number={1}>Open this site in your phone&apos;s browser.</SetupStep>
               <SetupStep number={2}>Create an account or sign in.</SetupStep>
-              <SetupStep number={3}>Add Spenles to your home screen if you like, then record your first transaction.</SetupStep>
+              <SetupStep number={3}>
+                <p>Optional: add Spenles to your home screen.</p>
+                <div className={styles.installGuides}>
+                  <div>
+                    <strong>iPhone · Safari</strong>
+                    <p>Tap Share (or the page menu, then Share), then Add to Home Screen. If shown, turn on Open as Web App, then tap Add.</p>
+                  </div>
+                  <div>
+                    <strong>Android · Chrome</strong>
+                    <p>Tap the three-dot menu, look for Install or Add to Home screen, then confirm.</p>
+                  </div>
+                </div>
+              </SetupStep>
+              <SetupStep number={4}>Open Spenles and record your first transaction.</SetupStep>
             </ol>
             <CopySiteLink />
           </>
@@ -82,23 +95,21 @@ export function GettingStartedTabs() {
           <>
             <ol className={styles.setupSteps}>
               <SetupStep number={1}>Open this site in Chrome or Edge on your computer.</SetupStep>
-              <SetupStep number={2}>Open Developer Tools with <kbd>F12</kbd> or <kbd>⌘⌥I</kbd> on Mac.</SetupStep>
-              <SetupStep number={3}>Turn on the device toolbar with <kbd>Ctrl+Shift+M</kbd> or <kbd>⌘⇧M</kbd> on Mac. Choose a phone width below 861 px.</SetupStep>
+              <SetupStep number={2}>Right-click the page and choose Inspect. A browser tools panel will open.</SetupStep>
+              <SetupStep number={3}>Click the phone-and-tablet icon at the top of that panel, then choose a phone from the device menu.</SetupStep>
             </ol>
-            <p className={styles.setupNote}>This previews the phone layout. Use a real phone to install the PWA.</p>
+            <p className={styles.setupNote}>This previews the phone layout on your computer. To add Spenles to your home screen, use a real phone and follow From Mobile.</p>
             <CopySiteLink />
           </>
         )}
         {active === "personal" && (
           <>
             <ol className={styles.setupSteps}>
-              <SetupStep number={1}>Open the repository and follow its README. Repository access is required.</SetupStep>
-              <SetupStep number={2}>Clone it, use Node.js 22, and run <code>npm ci</code>.</SetupStep>
-              <SetupStep number={3}>Copy <code>.env.example</code> to <code>.env.local</code> and configure your own Neon database and Auth.</SetupStep>
-              <SetupStep number={4}>Run <code>npm run db:migrate</code>, then <code>npm run dev</code>.</SetupStep>
+              <SetupStep number={1}>Open the Spenles project page. You will need access to it.</SetupStep>
+              <SetupStep number={2}>Follow the setup instructions in its README to run your own copy.</SetupStep>
             </ol>
             <a className={styles.repositoryLink} href="https://github.com/Nabilmln/Spenles" target="_blank" rel="noopener noreferrer">
-              Open Spenles repository
+              Open Spenles project page
             </a>
           </>
         )}

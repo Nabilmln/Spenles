@@ -278,8 +278,8 @@ export function DesktopLanding() {
               <div className={styles.featureCopy}>
                 <h3 data-reveal="up">See the story behind the numbers.</h3>
                 <p data-reveal="up" data-delay="70">
-                  Review cash flow, category spending, and income against
-                  expenses, then export a PDF report.
+                  See what came in, what went out, and where you spent.
+                  Download a report when you need one.
                 </p>
               </div>
               <div
@@ -288,7 +288,7 @@ export function DesktopLanding() {
                 data-reveal="up"
               >
                 <div>
-                  <span>Monthly cash flow</span>
+                  <span>Money in and out</span>
                   <ChartNoAxesCombined size={17} />
                 </div>
                 <div className={styles.reportDemoChart}>
@@ -311,7 +311,7 @@ export function DesktopLanding() {
                 <li data-reveal="right">Income & expense tracking</li>
                 <li data-reveal="right" data-delay="50">Accounts & transfers</li>
                 <li data-reveal="right" data-delay="100">Custom categories</li>
-                <li data-reveal="right" data-delay="150">Data backup</li>
+                <li data-reveal="right" data-delay="150">Save a copy of your records</li>
               </ul>
             </ScrollStackItem>
           </ScrollStack>
@@ -334,10 +334,10 @@ export function DesktopLanding() {
                 <Check size={17} /> Compare income with expenses
               </li>
               <li data-reveal="left" data-delay="60">
-                <Check size={17} /> Review cash flow and category spending
+                <Check size={17} /> See where your money went
               </li>
               <li data-reveal="left" data-delay="120">
-                <Check size={17} /> Export a personal PDF report
+                <Check size={17} /> Download a personal report
               </li>
             </ul>
           </div>
@@ -352,7 +352,7 @@ export function DesktopLanding() {
             <h2 id="get-started-title" data-reveal="left">Choose how to begin.</h2>
             <p data-reveal="left">
               Use Spenles on your phone, preview its phone layout on desktop,
-              or set up a personal development copy.
+              or set up your own copy.
             </p>
           </div>
           <GettingStartedTabs />
