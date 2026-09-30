@@ -14,9 +14,11 @@ Pada layar selebar 861 px atau lebih, situs menampilkan landing page tentang
 Spenles dengan lima bagian: pengenalan, alasan penggunaan, fitur utama
 (split bill, budget, laporan), insight pemasukan/pengeluaran, dan panduan
 ponsel. Tampilan memakai warna hitam dan putih serta logo S tanpa bingkai.
-Tombol “Try Spenles on your phone” menuju petunjuk penggunaan PWA di
-ponsel dan tombol untuk menyalin alamat situs. Aplikasi keuangan tetap khusus
-untuk tampilan mobile. Lihat `PRODUCT.md` untuk konteks produk ringkas dan
+Tombol “Try Spenles” menuju tiga panduan: memakai aplikasi di ponsel, mencoba
+tampilan ponsel lewat device toolbar di browser desktop, atau menjalankan
+salinan pengembangan pribadi dari repositori. Tampilan desktop hanya untuk
+pratinjau; aplikasi keuangan tetap dirancang untuk ponsel. Lihat `PRODUCT.md`
+untuk konteks produk ringkas dan
 `DESIGN.md` untuk sistem visual.
 
 Spenles adalah **Progressive Web App (PWA)**: berbasis web, tetapi dapat

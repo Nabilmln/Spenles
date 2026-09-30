@@ -111,6 +111,10 @@
   line-height: 1.07;
   text-wrap: balance;
 }
+.hero h1 span,
+.heroDescriptionText {
+  display: block;
+}
 .heroCopy > p {
   max-width: 54ch;
   margin: 1.4rem 0 0;
@@ -649,29 +653,101 @@
 .getStarted h2 {
   max-width: 13ch;
 }
-.steps {
+.setupChooser {
+  min-width: 0;
   align-self: center;
 }
-.steps > div:not(.linkTool) {
-  display: flex;
-  align-items: center;
-  gap: 1.2rem;
-  min-height: 64px;
+.setupTabs {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.25rem;
+  padding: 0.3rem;
+  border: 1px solid #e2e4e5;
+  border-radius: 999px;
+  background: #f2f3f4;
 }
-.steps > div:not(.linkTool) > span {
+.setupTabs button {
+  min-height: 46px;
+  padding: 0.55rem 0.7rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #555853;
+  cursor: pointer;
+  font-size: 0.77rem;
+  font-weight: 600;
+  white-space: nowrap;
+  transition: background 180ms ease, color 180ms ease;
+}
+.setupTabs button[aria-selected="true"] {
+  background: #171717;
+  color: #fff;
+}
+.setupTabs button:focus-visible {
+  outline: 3px solid #4c4c48;
+  outline-offset: 2px;
+}
+.setupPanel {
+  min-height: 345px;
+  padding-top: 1.35rem;
+}
+.setupSteps {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.setupSteps li {
+  display: grid;
+  grid-template-columns: 29px minmax(0, 1fr);
+  align-items: start;
+  gap: 1.1rem;
+  padding: 0.55rem 0;
+  font-size: 0.84rem;
+  line-height: 1.65;
+}
+.setupSteps li > span {
   display: grid;
   width: 29px;
   height: 29px;
-  flex: 0 0 29px;
   place-items: center;
   border-radius: 50%;
   background: #1b1b1b;
   color: #fff;
   font-size: 0.74rem;
 }
-.steps p {
-  margin: 0;
-  font-size: 0.87rem;
+.setupSteps kbd,
+.setupSteps code {
+  padding: 0.12rem 0.35rem;
+  border: 1px solid #e3e5e6;
+  border-radius: 5px;
+  background: #f5f6f7;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+.setupNote {
+  margin: 0.7rem 0 0;
+  color: #62645f;
+  font-size: 0.76rem;
+  line-height: 1.6;
+}
+.repositoryLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  margin-top: 1.25rem;
+  padding: 0.65rem 1.1rem;
+  border-radius: 999px;
+  background: #171717;
+  color: #fff;
+  font-size: 0.77rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.repositoryLink:hover {
+  background: #363636;
 }
 .linkTool {
   display: grid;

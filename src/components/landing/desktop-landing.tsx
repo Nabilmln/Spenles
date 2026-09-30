@@ -8,8 +8,9 @@ import {
   ReceiptText,
 } from "lucide-react";
 import { Brand } from "@/components/layout/brand";
-import { CopySiteLink } from "./copy-site-link";
 import { ScrollStack, ScrollStackItem } from "./feature-scroll-stack";
+import { GettingStartedTabs } from "./getting-started-tabs";
+import { LandingEntrance } from "./landing-entrance";
 import { LandingMotion } from "./landing-motion";
 import { GithubLogo, LinkedinLogo } from "./social-logos";
 import styles from "./desktop-landing.module.css";
@@ -112,32 +113,34 @@ export function DesktopLanding() {
   return (
     <div className={styles.landing} lang="en" data-landing-root>
       <LandingMotion />
+      <LandingEntrance />
       <header className={styles.header}>
         <Brand showLabel />
-        <nav aria-label="Landing page" className={styles.headerNav}>
+        <nav aria-label="Landing page" className={styles.headerNav} data-entry-nav>
           <a href="#why-spenles">Why Spenles</a>
           <a href="#features">Features</a>
           <a href="#insights">Insights</a>
-          <a href="#get-started">Get started</a>
         </nav>
-        <a className={styles.headerAction} href="#get-started">
+        <a className={styles.headerAction} href="#get-started" data-entry-nav>
           Try Spenles
         </a>
       </header>
       <main>
         <section aria-labelledby="landing-title" className={styles.hero}>
           <div className={styles.heroCopy}>
-            <h1 id="landing-title" data-reveal="up">Your money, clearly in view.</h1>
+            <h1 id="landing-title" data-reveal="up"><span data-entry-title>Your money, clearly in view.</span></h1>
             <p data-reveal="up" data-delay="80">
-              Spenles brings everyday spending, shared bills, budgets, and
-              reports into one personal finance app for your phone.
+              <span className={styles.heroDescriptionText} data-entry-description>
+                Spenles brings everyday spending, shared bills, budgets, and
+                reports into one personal finance app for your phone.
+              </span>
             </p>
             <div className={styles.heroActions} data-reveal="up" data-delay="140">
-              <a className={styles.primaryAction} href="#get-started">
+              <a className={styles.primaryAction} href="#get-started" data-entry-action>
                 Try Spenles on your phone{" "}
                 <ArrowRight aria-hidden="true" size={18} />
               </a>
-              <a className={styles.secondaryAction} href="#features">
+              <a className={styles.secondaryAction} href="#features" data-entry-action>
                 Explore the features
               </a>
             </div>
@@ -338,27 +341,13 @@ export function DesktopLanding() {
           id="get-started"
         >
           <div className={styles.getStartedIntro}>
-            <h2 id="get-started-title" data-reveal="left">Start on the phone in your hand.</h2>
+            <h2 id="get-started-title" data-reveal="left">Choose how to begin.</h2>
             <p data-reveal="left">
-              Open Spenles in your mobile browser. After signing in, you can add
-              it to your home screen for quick access.
+              Use Spenles on your phone, preview its phone layout on desktop,
+              or set up a personal development copy.
             </p>
           </div>
-          <div className={styles.steps}>
-            <div data-reveal="right">
-              <span>1</span>
-              <p>Open this site on your phone.</p>
-            </div>
-            <div data-reveal="right" data-delay="60">
-              <span>2</span>
-              <p>Create an account or sign in.</p>
-            </div>
-            <div data-reveal="right" data-delay="120">
-              <span>3</span>
-              <p>Record your first transaction.</p>
-            </div>
-            <CopySiteLink />
-          </div>
+          <GettingStartedTabs />
         </section>
       </main>
       <footer className={styles.footer}>

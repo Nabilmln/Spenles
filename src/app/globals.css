@@ -66,6 +66,15 @@ html {
   background: var(--background);
 }
 
+@media (min-width: 861px) {
+  html:has([data-landing-root]) {
+    scrollbar-width: none;
+  }
+  html:has([data-landing-root])::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 body {
   min-height: 100vh;
   margin: 0;

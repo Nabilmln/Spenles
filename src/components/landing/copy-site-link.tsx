@@ -22,7 +22,7 @@ export function CopySiteLink() {
   }
 
   return (
-    <div className={styles.linkTool} data-reveal="right" data-delay="180">
+    <div className={styles.linkTool}>
       <span className={styles.siteUrl} title={siteUrl}>
         {siteUrl || "This site's address"}
       </span>

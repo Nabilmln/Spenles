@@ -29,9 +29,10 @@ investment, or professional accounting service.
 
 - The finance app renders below 861px. At wider viewports, the site shows a
   landing page about Spenles instead of the finance interface.
-- The desktop landing's â€œTry Spenles on your phoneâ€ action leads to setup
-  steps on the page: open the site on a phone, create an account or sign in,
-  and record a first transaction. Visitors can copy the site link.
+- The desktop landing Try Spenles action leads to three setup paths: use the
+  app on a phone, preview its phone layout with browser device tools, or run
+  a personal development copy with repository access and separate service
+  credentials. The desktop preview does not make the finance UI a desktop app.
 - Users enter and review amounts in IDR. Financial periods use Asia/Jakarta.
 - The intended product UI language is English throughout. The current UI
   still mixes English and Indonesian; that is implementation drift, not a
