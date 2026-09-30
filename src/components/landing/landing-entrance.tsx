@@ -16,24 +16,27 @@ export function LandingEntrance() {
       context = undefined;
       if (reducedMotion.matches || !root?.getClientRects().length) return;
 
-      const title = root.querySelector<HTMLElement>("[data-entry-title]");
+      const logo = root.querySelector<HTMLElement>("[data-entry-logo]");
+      const words = root.querySelectorAll<HTMLElement>("[data-entry-word]");
       const description = root.querySelector<HTMLElement>("[data-entry-description]");
       const buttons = root.querySelectorAll<HTMLElement>("[data-entry-action]");
       const navigation = root.querySelectorAll<HTMLElement>("[data-entry-nav]");
-      if (!title || !description || !buttons.length || !navigation.length) return;
+      if (!logo || !words.length || !description || !buttons.length || !navigation.length) return;
 
       context = gsap.context(() => {
-        gsap.set(title, { clipPath: "inset(0 0 100% 0)", y: 28 });
+        gsap.set(logo, { autoAlpha: 0, y: -16, scale: 0.96 });
+        gsap.set(words, { autoAlpha: 0, yPercent: -110 });
         gsap.set(description, { autoAlpha: 0, filter: "blur(8px)", y: 14 });
-        gsap.set(buttons, { autoAlpha: 0, y: 28, scale: 0.94 });
+        gsap.set(buttons, { autoAlpha: 0, x: (index: number) => index === 0 ? -36 : 36 });
         gsap.set(navigation, { clipPath: "inset(0 0 100% 0)", y: -14 });
 
         const timeline = gsap.timeline({ defaults: { ease: "power3.out" } });
         timeline
-          .to(title, { clipPath: "inset(0 0 0% 0)", y: 0, duration: 0.85 }, 0.1)
-          .to(description, { autoAlpha: 1, filter: "blur(0px)", y: 0, duration: 0.78 }, 0.42)
-          .to(buttons, { autoAlpha: 1, y: 0, scale: 1, duration: 0.62, stagger: 0.12 }, 1.08)
-          .to(navigation, { clipPath: "inset(0 0 0% 0)", y: 0, duration: 0.76, stagger: 0.1 }, 2);
+          .to(logo, { autoAlpha: 1, y: 0, scale: 1, duration: 0.68 }, 0.08)
+          .to(words, { autoAlpha: 1, yPercent: 0, duration: 0.68, stagger: 0.12 }, 0.18)
+          .to(description, { autoAlpha: 1, filter: "blur(0px)", y: 0, duration: 0.72 }, 0.74)
+          .to(buttons, { autoAlpha: 1, x: 0, duration: 0.7, stagger: 0.1 }, 1.05)
+          .to(navigation, { clipPath: "inset(0 0 0% 0)", y: 0, duration: 0.72, stagger: 0.08 }, 1);
       }, root);
     }
 

@@ -44,7 +44,7 @@ export function GettingStartedTabs() {
 
   return (
     <div className={styles.setupChooser} data-reveal="right">
-      <div className={styles.setupTabs} role="tablist" aria-label="Ways to try Spenles" onKeyDown={onTabKeyDown}>
+      <div className={styles.setupTabs} data-active={active} role="tablist" aria-label="Ways to try Spenles" onKeyDown={onTabKeyDown}>
         {tabs.map((tab) => (
           <button
             key={tab.id}

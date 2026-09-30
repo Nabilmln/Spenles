@@ -48,6 +48,9 @@
   font-size: 1.05rem;
   letter-spacing: -0.035em;
 }
+.headerBrand {
+  flex: 0 0 auto;
+}
 .headerNav {
   display: flex;
   align-items: center;
@@ -111,9 +114,16 @@
   line-height: 1.07;
   text-wrap: balance;
 }
-.hero h1 span,
 .heroDescriptionText {
   display: block;
+}
+.heroWordMask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+.heroWordMask > span {
+  display: inline-block;
 }
 .heroCopy > p {
   max-width: 54ch;
@@ -658,6 +668,7 @@
   align-self: center;
 }
 .setupTabs {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.25rem;
@@ -666,7 +677,26 @@
   border-radius: 999px;
   background: #f2f3f4;
 }
+.setupTabs::before {
+  position: absolute;
+  top: 0.3rem;
+  bottom: 0.3rem;
+  left: 0.3rem;
+  width: calc((100% - 1.1rem) / 3);
+  border-radius: 999px;
+  background: #171717;
+  content: "";
+  transition: transform 440ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.setupTabs[data-active="desktop"]::before {
+  transform: translateX(calc(100% + 0.25rem));
+}
+.setupTabs[data-active="personal"]::before {
+  transform: translateX(calc(200% + 0.5rem));
+}
 .setupTabs button {
+  position: relative;
+  z-index: 1;
   min-height: 46px;
   padding: 0.55rem 0.7rem;
   border: 0;
@@ -677,10 +707,9 @@
   font-size: 0.77rem;
   font-weight: 600;
   white-space: nowrap;
-  transition: background 180ms ease, color 180ms ease;
+  transition: color 220ms ease;
 }
 .setupTabs button[aria-selected="true"] {
-  background: #171717;
   color: #fff;
 }
 .setupTabs button:focus-visible {
@@ -690,6 +719,11 @@
 .setupPanel {
   min-height: 345px;
   padding-top: 1.35rem;
+  animation: setupPanelIn 380ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes setupPanelIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 .setupSteps {
   display: grid;
@@ -877,5 +911,8 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .whyList article,
-  .footerLinks a { transition: none !important; }
+  .footerLinks a,
+  .setupTabs::before,
+  .setupTabs button { transition: none !important; }
+  .setupPanel { animation: none !important; }
 }

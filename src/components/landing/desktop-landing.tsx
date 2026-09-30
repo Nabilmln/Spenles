@@ -18,6 +18,7 @@ import styles from "./desktop-landing.module.css";
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 const income = [49, 56, 53, 63, 59, 68, 64, 73, 70, 77, 74, 84];
 const expenses = [27, 34, 31, 43, 39, 47, 45, 54, 49, 59, 55, 64];
+const heroTitleWords = ["Your", "money,", "clearly", "in", "view."];
 
 function linePath(values: number[]) {
   const points = values.map((value, index) => ({
@@ -115,7 +116,7 @@ export function DesktopLanding() {
       <LandingMotion />
       <LandingEntrance />
       <header className={styles.header}>
-        <Brand showLabel />
+        <div className={styles.headerBrand} data-entry-logo><Brand showLabel /></div>
         <nav aria-label="Landing page" className={styles.headerNav} data-entry-nav>
           <a href="#why-spenles">Why Spenles</a>
           <a href="#features">Features</a>
@@ -128,7 +129,14 @@ export function DesktopLanding() {
       <main>
         <section aria-labelledby="landing-title" className={styles.hero}>
           <div className={styles.heroCopy}>
-            <h1 id="landing-title" data-reveal="up"><span data-entry-title>Your money, clearly in view.</span></h1>
+            <h1 id="landing-title" data-reveal="up">
+              {heroTitleWords.map((word, index) => (
+                <span key={word}>
+                  <span className={styles.heroWordMask}><span data-entry-word>{word}</span></span>
+                  {index < heroTitleWords.length - 1 ? " " : null}
+                </span>
+              ))}
+            </h1>
             <p data-reveal="up" data-delay="80">
               <span className={styles.heroDescriptionText} data-entry-description>
                 Spenles brings everyday spending, shared bills, budgets, and
