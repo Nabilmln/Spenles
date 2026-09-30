@@ -209,6 +209,7 @@ Working controls use gently rounded corners, with cards slightly rounder than co
 - **Mobile app:** A solid graphite floating bar holds the existing icon links and expands the active label in a quiet translucent pill. The add button is white with an ink icon.
 - **Brand:** The shared open S in ink anchors app and landing navigation without a drawn tile. Favicon and install icons use the same vector; opaque PWA canvases and centered Android maskable exports meet platform requirements.
 - **Landing:** Simple text links and one dark action keep the desktop header light. It stays visible while scrolling, and section links leave space for its height.
+- **Landing guidance:** The hero's secondary action has a white surface and ink outline. Setup steps pair exact browser labels with small icon cues and optional keyboard shortcuts; home-screen actions use dark emphasis within quieter explanatory text.
 
 ## Do's and Don'ts
 

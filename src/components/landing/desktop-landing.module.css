@@ -144,10 +144,21 @@
 .secondaryAction {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.4rem;
-  min-height: 44px;
+  min-height: 56px;
+  padding: 0.7rem 1.4rem;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
   font-size: 0.82rem;
   font-weight: 600;
+  transition: background 180ms ease, transform 180ms ease;
+}
+.secondaryAction:hover {
+  transform: translateY(-2px);
+  background: #f3f3f1;
 }
 .heroVisual {
   position: relative;
@@ -764,7 +775,7 @@
   padding-left: 0.8rem;
   border-left: 1px solid #d5d9d9;
 }
-.installGuides strong {
+.installGuides > div > strong {
   display: block;
   font-size: 0.76rem;
 }
@@ -773,6 +784,24 @@
   color: #62645f;
   font-size: 0.75rem;
   line-height: 1.6;
+}
+.stepEmphasis {
+  color: #171717;
+  font-weight: 600;
+}
+.stepIcon {
+  display: inline-block;
+  color: #171717;
+  vertical-align: -0.2em;
+}
+.shortcutKey {
+  padding: 0.08rem 0.3rem;
+  border: 1px solid #e3e5e6;
+  border-radius: 5px;
+  background: #f5f6f7;
+  color: #171717;
+  font-size: 0.78rem;
+  white-space: nowrap;
 }
 .setupNote {
   margin: 0.7rem 0 0;

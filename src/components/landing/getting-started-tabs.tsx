@@ -1,5 +1,6 @@
 "use client";
 
+import { EllipsisVertical, Share, TabletSmartphone } from "lucide-react";
 import { useId, useState, type KeyboardEvent, type ReactNode } from "react";
 import { CopySiteLink } from "./copy-site-link";
 import styles from "./desktop-landing.module.css";
@@ -78,11 +79,11 @@ export function GettingStartedTabs() {
                 <div className={styles.installGuides}>
                   <div>
                     <strong>iPhone · Safari</strong>
-                    <p>Tap Share (or the page menu, then Share), then Add to Home Screen. If shown, turn on Open as Web App, then tap Add.</p>
+                    <p>Tap <Share className={styles.stepIcon} size={16} aria-hidden="true" /> <strong className={styles.stepEmphasis}>Share</strong> (or the page menu, then Share), then <strong className={styles.stepEmphasis}>Add to Home Screen</strong>. If shown, turn on Open as Web App, then tap Add.</p>
                   </div>
                   <div>
                     <strong>Android · Chrome</strong>
-                    <p>Tap the three-dot menu, look for Install or Add to Home screen, then confirm.</p>
+                    <p>Tap the <EllipsisVertical className={styles.stepIcon} size={16} aria-hidden="true" /> <strong className={styles.stepEmphasis}>three-dot menu</strong>, look for <strong className={styles.stepEmphasis}>Install</strong> or <strong className={styles.stepEmphasis}>Add to Home screen</strong>, then confirm.</p>
                   </div>
                 </div>
               </SetupStep>
@@ -95,8 +96,8 @@ export function GettingStartedTabs() {
           <>
             <ol className={styles.setupSteps}>
               <SetupStep number={1}>Open this site in Chrome or Edge on your computer.</SetupStep>
-              <SetupStep number={2}>Right-click the page and choose Inspect. A browser tools panel will open.</SetupStep>
-              <SetupStep number={3}>Click the phone-and-tablet icon at the top of that panel, then choose a phone from the device menu.</SetupStep>
+              <SetupStep number={2}>Right-click the page and choose <strong className={styles.stepEmphasis}>Inspect</strong>. You can also press <kbd className={styles.shortcutKey}>F12</kbd> on Windows or <kbd className={styles.shortcutKey}>⌘⌥I</kbd> on Mac.</SetupStep>
+              <SetupStep number={3}>Click the <TabletSmartphone className={styles.stepIcon} size={16} aria-hidden="true" /> phone-and-tablet icon at the top of the panel, then choose a phone. You can also press <kbd className={styles.shortcutKey}>Ctrl+Shift+M</kbd> on Windows or <kbd className={styles.shortcutKey}>⌘⇧M</kbd> on Mac.</SetupStep>
             </ol>
             <p className={styles.setupNote}>This previews the phone layout on your computer. To add Spenles to your home screen, use a real phone and follow From Mobile.</p>
             <CopySiteLink />
