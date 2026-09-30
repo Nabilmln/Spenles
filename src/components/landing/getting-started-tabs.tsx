@@ -96,8 +96,8 @@ export function GettingStartedTabs() {
           <>
             <ol className={styles.setupSteps}>
               <SetupStep number={1}>Open this site in Chrome or Edge on your computer.</SetupStep>
-              <SetupStep number={2}>Right-click the page and choose <strong className={styles.stepEmphasis}>Inspect</strong>. You can also press <kbd className={styles.shortcutKey}>F12</kbd> on Windows or <kbd className={styles.shortcutKey}>⌘⌥I</kbd> on Mac.</SetupStep>
-              <SetupStep number={3}>Click the <TabletSmartphone className={styles.stepIcon} size={16} aria-hidden="true" /> phone-and-tablet icon at the top of the panel, then choose a phone. You can also press <kbd className={styles.shortcutKey}>Ctrl+Shift+M</kbd> on Windows or <kbd className={styles.shortcutKey}>⌘⇧M</kbd> on Mac.</SetupStep>
+              <SetupStep number={2}>Right-click the page and choose <strong className={styles.stepEmphasis}>Inspect</strong>. You can also press <kbd className={styles.shortcutKey}>F12</kbd> on Windows or <kbd className={styles.shortcutKey}>Command + Option + I</kbd> on Mac.</SetupStep>
+              <SetupStep number={3}>Click the <TabletSmartphone className={styles.stepIcon} size={16} aria-hidden="true" /> phone-and-tablet icon at the top of the panel, then choose a phone. You can also press <kbd className={styles.shortcutKey}>Ctrl + Shift + M</kbd> on Windows or <kbd className={styles.shortcutKey}>Command + Shift + M</kbd> on Mac.</SetupStep>
             </ol>
             <p className={styles.setupNote}>This previews the phone layout on your computer. To add Spenles to your home screen, use a real phone and follow From Mobile.</p>
             <CopySiteLink />
