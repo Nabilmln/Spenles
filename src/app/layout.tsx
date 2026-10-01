@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { DesktopLanding } from "@/components/landing/desktop-landing";
 import { ServiceWorkerRegister } from "@/components/pwa/service-worker-register";
 import { ToastProvider } from "@/components/ui/toast";
@@ -39,6 +40,20 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <Script id="landing-scroll-reset" strategy="beforeInteractive">
+          {`(() => {
+            const desktop = window.matchMedia("(min-width: 861px)");
+            const navigation = performance.getEntriesByType("navigation")[0];
+            if (!desktop.matches || navigation?.type !== "reload" || !("scrollRestoration" in history)) return;
+            history.scrollRestoration = "manual";
+            window.addEventListener("pageshow", () => {
+              if (desktop.matches) window.scrollTo(0, 0);
+            }, { once: true });
+            desktop.addEventListener("change", () => {
+              if (!desktop.matches) history.scrollRestoration = "auto";
+            });
+          })();`}
+        </Script>
         <ToastProvider>
           <div className="min-[861px]:hidden">{children}</div>
           <div className="hidden min-[861px]:block"><DesktopLanding /></div>

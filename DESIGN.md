@@ -211,6 +211,7 @@ Working controls use gently rounded corners, with cards slightly rounder than co
 - **Landing:** Simple text links and one dark action keep the desktop header light. It stays visible while scrolling, and section links leave space for its height.
 - **Landing guidance:** The hero's secondary action has a white surface and ink outline. Setup steps pair exact browser labels with small icon cues and optional keyboard shortcuts; home-screen actions use dark emphasis within quieter explanatory text.
 - **Landing footer:** A full-width ink surface with rounded top corners closes the page. The white brand mark and short product line sit opposite a labeled Developer contact group; a readable copyright line finishes the section without displaying the creator's name.
+- **Landing reload:** Refreshing at a desktop width starts at the introduction. In-page section links continue to scroll normally, and mobile app navigation retains normal browser scroll restoration.
 
 ## Do's and Don'ts
 

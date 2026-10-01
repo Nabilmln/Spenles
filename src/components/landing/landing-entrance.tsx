@@ -8,6 +8,15 @@ export function LandingEntrance() {
     const root = document.querySelector<HTMLElement>("[data-landing-root]");
     if (!root) return;
 
+    const navigation = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+    const reloaded = navigation?.type === "reload";
+    let resetFrame = 0;
+    if (reloaded && root.getClientRects().length) {
+      // Hydration can finish after the browser attempts to restore its old position.
+      window.scrollTo(0, 0);
+      resetFrame = requestAnimationFrame(() => window.scrollTo(0, 0));
+    }
+
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let context: gsap.Context | undefined;
 
@@ -43,6 +52,7 @@ export function LandingEntrance() {
     setUpEntrance();
     reducedMotion.addEventListener("change", setUpEntrance);
     return () => {
+      if (resetFrame) cancelAnimationFrame(resetFrame);
       reducedMotion.removeEventListener("change", setUpEntrance);
       context?.revert();
     };
