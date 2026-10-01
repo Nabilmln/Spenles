@@ -10,8 +10,8 @@ laporan finansial dengan perhitungan yang deterministik dan dapat diaudit.
 Aplikasi ini bukan platform bank, pembayaran, investasi, atau akuntansi
 profesional.
 
-Pada layar selebar 861 px atau lebih, situs menampilkan landing page tentang
-Spenles dengan lima bagian: pengenalan, alasan penggunaan, fitur utama
+Pada layar selebar 601 px atau lebih, termasuk tablet, situs menampilkan
+landing page tentang Spenles dengan lima bagian: pengenalan, alasan penggunaan, fitur utama
 (split bill, budget, laporan), insight pemasukan/pengeluaran, dan panduan
 ponsel. Tampilan memakai warna hitam dan putih serta logo S tanpa bingkai.
 Tombol “Try Spenles” menuju tiga panduan: memakai aplikasi di ponsel, mencoba

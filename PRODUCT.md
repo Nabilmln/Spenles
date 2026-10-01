@@ -27,8 +27,9 @@ investment, or professional accounting service.
 
 ## Operating Context
 
-- The finance app renders below 861px. At wider viewports, the site shows a
-  landing page about Spenles instead of the finance interface.
+- The login and finance app render only through 600px of viewport width. At
+  tablet and desktop widths (601px and wider), the site shows a landing page
+  about Spenles instead of the finance interface.
 - The desktop landing Try Spenles action leads to three setup paths: use the
   app on a phone, preview its phone layout with browser device tools, or run
   a personal development copy with repository access and separate service

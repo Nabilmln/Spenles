@@ -23,8 +23,8 @@ The application allows users to:
 - Default timezone: Asia/Jakarta
 - Primary system color: Ink black with neutral paper surfaces
 - Platform: Installable web PWA
-- Design approach: Mobile-only finance app below 861px; informational desktop
-  landing page with a mobile setup path at wider viewports
+- Design approach: Phone-width finance app through 600px; informational landing
+  page with a mobile setup path at tablet and desktop widths
 
 ## Required documents
 

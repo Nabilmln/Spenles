@@ -116,7 +116,7 @@ function ToastSheet({
         tabIndex={-1}
       />
       <section
-        className="notification-sheet-in relative flex min-h-[min(25rem,72dvh)] w-full max-w-[28rem] flex-col items-center rounded-t-[2rem] bg-surface px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[4rem] text-center text-foreground shadow-[0_-12px_40px_rgb(15_15_18/14%)] min-[861px]:mb-4 min-[861px]:rounded-[2rem]"
+        className="notification-sheet-in relative flex min-h-[min(25rem,72dvh)] w-full max-w-[28rem] flex-col items-center rounded-t-[2rem] bg-surface px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[4rem] text-center text-foreground shadow-[0_-12px_40px_rgb(15_15_18/14%)] min-[601px]:mb-4 min-[601px]:rounded-[2rem]"
         role={toast.variant === "error" ? "alert" : "status"}
         aria-label={style.title}
       >

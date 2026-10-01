@@ -983,6 +983,33 @@
   .reportFeature,
   .moreFeatureCard { gap: 1.5rem; padding: 2.5rem; }
 }
+@media (max-width: 720px) {
+  .header { justify-content: space-between; gap: 1rem; }
+  .headerNav { display: none; }
+  .hero { padding-top: 3.5rem; }
+  .hero h1 { font-size: clamp(2.7rem, 7vw, 3.5rem); }
+  .heroVisual { height: 340px; }
+  .featureStack {
+    --stack-card-height: 600px;
+    --stack-stage-top: clamp(64px, calc(50vh - 320px), 130px);
+  }
+  .splitFeature,
+  .budgetFeature,
+  .reportFeature,
+  .moreFeatureCard {
+    grid-template-columns: 1fr;
+    align-content: center;
+    gap: 1.5rem;
+    padding: 2rem;
+  }
+  .splitDemo,
+  .budgetDemo,
+  .reportDemo,
+  .moreFeatureList { width: min(100%, 380px); margin-inline: auto; }
+  .insights { padding: 2rem; }
+  .footerTop { flex-direction: column; }
+  .footerContact { justify-items: start; }
+}
 @media (prefers-reduced-motion: reduce) {
   .whyList article,
   .footerLinks a,

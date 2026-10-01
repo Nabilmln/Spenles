@@ -42,7 +42,7 @@ export default function RootLayout({
       <body>
         <Script id="landing-scroll-reset" strategy="beforeInteractive">
           {`(() => {
-            const desktop = window.matchMedia("(min-width: 861px)");
+            const desktop = window.matchMedia("(min-width: 601px)");
             const navigation = performance.getEntriesByType("navigation")[0];
             if (!desktop.matches || navigation?.type !== "reload" || !("scrollRestoration" in history)) return;
             history.scrollRestoration = "manual";
@@ -55,8 +55,8 @@ export default function RootLayout({
           })();`}
         </Script>
         <ToastProvider>
-          <div className="min-[861px]:hidden">{children}</div>
-          <div className="hidden min-[861px]:block"><DesktopLanding /></div>
+          <div className="min-[601px]:hidden">{children}</div>
+          <div className="hidden min-[601px]:block"><DesktopLanding /></div>
         </ToastProvider>
         <ServiceWorkerRegister />
       </body>

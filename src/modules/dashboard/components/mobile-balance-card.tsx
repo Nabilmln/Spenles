@@ -24,7 +24,7 @@ export function MobileBalanceCard({
           aria-hidden="true"
           fill
           priority
-          sizes="(max-width: 860px) 100vw, 0px"
+          sizes="(max-width: 600px) 100vw, 0px"
           className="pointer-events-none scale-[1.08] object-contain"
         />
 

@@ -7,7 +7,7 @@ export function MobileHomeRedirect({ destination }: { destination: string }) {
   const router = useRouter();
 
   useEffect(() => {
-    const mobile = window.matchMedia("(max-width: 860px)");
+    const mobile = window.matchMedia("(max-width: 600px)");
     const goToApp = () => {
       if (mobile.matches) router.replace(destination);
     };
