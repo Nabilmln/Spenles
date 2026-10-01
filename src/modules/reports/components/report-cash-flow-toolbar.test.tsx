@@ -66,7 +66,7 @@ describe("report cash flow card", () => {
     expect(screen.getByTestId("cash-flow-chart")).toHaveAttribute("data-points", "7");
   });
 
-  it("shows a zero-data hint when every point is zero", () => {
+  it("keeps the zero-value chart visible when every point is zero", () => {
     render(
       <ReportCashFlow
         points={buildCashFlowPoints([{ month: "2026-08-01", incomeIdr: "0", expenseIdr: "0" }], { from: "2026-08-01", to: "2026-08-01", daily: true })}
@@ -74,7 +74,7 @@ describe("report cash flow card", () => {
         to="2026-08-01"
       />,
     );
-    expect(screen.getByText("No data available for this period.")).toBeInTheDocument();
+    expect(screen.getByTestId("cash-flow-chart")).toHaveAttribute("data-points", "1");
   });
 });
 

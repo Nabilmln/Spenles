@@ -128,7 +128,7 @@ describe("category analysis", () => {
     );
   });
 
-  it("shows a zero-data message when there are no categories", () => {
+  it("explains the empty category breakdown", () => {
     render(
       <CategoryAnalysis
         categories={[]}
@@ -139,7 +139,7 @@ describe("category analysis", () => {
       />,
     );
     expect(
-      screen.getByText("No expense in this period yet."),
+      screen.getByText("No expenses to break down"),
     ).toBeInTheDocument();
   });
 

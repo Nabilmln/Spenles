@@ -57,7 +57,7 @@ export function TransactionTrendChart({
   const lastDay = points.at(-1)?.period;
 
   return (
-    <div aria-label="Cumulative expenses this month" role="group" className="mt-4 min-w-0">
+    <div aria-label={hasData ? "Cumulative expenses this month" : "Cumulative expenses this month: zero so far"} role="group" className="mt-4 min-w-0">
       <div className="chart-vertical-guides h-[17rem] w-full">
         <ResponsiveContainer height="100%" width="100%">
           <ComposedChart
@@ -71,35 +71,31 @@ export function TransactionTrendChart({
               </linearGradient>
             </defs>
             <XAxis dataKey="period" hide axisLine={false} tickLine={false} />
-            <YAxis domain={[0, 1]} hide />
+            <YAxis domain={[-0.05, 1]} hide />
             <Tooltip
               content={<TrendTooltip />}
               cursor={{ stroke: "var(--analytics)", strokeWidth: 1, strokeOpacity: 0.45 }}
             />
-            {hasData ? (
-              <>
-                <Area
-                  type="basis"
-                  dataKey="visibleExpensePlot"
-                  stroke="none"
-                  fill="url(#expense-trend-fill)"
-                  fillOpacity={1}
-                  isAnimationActive={false}
-                  activeDot={false}
-                />
-                <Line
-                  type="basis"
-                  dataKey="visibleExpensePlot"
-                  stroke="var(--analytics)"
-                  strokeWidth={2.5}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  dot={false}
-                  activeDot={{ r: 4, fill: "#ffffff", stroke: "var(--analytics)", strokeWidth: 2 }}
-                  isAnimationActive={false}
-                />
-              </>
-            ) : null}
+            <Area
+              type="basis"
+              dataKey="visibleExpensePlot"
+              stroke="none"
+              fill="url(#expense-trend-fill)"
+              fillOpacity={1}
+              isAnimationActive={false}
+              activeDot={false}
+            />
+            <Line
+              type="basis"
+              dataKey="visibleExpensePlot"
+              stroke="var(--analytics)"
+              strokeWidth={2.5}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              dot={false}
+              activeDot={{ r: 4, fill: "#ffffff", stroke: "var(--analytics)", strokeWidth: 2 }}
+              isAnimationActive={false}
+            />
           </ComposedChart>
         </ResponsiveContainer>
       </div>

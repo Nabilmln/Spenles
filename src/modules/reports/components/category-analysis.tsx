@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { LoaderCircle } from "lucide-react";
+import { ChartPie, LoaderCircle } from "lucide-react";
 import { cardClass } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import { formatIdr } from "@/lib/money/format-idr";
@@ -166,10 +166,20 @@ export function CategoryAnalysis({
         </div>
       ) : (
         <div
-          className="mt-4 grid min-h-[10rem] place-items-center rounded-[.8rem] border border-dashed border-border bg-surface-subtle p-4 text-center text-[.84rem] text-muted"
+          className="mt-4 flex min-h-[16rem] flex-col items-center justify-center px-5 text-center"
           role="status"
         >
-          No {activeType === "income" ? "income" : "expense"} in this period yet.
+          <span className="mb-4 grid size-14 place-items-center rounded-full bg-surface-subtle text-foreground" aria-hidden="true">
+            <ChartPie className="size-7" strokeWidth={1.6} />
+          </span>
+          <p className="m-0 text-[.9rem] font-medium text-foreground">
+            No {activeType === "income" ? "income" : "expenses"} to break down
+          </p>
+          <p className="mt-1 max-w-[17rem] text-[.85rem] leading-relaxed text-muted">
+            {activeType === "income"
+              ? "Income categories will appear here when you record income in this period."
+              : "Expense categories will appear here when you record an expense in this period."}
+          </p>
         </div>
       )}
     </section>

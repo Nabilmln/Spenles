@@ -67,24 +67,9 @@ export function ReportCashFlow({
   from: string;
   to: string;
 }) {
-  const hasData = points.some(
-    (point) =>
-      BigInt(point.incomeIdr) > 0n || BigInt(point.expenseIdr) > 0n,
-  );
   return (
     <section aria-label="Cash flow">
-      {hasData ? (
-        <ReportCashFlowChart points={points} from={from} to={to} />
-      ) : (
-        <div
-          className="grid h-[15rem] place-items-center rounded-[.9rem] bg-surface-subtle text-center"
-          role="status"
-        >
-          <p className="m-0 px-4 text-[.82rem] text-muted">
-            No data available for this period.
-          </p>
-        </div>
-      )}
+      <ReportCashFlowChart points={points} from={from} to={to} />
     </section>
   );
 }

@@ -55,8 +55,9 @@ export function ReportCashFlowChart({
   to: string;
 }) {
   const singlePoint = points.length === 1;
+  const allZero = points.every((point) => point.incomePlot === 0 && point.expensePlot === 0);
   return (
-    <div aria-label="Income (black) and expense (blue) trends" role="group" className="mt-4 min-w-0">
+    <div aria-label={allZero ? "Income and expense trends: zero throughout this period" : "Income (black) and expense (blue) trends"} role="group" className="mt-4 min-w-0">
       <div className="chart-vertical-guides h-[17rem] w-full">
         <ResponsiveContainer height="100%" width="100%">
           <ComposedChart data={points} margin={{ top: 12, right: 5, left: 5, bottom: 0 }}>
@@ -71,7 +72,7 @@ export function ReportCashFlowChart({
               </linearGradient>
             </defs>
             <XAxis dataKey="period" hide axisLine={false} tickLine={false} />
-            <YAxis domain={[0, 1]} hide />
+            <YAxis domain={[-0.05, 1]} hide />
             <Tooltip
               content={<CashFlowTooltip />}
               cursor={{ stroke: "var(--analytics)", strokeWidth: 1, strokeOpacity: 0.45 }}
@@ -109,6 +110,7 @@ export function ReportCashFlowChart({
               type="basis"
               dataKey="expensePlot"
               stroke="var(--analytics)"
+              strokeDasharray={allZero ? "4 5" : undefined}
               strokeWidth={2.5}
               strokeLinecap="round"
               strokeLinejoin="round"
