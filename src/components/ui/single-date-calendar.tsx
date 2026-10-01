@@ -83,7 +83,7 @@ export function SingleDateCalendar({
             return (
               <span
                 aria-hidden="true"
-                className="grid min-h-[2.5rem] place-items-center rounded-[.6rem] text-[.88rem]"
+                className="grid min-h-[2.5rem] place-items-center rounded-full text-[.88rem]"
                 key={`blank-${index}`}
               />
             );
@@ -94,9 +94,9 @@ export function SingleDateCalendar({
               aria-label={formatDateLong(cell.date)}
               aria-pressed={selected}
               className={cn(
-                "grid min-h-[2.5rem] place-items-center text-[.88rem] cursor-pointer border border-transparent hover:bg-primary-50",
+                "grid min-h-[2.5rem] place-items-center rounded-full text-[.88rem] cursor-pointer border border-transparent hover:bg-primary-50",
                 selected
-                  ? "rounded-[.6rem] bg-primary-600 font-medium text-white"
+                  ? "bg-primary-600 font-medium text-white"
                   : "bg-surface-subtle text-foreground",
               )}
               key={cell.date}

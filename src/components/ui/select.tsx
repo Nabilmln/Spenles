@@ -146,7 +146,7 @@ export function Select({
         aria-haspopup="listbox"
         aria-label={ariaLabel}
         className={cn(
-          "flex w-full min-h-[2.9rem] cursor-pointer items-center justify-between gap-[.5rem] rounded-[.72rem] border border-border bg-surface-subtle px-[.85rem] py-[.72rem] text-left font-medium text-foreground transition-[border,box-shadow] duration-150 focus:border-primary-500 focus:shadow-[0_0_0_3px_rgb(59_130_246/12%)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-65",
+          "flex w-full min-h-[2.9rem] cursor-pointer items-center justify-between gap-[.5rem] rounded-[1.12rem] border border-border bg-surface-subtle px-[.85rem] py-[.72rem] text-left font-medium text-foreground transition-[border,box-shadow] duration-150 focus:border-primary-500 focus:shadow-[0_0_0_3px_rgb(59_130_246/12%)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-65",
           className,
         )}
         disabled={disabled}
@@ -188,7 +188,7 @@ export function Select({
                   <button
                     aria-selected={active}
                     className={cn(
-                      "flex w-full min-h-[2.7rem] cursor-pointer items-center justify-between gap-[.6rem] rounded-[.7rem] border-0 bg-transparent px-[.75rem] py-[.55rem] text-left text-[.9rem] font-medium text-foreground hover:bg-surface-subtle focus-visible:bg-surface-subtle",
+                      "flex w-full min-h-[2.7rem] cursor-pointer items-center justify-between gap-[.6rem] rounded-[1.12rem] border-0 bg-transparent px-[.75rem] py-[.55rem] text-left text-[.9rem] font-medium text-foreground hover:bg-surface-subtle focus-visible:bg-surface-subtle",
                       active && "bg-primary-50 text-primary-700",
                     )}
                     data-value={option.value}

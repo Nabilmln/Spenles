@@ -47,7 +47,7 @@ export const financialCardOrbBottom =
   "pointer-events-none absolute hidden";
 
 export const inputClass =
-  "w-full min-h-[2.6rem] rounded-[.65rem] border border-border bg-surface-subtle px-[.8rem] py-[.6rem] text-base text-foreground transition-[border,background] duration-150 focus:border-primary-600 focus:bg-surface focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:cursor-not-allowed disabled:opacity-65";
+  "w-full min-h-[2.6rem] rounded-[1.12rem] border border-border bg-surface-subtle px-[.8rem] py-[.6rem] text-base text-foreground transition-[border,background] duration-150 focus:border-primary-600 focus:bg-surface focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:cursor-not-allowed disabled:opacity-65";
 
 export const textareaClass = `${inputClass} min-h-[7rem] resize-y`;
 
@@ -55,7 +55,10 @@ export const iconButtonClass =
   "grid size-[2.5rem] shrink-0 cursor-pointer place-items-center rounded-[.65rem] border border-border bg-surface text-muted hover:text-primary-600 hover:border-primary-300 transition-[border,color,background] duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600";
 
 export const inputDisplayClass =
-  "flex min-h-[2.6rem] items-center rounded-[.65rem] border border-border bg-surface-subtle px-[.8rem] py-[.6rem] text-[.88rem] font-medium text-muted";
+  "flex min-h-[2.6rem] items-center rounded-[1.12rem] border border-border bg-surface-subtle px-[.8rem] py-[.6rem] text-[.88rem] font-medium text-muted";
+
+export const actionSheetRowClass =
+  "flex min-h-[3rem] w-full cursor-pointer items-center gap-[.75rem] rounded-[1.12rem] border border-border bg-surface-subtle px-[.9rem] text-left text-[.9rem] font-medium transition-colors hover:bg-surface focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 disabled:cursor-not-allowed disabled:opacity-55";
 
 export const formMessageClass = "m-0 text-[.82rem] text-expense";
 

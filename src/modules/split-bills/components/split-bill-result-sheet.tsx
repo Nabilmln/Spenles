@@ -171,7 +171,7 @@ export function SplitBillResultSheet({
                       <div
                         key={participant.id}
                         data-testid={`participant-breakdown-${participant.id}`}
-                        className="grid min-w-0 gap-[.4rem] rounded-[.7rem] border border-border bg-surface-subtle p-[.8rem]"
+                        className="grid min-w-0 gap-[.4rem] rounded-[1.12rem] border border-border bg-surface-subtle p-[.8rem]"
                       >
                         <div className="flex items-center justify-between gap-4">
                           <span className="min-w-0 truncate rounded-full border border-border bg-surface px-[.6rem] py-[.25rem] text-[.8rem] font-medium">
@@ -207,7 +207,7 @@ export function SplitBillResultSheet({
                     <div
                       key={item.id}
                       data-testid={`result-item-${item.id}`}
-                      className="grid min-w-0 gap-[.15rem] rounded-[.7rem] border border-border bg-surface-subtle p-[.75rem]"
+                      className="grid min-w-0 gap-[.15rem] rounded-[1.12rem] border border-border bg-surface-subtle p-[.75rem]"
                     >
                       <div className="flex items-baseline justify-between gap-4">
                         <span className="min-w-0 truncate font-medium">

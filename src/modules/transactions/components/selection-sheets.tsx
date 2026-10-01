@@ -52,7 +52,7 @@ export function CategorySelectionSheet({
             <button
               aria-pressed={selected}
               className={cn(
-                "flex min-h-[3rem] cursor-pointer items-center gap-[.55rem] rounded-[.7rem] border px-[.65rem] py-[.55rem] text-left text-[.82rem] font-medium text-foreground transition-colors",
+                "flex min-h-[3rem] cursor-pointer items-center gap-[.55rem] rounded-[1.12rem] border px-[.65rem] py-[.55rem] text-left text-[.82rem] font-medium text-foreground transition-colors",
                 selected
                   ? "border-primary-600 bg-primary-50 text-primary-700"
                   : "border-border bg-surface hover:bg-surface-subtle",
@@ -105,7 +105,7 @@ export function AccountSelectionSheet({
             <button
               aria-pressed={selected}
               className={cn(
-                "flex min-h-[2.7rem] w-full cursor-pointer items-center justify-between gap-[.6rem] rounded-[.7rem] border px-[.75rem] py-[.55rem] text-left text-[.9rem] font-medium text-foreground transition-colors",
+                "flex min-h-[2.7rem] w-full cursor-pointer items-center justify-between gap-[.6rem] rounded-[1.12rem] border px-[.75rem] py-[.55rem] text-left text-[.9rem] font-medium text-foreground transition-colors",
                 selected
                   ? "border-primary-600 bg-primary-50 text-primary-700"
                   : "border-border bg-surface hover:bg-surface-subtle",

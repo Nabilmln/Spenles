@@ -79,7 +79,7 @@ export function EditTransactionSheet({
           {Array.from({ length: 4 }, (_, index) => (
             <div
               aria-hidden="true"
-              className="h-[2.9rem] animate-pulse rounded-[.72rem] bg-surface-subtle"
+              className="h-[2.9rem] animate-pulse rounded-[1.12rem] bg-surface-subtle"
               key={index}
             />
           ))}

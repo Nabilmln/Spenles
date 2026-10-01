@@ -18,7 +18,7 @@ export function FriendCarousel({
       <button
         type="button"
         onClick={onAddFriend}
-        className="flex min-h-[5.5rem] w-full items-center justify-center rounded-[1rem] border-2 border-dashed border-border bg-surface-subtle text-[.82rem] font-medium text-muted transition-colors hover:border-primary-300 hover:text-primary-600"
+        className="flex min-h-[5.5rem] w-full items-center justify-center rounded-[1.12rem] border-2 border-dashed border-border bg-surface-subtle text-[.82rem] font-medium text-muted transition-colors hover:border-primary-300 hover:text-primary-600"
       >
         <UserPlus size={18} aria-hidden="true" className="mr-[.4rem]" />
         Add Friend

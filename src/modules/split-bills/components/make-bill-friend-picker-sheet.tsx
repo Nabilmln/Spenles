@@ -105,7 +105,7 @@ export function MakeBillFriendPickerSheet({
         ) : null}
 
         {filtered.length === 0 ? (
-          <p className="m-0 rounded-[.7rem] bg-surface-subtle p-[.75rem] text-[.82rem] text-muted">
+          <p className="m-0 rounded-[1.12rem] bg-surface-subtle p-[.75rem] text-[.82rem] text-muted">
             {friends.length === 0
               ? "You have no friends to split with yet."
               : "No friends match your search."}
@@ -116,7 +116,7 @@ export function MakeBillFriendPickerSheet({
               <li key={friend.id}>
                 <button
                   type="button"
-                  className="flex w-full items-center gap-[.7rem] rounded-[.7rem] px-[.4rem] py-[.5rem] text-left transition-colors hover:bg-surface-subtle"
+                  className="flex w-full items-center gap-[.7rem] rounded-[1.12rem] px-[.4rem] py-[.5rem] text-left transition-colors hover:bg-surface-subtle"
                   onClick={() => toggle(friend.id)}
                 >
                   <FriendAvatar name={friend.name} size="sm" />

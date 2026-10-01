@@ -8,7 +8,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const iconOptionClass =
-  "relative grid cursor-pointer place-items-center gap-[.2rem] rounded-[.8rem] border border-border bg-surface-subtle p-[.45rem_.2rem] text-center text-muted focus-within:outline-2 focus-within:outline-primary-500 focus-within:outline-offset-2";
+  "relative grid cursor-pointer place-items-center gap-[.2rem] rounded-[1.12rem] border border-border bg-surface-subtle p-[.45rem_.2rem] text-center text-muted focus-within:outline-2 focus-within:outline-primary-500 focus-within:outline-offset-2";
 
 export function CategoryIconPicker({
   value,

@@ -13,7 +13,7 @@ function LogoutButton() {
   const { pending } = useFormStatus();
   return (
     <button
-      className=" mb-5 flex w-full min-h-[2.9rem] items-center gap-[.6rem] rounded-[.7rem] border-0 bg-transparent px-[.7rem] py-[.55rem] text-left text-[.9rem] font-medium text-expense hover:bg-[color-mix(in_srgb,var(--expense)_8%,transparent)] hover:text-expense focus-visible:bg-surface-subtle disabled:cursor-not-allowed disabled:opacity-55"
+      className="mb-5 flex w-full min-h-[2.9rem] items-center gap-[.6rem] rounded-[1.12rem] border-0 bg-transparent px-[.7rem] py-[.55rem] text-left text-[.9rem] font-medium text-expense hover:bg-[color-mix(in_srgb,var(--expense)_8%,transparent)] hover:text-expense focus-visible:bg-surface-subtle disabled:cursor-not-allowed disabled:opacity-55"
       disabled={pending}
       type="submit"
     >

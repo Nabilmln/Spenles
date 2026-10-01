@@ -128,7 +128,7 @@ export function SplitBillFriendEditSheet({
           <button
             type="button"
             onClick={() => setDeleteOpen(true)}
-            className="flex w-full items-center justify-center gap-[.5rem] rounded-[.8rem] bg-surface-subtle px-[.9rem] py-[.85rem] text-[.88rem] font-medium text-expense transition-colors hover:bg-[color-mix(in_srgb,var(--expense)_8%,transparent)]"
+            className="flex w-full items-center justify-center gap-[.5rem] rounded-[1.12rem] bg-surface-subtle px-[.9rem] py-[.85rem] text-[.88rem] font-medium text-expense transition-colors hover:bg-[color-mix(in_srgb,var(--expense)_8%,transparent)]"
           >
             <Trash2 size={17} aria-hidden="true" />
             Delete Friend

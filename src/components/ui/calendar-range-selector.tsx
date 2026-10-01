@@ -127,7 +127,7 @@ export function CalendarRangeSelector({
             return (
               <span
                 aria-hidden="true"
-                className="grid min-h-[2.5rem] place-items-center rounded-[.6rem] text-[.88rem]"
+                className="grid min-h-[2.5rem] place-items-center rounded-full text-[.88rem]"
                 key={`blank-${index}`}
               />
             );
@@ -144,8 +144,8 @@ export function CalendarRangeSelector({
               ? "bg-primary-600 text-white"
               : "bg-surface-subtle text-foreground",
             isToday ? "border-primary-600 font-medium" : "",
-            isStart ? "relative z-[1] rounded-l-[.6rem] font-medium" : "",
-            isEnd ? "relative z-[1] rounded-r-[.6rem] font-medium" : "",
+            isStart ? "relative z-[1] rounded-l-full font-medium" : "",
+            isEnd ? "relative z-[1] rounded-r-full font-medium" : "",
             isInRange && !isStart && !isEnd ? "rounded-none" : "",
           ]
             .filter(Boolean)

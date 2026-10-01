@@ -555,7 +555,7 @@ export function MakeBillWizard({
               <span className="text-[.86rem] font-medium">Date</span>
               <button
                 type="button"
-                className="flex min-h-[2.6rem] items-center justify-between gap-[.5rem] rounded-[.65rem] border border-border bg-surface-subtle px-[.8rem] py-[.6rem] text-left text-[.9rem] text-foreground transition-colors hover:border-primary-300"
+                className="flex min-h-[2.6rem] items-center justify-between gap-[.5rem] rounded-[1.12rem] border border-border bg-surface-subtle px-[.8rem] py-[.6rem] text-left text-[.9rem] text-foreground transition-colors hover:border-primary-300"
                 onClick={() => setDateOpen(true)}
                 aria-label="Date"
               >
@@ -583,7 +583,7 @@ export function MakeBillWizard({
               <button
                 type="button"
                 onClick={addItem}
-                className="flex min-h-[5.5rem] w-full items-center justify-center gap-[.4rem] rounded-[1rem] border-2 border-dashed border-border bg-surface-subtle text-[.82rem] font-medium text-muted transition-colors hover:border-primary-300 hover:text-primary-600"
+                className="flex min-h-[5.5rem] w-full items-center justify-center gap-[.4rem] rounded-[1.12rem] border-2 border-dashed border-border bg-surface-subtle text-[.82rem] font-medium text-muted transition-colors hover:border-primary-300 hover:text-primary-600"
               >
                 <Plus size={18} aria-hidden="true" />
                 Add Item
@@ -597,7 +597,7 @@ export function MakeBillWizard({
                 return (
                   <article
                     key={item.id}
-                    className="grid min-w-0 gap-[.8rem] rounded-[.85rem] border border-border bg-surface-subtle p-[.9rem]"
+                    className="grid min-w-0 gap-[.8rem] rounded-[1.12rem] border border-border bg-surface-subtle p-[.9rem]"
                   >
                     <div className="flex items-center justify-between gap-4">
                       <h3 className="m-0 text-[.95rem]">Item {itemIndex + 1}</h3>
@@ -756,7 +756,7 @@ export function MakeBillWizard({
           <div className="grid gap-[1rem]">
             <div className="grid gap-[.75rem]">
               {taxSet ? (
-                <div className="flex items-center justify-between gap-4 rounded-[.85rem] border border-border p-[.9rem]">
+                <div className="flex items-center justify-between gap-4 rounded-[1.12rem] border border-border p-[.9rem]">
                   <button
                     type="button"
                     className="min-w-0 text-left"
@@ -786,7 +786,7 @@ export function MakeBillWizard({
                 <button
                   type="button"
                   onClick={() => setTaxOpen(true)}
-                  className="flex min-h-[3.5rem] w-full items-center justify-center gap-[.4rem] rounded-[1rem] border-2 border-dashed border-border bg-surface-subtle text-[.82rem] font-medium text-muted transition-colors hover:border-primary-300 hover:text-primary-600"
+                  className="flex min-h-[3.5rem] w-full items-center justify-center gap-[.4rem] rounded-[1.12rem] border-2 border-dashed border-border bg-surface-subtle text-[.82rem] font-medium text-muted transition-colors hover:border-primary-300 hover:text-primary-600"
                 >
                   <Plus size={18} aria-hidden="true" />
                   Add Tax (Optional)

@@ -2,9 +2,7 @@
 
 import { Pencil, Trash2 } from "lucide-react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
-
-const actionRowClass =
-  "flex w-full min-h-[3rem] cursor-pointer items-center gap-[.75rem] rounded-[.8rem] border border-border bg-surface-subtle px-[.9rem] text-left text-[.9rem] font-medium transition-colors";
+import { actionSheetRowClass } from "@/components/ui/styles";
 
 export function BudgetActionSheet({
   open,
@@ -26,11 +24,11 @@ export function BudgetActionSheet({
       zIndex="z-[85]"
     >
       <div className="mb-6 grid gap-[.6rem]">
-        <button type="button" className={actionRowClass} onClick={onEdit}>
+        <button type="button" className={actionSheetRowClass} onClick={onEdit}>
           <Pencil size={18} aria-hidden="true" className="shrink-0 text-primary-600" />
           <span className="block">Edit Budget</span>
         </button>
-        <button type="button" className={actionRowClass} onClick={onDelete}>
+        <button type="button" className={actionSheetRowClass} onClick={onDelete}>
           <Trash2 size={18} aria-hidden="true" className="shrink-0 text-expense" />
           <span className="block">Delete Budget</span>
         </button>

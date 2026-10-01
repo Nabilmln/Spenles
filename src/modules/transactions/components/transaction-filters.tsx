@@ -45,7 +45,7 @@ const TYPE_OPTIONS = [
 function fieldButtonClass() {
   return cn(
     inputClass,
-    "flex min-h-[2.9rem] items-center justify-between gap-[.5rem] rounded-[.72rem] bg-white! p-[.72rem_.85rem]",
+    "flex min-h-[2.9rem] items-center justify-between gap-[.5rem] bg-white! p-[.72rem_.85rem]",
   );
 }
 
@@ -221,7 +221,7 @@ export function TransactionFilterBar({
               <button
                 aria-pressed={selected}
                 className={cn(
-                  "flex min-h-[2.7rem] w-full cursor-pointer items-center gap-[.6rem] rounded-[.7rem] border px-[.75rem] py-[.55rem] text-left text-[.9rem] font-medium text-foreground transition-colors",
+                  "flex min-h-[2.7rem] w-full cursor-pointer items-center gap-[.6rem] rounded-[1.12rem] border px-[.75rem] py-[.55rem] text-left text-[.9rem] font-medium text-foreground transition-colors",
                   selected
                     ? "border-primary-600 bg-primary-50 text-primary-700"
                     : "border-border bg-surface hover:bg-surface-subtle",
@@ -256,7 +256,7 @@ export function TransactionFilterBar({
           <button
             aria-pressed={account === ""}
             className={cn(
-              "flex min-h-[2.7rem] w-full cursor-pointer items-center justify-between gap-[.6rem] rounded-[.7rem] border px-[.75rem] py-[.55rem] text-left text-[.9rem] font-medium text-foreground transition-colors",
+              "flex min-h-[2.7rem] w-full cursor-pointer items-center justify-between gap-[.6rem] rounded-[1.12rem] border px-[.75rem] py-[.55rem] text-left text-[.9rem] font-medium text-foreground transition-colors",
               account === ""
                 ? "border-primary-600 bg-primary-50 text-primary-700"
                 : "border-border bg-surface hover:bg-surface-subtle",
@@ -276,7 +276,7 @@ export function TransactionFilterBar({
               <button
                 aria-pressed={selected}
                 className={cn(
-                  "flex min-h-[2.7rem] w-full cursor-pointer items-center justify-between gap-[.6rem] rounded-[.7rem] border px-[.75rem] py-[.55rem] text-left text-[.9rem] font-medium text-foreground transition-colors",
+                  "flex min-h-[2.7rem] w-full cursor-pointer items-center justify-between gap-[.6rem] rounded-[1.12rem] border px-[.75rem] py-[.55rem] text-left text-[.9rem] font-medium text-foreground transition-colors",
                   selected
                     ? "border-primary-600 bg-primary-50 text-primary-700"
                     : "border-border bg-surface hover:bg-surface-subtle",

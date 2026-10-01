@@ -55,6 +55,7 @@ typography:
     fontWeight: 400
 rounded:
   control: "0.65rem"
+  field: "1.12rem"
   card: "1.15rem"
   feature-card: "1.5rem"
   pill: "999px"
@@ -80,7 +81,7 @@ components:
   field:
     backgroundColor: "{colors.surface-subtle}"
     textColor: "{colors.foreground}"
-    rounded: "{rounded.control}"
+    rounded: "{rounded.field}"
     padding: "0.6rem 0.8rem"
     height: "2.6rem"
   card:
@@ -194,7 +195,7 @@ Working fields use gently rounded corners, with cards slightly rounder than fiel
 
 ### Inputs / Fields
 
-- **Style:** Subtle gray fill, fine border, 0.65rem corners, and at least 2.6rem height.
+- **Style:** Subtle gray fill, fine border, 1.12rem corners matched to the inner transaction row, and at least 2.6rem height. Picker fields and their boxed choices follow the same curve.
 - **Focus:** Ink border with a visible neutral outline. Disabled fields reduce opacity and signal the inactive state.
 - **Labels:** Medium-weight text stays near the field; helper and error text use quieter or semantic colors.
 - **Transaction calculator:** The sheet title and large black, IDR-formatted expression are centered above a smaller running preview total. The expression keeps both operands and operators visible while entering a calculation. Four ink operators and a C clear key sit in one row above a three-column pad of larger white pill number keys on a light grey surface. Integer IDR input keeps 000 instead of a decimal key, and the delete icon remains in the keypad. Use Amount stays fixed in the sheet footer so a short phone can scroll the keypad without hiding the action. No available-balance figure appears because the calculator does not receive account balance data.
@@ -202,7 +203,7 @@ Working fields use gently rounded corners, with cards slightly rounder than fiel
 ### Notifications
 
 - **In-app feedback:** Success, error, and info messages use one tall white bottom sheet at a time with a fully circular striped badge, a short heading, the original action message, and a dark Done button anchored at the bottom. Success uses the analytics blue, errors retain a distinct red, and info uses ink. A floating black close control with a white X and the backdrop dismiss the sheet; otherwise it closes after four seconds. Messages that arrive together wait their turn. Save actions that change pages return success feedback and a destination; the shared hook queues the sheet before navigating so the result remains visible on the next page.
-- **Action sheets:** Form, picker, filter, profile, and action sheets all use the shared BottomSheet primitive. Its floating close control is centered above the sheet, using the same black circle and white X as notifications. The close-button style comes from one shared component while notification timing and action-sheet scrolling remain separate behaviors. The sheet title stays left aligned and its content order stays unchanged.
+- **Action sheets:** Form, picker, filter, profile, and action sheets all use the shared BottomSheet primitive. Its floating close control is centered above the sheet, using the same black circle and white X as notifications. Action rows and boxed details use the 1.12rem field radius across transaction, budget, category, and split-bill flows. The close-button style comes from one shared component while notification timing and action-sheet scrolling remain separate behaviors. The sheet title stays left aligned and its content order stays unchanged.
 
 ### Navigation
 

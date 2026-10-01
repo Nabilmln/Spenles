@@ -44,7 +44,7 @@ export function BillAmountSummary({
   return (
     <dl
       className={cn(
-        "m-0 grid gap-[.45rem] rounded-[.75rem] border border-border bg-surface-subtle px-[.9rem] py-[.85rem]",
+        "m-0 grid gap-[.45rem] rounded-[1.12rem] border border-border bg-surface-subtle px-[.9rem] py-[.85rem]",
         className,
       )}
     >

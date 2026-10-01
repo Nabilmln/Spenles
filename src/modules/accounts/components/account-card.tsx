@@ -69,7 +69,7 @@ export function AccountCard({
       <div className="relative z-[1] flex items-center justify-end border-t border-white/15 pt-[.7rem]">
         <button
           type="button"
-          className="inline-flex min-h-[2.2rem] cursor-pointer items-center gap-[.25rem] rounded-[.6rem] border-0 bg-white/12 px-[.55rem] text-[.82rem] font-medium text-white transition-colors hover:bg-white/20"
+          className="inline-flex min-h-[2.2rem] cursor-pointer items-center gap-[.25rem] rounded-full border-0 bg-white/12 px-[.55rem] text-[.82rem] font-medium text-white transition-colors hover:bg-white/20"
           onClick={() => onDetail(account)}
           aria-label={`Open details for ${account.name}`}
         >

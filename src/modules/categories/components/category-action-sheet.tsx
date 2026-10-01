@@ -2,6 +2,7 @@
 
 import { Archive, ArchiveRestore, Pencil, Trash2 } from "lucide-react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
+import { actionSheetRowClass } from "@/components/ui/styles";
 import { useToastActionState } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
 import {
@@ -9,9 +10,6 @@ import {
   restoreCategoryAction,
   type CategoryStatusActionState,
 } from "../actions/category-actions";
-
-const actionRowClass =
-  "flex w-full min-h-[3rem] cursor-pointer items-center gap-[.75rem] rounded-[.8rem] border border-border bg-surface-subtle px-[.9rem] text-left text-[.9rem] font-medium transition-colors";
 
 export function CategoryActionSheet({
   item,
@@ -37,7 +35,7 @@ export function CategoryActionSheet({
       zIndex="z-[85]"
     >
       <div className="mb-6 grid gap-[.6rem]">
-        <button type="button" className={actionRowClass} onClick={onEdit}>
+        <button type="button" className={actionSheetRowClass} onClick={onEdit}>
           <Pencil size={18} aria-hidden="true" className="shrink-0 text-primary-600" />
           <span className="block">Edit category</span>
         </button>
@@ -48,7 +46,7 @@ export function CategoryActionSheet({
         ) : null}
         <button
           type="button"
-          className={cn(actionRowClass, "text-expense [&_svg]:text-expense")}
+          className={cn(actionSheetRowClass, "text-expense [&_svg]:text-expense")}
           onClick={onDelete}
         >
           <Trash2 size={18} aria-hidden="true" className="shrink-0" />
@@ -67,7 +65,7 @@ function CategoryArchiveRow({ categoryId }: { categoryId: string }) {
   return (
     <form action={formAction} className="m-0">
       <input name="id" type="hidden" value={categoryId} />
-      <button type="submit" disabled={pending} className={actionRowClass}>
+      <button type="submit" disabled={pending} className={actionSheetRowClass}>
         <Archive
           size={18}
           aria-hidden="true"
@@ -87,7 +85,7 @@ function CategoryRestoreRow({ categoryId }: { categoryId: string }) {
   return (
     <form action={formAction} className="m-0">
       <input name="id" type="hidden" value={categoryId} />
-      <button type="submit" disabled={pending} className={actionRowClass}>
+      <button type="submit" disabled={pending} className={actionSheetRowClass}>
         <ArchiveRestore
           size={18}
           aria-hidden="true"

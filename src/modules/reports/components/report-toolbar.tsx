@@ -48,7 +48,7 @@ export function ReportToolbar({
           onClick={() => setSheet("range")}
           type="button"
         >
-          <span className="grid size-9 shrink-0 place-items-center rounded-[.65rem] bg-primary-50 text-primary-600">
+          <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary-50 text-primary-600">
             <CalendarRange aria-hidden="true" size={18} />
           </span>
           <span className="grid min-w-0 flex-1 gap-[.05rem]">
@@ -71,7 +71,7 @@ export function ReportToolbar({
           onClick={() => setSheet("export")}
           type="button"
         >
-          <span className="grid size-9 shrink-0 place-items-center rounded-[.65rem] bg-primary-50 text-primary-600">
+          <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary-50 text-primary-600">
             <FileText aria-hidden="true" size={18} />
           </span>
           <span className="grid text-left gap-[.05rem]">
@@ -120,11 +120,11 @@ export function ReportToolbar({
           Preview the {rangeLabel} report below before downloading.
         </p>
         <iframe
-          className="h-[min(52dvh,26rem)] w-full rounded-[.7rem] border border-border bg-surface-subtle"
+          className="h-[min(52dvh,26rem)] w-full rounded-[1.12rem] border border-border bg-surface-subtle"
           src={pdfPreviewHref}
           title="Report preview"
         />
-        <p className="mt-4 rounded-[.7rem] bg-surface-subtle p-3 text-[.76rem] text-muted">
+        <p className="mt-4 rounded-[1.12rem] bg-surface-subtle p-3 text-[.76rem] text-muted">
           Your data stays private. PDF supports up to 366 days and max. 500
           detail transactions.
         </p>

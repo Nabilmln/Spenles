@@ -37,7 +37,7 @@ export function CalculationSummary({
         ))}
       </div>
       {!authoritative ? (
-        <p className="mt-4 rounded-[.7rem] bg-surface-subtle p-[.75rem] text-[.76rem] text-muted">
+        <p className="mt-4 rounded-[1.12rem] bg-surface-subtle p-[.75rem] text-[.76rem] text-muted">
           The browser preview is not the final value. The server recalculates
           before saving and finalizing.
         </p>

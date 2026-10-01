@@ -56,7 +56,7 @@ const DAYS_OPTIONS = [
 function sheetFieldClass() {
   return cn(
     inputClass,
-    "flex min-h-[2.9rem] cursor-pointer items-center justify-between gap-[.5rem] rounded-[.72rem] bg-white! p-[.72rem_.85rem] text-left",
+    "flex min-h-[2.9rem] cursor-pointer items-center justify-between gap-[.5rem] bg-white! p-[.72rem_.85rem] text-left",
   );
 }
 

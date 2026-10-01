@@ -155,7 +155,7 @@ export function CategoryAnalysis({
         </div>
       ) : busy ? (
         <div
-          className="mt-4 grid min-h-[10rem] place-items-center rounded-[.8rem] border border-dashed border-border bg-surface-subtle p-4 text-center text-[.84rem] text-muted"
+          className="mt-4 grid min-h-[10rem] place-items-center rounded-[1.12rem] border border-dashed border-border bg-surface-subtle p-4 text-center text-[.84rem] text-muted"
           role="status"
         >
           Loading...

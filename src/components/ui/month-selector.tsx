@@ -49,12 +49,12 @@ export function MonthSelector({
         onToggle={(event) => setOpen(event.currentTarget.open)}
         open={open}
       >
-        <summary aria-label="Select billing month" className="flex min-h-[2.9rem] cursor-pointer list-none items-center justify-between gap-[.5rem] rounded-[.72rem] border border-border bg-surface-subtle px-[.85rem] py-[.72rem] font-medium text-foreground [&::-webkit-details-marker]:hidden">
+        <summary aria-label="Select billing month" className="flex min-h-[2.9rem] cursor-pointer list-none items-center justify-between gap-[.5rem] rounded-[1.12rem] border border-border bg-surface-subtle px-[.85rem] py-[.72rem] font-medium text-foreground [&::-webkit-details-marker]:hidden">
           <CalendarRange aria-hidden="true" size={18} />
           <span className="min-w-0 flex-1 truncate text-[.85rem]">{label}</span>
           <ChevronDown aria-hidden="true" className="shrink-0 text-muted" size={18} />
         </summary>
-        <div className="absolute left-1/2 top-[calc(100%+.45rem)] z-[15] grid w-max min-w-full max-w-[calc(100vw-1.5rem)] gap-[.3rem] -translate-x-1/2 rounded-[.8rem] border border-border bg-surface p-[.5rem] shadow-card">
+        <div className="absolute left-1/2 top-[calc(100%+.45rem)] z-[15] grid w-max min-w-full max-w-[calc(100vw-1.5rem)] gap-[.3rem] -translate-x-1/2 rounded-[1.12rem] border border-border bg-surface p-[.5rem] shadow-card">
           <div className="min-w-[19rem]">
             <div className="mb-[.65rem] flex items-center justify-between gap-[.5rem]" role="group" aria-label="Month navigation">
               <button
@@ -94,7 +94,7 @@ export function MonthSelector({
                   return (
                     <span
                       aria-hidden="true"
-                      className="grid min-h-[2.5rem] place-items-center rounded-[.6rem] text-[.88rem]"
+                      className="grid min-h-[2.5rem] place-items-center rounded-full text-[.88rem]"
                       key={`blank-${index}`}
                     />
                   );
@@ -102,9 +102,9 @@ export function MonthSelector({
                 const selected = cell.date.slice(0, 7) === month;
                 const isToday = cell.date === today;
                 const className = [
-                  "grid min-h-[2.5rem] cursor-pointer place-items-center rounded-[.6rem] border border-transparent bg-surface-subtle text-[.88rem] text-foreground hover:enabled:bg-primary-50",
+                  "grid min-h-[2.5rem] cursor-pointer place-items-center rounded-full border border-transparent bg-surface-subtle text-[.88rem] text-foreground hover:enabled:bg-primary-50",
                   isToday ? "border-primary-600 font-medium" : "",
-                  selected ? "relative z-[1] rounded-[.6rem] bg-primary-600 font-medium text-white" : "",
+                  selected ? "relative z-[1] bg-primary-600 font-medium text-white" : "",
                 ]
                   .filter(Boolean)
                   .join(" ");
