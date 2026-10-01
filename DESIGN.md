@@ -67,7 +67,7 @@ components:
   button-primary:
     backgroundColor: "{colors.primary-600}"
     textColor: "{colors.surface}"
-    rounded: "{rounded.control}"
+    rounded: "{rounded.pill}"
     padding: "0.55rem 0.9rem"
     height: "2.6rem"
   button-primary-hover:
@@ -75,7 +75,7 @@ components:
   button-ghost:
     backgroundColor: "transparent"
     textColor: "{colors.foreground}"
-    rounded: "{rounded.control}"
+    rounded: "{rounded.pill}"
     padding: "0.55rem 0.9rem"
   field:
     backgroundColor: "{colors.surface-subtle}"
@@ -171,13 +171,14 @@ The app uses pale canvas contrast and fine borders for most separation. A low am
 
 ## Shapes
 
-Working controls use gently rounded corners, with cards slightly rounder than controls. Larger financial cards and landing panels use broader corners. Navigation pills and landing actions are fully rounded. Fine borders help pale surfaces remain distinct.
+Working fields use gently rounded corners, with cards slightly rounder than fields. App action buttons, segmented choices, navigation pills, and landing actions are fully rounded. Larger financial cards and landing panels use broader corners. Fine borders help pale surfaces remain distinct.
 
 ## Components
 
 ### Buttons
 
-- **App primary:** Ink fill, white medium-weight text, compact control radius, and a minimum height of 2.6rem. Hover deepens the fill; active state shifts down one pixel. Disabled state reduces opacity.
+- **App primary:** Ink fill, white medium-weight text, pill radius like the notification action, and a minimum height of 2.6rem. Hover deepens the fill; active state shifts down one pixel. Disabled state reduces opacity.
+- **Segmented choices:** Selected income, payment, category, and period options use ink fill with white text inside rounded pills; unselected options stay on quiet neutral surfaces.
 - **App ghost:** Transparent fill and foreground text, gaining a subtle surface on hover.
 - **Landing action:** Dark ink fill and white text in a pill, with greater height and padding. Its hover state lifts slightly.
 - **Focus:** Keyboard focus remains visible. The landing uses a strong neutral outline.

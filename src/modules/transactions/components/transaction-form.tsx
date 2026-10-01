@@ -8,7 +8,7 @@ import { createTransferAction } from "@/modules/accounts/actions/transfer-action
 import type { TransactionActionState } from "../actions/transaction-actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { fieldClass, fieldLabelClass, formMessageClass, inputClass } from "@/components/ui/styles";
+import { fieldClass, fieldLabelClass, formMessageClass, inputClass, segmentedSelectedClass } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import { formatIdr } from "@/lib/money/format-idr";
 import { formatDateLong } from "@/lib/dates/format-id";
@@ -21,12 +21,12 @@ import { SingleDateCalendar } from "@/components/ui/single-date-calendar";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 
 const modeLabelClass =
-  "relative flex flex-1 min-w-[6.5rem] min-h-[2.55rem] cursor-pointer items-center justify-center rounded-[.7rem] border border-border bg-surface-subtle p-[.45rem_.6rem] text-center text-[.78rem] font-medium text-muted focus-within:outline-2 focus-within:outline-primary-500 focus-within:outline-offset-2";
+  "relative flex flex-1 min-w-[6.5rem] min-h-[2.55rem] cursor-pointer items-center justify-center rounded-full border border-border bg-surface-subtle p-[.45rem_.6rem] text-center text-[.78rem] font-medium text-muted focus-within:outline-2 focus-within:outline-primary-500 focus-within:outline-offset-2";
 
 const directionLabelClass =
-  "relative flex flex-1 min-w-[6.5rem] min-h-[2.55rem] cursor-pointer items-center justify-center rounded-[.7rem] border border-border bg-surface-subtle p-[.45rem_.6rem] text-center text-[.78rem] font-medium text-muted";
+  "relative flex flex-1 min-w-[6.5rem] min-h-[2.55rem] cursor-pointer items-center justify-center rounded-full border border-border bg-surface-subtle p-[.45rem_.6rem] text-center text-[.78rem] font-medium text-muted focus-within:outline-2 focus-within:outline-primary-500 focus-within:outline-offset-2";
 
-const modeActiveClass = "border-primary-500 bg-primary-50 text-primary-700";
+const modeActiveClass = `${segmentedSelectedClass} border-primary-700`;
 
 type Option = { id: string; name: string; type?: string };
 export type TransactionFormCategory = Option & {

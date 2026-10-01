@@ -4,7 +4,7 @@ import { useState } from "react";
 import { MoreHorizontal, Plus } from "lucide-react";
 import { useToastActionState } from "@/components/ui/toast";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
-import { buttonClass, iconButtonClass } from "@/components/ui/styles";
+import { buttonClass, iconButtonClass, segmentedOptionClass } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import {
   archiveCategoryAction,
@@ -64,15 +64,12 @@ export function CategoryManager({
     <div className="grid gap-[1.1rem]">
       <div
         aria-label="Category type"
-        className="grid grid-cols-[1fr_1fr] gap-[.35rem] rounded-[1.25rem] border border-border bg-surface-subtle p-1"
+        className="grid grid-cols-[1fr_1fr] gap-[.35rem] rounded-full border border-border bg-surface-subtle p-1"
         role="tablist"
       >
         <button
           aria-selected={tab === "expense"}
-          className={cn(
-            "min-h-[2.7rem] cursor-pointer rounded-[.75rem] border-0 bg-transparent p-[.5rem_.7rem] font-medium text-muted",
-            tab === "expense" && "bg-surface text-primary-700 shadow-card",
-          )}
+          className={segmentedOptionClass(tab === "expense", "min-h-[2.7rem]")}
           onClick={() => setTab("expense")}
           role="tab"
           type="button"
@@ -81,10 +78,7 @@ export function CategoryManager({
         </button>
         <button
           aria-selected={tab === "income"}
-          className={cn(
-            "min-h-[2.7rem] cursor-pointer rounded-[.75rem] border-0 bg-transparent p-[.5rem_.7rem] font-medium text-muted",
-            tab === "income" && "bg-surface text-primary-700 shadow-card",
-          )}
+          className={segmentedOptionClass(tab === "income", "min-h-[2.7rem]")}
           onClick={() => setTab("income")}
           role="tab"
           type="button"

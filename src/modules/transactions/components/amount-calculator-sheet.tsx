@@ -50,7 +50,11 @@ function KeypadButton({
       aria-label={aria}
       onClick={onClick}
     >
-      {Icon ? <Icon aria-hidden="true" size={operator ? 21 : 25} strokeWidth={2.2} /> : label}
+      {Icon ? (
+        <Icon aria-hidden="true" size={operator ? 21 : 25} strokeWidth={2.2} />
+      ) : (
+        label
+      )}
     </button>
   );
 }
@@ -84,7 +88,10 @@ export function AmountCalculatorSheet({
       return null;
     }
   }, [expression]);
-  const displayExpression = useMemo(() => formatExpression(expression), [expression]);
+  const displayExpression = useMemo(
+    () => formatExpression(expression),
+    [expression],
+  );
   const previewTotal = useMemo(() => {
     if (!expression) return "0";
     if (result) return result;
@@ -113,7 +120,9 @@ export function AmountCalculatorSheet({
 
   function commit() {
     if (!result) {
-      setCalculatorError("Enter the amount using the number buttons so it can be calculated.");
+      setCalculatorError(
+        "Enter the amount using the number buttons so it can be calculated.",
+      );
       return;
     }
     onCommit(result);
@@ -143,28 +152,74 @@ export function AmountCalculatorSheet({
       }
     >
       <div className="flex min-h-[8.5rem] flex-col items-center justify-center gap-[.45rem] px-1 text-center">
-        <p className="m-0 max-w-full text-[clamp(1.65rem,7vw,2.7rem)] font-semibold leading-tight tracking-[-.035em] text-foreground tabular-nums [overflow-wrap:anywhere]" aria-label="Calculator expression" aria-live="polite">
+        <p
+          className="m-0 max-w-full text-[clamp(1.65rem,7vw,2.7rem)] font-semibold leading-tight tracking-[-.035em] text-foreground tabular-nums [overflow-wrap:anywhere]"
+          aria-label="Calculator expression"
+          aria-live="polite"
+        >
           {displayExpression}
         </p>
-        <output className="min-h-[1.25rem] w-full text-[.75rem] text-muted tabular-nums" aria-label="Preview total" aria-live="polite">
+        <output
+          className="min-h-[1.25rem] w-full text-[.75rem] text-muted tabular-nums"
+          aria-label="Preview total"
+          aria-live="polite"
+        >
           Total: {previewTotal === null ? "—" : formatIdr(previewTotal)}
         </output>
       </div>
       <FormMessage>{calculatorError}</FormMessage>
       <div className="mb-[.5rem] grid grid-cols-5 gap-[.45rem]">
-        <KeypadButton label="+" aria="Add" icon={Plus} operator onClick={() => append("+")} />
-        <KeypadButton label="-" aria="Subtract" icon={Minus} operator onClick={() => append("-")} />
-        <KeypadButton label="*" aria="Multiply" icon={X} operator onClick={() => append("*")} />
-        <KeypadButton label="/" aria="Divide" icon={Divide} operator onClick={() => append("/")} />
+        <KeypadButton
+          label="+"
+          aria="Add"
+          icon={Plus}
+          operator
+          onClick={() => append("+")}
+        />
+        <KeypadButton
+          label="-"
+          aria="Subtract"
+          icon={Minus}
+          operator
+          onClick={() => append("-")}
+        />
+        <KeypadButton
+          label="*"
+          aria="Multiply"
+          icon={X}
+          operator
+          onClick={() => append("*")}
+        />
+        <KeypadButton
+          label="/"
+          aria="Divide"
+          icon={Divide}
+          operator
+          onClick={() => append("/")}
+        />
         <KeypadButton label="C" aria="Clear" operator onClick={clear} />
       </div>
       <div className="grid grid-cols-3 gap-[.45rem] rounded-[1.45rem] bg-surface-subtle p-[.45rem]">
         {["1", "2", "3", "4", "5", "6", "7", "8", "9"].map((key) => (
-          <KeypadButton key={key} label={key} aria={key} onClick={() => append(key)} />
+          <KeypadButton
+            key={key}
+            label={key}
+            aria={key}
+            onClick={() => append(key)}
+          />
         ))}
-        <KeypadButton label="000" aria="Insert three zeros" onClick={() => append("000")} />
+        <KeypadButton
+          label="000"
+          aria="Insert three zeros"
+          onClick={() => append("000")}
+        />
         <KeypadButton label="0" aria="Zero" onClick={() => append("0")} />
-        <KeypadButton label="Delete" aria="Delete last character" icon={Delete} onClick={backspace} />
+        <KeypadButton
+          label="Delete"
+          aria="Delete last character"
+          icon={Delete}
+          onClick={backspace}
+        />
       </div>
     </BottomSheet>
   );

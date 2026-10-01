@@ -13,6 +13,7 @@ import {
   fieldHintClass,
   fieldLabelClass,
   inputClass,
+  segmentedOptionClass,
 } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import {
@@ -51,15 +52,6 @@ const DAYS_OPTIONS = [
   { value: "3", label: "Last 3 days" },
   { value: "5", label: "Last 5 days" },
 ];
-
-function segmentedClass(active: boolean) {
-  return cn(
-    "flex-1 min-h-[2.6rem] cursor-pointer items-center justify-center rounded-[.7rem] border border-transparent px-[.5rem] py-[.55rem] text-[.82rem] font-medium text-muted transition-[background,color] duration-150",
-    active
-      ? "bg-primary-600 text-white shadow-[0_2px_10px_rgb(23_23_23/25%)]"
-      : "bg-surface-subtle hover:bg-surface-subtle hover:text-foreground",
-  );
-}
 
 function sheetFieldClass() {
   return cn(
@@ -139,7 +131,7 @@ function BudgetSheetForm({
             {PERIOD_OPTIONS.map((option) => (
               <button
                 aria-pressed={periodType === option.value}
-                className={segmentedClass(periodType === option.value)}
+                className={segmentedOptionClass(periodType === option.value)}
                 key={option.value}
                 onClick={() => setPeriodType(option.value)}
                 type="button"
@@ -202,7 +194,7 @@ function BudgetSheetForm({
             {WARNING_MODE_OPTIONS.map((option) => (
               <button
                 aria-pressed={warningMode === option.value}
-                className={segmentedClass(warningMode === option.value)}
+                className={segmentedOptionClass(warningMode === option.value)}
                 key={option.value}
                 onClick={() => setWarningMode(option.value)}
                 type="button"

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { ChartPie, LoaderCircle } from "lucide-react";
-import { cardClass } from "@/components/ui/styles";
+import { cardClass, segmentedOptionClass } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import { formatIdr } from "@/lib/money/format-idr";
 import { getCategoryBreakdownAction } from "../actions/category-breakdown";
@@ -106,7 +106,7 @@ export function CategoryAnalysis({
       className={cn(cardClass, "shadow-none")}
     >
       <div
-        className="mb-4 inline-flex w-full rounded-[.7rem] bg-surface-subtle p-[.25rem]"
+        className="mb-4 inline-flex w-full gap-[.25rem] rounded-full bg-surface-subtle p-[.25rem]"
         role="group"
         aria-label="Transaction type"
       >
@@ -116,11 +116,7 @@ export function CategoryAnalysis({
           return (
             <button
               aria-pressed={active}
-              className={cn(
-                "flex flex-1 cursor-pointer items-center justify-center gap-[.4rem] rounded-[.55rem] px-[.8rem] py-[.4rem] text-[.82rem] font-medium text-muted transition-[background,color] duration-150 hover:text-foreground",
-                active && "bg-surface text-foreground shadow-card",
-                busy && !active && "cursor-wait opacity-70",
-              )}
+              className={segmentedOptionClass(active, busy && !active ? "cursor-wait opacity-70" : undefined)}
               disabled={busy}
               key={option.value}
               onClick={() => select(option.value)}

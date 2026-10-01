@@ -1,5 +1,19 @@
+import { cn } from "@/lib/utils";
+
 export const buttonBase =
-  "button inline-flex min-h-[2.6rem] cursor-pointer items-center justify-center gap-[.5rem] rounded-[.65rem] border border-transparent px-[.9rem] py-[.55rem] text-[.88rem] font-medium transition-[background,transform,box-shadow] duration-150 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-55";
+  "button inline-flex min-h-[2.6rem] cursor-pointer items-center justify-center gap-[.5rem] rounded-full border border-transparent px-[.9rem] py-[.55rem] text-[.88rem] font-medium transition-[background,transform,box-shadow] duration-150 active:translate-y-px disabled:cursor-not-allowed disabled:opacity-55";
+
+export const segmentedSelectedClass = "bg-primary-700 text-white";
+
+export function segmentedOptionClass(active: boolean, className?: string) {
+  return cn(
+    "inline-flex min-h-[2.6rem] flex-1 cursor-pointer items-center justify-center gap-[.4rem] rounded-full border border-transparent px-[.8rem] py-[.5rem] text-center text-[.82rem] font-medium transition-[background,color] duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600",
+    active
+      ? segmentedSelectedClass
+      : "bg-surface-subtle text-muted hover:bg-surface hover:text-foreground",
+    className,
+  );
+}
 
 export const buttonVariant: Record<string, string> = {
   primary:

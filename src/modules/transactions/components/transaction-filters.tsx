@@ -9,6 +9,7 @@ import {
   fieldClass,
   iconButtonClass,
   inputClass,
+  segmentedOptionClass,
 } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import { resolveCategoryIcon } from "@/modules/categories/constants/category-icons";
@@ -40,15 +41,6 @@ const TYPE_OPTIONS = [
   { value: "expense", label: "Payment" },
   { value: "income", label: "Income" },
 ] as const;
-
-function segmentedClass(active: boolean) {
-  return cn(
-    "flex-1 min-h-[2.6rem] cursor-pointer items-center justify-center rounded-[.7rem] border border-transparent px-[.5rem] py-[.55rem] text-[.82rem] font-medium text-muted transition-[background,color] duration-150",
-    active
-      ? "bg-primary-600 text-white shadow-[0_2px_10px_rgb(23_23_23/25%)]"
-      : "bg-surface-subtle hover:bg-surface-subtle hover:text-foreground",
-  );
-}
 
 function fieldButtonClass() {
   return cn(
@@ -146,7 +138,7 @@ export function TransactionFilterBar({
               {TYPE_OPTIONS.map((option) => (
                 <button
                   aria-pressed={type === option.value}
-                  className={segmentedClass(type === option.value)}
+                  className={segmentedOptionClass(type === option.value)}
                   key={option.value}
                   onClick={() => setType(option.value)}
                   type="button"
