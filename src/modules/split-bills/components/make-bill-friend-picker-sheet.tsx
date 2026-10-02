@@ -89,7 +89,7 @@ export function MakeBillFriendPickerSheet({
                 key={friend.id}
                 className="inline-flex items-center gap-[.35rem] rounded-full border border-border bg-surface-subtle py-[.3rem] pr-[.3rem] pl-[.4rem]"
               >
-                <FriendAvatar name={friend.name} size="xs" />
+                <FriendAvatar name={friend.name} friendId={friend.id} avatarIndex={friend.avatarIndex} size="xs" />
                 <span className="text-[.82rem] font-medium">{friend.name}</span>
                 <button
                   type="button"
@@ -119,7 +119,7 @@ export function MakeBillFriendPickerSheet({
                   className="flex w-full items-center gap-[.7rem] rounded-[1.12rem] px-[.4rem] py-[.5rem] text-left transition-colors hover:bg-surface-subtle"
                   onClick={() => toggle(friend.id)}
                 >
-                  <FriendAvatar name={friend.name} size="sm" />
+                  <FriendAvatar name={friend.name} friendId={friend.id} avatarIndex={friend.avatarIndex} size="sm" />
                   <span className="min-w-0 flex-1 truncate text-[.9rem] font-medium">
                     {friend.name}
                   </span>

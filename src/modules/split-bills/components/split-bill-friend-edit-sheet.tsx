@@ -7,12 +7,14 @@ import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useToast, useToastActionState } from "@/components/ui/toast";
 import { buttonClass, fieldClass, inputClass } from "@/components/ui/styles";
+import { avatarIndexForId } from "@/lib/avatars";
 import {
   deleteFriendAction,
   updateFriendAction,
   type FriendActionState,
 } from "../../friends/actions/friend-actions";
 import type { FriendRow } from "../../friends/queries/friends";
+import { FriendAvatarPicker } from "./friend-avatar-picker";
 
 const initialState: FriendActionState = {};
 
@@ -30,14 +32,17 @@ function FriendEditForm({
     initialState,
   );
   const [name, setName] = useState(friend.name);
+  const [avatarIndex, setAvatarIndex] = useState(
+    friend.avatarIndex ?? avatarIndexForId(friend.id),
+  );
   const router = useRouter();
 
   useEffect(() => {
     if (!state.success) return;
-    onSaved({ ...friend, name: name.trim() });
+    onSaved({ ...friend, name: name.trim(), avatarIndex });
     router.refresh();
     onClose();
-  }, [state.success, friend, name, onSaved, onClose, router]);
+  }, [state.success, friend, name, avatarIndex, onSaved, onClose, router]);
 
   return (
     <form action={action} className="grid gap-[1rem]">
@@ -57,6 +62,7 @@ function FriendEditForm({
           aria-invalid={Boolean(state.error)}
         />
       </div>
+      <FriendAvatarPicker value={avatarIndex} onChange={setAvatarIndex} />
       <button
         className={buttonClass("primary", "w-full justify-center")}
         disabled={pending}

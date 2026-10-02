@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { friends } from "@/db/schema";
 import { requireSessionUser } from "@/lib/auth/require-session";
-import { friendIdSchema, friendNameSchema } from "../schemas/friend";
+import { friendAvatarIndexSchema, friendIdSchema, friendNameSchema } from "../schemas/friend";
 
 export type FriendActionState = {
   error?: string;
@@ -18,9 +18,14 @@ export async function createFriendAction(
 ): Promise<FriendActionState> {
   const user = await requireSessionUser();
   const parsed = friendNameSchema.safeParse(formData.get("name"));
+  const avatarInput = formData.get("avatarIndex");
+  const parsedAvatar = avatarInput === null ? null : friendAvatarIndexSchema.safeParse(avatarInput);
   if (!parsed.success) {
     const formErrors = parsed.error.flatten().formErrors;
     return { error: formErrors[0] ?? "Invalid name." };
+  }
+  if (parsedAvatar && !parsedAvatar.success) {
+    return { error: "Choose one of the available avatars." };
   }
 
   const existing = await db
@@ -36,6 +41,7 @@ export async function createFriendAction(
   await db.insert(friends).values({
     userId: user.id,
     name: parsed.data,
+    avatarIndex: parsedAvatar?.data ?? Math.floor(Math.random() * 5) + 1,
   });
 
   revalidatePath("/split-bills");
@@ -49,8 +55,13 @@ export async function updateFriendAction(
   const user = await requireSessionUser();
   const id = friendIdSchema.safeParse(formData.get("id"));
   const parsed = friendNameSchema.safeParse(formData.get("name"));
+  const avatarInput = formData.get("avatarIndex");
+  const parsedAvatar = avatarInput === null ? null : friendAvatarIndexSchema.safeParse(avatarInput);
   if (!id.success || !parsed.success) {
     return { error: "Invalid name or friend." };
+  }
+  if (parsedAvatar && !parsedAvatar.success) {
+    return { error: "Choose one of the available avatars." };
   }
 
   const existing = await db
@@ -65,7 +76,11 @@ export async function updateFriendAction(
 
   const updated = await db
     .update(friends)
-    .set({ name: parsed.data, updatedAt: new Date() })
+    .set({
+      name: parsed.data,
+      ...(parsedAvatar ? { avatarIndex: parsedAvatar.data } : {}),
+      updatedAt: new Date(),
+    })
     .where(and(eq(friends.id, id.data), eq(friends.userId, user.id)))
     .returning({ id: friends.id });
 

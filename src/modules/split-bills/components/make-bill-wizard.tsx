@@ -86,6 +86,7 @@ function buildInitialRemap(
       selected.push({
         id: participant.id,
         name: participant.name,
+        avatarIndex: null,
         createdAt: "1970-01-01T00:00:00.000Z",
       });
     }
@@ -721,7 +722,7 @@ export function MakeBillWizard({
                               key={friend.id}
                               className="flex min-w-0 cursor-pointer items-center gap-[.5rem] rounded-[.5rem] px-[.3rem] py-[.25rem]"
                             >
-                              <FriendAvatar name={friend.name} size="xs" />
+                              <FriendAvatar name={friend.name} friendId={friend.id} avatarIndex={friend.avatarIndex} size="xs" />
                               <span className="min-w-0 flex-1 truncate text-[.85rem]">
                                 {friend.name}
                               </span>

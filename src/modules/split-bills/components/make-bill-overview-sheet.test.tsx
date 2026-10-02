@@ -7,8 +7,8 @@ import { MakeBillOverviewSheet } from "./make-bill-overview-sheet";
 afterEach(cleanup);
 
 const participants: FriendRow[] = [
-  { id: "f1", name: "Nabil", createdAt: "2026-01-01T00:00:00.000Z" },
-  { id: "f2", name: "Ayu", createdAt: "2026-01-01T00:00:00.000Z" },
+  { id: "f1", name: "Nabil", avatarIndex: null, createdAt: "2026-01-01T00:00:00.000Z" },
+  { id: "f2", name: "Ayu", avatarIndex: null, createdAt: "2026-01-01T00:00:00.000Z" },
 ];
 
 const preview: SplitBillCalculationResult = {

@@ -7,3 +7,5 @@ export const friendNameSchema = z
   .max(100, "Name must be 100 characters or less");
 
 export const friendIdSchema = z.string().uuid();
+
+export const friendAvatarIndexSchema = z.coerce.number<number>().int().min(1).max(5);

@@ -8,6 +8,7 @@ import type { Database } from "@/db/types";
 export type FriendRow = {
   id: string;
   name: string;
+  avatarIndex: number | null;
   createdAt: string;
 };
 
@@ -19,6 +20,7 @@ export async function listFriends(
     .select({
       id: friends.id,
       name: friends.name,
+      avatarIndex: friends.avatarIndex,
       createdAt: friends.createdAt,
     })
     .from(friends)

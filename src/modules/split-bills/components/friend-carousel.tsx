@@ -36,7 +36,7 @@ export function FriendCarousel({
             onClick={() => onSelectFriend(friend)}
             className="flex shrink-0 flex-col items-center gap-[.3rem]"
           >
-            <FriendAvatar name={friend.name} />
+            <FriendAvatar name={friend.name} friendId={friend.id} avatarIndex={friend.avatarIndex} />
             <span className="max-w-[4rem] truncate text-[.7rem] text-muted">
               {friend.name}
             </span>

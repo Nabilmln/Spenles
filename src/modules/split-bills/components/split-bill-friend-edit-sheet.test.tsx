@@ -29,7 +29,7 @@ afterEach(() => {
   deleteFriendAction.mockClear();
 });
 
-const friend = { id: "f1", name: "Ayu", createdAt: "2026-01-01T00:00:00.000Z" };
+const friend = { id: "f1", name: "Ayu", avatarIndex: 2, createdAt: "2026-01-01T00:00:00.000Z" };
 
 describe("split-bill friend edit sheet", () => {
   it("renders the friend name prefilled and lets it be changed", () => {
@@ -46,6 +46,7 @@ describe("split-bill friend edit sheet", () => {
     expect(input.value).toBe("Ayu");
     fireEvent.change(input, { target: { value: "Ayu Lestari" } });
     expect(input.value).toBe("Ayu Lestari");
+    expect(screen.getByRole("radio", { name: "Avatar 2" })).toBeChecked();
   });
 
   it("saves a renamed friend", async () => {
@@ -62,15 +63,18 @@ describe("split-bill friend edit sheet", () => {
     );
     const input = screen.getByLabelText("Friend name");
     fireEvent.change(input, { target: { value: "Ayu Lestari" } });
+    fireEvent.click(screen.getByRole("radio", { name: "Avatar 4" }));
     const form = screen
       .getByLabelText("Friend name")
       .closest("form") as HTMLFormElement;
+    expect(new FormData(form).get("avatarIndex")).toBe("4");
     fireEvent.submit(form);
 
     await waitFor(() => expect(onSaved).toHaveBeenCalledTimes(1));
     expect(onSaved).toHaveBeenCalledWith({
       ...friend,
       name: "Ayu Lestari",
+      avatarIndex: 4,
     });
     expect(onClose).toHaveBeenCalledTimes(1);
   });

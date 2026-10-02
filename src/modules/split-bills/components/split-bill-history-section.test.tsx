@@ -106,7 +106,7 @@ const filters: SplitBillFilters = {
 };
 
 const friends: FriendRow[] = [
-  { id: "f1", name: "Ayu", createdAt: "2026-01-01T00:00:00.000Z" },
+  { id: "f1", name: "Ayu", avatarIndex: null, createdAt: "2026-01-01T00:00:00.000Z" },
 ];
 
 const rows = [

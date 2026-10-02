@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToastActionState } from "@/components/ui/toast";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { buttonClass, fieldClass, inputClass } from "@/components/ui/styles";
 import { createFriendAction } from "../../friends/actions/friend-actions";
 import type { FriendActionState } from "../../friends/actions/friend-actions";
+import { FriendAvatarPicker } from "./friend-avatar-picker";
 
 const initialState: FriendActionState = {};
 
@@ -22,6 +23,9 @@ export function SplitBillFriendAddSheet({
     initialState,
   );
   const formRef = useRef<HTMLFormElement>(null);
+  const [avatarIndex, setAvatarIndex] = useState(
+    () => Math.floor(Math.random() * 5) + 1,
+  );
   const router = useRouter();
 
   useEffect(() => {
@@ -33,6 +37,7 @@ export function SplitBillFriendAddSheet({
       open={open}
       onClose={() => {
         formRef.current?.reset();
+        setAvatarIndex(Math.floor(Math.random() * 5) + 1);
         onClose();
       }}
       title="Add Friend"
@@ -53,6 +58,7 @@ export function SplitBillFriendAddSheet({
             aria-invalid={Boolean(state.error)}
           />
         </div>
+        <FriendAvatarPicker value={avatarIndex} onChange={setAvatarIndex} />
         <button
           className={buttonClass("primary", "w-full justify-center")}
           disabled={pending}

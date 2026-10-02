@@ -6,8 +6,8 @@ import { FriendCarousel } from "./friend-carousel";
 afterEach(cleanup);
 
 const friends: FriendRow[] = [
-  { id: "f1", name: "Ayu", createdAt: "2026-01-01T00:00:00.000Z" },
-  { id: "f2", name: "Bima", createdAt: "2026-01-02T00:00:00.000Z" },
+  { id: "f1", name: "Ayu", avatarIndex: 2, createdAt: "2026-01-01T00:00:00.000Z" },
+  { id: "f2", name: "Bima", avatarIndex: null, createdAt: "2026-01-02T00:00:00.000Z" },
 ];
 
 describe("friend carousel", () => {
@@ -24,7 +24,7 @@ describe("friend carousel", () => {
     expect(onAddFriend).toHaveBeenCalledTimes(1);
   });
 
-  it("renders friend avatars with initials and an add entry", () => {
+  it("renders saved and fallback portraits with an add entry", () => {
     const onAddFriend = vi.fn();
     render(
       <FriendCarousel
@@ -35,7 +35,8 @@ describe("friend carousel", () => {
     );
     expect(screen.getByText("Ayu")).toBeInTheDocument();
     expect(screen.getByText("Bima")).toBeInTheDocument();
-    expect(screen.getAllByText("A").length).toBeGreaterThan(0);
+    expect(screen.getByRole("button", { name: "Ayu" }).querySelector("img")?.getAttribute("src")).toContain("default-2.png");
+    expect(screen.getByRole("button", { name: "Bima" }).querySelector("img")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: /^add$/i }));
     expect(onAddFriend).toHaveBeenCalledTimes(1);
   });

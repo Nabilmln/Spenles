@@ -46,6 +46,9 @@ investment, or professional accounting service.
   versioned JSON backup are in the current app.
 - Registration, sign-in, and password recovery use Neon Auth. Financial data
   belongs to the authenticated user; split-bill contacts are personal records.
+- Split-bill friends use one of five bundled portrait avatars. Owners can choose
+  a portrait when adding or editing a friend; older contacts receive a stable
+  default portrait until changed.
 - Authoritative money amounts are integer rupiah and financial calculations
   happen on the server. Split-bill totals reconcile exactly.
 - The PWA caches static assets, not authenticated page navigation or API data.
