@@ -60,7 +60,7 @@ export function ProfileSheet({
         <h4 className="m-[0_0_.2rem] text-[.72rem] font-semibold uppercase tracking-[.12em] text-muted">
           Edit profile
         </h4>
-        <ProfileForm profile={profile} email={email} />
+        <ProfileForm profile={profile} email={email} onSuccess={onClose} />
       </div>
 
       <div className="mb-[.75rem] mt-[1rem] border-t border-border" role="separator" />

@@ -152,4 +152,22 @@ describe("TransactionForm", () => {
     const submit = screen.getByRole("button", { name: "Add Transaction" });
     expect(submit).toBeDisabled();
   });
+
+  it("closes its host sheet after a successful save instead of redirecting", async () => {
+    const onSuccess = vi.fn();
+    const action = vi.fn(async () => ({ success: "Expense recorded.", redirectTo: "/transactions" }));
+    render(
+      <TransactionForm
+        action={action}
+        accounts={accounts}
+        categories={categories}
+        defaultDate="2026-08-07"
+        onSuccess={onSuccess}
+      />,
+    );
+
+    fireEvent.submit(screen.getByRole("button", { name: "Add Transaction" }).closest("form") as HTMLFormElement);
+    await waitFor(() => expect(onSuccess).toHaveBeenCalledTimes(1));
+    expect(action).toHaveBeenCalledTimes(1);
+  });
 });

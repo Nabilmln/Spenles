@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { MoreHorizontal, Plus } from "lucide-react";
 import { useToastActionState } from "@/components/ui/toast";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
@@ -259,13 +260,13 @@ function CategoryDeleteSheet({
               : `Category "${item.name}" cannot be permanently deleted. Archive the category to hide it while keeping its transaction history.`}
           </p>
           {deletable ? (
-            <DeleteButton categoryId={item.id} />
+            <DeleteButton categoryId={item.id} onClose={onClose} />
           ) : item.status === "archived" ? (
             <p className="text-[.82rem] text-muted">
               Category is already archived.
             </p>
           ) : (
-            <CategoryDeleteArchiveButton categoryId={item.id} />
+            <CategoryDeleteArchiveButton categoryId={item.id} onClose={onClose} />
           )}
         </>
       ) : null}
@@ -275,13 +276,19 @@ function CategoryDeleteSheet({
 
 function CategoryDeleteArchiveButton({
   categoryId,
+  onClose,
 }: {
   categoryId: string;
+  onClose: () => void;
 }) {
+  const router = useRouter();
   const [, formAction, pending] = useToastActionState<
     CategoryStatusActionState,
     FormData
-  >(archiveCategoryAction, {});
+  >(archiveCategoryAction, {}, undefined, () => {
+    onClose();
+    router.refresh();
+  });
   return (
     <form action={formAction} className="mt-2 grid gap-[.6rem]">
       <input name="id" type="hidden" value={categoryId} />
@@ -296,8 +303,12 @@ function CategoryDeleteArchiveButton({
   );
 }
 
-function DeleteButton({ categoryId }: { categoryId: string }) {
-  const [, formAction, pending] = useToastActionState(deleteCategoryAction, {});
+function DeleteButton({ categoryId, onClose }: { categoryId: string; onClose: () => void }) {
+  const router = useRouter();
+  const [, formAction, pending] = useToastActionState(deleteCategoryAction, {}, undefined, () => {
+    onClose();
+    router.refresh();
+  });
   return (
     <form action={formAction} className="mt-4 grid gap-[.6rem]">
       <input name="id" type="hidden" value={categoryId} />

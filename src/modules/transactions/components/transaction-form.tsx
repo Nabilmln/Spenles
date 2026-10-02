@@ -49,6 +49,7 @@ export function TransactionForm({
   categories,
   initial,
   defaultDate,
+  onSuccess,
 }: {
   action: (state: TransactionActionState, data: FormData) => Promise<TransactionActionState>;
   accounts: Option[];
@@ -63,6 +64,7 @@ export function TransactionForm({
     note: string;
   };
   defaultDate?: string;
+  onSuccess?: () => void;
 }) {
   const router = useRouter();
   const handleRedirect = useCallback((path: string) => router.push(path), [router]);
@@ -74,7 +76,8 @@ export function TransactionForm({
       return action(previous, data);
     },
     {},
-    handleRedirect,
+    onSuccess ? undefined : handleRedirect,
+    onSuccess,
   );
   const [type, setType] = useState<FlowType>(initial?.type ?? "expense");
   const [amount, setAmount] = useState(initial?.amount ?? "");

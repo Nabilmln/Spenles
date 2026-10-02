@@ -189,21 +189,30 @@ export function useToastActionState<
   action: (previousState: State, payload: Payload) => Promise<State>,
   initialState: State,
   onRedirect?: (path: string) => void,
+  onSuccess?: () => void,
 ) {
   const [state, formAction, pending] = useActionState<State, Payload>(
     action,
     initialState as Awaited<State>,
   );
   const toast = useToast();
+  const onRedirectRef = useRef(onRedirect);
+  const onSuccessRef = useRef(onSuccess);
+
+  useEffect(() => {
+    onRedirectRef.current = onRedirect;
+    onSuccessRef.current = onSuccess;
+  }, [onRedirect, onSuccess]);
 
   useEffect(() => {
     if (state.error) {
       toast.error(state.error);
     } else if (state.success) {
       toast.success(state.success);
-      if (state.redirectTo) onRedirect?.(state.redirectTo);
+      if (state.redirectTo) onRedirectRef.current?.(state.redirectTo);
+      onSuccessRef.current?.();
     }
-  }, [state, toast, onRedirect]);
+  }, [state, toast]);
 
   return [state, formAction, pending] as const;
 }

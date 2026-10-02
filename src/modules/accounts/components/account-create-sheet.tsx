@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
@@ -31,17 +31,13 @@ export function AccountCreateSheet({
   const [type, setType] = useState<string>("cash");
   const [typeSheetOpen, setTypeSheetOpen] = useState(false);
 
-  const [state, formAction, pending] = useToastActionState<
+  const [, formAction, pending] = useToastActionState<
     AccountActionState,
     FormData
-  >(createAccountFromSheetAction, {});
-
-  useEffect(() => {
-    if (state.success) {
+  >(createAccountFromSheetAction, {}, undefined, () => {
       onClose();
       router.refresh();
-    }
-  }, [state.success, onClose, router]);
+  });
 
   return (
     <>

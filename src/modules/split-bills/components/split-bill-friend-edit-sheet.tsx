@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
@@ -27,22 +27,21 @@ function FriendEditForm({
   onSaved: (friend: FriendRow) => void;
   onClose: () => void;
 }) {
-  const [state, action, pending] = useToastActionState(
-    updateFriendAction,
-    initialState,
-  );
   const [name, setName] = useState(friend.name);
   const [avatarIndex, setAvatarIndex] = useState(
     friend.avatarIndex ?? avatarIndexForId(friend.id),
   );
   const router = useRouter();
-
-  useEffect(() => {
-    if (!state.success) return;
-    onSaved({ ...friend, name: name.trim(), avatarIndex });
-    router.refresh();
-    onClose();
-  }, [state.success, friend, name, avatarIndex, onSaved, onClose, router]);
+  const [state, action, pending] = useToastActionState(
+    updateFriendAction,
+    initialState,
+    undefined,
+    () => {
+      onSaved({ ...friend, name: name.trim(), avatarIndex });
+      router.refresh();
+      onClose();
+    },
+  );
 
   return (
     <form action={action} className="grid gap-[1rem]">

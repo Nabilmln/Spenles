@@ -62,13 +62,10 @@ export function EditTransactionSheet({
       {options && initial ? (
         <TransactionForm
           key={initial.id}
-          action={async (state, data) => {
-            const result = await editTransactionFromHistoryAction(state, data);
-            if (result.success) {
-              onClose();
-              onSaved?.();
-            }
-            return result;
+          action={editTransactionFromHistoryAction}
+          onSuccess={() => {
+            onClose();
+            onSaved?.();
           }}
           accounts={options.accounts}
           categories={options.categories}

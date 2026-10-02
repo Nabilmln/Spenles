@@ -21,13 +21,17 @@ const initialState: ProfileActionState = {};
 export function ProfileForm({
   profile,
   email,
+  onSuccess,
 }: {
   profile: Profile;
   email: string;
+  onSuccess?: () => void;
 }) {
   const [state, action, pending] = useToastActionState(
     updateProfileAction,
     initialState,
+    undefined,
+    onSuccess,
   );
 
   return (

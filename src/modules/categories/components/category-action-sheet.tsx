@@ -1,6 +1,7 @@
 "use client";
 
 import { Archive, ArchiveRestore, Pencil, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { actionSheetRowClass } from "@/components/ui/styles";
 import { useToastActionState } from "@/components/ui/toast";
@@ -40,9 +41,9 @@ export function CategoryActionSheet({
           <span className="block">Edit category</span>
         </button>
         {item?.status === "active" ? (
-          <CategoryArchiveRow categoryId={item.id} />
+          <CategoryArchiveRow categoryId={item.id} onClose={onClose} />
         ) : item?.status === "archived" ? (
-          <CategoryRestoreRow categoryId={item.id} />
+          <CategoryRestoreRow categoryId={item.id} onClose={onClose} />
         ) : null}
         <button
           type="button"
@@ -57,11 +58,15 @@ export function CategoryActionSheet({
   );
 }
 
-function CategoryArchiveRow({ categoryId }: { categoryId: string }) {
+function CategoryArchiveRow({ categoryId, onClose }: { categoryId: string; onClose: () => void }) {
+  const router = useRouter();
   const [, formAction, pending] = useToastActionState<
     CategoryStatusActionState,
     FormData
-  >(archiveCategoryAction, {});
+  >(archiveCategoryAction, {}, undefined, () => {
+    onClose();
+    router.refresh();
+  });
   return (
     <form action={formAction} className="m-0">
       <input name="id" type="hidden" value={categoryId} />
@@ -77,11 +82,15 @@ function CategoryArchiveRow({ categoryId }: { categoryId: string }) {
   );
 }
 
-function CategoryRestoreRow({ categoryId }: { categoryId: string }) {
+function CategoryRestoreRow({ categoryId, onClose }: { categoryId: string; onClose: () => void }) {
+  const router = useRouter();
   const [, formAction, pending] = useToastActionState<
     CategoryStatusActionState,
     FormData
-  >(restoreCategoryAction, {});
+  >(restoreCategoryAction, {}, undefined, () => {
+    onClose();
+    router.refresh();
+  });
   return (
     <form action={formAction} className="m-0">
       <input name="id" type="hidden" value={categoryId} />

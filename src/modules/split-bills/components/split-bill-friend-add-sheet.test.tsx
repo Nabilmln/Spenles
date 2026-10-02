@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { SplitBillFriendAddSheet } from "./split-bill-friend-add-sheet";
 
@@ -23,5 +23,15 @@ describe("split-bill friend add sheet", () => {
     fireEvent.click(screen.getByRole("radio", { name: "Avatar 5" }));
     const form = screen.getByLabelText("Friend name").closest("form") as HTMLFormElement;
     expect(new FormData(form).get("avatarIndex")).toBe("5");
+  });
+
+  it("closes after a friend is added", async () => {
+    const onClose = vi.fn();
+    render(<SplitBillFriendAddSheet open onClose={onClose} />);
+
+    fireEvent.change(screen.getByLabelText("Friend name"), { target: { value: "Ayu" } });
+    fireEvent.submit(screen.getByLabelText("Friend name").closest("form") as HTMLFormElement);
+
+    await waitFor(() => expect(onClose).toHaveBeenCalledTimes(1));
   });
 });

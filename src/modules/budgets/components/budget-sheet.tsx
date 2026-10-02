@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronRight } from "lucide-react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
@@ -70,11 +70,14 @@ function BudgetSheetForm({
   onClose: () => void;
 }) {
   const action = initial ? updateBudgetAction : createBudgetAction;
-  const [state, formAction, pending] = useToastActionState<
+  const router = useRouter();
+  const [, formAction, pending] = useToastActionState<
     BudgetActionState,
     FormData
-  >(action, {});
-  const router = useRouter();
+  >(action, {}, undefined, () => {
+    router.refresh();
+    onClose();
+  });
   const [categoryId, setCategoryId] = useState(initial?.categoryId ?? "");
   const [categorySheetOpen, setCategorySheetOpen] = useState(false);
   const [periodType, setPeriodType] = useState<BudgetPeriodType>(
@@ -95,12 +98,6 @@ function BudgetSheetForm({
   const [thresholdSheetOpen, setThresholdSheetOpen] = useState(false);
   const [days, setDays] = useState(String(initial?.warningDaysRemaining ?? 3));
   const [daysSheetOpen, setDaysSheetOpen] = useState(false);
-
-  useEffect(() => {
-    if (!state.success) return;
-    router.refresh();
-    onClose();
-  }, [state.success, router, onClose]);
 
   const anyCategory = categories.length > 0;
   const selectedCategory = categories.find((item) => item.id === categoryId);

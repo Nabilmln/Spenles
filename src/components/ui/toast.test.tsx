@@ -1,4 +1,4 @@
-import { act, cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ToastProvider, useToast, useToastActionState } from "./toast";
 
@@ -28,6 +28,16 @@ function ActionTrigger() {
     push,
   );
   return <form action={action}><button type="submit">Save expense</button></form>;
+}
+
+function SheetActionTrigger({ onSuccess, fail = false }: { onSuccess: () => void; fail?: boolean }) {
+  const [, action] = useToastActionState<{ success?: string; error?: string }, FormData>(
+    async () => fail ? { error: "Could not save." } : { success: "Saved." },
+    {},
+    undefined,
+    onSuccess,
+  );
+  return <form action={action}><button type="submit">Save in sheet</button></form>;
 }
 
 describe("ToastProvider", () => {
@@ -108,5 +118,25 @@ describe("ToastProvider", () => {
     fireEvent.click(screen.getByRole("button", { name: "Save expense" }));
     expect(await screen.findByRole("status")).toHaveTextContent("Expense recorded.");
     expect(push).toHaveBeenCalledTimes(2);
+  });
+
+  it("calls a sheet success handler once per successful submission and never on errors", async () => {
+    const onSuccess = vi.fn();
+    const view = render(
+      <ToastProvider>
+        <SheetActionTrigger onSuccess={onSuccess} />
+      </ToastProvider>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Save in sheet" }));
+    await waitFor(() => expect(onSuccess).toHaveBeenCalledTimes(1));
+    view.rerender(<ToastProvider><SheetActionTrigger onSuccess={onSuccess} /></ToastProvider>);
+    expect(onSuccess).toHaveBeenCalledTimes(1);
+
+    view.unmount();
+    render(<ToastProvider><SheetActionTrigger onSuccess={onSuccess} fail /></ToastProvider>);
+    fireEvent.click(screen.getByRole("button", { name: "Save in sheet" }));
+    expect(await screen.findByRole("alert")).toHaveTextContent("Could not save.");
+    expect(onSuccess).toHaveBeenCalledTimes(1);
   });
 });

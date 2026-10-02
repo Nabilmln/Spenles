@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToastActionState } from "@/components/ui/toast";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
@@ -18,19 +18,22 @@ export function SplitBillFriendAddSheet({
   open: boolean;
   onClose: () => void;
 }) {
-  const [state, action, pending] = useToastActionState(
-    createFriendAction,
-    initialState,
-  );
   const formRef = useRef<HTMLFormElement>(null);
   const [avatarIndex, setAvatarIndex] = useState(
     () => Math.floor(Math.random() * 5) + 1,
   );
   const router = useRouter();
-
-  useEffect(() => {
-    if (state.success) router.refresh();
-  }, [state.success, router]);
+  const [state, action, pending] = useToastActionState(
+    createFriendAction,
+    initialState,
+    undefined,
+    () => {
+      formRef.current?.reset();
+      setAvatarIndex(Math.floor(Math.random() * 5) + 1);
+      onClose();
+      router.refresh();
+    },
+  );
 
   return (
     <BottomSheet

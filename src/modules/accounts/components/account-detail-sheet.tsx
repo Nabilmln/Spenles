@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronRight, Trash2 } from "lucide-react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
@@ -75,32 +75,24 @@ export function AccountDetailSheet({
     setConfirming(false);
   }
 
-  const [updateState, updateAction, updating] = useToastActionState<
+  const [, updateAction, updating] = useToastActionState<
     AccountActionState,
     FormData
-  >(updateAccountFromSheetAction, {});
-  const [deleteState, deleteAction, deleting] = useToastActionState<
+  >(updateAccountFromSheetAction, {}, undefined, () => {
+    onClose();
+    router.refresh();
+  });
+  const [, deleteAction, deleting] = useToastActionState<
     AccountActionState,
     FormData
-  >(deleteAccountAction, {});
+  >(deleteAccountAction, {}, undefined, () => {
+    onClose();
+    router.refresh();
+  });
 
   function handleDeleteConfirm() {
     deleteFormRef.current?.requestSubmit();
   }
-
-  useEffect(() => {
-    if (updateState.success) {
-      onClose();
-      router.refresh();
-    }
-  }, [updateState.success, onClose, router]);
-
-  useEffect(() => {
-    if (deleteState.success) {
-      onClose();
-      router.refresh();
-    }
-  }, [deleteState.success, onClose, router]);
 
   return (
     <>

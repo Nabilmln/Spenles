@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Check, ChevronRight } from "lucide-react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
@@ -34,17 +34,14 @@ export function CategoryForm({
   onClose?: () => void;
 }) {
   const router = useRouter();
-  const [state, formAction, pending] = useToastActionState(action, {});
+  const [, formAction, pending] = useToastActionState(action, {}, undefined, () => {
+    router.refresh();
+    onClose?.();
+  });
   const key = initial?.id ?? "new";
   const [type, setType] = useState<"income" | "expense">(initial?.type ?? "expense");
   const [icon, setIcon] = useState<string | null>(initial?.icon ?? null);
   const [typeSheetOpen, setTypeSheetOpen] = useState(false);
-
-  useEffect(() => {
-    if (!state.success) return;
-    router.refresh();
-    onClose?.();
-  }, [state.success, router, onClose]);
 
   return (
     <form action={formAction} className="grid gap-4" id={formId}>

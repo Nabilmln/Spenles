@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { formatJakartaDate } from "@/lib/dates/jakarta";
 import { createTransactionAction, getTransactionOptionsAction } from "../actions/transaction-actions";
@@ -19,6 +20,7 @@ export function AddTransactionSheet({
   onClose: () => void;
 }) {
   const [options, setOptions] = useState<Options | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (open && !options) {
@@ -39,6 +41,10 @@ export function AddTransactionSheet({
           accounts={options.accounts}
           categories={options.categories}
           defaultDate={formatJakartaDate(new Date())}
+          onSuccess={() => {
+            onClose();
+            router.refresh();
+          }}
         />
       ) : (
         <div className="grid gap-[.75rem]">
