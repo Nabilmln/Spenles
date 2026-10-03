@@ -51,7 +51,7 @@ export function TransactionTrendChart({
   const lastDay = points.at(-1)?.period;
 
   return (
-    <div aria-label={hasData ? "Cumulative expenses this month" : "Cumulative expenses this month: zero so far"} role="group" className="mt-4 min-w-0">
+    <div aria-label={hasData ? "Daily expenses this month" : "Daily expenses this month: zero so far"} role="group" className="mt-4 min-w-0">
       <div className="chart-vertical-guides h-[17rem] w-full">
         <ResponsiveContainer height="100%" width="100%">
           <ComposedChart
@@ -71,7 +71,7 @@ export function TransactionTrendChart({
               cursor={{ stroke: "var(--analytics)", strokeWidth: 1, strokeOpacity: 0.45 }}
             />
             <Area
-              type="basis"
+              type="monotone"
               dataKey="expensePlot"
               stroke="none"
               fill="url(#expense-trend-fill)"
@@ -80,7 +80,7 @@ export function TransactionTrendChart({
               activeDot={false}
             />
             <Line
-              type="basis"
+              type="monotone"
               dataKey="expensePlot"
               stroke="var(--analytics)"
               strokeWidth={2.5}
