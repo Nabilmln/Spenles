@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, within } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { CategoryAnalysis } from "./category-analysis";
 import { CompactReportSummary } from "./compact-report-summary";
@@ -94,6 +94,12 @@ describe("category analysis", () => {
     expect(
       screen.getByRole("region", { name: "Expense by Category" }),
     ).toBeInTheDocument();
+    const table = screen.getByRole("table", { name: "Category breakdown" });
+    expect(within(table).getByRole("columnheader", { name: "Percentage" })).toBeInTheDocument();
+    expect(within(table).getByRole("columnheader", { name: "Amount" })).toBeInTheDocument();
+    const foodRow = within(table).getByRole("row", { name: /Makanan/ });
+    expect(within(foodRow).getByLabelText("60 percent")).toHaveTextContent("60");
+    expect(within(foodRow).getByText(/Rp\s*30\.000/u)).toBeInTheDocument();
     expect(screen.getByRole("link", { name: /Makanan/ })).toHaveAttribute(
       "href",
       "/reports/categories/cat-1?from=2026-08-01&to=2026-08-07",
@@ -109,7 +115,7 @@ describe("category analysis", () => {
         totalIdr="0"
       />,
     );
-    expect(screen.getAllByText("0%")).toHaveLength(2);
+    expect(screen.getAllByLabelText("0 percent")).toHaveLength(2);
   });
 
   it("shows an inline type toggle with the active type", () => {

@@ -74,12 +74,12 @@ export function ReportCategoryChart({
                 key={`${slice.name}-${index}`}
                 patternTransform="rotate(45)"
                 patternUnits="userSpaceOnUse"
-                width="8"
-                height="8"
+                width="6"
+                height="6"
               >
-                <rect width="8" height="8" fill="var(--surface)" />
-                <rect width="8" height="8" fill={slice.fill} fillOpacity="0.1" />
-                <path d="M 0 0 V 8" stroke={slice.fill} strokeWidth="3" />
+                <rect width="6" height="6" fill="var(--surface)" />
+                <rect width="6" height="6" fill={slice.fill} fillOpacity="0.1" />
+                <path d="M 0 0 V 6" stroke={slice.fill} strokeWidth="2" />
               </pattern>
             ))}
           </defs>

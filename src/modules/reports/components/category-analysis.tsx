@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { ChartPie, LoaderCircle } from "lucide-react";
+import { ChartPie, LoaderCircle, Percent } from "lucide-react";
 import { cardClass, segmentedOptionClass } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import { formatIdr } from "@/lib/money/format-idr";
@@ -134,24 +134,55 @@ export function CategoryAnalysis({
       {activeCategories.length ? (
         <div aria-busy={busy} className={cn(busy && "opacity-60")}>
           <ReportCategoryChart slices={slices} />
-          <div className="grid mt-[.75rem]">
-            {activeCategories.map((category) => {
-              const share = percent(category.amountIdr, total);
-              return (
-                <Link
-                  className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-[.9rem] border-b border-border p-[.8rem_0] last:border-b-0"
-                  href={`/reports/categories/${category.categoryId}?from=${from}&to=${to}`}
-                  key={category.categoryId}
-                >
-                  <span className="truncate">{category.name}</span>
-                  <strong>{formatIdr(category.amountIdr)}</strong>
-                  <small className="text-[.78rem] text-muted">
-                    {share.toLocaleString("en-US")}%
-                  </small>
-                </Link>
-              );
-            })}
-          </div>
+          <table aria-label="Category breakdown" className="mt-[.75rem] w-full table-fixed border-collapse text-[.76rem]">
+            <colgroup>
+              <col className="w-5" />
+              <col />
+              <col className="w-[3.25rem]" />
+              <col className="w-[5.5rem]" />
+            </colgroup>
+            <thead>
+              <tr className="border-b border-border text-[.7rem] font-medium text-muted">
+                <th scope="col" className="pb-2 text-left"><span className="sr-only">Mark</span></th>
+                <th scope="col" className="pb-2 text-left font-medium">Category</th>
+                <th scope="col" className="pb-2 text-center font-medium">
+                  <span className="sr-only">Percentage</span>
+                  <Percent aria-hidden="true" className="mx-auto" size={14} strokeWidth={1.8} />
+                </th>
+                <th scope="col" className="pb-2 text-right font-medium">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {activeCategories.map((category, index) => {
+                const share = percent(category.amountIdr, total);
+                const shareLabel = share.toLocaleString("en-US");
+                return (
+                  <tr className="border-b border-border last:border-b-0" key={category.categoryId}>
+                    <td className="py-[.65rem] align-middle">
+                      <span aria-hidden="true" className="block size-[.55rem] rounded-full" style={{ backgroundColor: slices[index].fill }} />
+                    </td>
+                    <th scope="row" className="min-w-0 py-[.65rem] pr-1 text-left font-medium align-middle">
+                      <Link
+                        className="block truncate text-foreground underline-offset-2 hover:underline focus-visible:underline"
+                        href={`/reports/categories/${category.categoryId}?from=${from}&to=${to}`}
+                        title={category.name}
+                      >
+                        {category.name}
+                      </Link>
+                    </th>
+                    <td className="py-[.65rem] text-center align-middle">
+                      <span aria-label={`${shareLabel} percent`} className="inline-flex min-w-[2.25rem] justify-center rounded-full bg-primary-700 px-[.35rem] py-[.2rem] text-[.69rem] font-semibold tabular-nums text-white">
+                        {shareLabel}
+                      </span>
+                    </td>
+                    <td className="py-[.65rem] pl-1 text-right font-medium leading-snug align-middle tabular-nums text-foreground [overflow-wrap:anywhere]">
+                      {formatIdr(category.amountIdr)}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       ) : busy ? (
         <div
