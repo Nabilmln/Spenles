@@ -213,6 +213,19 @@ body {
 .notification-sheet-in {
   animation: notification-sheet-in 0.28s cubic-bezier(0.22, 0.61, 0.36, 1) both;
 }
+@keyframes notification-sheet-out {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+.notification-sheet-out {
+  animation: notification-sheet-out 0.24s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
 
 .notification-stripes-blue {
   background: repeating-linear-gradient(135deg, #b9dcf3 0 3px, #e7f3fb 3px 7px);

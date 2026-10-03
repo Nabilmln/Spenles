@@ -42,6 +42,7 @@ export function useToast(): ToastApi {
 }
 
 const TOAST_DURATION_MS = 4000;
+const TOAST_EXIT_MS = 240;
 
 const variantStyle = {
   success: {
@@ -73,11 +74,19 @@ function ToastSheet({
 }) {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const doneButtonRef = useRef<HTMLButtonElement>(null);
+  const [closing, setClosing] = useState(false);
+  const requestDismiss = useCallback(() => setClosing(true), []);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => onDismiss(toast.id), TOAST_DURATION_MS);
+    const timer = window.setTimeout(requestDismiss, TOAST_DURATION_MS);
     return () => window.clearTimeout(timer);
-  }, [onDismiss, toast.id]);
+  }, [requestDismiss, toast.id]);
+
+  useEffect(() => {
+    if (!closing) return;
+    const timer = window.setTimeout(() => onDismiss(toast.id), TOAST_EXIT_MS);
+    return () => window.clearTimeout(timer);
+  }, [closing, onDismiss, toast.id]);
 
   useEffect(() => {
     const previouslyFocused = document.activeElement;
@@ -92,12 +101,12 @@ function ToastSheet({
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[100] flex items-end justify-center"
+      className={cn("fixed inset-0 z-[100] flex items-end justify-center", closing && "pointer-events-none")}
       role="dialog"
       aria-modal="true"
       aria-label={`${style.title} notification`}
       onKeyDown={(event) => {
-        if (event.key === "Escape") onDismiss(toast.id);
+        if (event.key === "Escape") requestDismiss();
         if (event.key !== "Tab") return;
         if (event.shiftKey && document.activeElement === closeButtonRef.current) {
           event.preventDefault();
@@ -110,20 +119,20 @@ function ToastSheet({
     >
       <button
         type="button"
-        className="absolute inset-0 bg-[rgb(15_15_18/34%)]"
-        onClick={() => onDismiss(toast.id)}
+        className={cn("absolute inset-0 bg-[rgb(15_15_18/34%)]", closing ? "curtain-backdrop-out" : "curtain-backdrop-in")}
+        onClick={requestDismiss}
         aria-hidden="true"
         tabIndex={-1}
       />
       <section
-        className="notification-sheet-in relative flex min-h-[min(25rem,72dvh)] w-full max-w-[28rem] flex-col items-center rounded-t-[2rem] bg-surface px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[4rem] text-center text-foreground shadow-[0_-12px_40px_rgb(15_15_18/14%)] min-[601px]:mb-4 min-[601px]:rounded-[2rem]"
+        className={cn("relative flex min-h-[min(25rem,72dvh)] w-full max-w-[28rem] flex-col items-center rounded-t-[2rem] bg-surface px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-[4rem] text-center text-foreground shadow-[0_-12px_40px_rgb(15_15_18/14%)] min-[601px]:mb-4 min-[601px]:rounded-[2rem]", closing ? "notification-sheet-out" : "notification-sheet-in")}
         role={toast.variant === "error" ? "alert" : "status"}
         aria-label={style.title}
       >
         <SheetCloseButton
           ref={closeButtonRef}
           className="absolute -top-5 left-1/2 -translate-x-1/2"
-          onClick={() => onDismiss(toast.id)}
+          onClick={requestDismiss}
           ariaLabel="Close notification"
         />
 
@@ -140,7 +149,7 @@ function ToastSheet({
           ref={doneButtonRef}
           type="button"
           className="mt-auto min-h-[3rem] w-full rounded-full bg-primary-700 px-5 py-3 text-[.88rem] font-medium text-white transition-colors hover:bg-primary-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600"
-          onClick={() => onDismiss(toast.id)}
+          onClick={requestDismiss}
         >
           Done
         </button>

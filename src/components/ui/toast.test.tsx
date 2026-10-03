@@ -42,6 +42,7 @@ function SheetActionTrigger({ onSuccess, fail = false }: { onSuccess: () => void
 
 describe("ToastProvider", () => {
   it("shows a success notification and dismisses it", () => {
+    vi.useFakeTimers();
     render(
       <ToastProvider>
         <Trigger />
@@ -53,6 +54,10 @@ describe("ToastProvider", () => {
     expect(screen.getByRole("dialog")).toHaveAttribute("aria-modal", "true");
 
     fireEvent.click(screen.getByRole("button", { name: "Close notification" }));
+    expect(screen.getByRole("status")).toHaveClass("notification-sheet-out");
+    act(() => vi.advanceTimersByTime(239));
+    expect(screen.getByRole("status")).toBeInTheDocument();
+    act(() => vi.advanceTimersByTime(1));
     expect(screen.queryByRole("status")).not.toBeInTheDocument();
   });
 
@@ -68,6 +73,7 @@ describe("ToastProvider", () => {
   });
 
   it("shows multiple notifications one at a time", () => {
+    vi.useFakeTimers();
     render(
       <ToastProvider>
         <Trigger />
@@ -82,9 +88,12 @@ describe("ToastProvider", () => {
     expect(screen.queryByText("Informasi terbaru")).not.toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: "Done" }));
+    expect(screen.getByRole("status")).toHaveTextContent("Saved successfully");
+    act(() => vi.advanceTimersByTime(240));
     expect(screen.getByRole("status")).toHaveTextContent("Informasi terbaru");
 
     fireEvent.click(screen.getByRole("button", { name: "Done" }));
+    act(() => vi.advanceTimersByTime(240));
     expect(screen.getByRole("alert")).toHaveTextContent("Terjadi kesalahan");
   });
 
@@ -100,6 +109,8 @@ describe("ToastProvider", () => {
     act(() => vi.advanceTimersByTime(3999));
     expect(screen.getByRole("status")).toBeInTheDocument();
     act(() => vi.advanceTimersByTime(1));
+    expect(screen.getByRole("status")).toHaveClass("notification-sheet-out");
+    act(() => vi.advanceTimersByTime(240));
     expect(screen.queryByRole("status")).not.toBeInTheDocument();
   });
 
@@ -115,6 +126,7 @@ describe("ToastProvider", () => {
     expect(push).toHaveBeenCalledWith("/transactions");
 
     fireEvent.click(screen.getByRole("button", { name: "Done" }));
+    await waitFor(() => expect(screen.queryByRole("status")).not.toBeInTheDocument());
     fireEvent.click(screen.getByRole("button", { name: "Save expense" }));
     expect(await screen.findByRole("status")).toHaveTextContent("Expense recorded.");
     expect(push).toHaveBeenCalledTimes(2);
