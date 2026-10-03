@@ -97,8 +97,14 @@ describe("report toolbar", () => {
       />,
     );
 
-    expect(screen.getByText("1 Aug – 7 Aug 2026")).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: /Select date range/ }));
+    const dateButton = screen.getByRole("button", { name: /Select date range/ });
+    expect(within(dateButton).getByText("1 Aug 26")).toBeInTheDocument();
+    expect(within(dateButton).getByText("-")).toBeInTheDocument();
+    expect(within(dateButton).getByText("7 Aug 26")).toBeInTheDocument();
+    expect(within(dateButton).getByText("Date")).toBeInTheDocument();
+    expect(within(dateButton).queryByText("Select date")).not.toBeInTheDocument();
+    expect(dateButton.firstElementChild?.firstElementChild?.tagName.toLowerCase()).toBe("svg");
+    fireEvent.click(dateButton);
     expect(screen.getByRole("dialog", { name: "Select date range" })).toBeInTheDocument();
   });
 

@@ -1,4 +1,5 @@
-import { formatRangeLong, formatRangeShort } from "@/lib/dates/format-id";
+import { formatRangeLong, formatRangeShort, MONTHS_SHORT } from "@/lib/dates/format-id";
+import { parseDateKey } from "@/lib/dates/calendar";
 
 export * from "@/lib/dates/calendar";
 
@@ -18,4 +19,10 @@ export function formatReportRange(from: string, to: string) {
  */
 export function formatReportRangeShort(from: string, to: string) {
   return formatRangeShort(from, to);
+}
+
+export function formatReportDateChip(value: string) {
+  const date = parseDateKey(value);
+  if (!date) return value;
+  return `${date.day} ${MONTHS_SHORT[date.month - 1]} ${String(date.year).slice(-2)}`;
 }

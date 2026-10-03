@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CalendarRange, ChevronDown, ChevronRight, Send, Upload } from "lucide-react";
+import { CalendarRange, ChevronRight, Send, Upload } from "lucide-react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { CalendarRangeSelector } from "@/components/ui/calendar-range-selector";
 import { buttonClass, fieldClass, fieldLabelClass, inputClass } from "@/components/ui/styles";
@@ -9,7 +9,7 @@ import { useToastActionState } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
 import { AccountSelectionSheet } from "@/modules/transactions/components/selection-sheets";
 import { emailReportAction, type EmailReportState } from "../actions/email-report";
-import { formatReportRange, formatReportRangeShort } from "../lib/report-date";
+import { formatReportDateChip, formatReportRange, formatReportRangeShort } from "../lib/report-date";
 
 type Sheet = "none" | "range" | "export" | "export-account" | "export-range";
 
@@ -39,7 +39,6 @@ export function ReportToolbar({
     () => setSheet("none"),
   );
   const rangeLabel = formatReportRange(from, to);
-  const rangeLabelShort = formatReportRangeShort(from, to);
   const exportRangeLabel = formatReportRangeShort(exportFrom, exportTo);
   const selectedAccount = accounts.find((account) => account.id === accountId);
 
@@ -58,23 +57,24 @@ export function ReportToolbar({
           aria-label={`Select date range: ${rangeLabel}`}
           className={cn(
             triggerClass,
-            "flex min-h-[3.05rem] min-w-0 flex-1 items-center gap-[.6rem] p-[.5rem_1rem] text-left",
+            "flex min-h-[3.05rem] min-w-0 flex-1 items-center gap-[.35rem] p-[.45rem_.55rem] text-left",
           )}
           onClick={() => setSheet("range")}
           type="button"
         >
-          <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary-50 text-primary-600">
+          <span className="grid w-[1.9rem] shrink-0 justify-items-center gap-[.1rem]">
             <CalendarRange aria-hidden="true" size={18} />
+            <span className="text-[.72rem] font-medium leading-none text-muted">Date</span>
           </span>
-          <span className="grid min-w-0 flex-1 gap-[.05rem]">
-            <span className="text-[.66rem] font-semibold uppercase tracking-[.06em] text-muted">
-              Select date
+          <span className="grid min-w-0 flex-1 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-[.18rem] whitespace-nowrap">
+            <span className="min-w-0 rounded-[.42rem] bg-primary-700 px-[.3rem] py-[.5rem] text-center text-[.8rem] font-semibold leading-none text-white">
+              {formatReportDateChip(from)}
             </span>
-            <span className="leading-snug text-[.84rem] font-semibold [overflow-wrap:anywhere]">
-              {rangeLabelShort}
+            <span className="text-[.8rem] font-medium text-muted">-</span>
+            <span className="min-w-0 rounded-[.42rem] bg-primary-700 px-[.3rem] py-[.5rem] text-center text-[.8rem] font-semibold leading-none text-white">
+              {formatReportDateChip(to)}
             </span>
           </span>
-          <ChevronDown aria-hidden="true" className="shrink-0 text-muted" size={16} />
         </button>
         <button
           aria-haspopup="dialog"

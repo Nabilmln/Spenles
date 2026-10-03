@@ -3,6 +3,7 @@ import {
   addCalendarDays,
   buildMonthGrid,
   daysInMonth,
+  formatReportDateChip,
   formatReportRange,
   formatReportRangeShort,
   inclusiveDayCount,
@@ -60,6 +61,11 @@ it("formats compact ranges across year boundaries", () => {
     expect(formatReportRangeShort("2026-12-20", "2027-01-10")).toBe(
       "20 Dec 2026 – 10 Jan 2027",
     );
+  });
+
+  it("formats compact start and end date labels with their years", () => {
+    expect(formatReportDateChip("2026-08-01")).toBe("1 Aug 26");
+    expect(formatReportDateChip("2027-01-10")).toBe("10 Jan 27");
   });
 
   it("builds a Monday-first month grid", () => {
