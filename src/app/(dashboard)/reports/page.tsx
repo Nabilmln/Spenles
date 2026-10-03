@@ -4,6 +4,7 @@ import {
   getReportAnalysis,
   getReportCategoryBreakdown,
   getReportOptions,
+  parseReportParams,
   todayJakartaDate,
 } from "@/modules/reports";
 import {
@@ -17,11 +18,14 @@ import {
 
 export const maxDuration = 30;
 
-const DATE_KEY = /^\d{4}-\d{2}-\d{2}$/u;
-
 function currentMonthStart() {
   const today = todayJakartaDate();
   return `${today.slice(0, 7)}-01`;
+}
+
+function currentMonthEnd(today: string) {
+  const [year, month] = today.slice(0, 7).split("-").map(Number);
+  return new Date(Date.UTC(year, month, 0)).toISOString().slice(0, 10);
 }
 
 export default async function ReportsPage({
@@ -32,14 +36,15 @@ export default async function ReportsPage({
   const user = await requireSessionUser();
   const raw = await searchParams;
   const today = todayJakartaDate();
-  const from =
-    typeof raw.from === "string" && DATE_KEY.test(raw.from) && raw.from <= today
-      ? raw.from
-      : currentMonthStart();
-  const to =
-    typeof raw.to === "string" && DATE_KEY.test(raw.to) && raw.to <= today
-      ? raw.to
-      : today;
+  const defaultFrom = currentMonthStart();
+  const defaultTo = currentMonthEnd(today);
+  const selectedRange = parseReportParams(new URLSearchParams({
+    period: "custom",
+    from: typeof raw.from === "string" ? raw.from : defaultFrom,
+    to: typeof raw.to === "string" ? raw.to : defaultTo,
+  }));
+  const from = selectedRange?.interval.startDate ?? defaultFrom;
+  const to = selectedRange?.interval.endDate ?? defaultTo;
   const categoryType =
     raw.categoryType === "income" ? "income" : "expense";
 

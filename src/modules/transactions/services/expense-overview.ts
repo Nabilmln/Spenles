@@ -6,12 +6,8 @@ type DailyCashFlow = { period: string; income: bigint; expense: bigint };
 export function buildMonthlyExpenseOverview(
   interval: DateInterval,
   rows: DailyCashFlow[],
-  asOfDate: string,
 ) {
-  const contract = buildDailyCashFlowContract(
-    interval,
-    rows.filter((row) => row.period <= asOfDate),
-  );
+  const contract = buildDailyCashFlowContract(interval, rows);
   let runningExpense = 0n;
   const points = contract.points.map((point) => {
     runningExpense += BigInt(point.expenseIdr);

@@ -169,7 +169,7 @@ export function ReportToolbar({
             <input name="to" type="hidden" value={exportTo} />
           </div>
           <p className="m-0 text-[.76rem] leading-relaxed text-muted">
-            A PDF with this account’s transactions for the selected dates will be emailed to the address above. Reports include dates through today.
+            A PDF with this account’s transactions for the selected dates will be emailed to the address above.
           </p>
         </form>
       </BottomSheet>

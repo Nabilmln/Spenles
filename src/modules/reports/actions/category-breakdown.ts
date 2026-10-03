@@ -2,11 +2,7 @@
 
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { getReportCategoryBreakdown } from "@/modules/reports";
-import {
-  todayJakartaDate,
-} from "@/modules/reports/lib/report-date";
-
-const DATE_KEY = /^\d{4}-\d{2}-\d{2}$/u;
+import { parseReportParams } from "@/modules/reports";
 
 export type CategoryBreakdownResult = {
   ok: true;
@@ -37,13 +33,11 @@ export async function getCategoryBreakdownAction(input: {
   if (input.categoryType !== "income" && input.categoryType !== "expense") {
     return { ok: false, reason: "invalid-input" };
   }
-  const today = todayJakartaDate();
-  if (
-    !DATE_KEY.test(input.from) ||
-    !DATE_KEY.test(input.to) ||
-    input.from > today ||
-    input.to > today
-  ) {
+  if (!parseReportParams(new URLSearchParams({
+    period: "custom",
+    from: input.from,
+    to: input.to,
+  }))) {
     return { ok: false, reason: "invalid-input" };
   }
   const user = await requireSessionUser();

@@ -40,7 +40,7 @@ export async function emailReportAction(
     details: "true",
   });
   const filters = parseReportParams(params);
-  if (!filters) return { error: "Choose valid dates up to today, within a 366-day range." };
+  if (!filters) return { error: "Choose a valid date range of up to 366 days." };
 
   try {
     const [owned, profile, options] = await Promise.all([

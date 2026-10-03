@@ -4,11 +4,9 @@ import { TransactionTrendChart } from "./transaction-trend-chart";
 
 export function ExpenseOverviewCard({
   points,
-  asOfDate,
   totalExpense,
 }: {
   points: IncomeExpensePoint[];
-  asOfDate: string;
   totalExpense: bigint;
 }) {
   const hasData = totalExpense > 0n;
@@ -19,7 +17,7 @@ export function ExpenseOverviewCard({
       <strong className="mt-[.15rem] block text-[clamp(1.5rem,7vw,2rem)] font-semibold leading-[1.15] tracking-[-.03em] tabular-nums text-foreground [overflow-wrap:anywhere]">
         {formatIdr(totalExpense)}
       </strong>
-      <TransactionTrendChart points={points} asOfDate={asOfDate} hasData={hasData} />
+      <TransactionTrendChart points={points} hasData={hasData} />
       {!hasData ? (
         <p
           role="status"

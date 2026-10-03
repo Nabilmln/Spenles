@@ -42,17 +42,11 @@ function TrendTooltip({
 
 export function TransactionTrendChart({
   points,
-  asOfDate,
   hasData,
 }: {
   points: IncomeExpensePoint[];
-  asOfDate: string;
   hasData: boolean;
 }) {
-  const visiblePoints = points.map((point) => ({
-    ...point,
-    visibleExpensePlot: point.period <= asOfDate ? point.expensePlot : null,
-  }));
   const firstDay = points[0]?.period;
   const lastDay = points.at(-1)?.period;
 
@@ -61,7 +55,7 @@ export function TransactionTrendChart({
       <div className="chart-vertical-guides h-[17rem] w-full">
         <ResponsiveContainer height="100%" width="100%">
           <ComposedChart
-            data={visiblePoints}
+            data={points}
             margin={{ top: 12, right: 5, left: 5, bottom: 0 }}
           >
             <defs>
@@ -78,7 +72,7 @@ export function TransactionTrendChart({
             />
             <Area
               type="basis"
-              dataKey="visibleExpensePlot"
+              dataKey="expensePlot"
               stroke="none"
               fill="url(#expense-trend-fill)"
               fillOpacity={1}
@@ -87,7 +81,7 @@ export function TransactionTrendChart({
             />
             <Line
               type="basis"
-              dataKey="visibleExpensePlot"
+              dataKey="expensePlot"
               stroke="var(--analytics)"
               strokeWidth={2.5}
               strokeLinecap="round"

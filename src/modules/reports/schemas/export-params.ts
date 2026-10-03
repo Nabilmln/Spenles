@@ -38,18 +38,8 @@ function addCalendarDays(value: string, days: number) {
   }).format(date);
 }
 
-function currentJakartaDate(now: Date) {
-  return new Intl.DateTimeFormat("sv-SE", {
-    timeZone: REPORT_TIMEZONE,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  }).format(now);
-}
-
 function buildInterval(
   values: Record<string, string>,
-  now: Date,
 ): ReportInterval | null {
   const kind = values.period;
   let startDate: string;
@@ -88,16 +78,6 @@ function buildInterval(
     return null;
   }
 
-  const today = currentJakartaDate(now);
-  if (
-    (kind === "month" || kind === "year") &&
-    startDate <= today &&
-    inclusiveEndDate > today
-  ) {
-    inclusiveEndDate = today;
-    label = `${label} (through ${today})`;
-  }
-
   const start = jakartaDate(startDate);
   const inclusiveEnd = jakartaDate(inclusiveEndDate);
   const exclusiveEndDate = addCalendarDays(inclusiveEndDate, 1);
@@ -108,7 +88,6 @@ function buildInterval(
   ) + 1;
   if (
     startDate < REPORT_EARLIEST_DATE ||
-    inclusiveEndDate > today ||
     start > inclusiveEnd ||
     inclusiveDays > REPORT_MAX_DAYS
   ) {
@@ -152,11 +131,10 @@ const sharedKeys = new Set([
 function parseShared(
   params: URLSearchParams,
   allowed: ReadonlySet<string>,
-  now: Date,
 ) {
   const values = paramsToObject(params, allowed);
   if (!values) return null;
-  const interval = buildInterval(values, now);
+  const interval = buildInterval(values);
   if (!interval) return null;
 
   const expectedPeriodKeys =
@@ -187,12 +165,10 @@ function parseShared(
 
 export function parseReportParams(
   params: URLSearchParams,
-  now = new Date(),
 ): ReportFilters | null {
   const parsed = parseShared(
     params,
     new Set([...sharedKeys, "details"]),
-    now,
   );
   if (!parsed) return null;
   if (parsed.values.details && !["true", "false"].includes(parsed.values.details)) {

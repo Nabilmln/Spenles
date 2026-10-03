@@ -122,7 +122,6 @@ describe("Phase 06 authenticated reports and exports", () => {
 
   const filters = parseReportParams(
     new URLSearchParams("period=month&month=2026-08&details=true"),
-    new Date("2026-08-06T06:00:00.000Z"),
   )!;
 
   it("rejects a foreign account filter without revealing its existence", async () => {
@@ -205,7 +204,6 @@ describe("Phase 06 authenticated reports and exports", () => {
         new URLSearchParams(
           "period=month&month=2026-09&details=true",
         ),
-        new Date("2026-09-02T02:00:00.000Z"),
       )!,
       database,
       new Date("2026-09-02T02:00:00.000Z"),
@@ -221,7 +219,6 @@ describe("Phase 06 authenticated reports and exports", () => {
           new URLSearchParams(
             "period=month&month=2026-09&details=true",
           ),
-          new Date("2026-09-02T02:00:00.000Z"),
         )!,
         database,
         new Date("2026-09-02T02:00:00.000Z"),
