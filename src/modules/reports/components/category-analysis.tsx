@@ -171,7 +171,7 @@ export function CategoryAnalysis({
                       </Link>
                     </th>
                     <td className="py-[.65rem] text-center align-middle">
-                      <span aria-label={`${shareLabel} percent`} className="inline-flex min-w-[2.25rem] justify-center rounded-full bg-primary-700 px-[.35rem] py-[.2rem] text-[.69rem] font-semibold tabular-nums text-white">
+                      <span aria-label={`${shareLabel} percent`} className="inline-flex min-w-[2.25rem] justify-center rounded-[.38rem] bg-primary-700 px-[.35rem] py-[.2rem] text-[.69rem] font-semibold tabular-nums text-white">
                         {shareLabel}
                       </span>
                     </td>

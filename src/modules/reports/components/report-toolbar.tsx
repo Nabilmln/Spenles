@@ -52,7 +52,7 @@ export function ReportToolbar({
 
   return (
     <div>
-      <div className="flex gap-[.6rem]">
+      <div className="flex gap-[.2rem]">
         <button
           aria-label={`Select date range: ${rangeLabel}`}
           className={cn(
@@ -63,8 +63,7 @@ export function ReportToolbar({
           type="button"
         >
           <span className="grid w-[1.9rem] shrink-0 justify-items-center gap-[.1rem]">
-            <CalendarRange aria-hidden="true" size={18} />
-            <span className="text-[.72rem] font-medium leading-none text-muted">Date</span>
+            <CalendarRange aria-hidden="true" size={25} />
           </span>
           <span className="grid min-w-0 flex-1 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-[.18rem] whitespace-nowrap">
             <span className="min-w-0 rounded-[.42rem] bg-primary-700 px-[.3rem] py-[.5rem] text-center text-[.8rem] font-semibold leading-none text-white">

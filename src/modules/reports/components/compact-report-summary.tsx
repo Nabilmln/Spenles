@@ -26,7 +26,7 @@ export function CompactReportSummary({
   totals: ReportTotals;
 }) {
   return (
-    <section aria-label="Period overview" className="grid grid-cols-3 gap-[.4rem]">
+    <section aria-label="Period overview" className="grid grid-cols-3 gap-[.2rem]">
       <article className={cardCellClass}>
         <p className={labelClass}>Income</p>
         <strong className={valueClass}>{nominal(BigInt(totals.incomeIdr))}</strong>

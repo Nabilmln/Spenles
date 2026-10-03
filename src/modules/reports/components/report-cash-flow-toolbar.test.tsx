@@ -101,7 +101,6 @@ describe("report toolbar", () => {
     expect(within(dateButton).getByText("1 Aug 26")).toBeInTheDocument();
     expect(within(dateButton).getByText("-")).toBeInTheDocument();
     expect(within(dateButton).getByText("7 Aug 26")).toBeInTheDocument();
-    expect(within(dateButton).getByText("Date")).toBeInTheDocument();
     expect(within(dateButton).queryByText("Select date")).not.toBeInTheDocument();
     expect(dateButton.firstElementChild?.firstElementChild?.tagName.toLowerCase()).toBe("svg");
     fireEvent.click(dateButton);

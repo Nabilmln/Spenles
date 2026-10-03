@@ -67,14 +67,15 @@ export default async function ReportsPage({
   };
   return (
     <div className={`${pageStackClass} max-w-[78rem]`}>
-      <ReportToolbar
-        from={from}
-        to={to}
-        email={user.email ?? ""}
-        accounts={reportOptions.accounts}
-      />
-
-      <CompactReportSummary totals={totals} />
+      <div className="grid gap-[.2rem]">
+        <ReportToolbar
+          from={from}
+          to={to}
+          email={user.email ?? ""}
+          accounts={reportOptions.accounts}
+        />
+        <CompactReportSummary totals={totals} />
+      </div>
 
       <ReportCashFlow points={buildCashFlowPoints(analysis.series, { from, to, daily: analysis.daily })} from={from} to={to} />
 
