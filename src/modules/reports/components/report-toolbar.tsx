@@ -57,7 +57,7 @@ export function ReportToolbar({
           aria-label={`Select date range: ${rangeLabel}`}
           className={cn(
             triggerClass,
-            "flex min-h-[3.05rem] min-w-0 flex-1 items-center gap-[.35rem] p-[.45rem_.55rem] text-left",
+            "flex min-h-[3.5rem] min-w-0 flex-1 items-center gap-[.35rem] p-[.45rem_.55rem] text-left",
           )}
           onClick={() => setSheet("range")}
           type="button"
@@ -66,11 +66,11 @@ export function ReportToolbar({
             <CalendarRange aria-hidden="true" size={25} />
           </span>
           <span className="grid min-w-0 flex-1 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-[.18rem] whitespace-nowrap">
-            <span className="min-w-0 rounded-[.42rem] bg-primary-700 px-[.3rem] py-[.5rem] text-center text-[.8rem] font-semibold leading-none text-white">
+            <span className="min-w-0 rounded-[.42rem] bg-primary-700 px-[.3rem] py-[.6rem] text-center text-[.8rem] font-semibold leading-none text-white">
               {formatReportDateChip(from)}
             </span>
             <span className="text-[.8rem] font-medium text-muted">-</span>
-            <span className="min-w-0 rounded-[.42rem] bg-primary-700 px-[.3rem] py-[.5rem] text-center text-[.8rem] font-semibold leading-none text-white">
+            <span className="min-w-0 rounded-[.42rem] bg-primary-700 px-[.3rem] py-[.6rem] text-center text-[.8rem] font-semibold leading-none text-white">
               {formatReportDateChip(to)}
             </span>
           </span>
@@ -80,12 +80,12 @@ export function ReportToolbar({
           aria-label="Export report"
           className={cn(
             triggerClass,
-            "grid size-[3.05rem] shrink-0 place-items-center p-0",
+            "grid size-[3.5rem] shrink-0 place-items-center p-0",
           )}
           onClick={() => setSheet("export")}
           type="button"
         >
-          <Upload aria-hidden="true" size={20} />
+          <Upload aria-hidden="true" size={22} />
         </button>
       </div>
 

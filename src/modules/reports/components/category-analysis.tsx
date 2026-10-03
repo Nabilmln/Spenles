@@ -144,12 +144,12 @@ export function CategoryAnalysis({
             <thead>
               <tr className="border-b border-border text-[.7rem] font-medium text-muted">
                 <th scope="col" className="pb-2 text-left"><span className="sr-only">Mark</span></th>
-                <th scope="col" className="pb-2 text-left font-medium">Category</th>
+                <th scope="col" className="pb-2 text-center font-medium">Category</th>
                 <th scope="col" className="pb-2 text-center font-medium">
                   <span className="sr-only">Percentage</span>
                   <Percent aria-hidden="true" className="mx-auto" size={14} strokeWidth={1.8} />
                 </th>
-                <th scope="col" className="pb-2 text-right font-medium">Amount</th>
+                <th scope="col" className="pb-2 text-center font-medium">Amount</th>
               </tr>
             </thead>
             <tbody>
