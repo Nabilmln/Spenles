@@ -60,7 +60,8 @@ export function TransactionTrendChart({
           >
             <defs>
               <linearGradient id="expense-trend-fill" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--analytics)" stopOpacity={0.18} />
+                <stop offset="0%" stopColor="var(--analytics)" stopOpacity={0.3} />
+                <stop offset="55%" stopColor="var(--analytics)" stopOpacity={0.14} />
                 <stop offset="100%" stopColor="var(--analytics)" stopOpacity={0} />
               </linearGradient>
             </defs>
@@ -73,6 +74,7 @@ export function TransactionTrendChart({
             <Area
               type="monotone"
               dataKey="expensePlot"
+              baseValue={0}
               stroke="none"
               fill="url(#expense-trend-fill)"
               fillOpacity={1}
