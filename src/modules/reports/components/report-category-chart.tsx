@@ -1,6 +1,6 @@
 "use client";
 
-import { useId } from "react";
+import { useId, useSyncExternalStore } from "react";
 import {
   Cell,
   Pie,
@@ -18,6 +18,19 @@ export type ReportCategorySlice = {
 };
 
 type TooltipEntry = { payload?: ReportCategorySlice };
+
+const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+
+function subscribeToMotionPreference(onChange: () => void) {
+  if (!window.matchMedia) return () => {};
+  const media = window.matchMedia(REDUCED_MOTION_QUERY);
+  media.addEventListener("change", onChange);
+  return () => media.removeEventListener("change", onChange);
+}
+
+function shouldAnimatePie() {
+  return !(window.matchMedia?.(REDUCED_MOTION_QUERY).matches ?? false);
+}
 
 function SliceTooltip({
   active,
@@ -43,6 +56,12 @@ export function ReportCategoryChart({
   slices: ReportCategorySlice[];
 }) {
   const patternPrefix = useId().replace(/[^a-zA-Z0-9_-]/g, "");
+  const animateOnEntry = useSyncExternalStore(
+    subscribeToMotionPreference,
+    shouldAnimatePie,
+    () => null,
+  );
+  const chartDataKey = JSON.stringify(slices.map(({ name, amountIdr, shareBps }) => [name, amountIdr, shareBps]));
 
   return (
     <div aria-hidden="true" className="mt-4 h-[16rem] w-full">
@@ -64,27 +83,32 @@ export function ReportCategoryChart({
               </pattern>
             ))}
           </defs>
-          <Pie
-            data={slices}
-            dataKey="shareBps"
-            nameKey="name"
-            innerRadius="55%"
-            outerRadius="85%"
-            paddingAngle={2}
-            stroke="var(--surface)"
-            strokeWidth={2}
-            animationDuration={600}
-            animationEasing="ease-out"
-          >
-            {slices.map((slice, index) => (
-              <Cell
-                key={`${slice.name}-${index}`}
-                fill={`url(#${patternPrefix}-category-${index})`}
-                stroke={slice.fill}
-                strokeWidth={1.5}
-              />
-            ))}
-          </Pie>
+          {animateOnEntry !== null ? (
+            <Pie
+              key={chartDataKey}
+              data={slices}
+              dataKey="shareBps"
+              nameKey="name"
+              innerRadius="55%"
+              outerRadius="85%"
+              paddingAngle={2}
+              stroke="var(--surface)"
+              strokeWidth={2}
+              isAnimationActive={animateOnEntry}
+              animationBegin={0}
+              animationDuration={800}
+              animationEasing="ease-out"
+            >
+              {slices.map((slice, index) => (
+                <Cell
+                  key={`${slice.name}-${index}`}
+                  fill={`url(#${patternPrefix}-category-${index})`}
+                  stroke={slice.fill}
+                  strokeWidth={1.5}
+                />
+              ))}
+            </Pie>
+          ) : null}
           <Tooltip content={<SliceTooltip />} />
         </PieChart>
       </ResponsiveContainer>
