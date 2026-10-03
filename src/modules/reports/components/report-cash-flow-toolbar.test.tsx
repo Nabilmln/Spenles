@@ -127,8 +127,17 @@ describe("report toolbar", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Export report" }));
     expect(screen.getByRole("dialog", { name: "Export report" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Export report" }).textContent).toBe("");
     expect(screen.getByRole("textbox", { name: "Send to" })).toHaveValue("user@example.com");
-    expect(screen.getByRole("combobox", { name: "Source account" })).toBeInTheDocument();
+    const accountButton = screen.getByRole("button", { name: "Source account Choose an account" });
+    expect(accountButton).toHaveTextContent("Choose an account");
+    expect(screen.getByRole("button", { name: "Email report" })).toBeDisabled();
+    fireEvent.click(accountButton);
+    const accountDialog = screen.getByRole("dialog", { name: "Select account" });
+    fireEvent.click(within(accountDialog).getByRole("button", { name: "Main account" }));
+    expect(accountButton).toHaveTextContent("Main account");
+    expect(screen.getByRole("button", { name: "Email report" })).toBeEnabled();
+    expect(document.querySelector('input[name="accountId"]')).toHaveValue(reportToolbarProps.accounts[0].id);
     expect(screen.getByRole("button", { name: "Email report" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: "Choose report date range" }));
     expect(screen.getByRole("dialog", { name: "Report dates" })).toBeInTheDocument();

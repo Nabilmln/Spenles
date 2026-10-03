@@ -83,12 +83,14 @@ export function AccountSelectionSheet({
   accounts,
   selectedId,
   onSelect,
+  zIndex = "z-[85]",
 }: {
   open: boolean;
   onClose: () => void;
   accounts: { id: string; name: string }[];
   selectedId: string;
   onSelect: (id: string) => void;
+  zIndex?: string;
 }) {
   return (
     <BottomSheet
@@ -96,7 +98,7 @@ export function AccountSelectionSheet({
       onClose={onClose}
       title="Select Account"
       ariaLabel="Select account"
-      zIndex="z-[85]"
+      zIndex={zIndex}
     >
       <div className="grid max-h-[60vh] gap-[.4rem] overflow-y-auto">
         {accounts.map((item) => {

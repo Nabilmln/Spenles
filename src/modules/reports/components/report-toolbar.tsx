@@ -1,16 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { CalendarRange, ChevronDown, Send, Upload } from "lucide-react";
+import { CalendarRange, ChevronDown, ChevronRight, Send, Upload } from "lucide-react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { CalendarRangeSelector } from "@/components/ui/calendar-range-selector";
 import { buttonClass, fieldClass, fieldLabelClass, inputClass } from "@/components/ui/styles";
 import { useToastActionState } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
+import { AccountSelectionSheet } from "@/modules/transactions/components/selection-sheets";
 import { emailReportAction, type EmailReportState } from "../actions/email-report";
 import { formatReportRange, formatReportRangeShort } from "../lib/report-date";
 
-type Sheet = "none" | "range" | "export" | "export-range";
+type Sheet = "none" | "range" | "export" | "export-account" | "export-range";
 
 const triggerClass =
   "cursor-pointer rounded-[.78rem] border border-border bg-surface font-medium text-foreground transition-[border,box-shadow] duration-150 hover:border-primary-500 focus:border-primary-500 focus:shadow-[0_0_0_3px_rgb(23_23_23/12%)] focus:outline-none";
@@ -40,6 +41,7 @@ export function ReportToolbar({
   const rangeLabel = formatReportRange(from, to);
   const rangeLabelShort = formatReportRangeShort(from, to);
   const exportRangeLabel = formatReportRangeShort(exportFrom, exportTo);
+  const selectedAccount = accounts.find((account) => account.id === accountId);
 
   function applyRange(nextFrom: string, nextTo: string) {
     setSheet("none");
@@ -56,7 +58,7 @@ export function ReportToolbar({
           aria-label={`Select date range: ${rangeLabel}`}
           className={cn(
             triggerClass,
-            "flex min-h-[3.05rem] flex-[1_1_auto] items-center gap-[.6rem] p-[.5rem_1rem] text-left",
+            "flex min-h-[3.05rem] min-w-0 flex-1 items-center gap-[.6rem] p-[.5rem_1rem] text-left",
           )}
           onClick={() => setSheet("range")}
           type="button"
@@ -79,21 +81,12 @@ export function ReportToolbar({
           aria-label="Export report"
           className={cn(
             triggerClass,
-            "flex min-h-[3.05rem] shrink-0 items-center gap-[.6rem] p-[.5rem_.85rem]",
+            "grid size-[3.05rem] shrink-0 place-items-center p-0",
           )}
           onClick={() => setSheet("export")}
           type="button"
         >
-          <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary-50 text-primary-600">
-            <Upload aria-hidden="true" size={18} />
-          </span>
-          <span className="grid text-left gap-[.05rem]">
-            <span className="truncate text-[.66rem] font-semibold uppercase tracking-[.06em] text-muted">
-              Export
-            </span>
-            <span className="truncate text-[.84rem] font-semibold">Report</span>
-          </span>
-          <ChevronDown aria-hidden="true" className="shrink-0 text-muted" size={16} />
+          <Upload aria-hidden="true" size={20} />
         </button>
       </div>
 
@@ -119,7 +112,7 @@ export function ReportToolbar({
         ariaLabel="Export report"
         zIndex="z-[85]"
         footer={
-          <button className={cn(buttonClass("primary"), "w-full")} disabled={sending || accounts.length === 0} form="email-report-form" type="submit">
+          <button className={cn(buttonClass("primary"), "w-full")} disabled={sending || !accountId} form="email-report-form" type="submit">
             <Send aria-hidden="true" size={18} />
             {sending ? "Preparing report..." : "Email report"}
           </button>
@@ -140,18 +133,19 @@ export function ReportToolbar({
             />
           </div>
           <div className={fieldClass}>
-            <label className={fieldLabelClass} htmlFor="report-account">Source account</label>
-            <select
-              className={inputClass}
-              id="report-account"
-              name="accountId"
-              onChange={(event) => setAccountId(event.target.value)}
-              required
-              value={accountId}
+            <span className={fieldLabelClass} id="report-account-label">Source account</span>
+            <button
+              aria-haspopup="dialog"
+              aria-labelledby="report-account-label report-account-value"
+              className={cn(inputClass, "flex items-center justify-between gap-2 bg-white text-left")}
+              disabled={accounts.length === 0}
+              onClick={() => setSheet("export-account")}
+              type="button"
             >
-              <option value="">Choose an account</option>
-              {accounts.map((account) => <option key={account.id} value={account.id}>{account.name}</option>)}
-            </select>
+              <span className="min-w-0 truncate" id="report-account-value">{selectedAccount?.name ?? "Choose an account"}</span>
+              <ChevronRight aria-hidden="true" className="shrink-0 text-muted" size={18} />
+            </button>
+            <input name="accountId" type="hidden" value={accountId} />
           </div>
           <div className={fieldClass}>
             <span className={fieldLabelClass}>Date range</span>
@@ -173,6 +167,14 @@ export function ReportToolbar({
           </p>
         </form>
       </BottomSheet>
+      <AccountSelectionSheet
+        accounts={accounts}
+        onClose={() => setSheet("export")}
+        onSelect={setAccountId}
+        open={sheet === "export-account"}
+        selectedId={accountId}
+        zIndex="z-[90]"
+      />
       <BottomSheet
         open={sheet === "export-range"}
         onClose={() => setSheet("export")}
