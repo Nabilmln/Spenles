@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import {
   Cell,
   Pie,
@@ -41,10 +42,28 @@ export function ReportCategoryChart({
 }: {
   slices: ReportCategorySlice[];
 }) {
+  const patternPrefix = useId().replace(/[^a-zA-Z0-9_-]/g, "");
+
   return (
     <div aria-hidden="true" className="mt-4 h-[16rem] w-full">
       <ResponsiveContainer height="100%" width="100%">
         <PieChart margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
+          <defs>
+            {slices.map((slice, index) => (
+              <pattern
+                id={`${patternPrefix}-category-${index}`}
+                key={`${slice.name}-${index}`}
+                patternTransform="rotate(45)"
+                patternUnits="userSpaceOnUse"
+                width="8"
+                height="8"
+              >
+                <rect width="8" height="8" fill="var(--surface)" />
+                <rect width="8" height="8" fill={slice.fill} fillOpacity="0.1" />
+                <path d="M 0 0 V 8" stroke={slice.fill} strokeWidth="3" />
+              </pattern>
+            ))}
+          </defs>
           <Pie
             data={slices}
             dataKey="shareBps"
@@ -57,8 +76,13 @@ export function ReportCategoryChart({
             animationDuration={600}
             animationEasing="ease-out"
           >
-            {slices.map((slice) => (
-              <Cell key={slice.name} fill={slice.fill} />
+            {slices.map((slice, index) => (
+              <Cell
+                key={`${slice.name}-${index}`}
+                fill={`url(#${patternPrefix}-category-${index})`}
+                stroke={slice.fill}
+                strokeWidth={1.5}
+              />
             ))}
           </Pie>
           <Tooltip content={<SliceTooltip />} />
