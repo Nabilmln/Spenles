@@ -20,6 +20,7 @@ import { getPeriodSavings } from "@/modules/accounts";
 import { getDailyIncomeExpenseAggregates } from "@/modules/dashboard";
 import { monthIntervalForKey } from "@/modules/dashboard";
 import { jakartaNowDate } from "@/lib/dates/jakarta";
+import { jakartaDateBoundary } from "@/lib/dates/jakarta";
 import { buildMonthlyExpenseOverview } from "../services/expense-overview";
 import type { TransactionFilters } from "../schemas/transaction-filters";
 import { categoryJoin, conditions, dateInterval } from "./transaction-search";
@@ -121,6 +122,7 @@ export async function getTransactionSummary(
   database: Database = db,
 ) {
   const interval = dateInterval(filters);
+  const tomorrow = new Date(jakartaDateBoundary(jakartaNowDate())!.getTime() + 86_400_000);
   const [totals, savings] = await Promise.all([
     database
       .select({
@@ -138,6 +140,7 @@ export async function getTransactionSummary(
         and(
           eq(transactions.userId, userId),
           isNull(transactions.deletedAt),
+          lt(transactions.transactionAt, tomorrow),
           interval
             ? and(
                 gte(transactions.transactionAt, interval.start),

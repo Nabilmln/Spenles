@@ -34,6 +34,7 @@ const balanceExpression = sql`
       where transaction.user_id = account.user_id
         and transaction.account_id = account.id
         and transaction.deleted_at is null
+        and transaction.transaction_at < ((timezone('Asia/Jakarta', now())::date + interval '1 day') at time zone 'Asia/Jakarta')
     ), 0)
     + coalesce((
       select sum(transfer.amount)

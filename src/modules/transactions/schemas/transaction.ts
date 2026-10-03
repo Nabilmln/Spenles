@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { jakartaDateBoundary, jakartaNowDate } from "@/lib/dates/jakarta";
+import { jakartaDateBoundary } from "@/lib/dates/jakarta";
 import { moneyString } from "@/lib/money/schema";
 import { optionalNoteSchema } from "@/lib/validation/note";
 
@@ -15,8 +15,8 @@ export const transactionSchema = z.object({
   transactionAt: z.string().refine((value) => {
     if (!/^\d{4}-\d{2}-\d{2}$/u.test(value)) return false;
     if (!jakartaDateBoundary(value)) return false;
-    return value <= jakartaNowDate();
-  }, "Transaction date is invalid or in the future."),
+    return true;
+  }, "Transaction date is invalid."),
   note: optionalNoteSchema,
 });
 

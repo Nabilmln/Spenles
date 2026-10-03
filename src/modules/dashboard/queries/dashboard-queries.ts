@@ -75,6 +75,7 @@ export async function getSelectedAndPreviousTotals(
       and deleted_at is null
       and transaction_at >= ${previous.start}
       and transaction_at < ${selected.end}
+      and transaction_at < ((timezone('Asia/Jakarta', now())::date + interval '1 day') at time zone 'Asia/Jakarta')
   `);
 
   const row = result.rows[0];
@@ -116,6 +117,7 @@ export async function getMonthlyAggregates(
       and deleted_at is null
       and transaction_at >= ${interval.start}
       and transaction_at < ${interval.end}
+      and transaction_at < ((timezone('Asia/Jakarta', now())::date + interval '1 day') at time zone 'Asia/Jakarta')
     group by date_trunc(
       'month',
       timezone('Asia/Jakarta', transaction_at)
@@ -157,6 +159,7 @@ export async function getCategoryExpenseAggregates(
       and owned_transaction.type = 'expense'
       and owned_transaction.transaction_at >= ${interval.start}
       and owned_transaction.transaction_at < ${interval.end}
+      and owned_transaction.transaction_at < ((timezone('Asia/Jakarta', now())::date + interval '1 day') at time zone 'Asia/Jakarta')
     group by
       owned_category.id,
       owned_category.name,
@@ -206,6 +209,7 @@ export async function getRecentActivityTransactions(
       and owned_category.user_id = ${authenticatedUserId}
     where owned_transaction.user_id = ${authenticatedUserId}
       and owned_transaction.deleted_at is null
+      and owned_transaction.transaction_at < ((timezone('Asia/Jakarta', now())::date + interval '1 day') at time zone 'Asia/Jakarta')
       ${interval
         ? sql`and owned_transaction.transaction_at >= ${interval.start}
             and owned_transaction.transaction_at < ${interval.end}`
@@ -251,6 +255,7 @@ export async function getDailyExpenseAggregates(
       and type = 'expense'
       and transaction_at >= ${interval.start}
       and transaction_at < ${interval.end}
+      and transaction_at < ((timezone('Asia/Jakarta', now())::date + interval '1 day') at time zone 'Asia/Jakarta')
     group by to_char(
       timezone('Asia/Jakarta', transaction_at),
       'YYYY-MM-DD'
@@ -299,6 +304,7 @@ export async function getDailyIncomeExpenseAggregates(
       and deleted_at is null
       and transaction_at >= ${interval.start}
       and transaction_at < ${interval.end}
+      and transaction_at < ((timezone('Asia/Jakarta', now())::date + interval '1 day') at time zone 'Asia/Jakarta')
     group by to_char(
       timezone('Asia/Jakarta', transaction_at),
       'YYYY-MM-DD'
@@ -340,6 +346,7 @@ export async function getWeeklyIncomeExpenseAggregates(
       and deleted_at is null
       and transaction_at >= ${interval.start}
       and transaction_at < ${interval.end}
+      and transaction_at < ((timezone('Asia/Jakarta', now())::date + interval '1 day') at time zone 'Asia/Jakarta')
     group by date_trunc(
       'week',
       timezone('Asia/Jakarta', transaction_at)

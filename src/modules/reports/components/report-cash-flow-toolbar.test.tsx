@@ -5,6 +5,17 @@ import type { ReportMonth } from "../types";
 import { buildCashFlowPoints, ReportCashFlow } from "./report-cash-flow";
 import { ReportToolbar } from "./report-toolbar";
 
+vi.mock("../actions/email-report", () => ({
+  emailReportAction: vi.fn(async () => ({ success: "Report queued." })),
+}));
+
+const reportToolbarProps = {
+  from: "2026-08-01",
+  to: "2026-08-07",
+  email: "user@example.com",
+  accounts: [{ id: "11111111-1111-4111-8111-111111111111", name: "Main account" }],
+};
+
 afterEach(cleanup);
 
 vi.mock("@/modules/dashboard", () => ({
@@ -82,10 +93,7 @@ describe("report toolbar", () => {
   it("shows the current range and opens the range sheet", () => {
     render(
       <ReportToolbar
-        from="2026-08-01"
-        to="2026-08-07"
-        pdfHref="/pdf"
-        pdfPreviewHref="/pdf?preview=1"
+        {...reportToolbarProps}
       />,
     );
 
@@ -97,10 +105,7 @@ describe("report toolbar", () => {
   it("keeps the range sheet open while picking calendar days", () => {
     render(
       <ReportToolbar
-        from="2026-08-01"
-        to="2026-08-07"
-        pdfHref="/pdf"
-        pdfPreviewHref="/pdf?preview=1"
+        {...reportToolbarProps}
       />,
     );
 
@@ -113,22 +118,19 @@ describe("report toolbar", () => {
     expect(screen.getByRole("dialog", { name: "Select date range" })).toBeInTheDocument();
   });
 
-  it("opens the export sheet with an inline PDF preview and a download button", () => {
+  it("opens the export sheet with recipient, account, date, and send controls", () => {
     render(
       <ReportToolbar
-        from="2026-08-01"
-        to="2026-08-07"
-        pdfHref="/pdf"
-        pdfPreviewHref="/pdf?preview=1"
+        {...reportToolbarProps}
       />,
     );
 
     fireEvent.click(screen.getByRole("button", { name: "Export report" }));
     expect(screen.getByRole("dialog", { name: "Export report" })).toBeInTheDocument();
-    const preview = screen.getByTitle("Report preview");
-    expect(preview).toHaveAttribute("src", "/pdf?preview=1");
-    const download = screen.getByRole("link", { name: "Download PDF" });
-    expect(download).toHaveAttribute("href", "/pdf");
-    expect(screen.queryByRole("link", { name: "Export CSV" })).toBeNull();
+    expect(screen.getByRole("textbox", { name: "Send to" })).toHaveValue("user@example.com");
+    expect(screen.getByRole("combobox", { name: "Source account" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Email report" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Choose report date range" }));
+    expect(screen.getByRole("dialog", { name: "Report dates" })).toBeInTheDocument();
   });
 });

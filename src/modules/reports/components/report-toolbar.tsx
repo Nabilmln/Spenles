@@ -1,14 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { CalendarRange, ChevronDown, Download, FileText } from "lucide-react";
+import { CalendarRange, ChevronDown, Send, Upload } from "lucide-react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { CalendarRangeSelector } from "@/components/ui/calendar-range-selector";
-import { buttonClass } from "@/components/ui/styles";
+import { buttonClass, fieldClass, fieldLabelClass, inputClass } from "@/components/ui/styles";
+import { useToastActionState } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
+import { emailReportAction, type EmailReportState } from "../actions/email-report";
 import { formatReportRange, formatReportRangeShort } from "../lib/report-date";
 
-type Sheet = "none" | "range" | "export";
+type Sheet = "none" | "range" | "export" | "export-range";
 
 const triggerClass =
   "cursor-pointer rounded-[.78rem] border border-border bg-surface font-medium text-foreground transition-[border,box-shadow] duration-150 hover:border-primary-500 focus:border-primary-500 focus:shadow-[0_0_0_3px_rgb(23_23_23/12%)] focus:outline-none";
@@ -16,17 +18,28 @@ const triggerClass =
 export function ReportToolbar({
   from,
   to,
-  pdfHref,
-  pdfPreviewHref,
+  email,
+  accounts,
 }: {
   from: string;
   to: string;
-  pdfHref: string;
-  pdfPreviewHref: string;
+  email: string;
+  accounts: { id: string; name: string }[];
 }) {
   const [sheet, setSheet] = useState<Sheet>("none");
+  const [recipient, setRecipient] = useState(email);
+  const [accountId, setAccountId] = useState("");
+  const [exportFrom, setExportFrom] = useState(from);
+  const [exportTo, setExportTo] = useState(to);
+  const [, sendAction, sending] = useToastActionState<EmailReportState, FormData>(
+    emailReportAction,
+    {},
+    undefined,
+    () => setSheet("none"),
+  );
   const rangeLabel = formatReportRange(from, to);
   const rangeLabelShort = formatReportRangeShort(from, to);
+  const exportRangeLabel = formatReportRangeShort(exportFrom, exportTo);
 
   function applyRange(nextFrom: string, nextTo: string) {
     setSheet("none");
@@ -72,7 +85,7 @@ export function ReportToolbar({
           type="button"
         >
           <span className="grid size-9 shrink-0 place-items-center rounded-full bg-primary-50 text-primary-600">
-            <FileText aria-hidden="true" size={18} />
+            <Upload aria-hidden="true" size={18} />
           </span>
           <span className="grid text-left gap-[.05rem]">
             <span className="truncate text-[.66rem] font-semibold uppercase tracking-[.06em] text-muted">
@@ -106,28 +119,78 @@ export function ReportToolbar({
         ariaLabel="Export report"
         zIndex="z-[85]"
         footer={
-          <a
-            className={cn(buttonClass("primary"), "w-full")}
-            download
-            href={pdfHref}
-          >
-            <Download aria-hidden="true" size={18} />
-            Download PDF
-          </a>
+          <button className={cn(buttonClass("primary"), "w-full")} disabled={sending || accounts.length === 0} form="email-report-form" type="submit">
+            <Send aria-hidden="true" size={18} />
+            {sending ? "Preparing report..." : "Email report"}
+          </button>
         }
       >
-        <p className="m-0 mb-4 text-muted">
-          Preview the {rangeLabel} report below before downloading.
-        </p>
-        <iframe
-          className="h-[min(52dvh,26rem)] w-full rounded-[1.12rem] border border-border bg-surface-subtle"
-          src={pdfPreviewHref}
-          title="Report preview"
+        <form action={sendAction} className="grid gap-5" id="email-report-form">
+          <div className={fieldClass}>
+            <label className={fieldLabelClass} htmlFor="report-recipient">Send to</label>
+            <input
+              autoComplete="email"
+              className={inputClass}
+              id="report-recipient"
+              name="email"
+              onChange={(event) => setRecipient(event.target.value)}
+              required
+              type="email"
+              value={recipient}
+            />
+          </div>
+          <div className={fieldClass}>
+            <label className={fieldLabelClass} htmlFor="report-account">Source account</label>
+            <select
+              className={inputClass}
+              id="report-account"
+              name="accountId"
+              onChange={(event) => setAccountId(event.target.value)}
+              required
+              value={accountId}
+            >
+              <option value="">Choose an account</option>
+              {accounts.map((account) => <option key={account.id} value={account.id}>{account.name}</option>)}
+            </select>
+          </div>
+          <div className={fieldClass}>
+            <span className={fieldLabelClass}>Date range</span>
+            <button
+              aria-haspopup="dialog"
+              aria-label="Choose report date range"
+              className={cn(inputClass, "flex items-center justify-between bg-white text-left")}
+              onClick={() => setSheet("export-range")}
+              type="button"
+            >
+              <span>{exportRangeLabel}</span>
+              <CalendarRange aria-hidden="true" size={18} />
+            </button>
+            <input name="from" type="hidden" value={exportFrom} />
+            <input name="to" type="hidden" value={exportTo} />
+          </div>
+          <p className="m-0 text-[.76rem] leading-relaxed text-muted">
+            A PDF with this account’s transactions for the selected dates will be emailed to the address above. Reports include dates through today.
+          </p>
+        </form>
+      </BottomSheet>
+      <BottomSheet
+        open={sheet === "export-range"}
+        onClose={() => setSheet("export")}
+        title="Report dates"
+        ariaLabel="Report dates"
+        zIndex="z-[90]"
+      >
+        <CalendarRangeSelector
+          from={exportFrom}
+          to={exportTo}
+          maxDays={366}
+          onApply={(nextFrom, nextTo) => {
+            setExportFrom(nextFrom);
+            setExportTo(nextTo);
+            setSheet("export");
+          }}
+          onCancel={() => setSheet("export")}
         />
-        <p className="mt-4 rounded-[1.12rem] bg-surface-subtle p-3 text-[.76rem] text-muted">
-          Your data stays private. PDF supports up to 366 days and max. 500
-          detail transactions.
-        </p>
       </BottomSheet>
     </div>
   );

@@ -32,8 +32,8 @@ describe("transaction validation", () => {
     expect(transactionSchema.safeParse({ ...valid, transactionAt: "2025-02-30" }).success).toBe(false);
   });
 
-  it("rejects a future calendar date", () => {
-    expect(transactionSchema.safeParse({ ...valid, transactionAt: "2999-12-31" }).success).toBe(false);
+  it("accepts a valid future calendar date", () => {
+    expect(transactionSchema.safeParse({ ...valid, transactionAt: "2027-12-31" }).success).toBe(true);
   });
 
   it("rejects notes over 500 characters", () => {

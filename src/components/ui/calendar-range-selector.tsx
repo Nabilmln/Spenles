@@ -88,7 +88,7 @@ export function CalendarRangeSelector({
   }
 
   return (
-    <div className="min-w-[19rem] mb-5">
+    <div className="mb-5 w-full min-w-0">
       <div className="mb-[.65rem] flex items-center justify-between gap-[.5rem]" role="group" aria-label="Month navigation">
         <button
           aria-label="Previous month"

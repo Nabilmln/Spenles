@@ -3,6 +3,7 @@ import { pageStackClass } from "@/components/ui/styles";
 import {
   getReportAnalysis,
   getReportCategoryBreakdown,
+  getReportOptions,
   todayJakartaDate,
 } from "@/modules/reports";
 import {
@@ -14,16 +15,13 @@ import {
   ReportToolbar,
 } from "@/modules/reports/components";
 
+export const maxDuration = 30;
+
 const DATE_KEY = /^\d{4}-\d{2}-\d{2}$/u;
 
 function currentMonthStart() {
   const today = todayJakartaDate();
   return `${today.slice(0, 7)}-01`;
-}
-
-function exportHrefs(from: string, to: string) {
-  const pdf = `/api/reports/pdf?period=custom&from=${from}&to=${to}`;
-  return { pdf, pdfPreview: `${pdf}&preview=1` };
 }
 
 export default async function ReportsPage({
@@ -46,6 +44,7 @@ export default async function ReportsPage({
     raw.categoryType === "income" ? "income" : "expense";
 
   const analysis = await getReportAnalysis(user.id, from, to);
+  const reportOptions = await getReportOptions(user.id);
   const categoryBreakdown = await getReportCategoryBreakdown(
     user.id,
     from,
@@ -61,15 +60,13 @@ export default async function ReportsPage({
     expenseIdr: analysis.summary.expenseIdr,
     netIdr: analysis.summary.netIdr,
   };
-  const exports = exportHrefs(from, to);
-
   return (
     <div className={`${pageStackClass} max-w-[78rem]`}>
       <ReportToolbar
         from={from}
         to={to}
-        pdfHref={exports.pdf}
-        pdfPreviewHref={exports.pdfPreview}
+        email={user.email ?? ""}
+        accounts={reportOptions.accounts}
       />
 
       <CompactReportSummary totals={totals} />

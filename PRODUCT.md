@@ -43,7 +43,8 @@ investment, or professional accounting service.
 
 - Personal income and expense transactions, categories, accounts, internal
   transfers, budgets, dashboard summaries, split bills, PDF reports, and a
-  versioned JSON backup are in the current app.
+  versioned JSON backup are in the current app. Report PDFs can be emailed for
+  a chosen account and date range when the email provider is configured.
 - Registration, sign-in, and password recovery use Neon Auth. Financial data
   belongs to the authenticated user; split-bill contacts are personal records.
 - Split-bill friends use one of five bundled portrait avatars. Owners can choose

@@ -179,6 +179,7 @@ export async function listOwnedBudgets(
           and transaction.category_id = budget.category_id
           and transaction.type = 'expense'
           and transaction.deleted_at is null
+          and transaction.transaction_at < ((timezone('Asia/Jakarta', now())::date + interval '1 day') at time zone 'Asia/Jakarta')
           and (
             (budget.period_type = 'monthly'
               and transaction.transaction_at >= ${windows.monthStart}::timestamp at time zone 'Asia/Jakarta'
@@ -232,6 +233,7 @@ export async function getOwnedBudget(
           and transaction.category_id = budget.category_id
           and transaction.type = 'expense'
           and transaction.deleted_at is null
+          and transaction.transaction_at < ((timezone('Asia/Jakarta', now())::date + interval '1 day') at time zone 'Asia/Jakarta')
           and (
             (budget.period_type = 'monthly'
               and transaction.transaction_at >= ${windows.monthStart}::timestamp at time zone 'Asia/Jakarta'

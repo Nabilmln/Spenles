@@ -43,8 +43,9 @@ menampilkan data terbaru.
 - **Split bill** dengan rincian tanggung jawab per orang yang deterministik:
   subtotal, diskon, pajak, service charge, dan total final yang tersimpan
   sebagai snapshot bernomor versi.
-- **Laporan dan ekspor**: laporan PDF privat dengan preview di aplikasi
-  sebelum diunduh, dan backup data pribadi JSON ber-versi.
+- **Laporan dan ekspor**: laporan PDF privat dapat dikirim melalui email untuk
+  akun dan rentang tanggal yang dipilih; backup data pribadi tetap berupa JSON
+  ber-versi yang dapat diunduh.
 
 ## Masalah dan solusi
 
@@ -123,6 +124,11 @@ npm ci
 # 2. Siapkan environment
 cp .env.example .env.local
 ```
+
+Untuk mengirim PDF laporan lewat email, buat API key Resend dan verifikasi
+domain pengirim di Resend. Isi `RESEND_API_KEY` dan `REPORT_EMAIL_FROM` di
+`.env.local` serta environment deployment. Tanpa keduanya, aplikasi tetap
+berjalan, tetapi aksi kirim laporan menampilkan pesan konfigurasi belum siap.
 
 Isi `.env.local`:
 
