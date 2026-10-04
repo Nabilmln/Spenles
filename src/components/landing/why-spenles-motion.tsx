@@ -23,66 +23,26 @@ export function WhySpenlesMotion() {
       gsap.set(photos, { autoAlpha: 0, y: 54, scale: 0.35, transformOrigin: "50% 100%" });
       gsap.set(copies, { autoAlpha: 0, y: 14 });
 
-      const reveal = gsap.timeline({ paused: true });
-      photos.forEach((photo, index) => {
-        reveal
-          .to(photo, { autoAlpha: 1, y: 0, scale: 1, duration: 0.38, ease: "back.out(1.15)" })
-          .to(copies[index], { autoAlpha: 1, y: 0, duration: 0.24, ease: "power2.out" }, "-=0.06");
-      });
-      const dismissal = gsap.timeline({ paused: true }).to(detail, {
-        autoAlpha: 0,
-        y: 36,
-        scale: 0.94,
-        transformOrigin: "50% 100%",
-        duration: 1,
-        ease: "none",
-      });
-
-      let pending: gsap.core.Tween | undefined;
-      let revealArmed = false;
       const movement = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: "top 80px",
-          end: "+=190%",
+          end: "+=150%",
           pin: true,
-          scrub: 0.8,
+          scrub: 0.4,
           anticipatePin: 1,
           invalidateOnRefresh: true,
-          onUpdate: ({ progress }) => {
-            if (progress >= 0.37 && !revealArmed) {
-              revealArmed = true;
-              pending = gsap.delayedCall(0.45, () => {
-                pending = undefined;
-                reveal.timeScale(1).play();
-              });
-            } else if (progress < 0.37 && revealArmed) {
-              revealArmed = false;
-              pending?.kill();
-              pending = undefined;
-              reveal.timeScale(1.6).reverse();
-            }
-
-            // Complete a skipped reveal before the section starts leaving.
-            if (progress >= 0.79) {
-              pending?.kill();
-              pending = undefined;
-              if (reveal.progress() < 1) reveal.progress(1);
-            }
-            dismissal.progress(gsap.utils.clamp(0, 1, (progress - 0.8) / 0.16));
-          },
         },
       });
 
-      movement
-        .fromTo(statement, { x: centeredX }, { x: 0, duration: 0.3, ease: "none" }, 0.1)
-        .to({}, { duration: 0.6 }, 0.4);
-
-      return () => {
-        pending?.kill();
-        reveal.kill();
-        dismissal.kill();
-      };
+      movement.fromTo(statement, { x: centeredX }, { x: 0, duration: 0.23, ease: "none" }, 0.03);
+      photos.forEach((photo, index) => {
+        const start = 0.25 + index * 0.15;
+        movement
+          .to(photo, { autoAlpha: 1, y: 0, scale: 1, duration: 0.11, ease: "back.out(1.15)" }, start)
+          .to(copies[index], { autoAlpha: 1, y: 0, duration: 0.06, ease: "power2.out" }, start + 0.09);
+      });
+      movement.to({}, { duration: 0.3 }, 0.7);
     });
 
     return () => media.revert();
