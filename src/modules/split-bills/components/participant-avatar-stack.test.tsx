@@ -14,23 +14,24 @@ describe("participant avatar stack", () => {
 
   it("renders a single participant avatar", () => {
     render(<ParticipantAvatarStack names={["Ayu"]} count={1} />);
-    expect(
-      screen.getByRole("img", { name: "1 participants" }),
-    ).toBeInTheDocument();
-    expect(screen.getByText("A")).toBeInTheDocument();
+    const stack = screen.getByRole("img", { name: "1 participants" });
+    expect(stack.querySelector("img")?.getAttribute("src")).toContain("default-");
   });
 
-  it("stacks up to three avatars and shows the remaining count", () => {
+  it("stacks the selected friend images and shows the remaining count", () => {
     render(
       <ParticipantAvatarStack
         names={["Ayu", "Bima", "Caca", "Deni", "Eka"]}
         count={5}
+        avatarIndexes={[2, 4, 5, null, null]}
       />,
     );
-    expect(
-      screen.getByRole("img", { name: "5 participants" }),
-    ).toBeInTheDocument();
-    expect(screen.getAllByText(/^[ABC]$/).length).toBe(3);
+    const stack = screen.getByRole("img", { name: "5 participants" });
+    const images = [...stack.querySelectorAll("img")];
+    expect(images).toHaveLength(3);
+    expect(images[0].getAttribute("src")).toContain("default-2.png");
+    expect(images[1].getAttribute("src")).toContain("default-4.png");
+    expect(images[2].getAttribute("src")).toContain("default-5.png");
     expect(screen.getByText("+2")).toBeInTheDocument();
   });
 

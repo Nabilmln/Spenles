@@ -26,9 +26,11 @@ export type SplitBillHistoryRow = {
 
 export function SplitBillHistoryCard({
   row,
+  avatarIndexes,
   onAction,
 }: {
   row: SplitBillHistoryRow;
+  avatarIndexes?: (number | null)[];
   onAction: (row: SplitBillHistoryRow) => void;
 }) {
   return (
@@ -54,6 +56,7 @@ export function SplitBillHistoryCard({
         <ParticipantAvatarStack
           names={row.participantNames}
           count={row.participantCount}
+          avatarIndexes={avatarIndexes}
         />
       </div>
 

@@ -1,3 +1,4 @@
+import { avatarIndexForId } from "@/lib/avatars";
 import { FriendAvatar } from "./friend-avatar";
 
 const DEFAULT_MAX_VISIBLE = 3;
@@ -5,10 +6,12 @@ const DEFAULT_MAX_VISIBLE = 3;
 export function ParticipantAvatarStack({
   names,
   count,
+  avatarIndexes,
   maxVisible = DEFAULT_MAX_VISIBLE,
 }: {
   names: string[];
   count: number;
+  avatarIndexes?: (number | null)[];
   maxVisible?: number;
 }) {
   if (count <= 0) return null;
@@ -36,7 +39,11 @@ export function ParticipantAvatarStack({
             }`}
             key={`${name || "p"}-${index}`}
           >
-            <FriendAvatar name={name} size="xs" />
+            <FriendAvatar
+              name={name}
+              avatarIndex={name ? avatarIndexes?.[index] ?? avatarIndexForId(name) : null}
+              size="xs"
+            />
           </span>
         ))}
       </div>

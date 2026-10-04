@@ -106,7 +106,7 @@ const filters: SplitBillFilters = {
 };
 
 const friends: FriendRow[] = [
-  { id: "f1", name: "Ayu", avatarIndex: null, createdAt: "2026-01-01T00:00:00.000Z" },
+  { id: "f1", name: "Ayu", avatarIndex: 2, createdAt: "2026-01-01T00:00:00.000Z" },
 ];
 
 const rows = [
@@ -139,6 +139,8 @@ describe("split-bill history section", () => {
     expect(screen.getByText("Ayu")).toBeInTheDocument();
     expect(screen.getByText("Split Bill History")).toBeInTheDocument();
     expect(screen.getByText("Warung Bu Endah")).toBeInTheDocument();
+    const stack = screen.getByRole("img", { name: "3 participants" });
+    expect(stack.querySelector("img")?.getAttribute("src")).toContain("default-2.png");
   });
 
   it("shows an empty state when there are no bills", () => {

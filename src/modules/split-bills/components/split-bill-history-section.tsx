@@ -7,6 +7,7 @@ import { EmptyState } from "@/components/feedback/empty-state";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { useToast } from "@/components/ui/toast";
 import { buttonClass } from "@/components/ui/styles";
+import { avatarIndexForId } from "@/lib/avatars";
 import type { FriendRow } from "@/modules/friends/queries/friends";
 import {
   deleteSplitBillByIdAction,
@@ -112,6 +113,13 @@ export function SplitBillHistorySection({
   }, [hasMore, page, filters]);
 
   const hasResults = rows.length > 0;
+  const avatarIndexByName = new Map<string, number>();
+  for (const friend of friendList) {
+    const name = friend.name.trim().toLowerCase();
+    if (!avatarIndexByName.has(name)) {
+      avatarIndexByName.set(name, friend.avatarIndex ?? avatarIndexForId(friend.id));
+    }
+  }
   const hasActiveFilters = Boolean(
     filters.q || (filters.status && filters.status !== "all") || filters.month,
   );
@@ -240,6 +248,9 @@ export function SplitBillHistorySection({
             <SplitBillHistoryCard
               key={row.id}
               row={row}
+              avatarIndexes={row.participantNames.map(
+                (name) => avatarIndexByName.get(name.trim().toLowerCase()) ?? null,
+              )}
               onAction={handleCardAction}
             />
           ))}

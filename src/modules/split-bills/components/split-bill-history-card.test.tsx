@@ -22,11 +22,21 @@ describe("split-bill history card", () => {
     expect(screen.getByText("Rp 2.160.000")).toBeInTheDocument();
     expect(screen.getByText("January 15, 2026")).toBeInTheDocument();
     expect(screen.getByText("FINAL")).toBeInTheDocument();
-    expect(
-      screen.getByRole("img", { name: "4 participants" }),
-    ).toBeInTheDocument();
-    expect(screen.getAllByText(/^[ABC]$/).length).toBe(3);
+    const stack = screen.getByRole("img", { name: "4 participants" });
+    expect(stack.querySelectorAll("img")).toHaveLength(3);
     expect(screen.getByText("+1")).toBeInTheDocument();
+  });
+
+  it("uses a friend's selected avatar in the participant stack", () => {
+    render(
+      <SplitBillHistoryCard
+        row={{ id: "b1", ...base }}
+        avatarIndexes={[3, null, null, null]}
+        onAction={vi.fn()}
+      />,
+    );
+    const stack = screen.getByRole("img", { name: "4 participants" });
+    expect(stack.querySelector("img")?.getAttribute("src")).toContain("default-3.png");
   });
 
   it("shows the Draft badge and hides the amount for draft bills", () => {
