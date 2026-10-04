@@ -1,13 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { parseReportParams } from "./export-params";
 
-describe("report and export parameters", () => {
+describe("report parameters", () => {
   it("creates inclusive-start and exclusive-end Jakarta month bounds", () => {
     const parsed = parseReportParams(
-      new URLSearchParams("period=month&month=2026-08&details=true"),
+      new URLSearchParams("period=month&month=2026-08"),
     );
     expect(parsed).toMatchObject({
-      includeDetails: true,
       interval: {
         startDate: "2026-08-01",
         endDate: "2026-08-31",

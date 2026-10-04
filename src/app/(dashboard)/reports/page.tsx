@@ -3,7 +3,6 @@ import { pageStackClass } from "@/components/ui/styles";
 import {
   getReportAnalysis,
   getReportCategoryBreakdown,
-  getReportOptions,
   parseReportParams,
   todayJakartaDate,
 } from "@/modules/reports";
@@ -49,7 +48,6 @@ export default async function ReportsPage({
     raw.categoryType === "income" ? "income" : "expense";
 
   const analysis = await getReportAnalysis(user.id, from, to);
-  const reportOptions = await getReportOptions(user.id);
   const categoryBreakdown = await getReportCategoryBreakdown(
     user.id,
     from,
@@ -68,12 +66,7 @@ export default async function ReportsPage({
   return (
     <div className={`${pageStackClass} max-w-[78rem]`}>
       <div className="grid gap-[.2rem]">
-        <ReportToolbar
-          from={from}
-          to={to}
-          email={user.email ?? ""}
-          accounts={reportOptions.accounts}
-        />
+        <ReportToolbar from={from} to={to} />
         <CompactReportSummary totals={totals} />
       </div>
 

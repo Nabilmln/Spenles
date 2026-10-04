@@ -1,4 +1,4 @@
-import { formatRangeLong, formatRangeShort, MONTHS_SHORT } from "@/lib/dates/format-id";
+import { formatRangeLong, MONTHS_SHORT } from "@/lib/dates/format-id";
 import { parseDateKey } from "@/lib/dates/calendar";
 
 export * from "@/lib/dates/calendar";
@@ -17,10 +17,6 @@ export function formatReportRange(from: string, to: string) {
  * Same year:   1 Aug – 7 Aug 2026
  * Cross year:  20 Dec 2026 – 10 Jan 2027
  */
-export function formatReportRangeShort(from: string, to: string) {
-  return formatRangeShort(from, to);
-}
-
 export function formatReportDateChip(value: string) {
   const date = parseDateKey(value);
   if (!date) return value;

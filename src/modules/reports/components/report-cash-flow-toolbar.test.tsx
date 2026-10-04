@@ -5,15 +5,9 @@ import type { ReportMonth } from "../types";
 import { buildCashFlowPoints, ReportCashFlow } from "./report-cash-flow";
 import { ReportToolbar } from "./report-toolbar";
 
-vi.mock("../actions/email-report", () => ({
-  emailReportAction: vi.fn(async () => ({ success: "Report queued." })),
-}));
-
 const reportToolbarProps = {
   from: "2026-08-01",
   to: "2026-08-07",
-  email: "user@example.com",
-  accounts: [{ id: "11111111-1111-4111-8111-111111111111", name: "Main account" }],
 };
 
 afterEach(cleanup);
@@ -98,6 +92,9 @@ describe("report toolbar", () => {
     );
 
     const dateButton = screen.getByRole("button", { name: /Select date range/ });
+    expect(dateButton).toHaveClass("bg-white", "w-full");
+    expect(dateButton.parentElement).toHaveClass("bg-primary-700");
+    expect(screen.queryByRole("button", { name: "Export report" })).not.toBeInTheDocument();
     expect(within(dateButton).getByText("1 Aug 26")).toBeInTheDocument();
     expect(within(dateButton).getByText("-")).toBeInTheDocument();
     expect(within(dateButton).getByText("7 Aug 26")).toBeInTheDocument();
@@ -121,30 +118,5 @@ describe("report toolbar", () => {
 
     expect(day).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByRole("dialog", { name: "Select date range" })).toBeInTheDocument();
-  });
-
-  it("opens the export sheet with recipient, account, date, and send controls", () => {
-    render(
-      <ReportToolbar
-        {...reportToolbarProps}
-      />,
-    );
-
-    fireEvent.click(screen.getByRole("button", { name: "Export report" }));
-    expect(screen.getByRole("dialog", { name: "Export report" })).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Export report" }).textContent).toBe("");
-    expect(screen.getByRole("textbox", { name: "Send to" })).toHaveValue("user@example.com");
-    const accountButton = screen.getByRole("button", { name: "Source account Choose an account" });
-    expect(accountButton).toHaveTextContent("Choose an account");
-    expect(screen.getByRole("button", { name: "Email report" })).toBeDisabled();
-    fireEvent.click(accountButton);
-    const accountDialog = screen.getByRole("dialog", { name: "Select account" });
-    fireEvent.click(within(accountDialog).getByRole("button", { name: "Main account" }));
-    expect(accountButton).toHaveTextContent("Main account");
-    expect(screen.getByRole("button", { name: "Email report" })).toBeEnabled();
-    expect(document.querySelector('input[name="accountId"]')).toHaveValue(reportToolbarProps.accounts[0].id);
-    expect(screen.getByRole("button", { name: "Email report" })).toBeInTheDocument();
-    fireEvent.click(screen.getByRole("button", { name: "Choose report date range" }));
-    expect(screen.getByRole("dialog", { name: "Report dates" })).toBeInTheDocument();
   });
 });

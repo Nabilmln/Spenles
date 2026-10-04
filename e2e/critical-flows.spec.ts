@@ -26,7 +26,7 @@ async function expectNoSeriousAxeViolations(page: Page) {
   ).toEqual([]);
 }
 
-test("authentication, private navigation, transaction, and exports", async ({
+test("authentication, private navigation, transaction, report, and backup", async ({
   page,
 }) => {
   await page.goto("/reports");
@@ -61,31 +61,13 @@ test("authentication, private navigation, transaction, and exports", async ({
     await expectNoSeriousAxeViolations(page);
   }
 
-  const month = new Intl.DateTimeFormat("sv-SE", {
-    timeZone: "Asia/Jakarta",
-    year: "numeric",
-    month: "2-digit",
-  }).format(new Date());
-  const pdf = await page.request.get(
-    `/api/reports/pdf?period=month&month=${month}`,
-  );
-  expect(pdf.status()).toBe(200);
-  expect(pdf.headers()["content-type"]).toContain("application/pdf");
-  expect(pdf.headers()["content-disposition"]).toContain("attachment");
-  expect(pdf.headers()["cache-control"]).toContain("no-store");
-  expect((await pdf.body()).subarray(0, 5).toString()).toBe("%PDF-");
-
-  const preview = await page.request.get(
-    `/api/reports/pdf?period=month&month=${month}&preview=1`,
-  );
-  expect(preview.status()).toBe(200);
-  expect(preview.headers()["content-disposition"]).toContain("inline");
-  expect(preview.headers()["cache-control"]).toContain("max-age");
-  expect(preview.headers()["cache-control"]).not.toContain("no-store");
+  await page.goto("/reports");
+  await expect(page.getByRole("button", { name: /Select date range/u })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Export report" })).toHaveCount(0);
 
   const backup = await page.request.get("/api/exports/backup");
   expect(backup.status()).toBe(200);
-  expect((await backup.json()).schemaVersion).toBe("1.0");
+  expect((await backup.json()).schemaVersion).toBe("1.1");
 
   await page.getByRole("button", { name: "Keluar" }).click();
   await expect(page).toHaveURL(/\/login$/u);

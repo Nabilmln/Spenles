@@ -1,18 +1,12 @@
 import { randomUUID } from "node:crypto";
 import { eq, inArray } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
-import { accounts, categories, profiles, transactions } from "@/db/schema";
+import { accounts, categories, profiles } from "@/db/schema";
 import { createOwnedAccount } from "@/modules/accounts/services/account-mutations";
 import { createOwnedTransfer } from "@/modules/accounts/services/transfer-mutations";
 import { ensureUserFoundationWithDatabase } from "@/modules/onboarding/services/ensure-user-foundation";
 import { getPersonalDataBackupJson } from "@/modules/reports/queries/backup-query";
-import {
-  getFinancialReport,
-  validateOwnedReportFilters,
-} from "@/modules/reports/queries/report-queries";
-import { REPORT_DETAIL_LIMIT } from "@/modules/reports/constants";
-import { ExportLimitError } from "@/modules/reports/services/export-error";
-import { parseReportParams } from "@/modules/reports/schemas/export-params";
+import { getReportAnalysis, getReportCategoryBreakdown } from "@/modules/reports/queries/report-queries";
 import {
   createOwnedTransaction,
   softDeleteOwnedTransaction,
@@ -120,27 +114,12 @@ describe("Phase 06 authenticated reports and exports", () => {
       .where(inArray(profiles.userId, [userA, userB]));
   });
 
-  const filters = parseReportParams(
-    new URLSearchParams("period=month&month=2026-08&details=true"),
-  )!;
-
-  it("rejects a foreign account filter without revealing its existence", async () => {
-    await expect(
-      validateOwnedReportFilters(
-        userA,
-        { ...filters, accountId: foreignAccount },
-        database,
-      ),
-    ).resolves.toBe(false);
-  });
-
   it("scopes totals, excludes deleted rows and transfers, and reconciles categories", async () => {
-    const report = await getFinancialReport(
-      userA,
-      "Phase 06 A",
-      filters,
-      database,
-      new Date("2026-08-06T06:00:00.000Z"),
+    const report = await getReportAnalysis(
+      userA, "2026-08-01", "2026-08-31", database,
+    );
+    const breakdown = await getReportCategoryBreakdown(
+      userA, "2026-08-01", "2026-08-31", "expense", undefined, database,
     );
     expect(report.summary).toEqual({
       incomeIdr: "100000",
@@ -148,15 +127,12 @@ describe("Phase 06 authenticated reports and exports", () => {
       netIdr: "75000",
     });
     expect(
-      report.categories.reduce(
+      breakdown.categories.reduce(
         (sum, category) => sum + BigInt(category.amountIdr),
         0n,
       ),
     ).toBe(25_000n);
-    expect(report.transactions.map((row) => row.amountIdr).sort()).toEqual([
-      "100000",
-      "25000",
-    ]);
+    expect(breakdown.totalIdr).toBe("25000");
   });
 
   it("produces one versioned allowlisted snapshot including deleted personal data", async () => {
@@ -171,7 +147,7 @@ describe("Phase 06 authenticated reports and exports", () => {
         transactions: Array<{ id: string; deletedAt: string | null }>;
       };
     };
-    expect(backup.schemaVersion).toBe("1.0");
+    expect(backup.schemaVersion).toBe("1.1");
     expect(
       backup.data.transactions.find((row) => row.id === deletedTransactionId)
         ?.deletedAt,
@@ -180,49 +156,4 @@ describe("Phase 06 authenticated reports and exports", () => {
     expect(text).not.toContain("Milik user B");
   });
 
-  it("accepts exactly REPORT_DETAIL_LIMIT detail rows and rejects one more", async () => {
-    const rows = Array.from(
-      { length: REPORT_DETAIL_LIMIT + 1 },
-      (_, index) => ({
-        id: randomUUID(),
-        userId: userA,
-        accountId: accountA,
-        categoryId: expenseCategory,
-        type: "expense" as const,
-        amount: 1_000n,
-        transactionAt: new Date(
-          Date.UTC(2026, 8, 1, 0, index % 24, index % 60),
-        ),
-        note: `Batas detail ${index}`,
-      }),
-    );
-    await database.insert(transactions).values(rows.slice(0, REPORT_DETAIL_LIMIT));
-    const atLimit = await getFinancialReport(
-      userA,
-      "Phase 06 A",
-      parseReportParams(
-        new URLSearchParams(
-          "period=month&month=2026-09&details=true",
-        ),
-      )!,
-      database,
-      new Date("2026-09-02T02:00:00.000Z"),
-    );
-    expect(atLimit.transactions).toHaveLength(REPORT_DETAIL_LIMIT);
-
-    await database.insert(transactions).values([rows[REPORT_DETAIL_LIMIT]]);
-    await expect(
-      getFinancialReport(
-        userA,
-        "Phase 06 A",
-        parseReportParams(
-          new URLSearchParams(
-            "period=month&month=2026-09&details=true",
-          ),
-        )!,
-        database,
-        new Date("2026-09-02T02:00:00.000Z"),
-      ),
-    ).rejects.toThrow(ExportLimitError);
-  });
 });

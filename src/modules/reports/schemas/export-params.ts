@@ -168,17 +168,13 @@ export function parseReportParams(
 ): ReportFilters | null {
   const parsed = parseShared(
     params,
-    new Set([...sharedKeys, "details"]),
+    sharedKeys,
   );
   if (!parsed) return null;
-  if (parsed.values.details && !["true", "false"].includes(parsed.values.details)) {
-    return null;
-  }
   return {
     interval: parsed.interval,
     type: parsed.type,
     categoryId: parsed.categoryId,
     accountId: parsed.accountId,
-    includeDetails: parsed.values.details === "true",
   };
 }

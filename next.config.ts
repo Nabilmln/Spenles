@@ -19,12 +19,6 @@ const contentSecurityPolicy = (() => {
 })();
 
 const nextConfig: NextConfig = {
-  outputFileTracingIncludes: {
-    "/api/reports/pdf": [
-      "./node_modules/@fontsource/noto-sans/files/noto-sans-latin-ext-400-normal.woff",
-      "./node_modules/@fontsource/noto-sans/files/noto-sans-latin-ext-600-normal.woff",
-    ],
-  },
   async headers() {
     return [
       {

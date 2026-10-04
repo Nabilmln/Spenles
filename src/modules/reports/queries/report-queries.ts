@@ -6,16 +6,13 @@ import type { Database } from "@/db/types";
 import { conditionalSumSql } from "@/db/sql-helpers";
 import { formatRangeLong } from "@/lib/dates/format-id";
 import { inclusiveDayCount } from "@/modules/reports/lib/report-date";
-import { REPORT_DETAIL_LIMIT } from "../constants";
 import type {
   ExportFilters,
-  FinancialReport,
   ReportCategory,
   ReportFilters,
   ReportMonth,
   ReportTransaction,
 } from "../types";
-import { ExportLimitError } from "../services/export-error";
 
 type TotalsRow = { income: string; expense: string };
 type MonthRow = { month: string; income: string; expense: string };
@@ -52,40 +49,6 @@ function transactionFilterSql(userId: string, filters: ExportFilters) {
   return sql.join(conditions, sql` and `);
 }
 
-export async function validateOwnedReportFilters(
-  userId: string,
-  filters: ExportFilters,
-  database: Database = db,
-) {
-  const result = await database.execute<{ account_owned: boolean; category_owned: boolean }>(
-    sql`
-      select
-        case
-          when ${filters.accountId ?? null}::uuid is null then true
-          else exists (
-            select 1 from accounts
-            where id = ${filters.accountId ?? null}::uuid
-              and user_id = ${userId}
-          )
-        end as account_owned,
-        case
-          when ${filters.categoryId ?? null}::uuid is null then true
-          else exists (
-            select 1 from categories
-            where id = ${filters.categoryId ?? null}::uuid
-              and user_id = ${userId}
-              and (
-                ${filters.type ?? null}::text is null
-                or type::text = ${filters.type ?? null}::text
-              )
-          )
-        end as category_owned
-    `,
-  );
-  const row = result.rows[0];
-  return Boolean(row?.account_owned && row.category_owned);
-}
-
 async function getTotals(
   userId: string,
   filters: ReportFilters,
@@ -112,19 +75,6 @@ async function getTotals(
     expenseIdr: expense.toString(),
     netIdr: (income - expense).toString(),
   };
-}
-
-async function getTransactionCount(
-  userId: string,
-  filters: ExportFilters,
-  database: Database,
-) {
-  const result = await database.execute<{ count: string }>(sql`
-    select count(*)::text as count
-    from transactions as owned_transaction
-    where ${transactionFilterSql(userId, filters)}
-  `);
-  return Number(result.rows[0]?.count ?? "0");
 }
 
 async function getMonths(
@@ -269,38 +219,6 @@ async function getTransactions(
   }));
 }
 
-export async function getFinancialReport(
-  userId: string,
-  displayName: string,
-  filters: ReportFilters,
-  database: Database = db,
-  generatedAt = new Date(),
-): Promise<FinancialReport> {
-  const [summary, categories, detailRows, transactionCount] = await Promise.all([
-    getTotals(userId, filters, database),
-    getCategories(userId, filters, database),
-    filters.includeDetails
-      ? getTransactions(userId, filters, REPORT_DETAIL_LIMIT + 1, database)
-      : Promise.resolve([]),
-    getTransactionCount(userId, filters, database),
-  ]);
-
-  if (detailRows.length > REPORT_DETAIL_LIMIT) {
-    throw new ExportLimitError(
-      `Report details exceed the ${REPORT_DETAIL_LIMIT}-transaction limit.`,
-    );
-  }
-  return {
-    displayName,
-    generatedAt,
-    filters,
-    summary,
-    categories,
-    transactions: detailRows,
-    transactionCount,
-  };
-}
-
 function customInterval(from: string, to: string) {
   const start = new Date(`${from}T00:00:00+07:00`);
   const inclusiveEnd = new Date(`${to}T00:00:00+07:00`);
@@ -324,7 +242,7 @@ export async function getReportAnalysis(
   database: Database = db,
 ) {
   const { interval } = customInterval(from, to);
-  const filters: ReportFilters = { interval, includeDetails: false };
+  const filters: ReportFilters = { interval };
   const inclusiveDays = inclusiveDayCount(from, to);
   const daily = inclusiveDays > 0 && inclusiveDays <= 62;
   const [summary, months, dayRows] = await Promise.all([
@@ -376,7 +294,6 @@ export async function getReportCategoryBreakdown(
   const filters: ReportFilters = {
     interval,
     type,
-    includeDetails: false,
   };
   const categories = await getCategories(userId, filters, database);
   const total =

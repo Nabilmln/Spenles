@@ -18,9 +18,7 @@ export type ExportFilters = {
   accountId?: string;
 };
 
-export type ReportFilters = ExportFilters & {
-  includeDetails: boolean;
-};
+export type ReportFilters = ExportFilters;
 
 export type ReportTransaction = {
   id: string;
@@ -55,14 +53,4 @@ export type ReportCategory = {
 export type ReportInsight = {
   averageDailyExpenseIdr: string;
   inclusiveDays: number;
-};
-
-export type FinancialReport = {
-  displayName: string;
-  generatedAt: Date;
-  filters: ReportFilters;
-  summary: ReportSummary;
-  categories: ReportCategory[];
-  transactions: ReportTransaction[];
-  transactionCount: number;
 };

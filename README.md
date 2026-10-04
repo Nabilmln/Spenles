@@ -43,9 +43,9 @@ menampilkan data terbaru.
 - **Split bill** dengan rincian tanggung jawab per orang yang deterministik:
   subtotal, diskon, pajak, service charge, dan total final yang tersimpan
   sebagai snapshot bernomor versi.
-- **Laporan dan ekspor**: laporan PDF privat dapat dikirim melalui email untuk
-  akun dan rentang tanggal yang dipilih; backup data pribadi tetap berupa JSON
-  ber-versi yang dapat diunduh.
+- **Laporan dan backup**: ringkasan, grafik, dan rincian kategori dapat dilihat
+  untuk rentang tanggal yang dipilih; backup data pribadi berupa JSON ber-versi
+  tetap dapat diunduh.
 
 ## Masalah dan solusi
 
@@ -62,7 +62,7 @@ menampilkan data terbaru.
   otomatis tanggung jawab tiap orang termasuk pajak dan service charge,
   lengkap dengan snapshot final.
 - **Tidak punya gambaran arah keuangan** — dashboard arus kas, grafik,
-  anggaran bulanan, dan laporan PDF memberikan ringkasan yang jelas per
+  anggaran bulanan, dan laporan interaktif memberikan ringkasan yang jelas per
   periode.
 
 ## Manfaat
@@ -125,10 +125,9 @@ npm ci
 cp .env.example .env.local
 ```
 
-Untuk mengirim PDF laporan lewat email, buat API key Resend dan verifikasi
-domain pengirim di Resend. Isi `RESEND_API_KEY` dan `REPORT_EMAIL_FROM` di
-`.env.local` serta environment deployment. Tanpa keduanya, aplikasi tetap
-berjalan, tetapi aksi kirim laporan menampilkan pesan konfigurasi belum siap.
+Reports are available in the app with a selectable date range. The report PDF
+and email export flow has been removed. Personal-data JSON backup remains
+available from the app.
 
 Isi `.env.local`:
 

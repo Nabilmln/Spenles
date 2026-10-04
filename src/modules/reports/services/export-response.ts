@@ -1,7 +1,6 @@
 import {
   EXPORT_MAX_BYTES,
   PRIVATE_EXPORT_HEADERS,
-  PRIVATE_PREVIEW_HEADERS,
 } from "../constants";
 import { ExportLimitError } from "./export-error";
 
@@ -19,14 +18,6 @@ export function exportHeaders(
 
 export function attachmentHeaders(contentType: string, fileName: string) {
   return exportHeaders(contentType, fileName, "attachment");
-}
-
-export function inlineHeaders(contentType: string, fileName: string) {
-  return {
-    ...PRIVATE_PREVIEW_HEADERS,
-    "Content-Type": contentType,
-    "Content-Disposition": `inline; filename="${fileName}"`,
-  };
 }
 
 export function assertExportSize(value: string | Uint8Array) {
