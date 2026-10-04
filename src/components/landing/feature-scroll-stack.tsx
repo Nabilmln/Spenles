@@ -16,5 +16,5 @@ export function ScrollStackItem({
   children: ReactNode;
   className: string;
 }) {
-  return <article className={`${styles.featureStackCard} min-w-0 min-h-[var(--stack-card-height)] overflow-hidden rounded-[25px] border border-[#e1e4e6] bg-white text-[#171717] shadow-[0_22px_58px_rgb(20_26_32_/_9%)] ${className}`} data-scroll-stack-card>{children}</article>;
+  return <article className={`${styles.featureStackCard} min-w-0 min-h-[var(--stack-card-height)] overflow-hidden rounded-t-[20px] border border-[#e1e4e6] bg-white text-[#171717] shadow-[0_22px_58px_rgb(20_26_32_/_9%)] ${className}`} data-scroll-stack-card>{children}</article>;
 }

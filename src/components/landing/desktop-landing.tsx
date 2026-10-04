@@ -3,16 +3,13 @@ import {
   ArrowRight,
   ChartNoAxesCombined,
   Check,
-  LockKeyhole,
-  Mail,
-  ReceiptText,
 } from "lucide-react";
 import { Brand } from "@/components/layout/brand";
 import { ScrollStack, ScrollStackItem } from "./feature-scroll-stack";
 import { GettingStartedTabs } from "./getting-started-tabs";
 import { LandingEntrance } from "./landing-entrance";
 import { LandingMotion } from "./landing-motion";
-import { GithubLogo, LinkedinLogo } from "./social-logos";
+import { WhySpenlesMotion } from "./why-spenles-motion";
 import styles from "./desktop-landing.module.css";
 
 const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -22,10 +19,6 @@ const heroTitleWords = ["Your", "money,", "clearly", "in", "view."];
 const sectionHeading = "m-0 text-[clamp(2.7rem,4.3vw,4.7rem)] font-semibold leading-[1.1] tracking-[-0.045em] text-balance";
 const sectionDescription = "mt-[1rem] max-w-[100ch] text-[.92rem] leading-[1.8] text-[#656660] text-pretty";
 const featureLayout = "grid grid-cols-[minmax(0,1fr)_minmax(0,.9fr)] items-center gap-16 px-[clamp(2rem,5vw,5rem)] py-14 max-[900px]:gap-6 max-[900px]:p-10 max-[720px]:grid-cols-1 max-[720px]:content-center max-[720px]:gap-6 max-[720px]:p-8";
-const whyItem = "grid grid-cols-[minmax(0,1fr)_1.7rem] items-start gap-[1.1rem] px-[.4rem] py-[1.8rem] transition-[padding,background] duration-300 hover:bg-[#f8f9f9] hover:px-[.9rem] motion-reduce:transition-none";
-const whyItemHeading = "m-0 text-[clamp(1.2rem,1.65vw,1.55rem)] font-semibold tracking-[-.03em]";
-const whyItemCopy = "mt-[.55rem] max-w-[42ch] text-[.82rem] leading-[1.7] text-[#676862]";
-const contactLink = "grid size-11 place-items-center rounded-full border border-[#4c4c4a] bg-[#242423] text-white transition-[background,color,transform] duration-200 hover:-translate-y-0.5 hover:bg-white hover:text-[#171717] motion-reduce:transition-none";
 const featureHeading = "my-[.85rem] text-[clamp(1.85rem,2.7vw,3rem)] font-semibold leading-[1.14] tracking-[-.042em] text-balance";
 const featureDescription = "m-0 max-w-[42ch] text-[.86rem] leading-[1.75] text-[#62645f]";
 const previewCard = "ml-auto w-[min(100%,370px)] rounded-[19px] border border-[#e6e8e9] bg-white p-[1.3rem] text-[.75rem] text-[#171717] shadow-[0_16px_38px_rgb(22_28_34_/_7%)] max-[720px]:mx-auto max-[720px]:w-[min(100%,380px)]";
@@ -123,39 +116,47 @@ export function DesktopLanding() {
         </section>
         <section
           aria-labelledby="why-title"
-          className={`${styles.why} grid grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] gap-[clamp(3rem,8vw,9rem)] pt-32 pb-36 max-[980px]:grid-cols-1 max-[980px]:gap-[3.2rem] max-[980px]:pt-24 max-[980px]:pb-28`}
+          className="relative w-full bg-[#f2f3f3]"
           id="why-spenles"
+          data-why-section
         >
-          <div>
-            <span className="mb-[1.2rem] block text-[.72rem] font-semibold tracking-[.06em] text-[#747570]" data-reveal="up">A clearer everyday</span>
-            <h2 className={`${sectionHeading} max-w-[12ch] max-[980px]:max-w-[18ch]`} id="why-title" data-reveal="up">Know where you stand, at a glance.</h2>
-            <p className={sectionDescription} data-reveal="up">
-              Keep the small details organized, so your next money decision
-              feels easier to make.
-            </p>
-          </div>
-          <div className="self-center">
-            <article className={whyItem} data-reveal="right">
-              <div>
-                <h3 className={whyItemHeading}>Follow the everyday</h3>
-                <p className={whyItemCopy}>Record income and payments, then find them by account, category, or date.</p>
+          <WhySpenlesMotion />
+          <div
+            className="relative mx-auto grid min-h-[calc(100svh-80px)] w-[min(calc(100%-7rem),1340px)] grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] items-center gap-[clamp(3rem,6vw,7rem)] py-16 max-[1220px]:w-[min(calc(100%-4rem),1120px)] max-[980px]:w-[calc(100%-3rem)] max-[980px]:min-h-0 max-[980px]:grid-cols-1 max-[980px]:gap-12 max-[980px]:py-24"
+            data-why-stage
+          >
+            <div className="max-w-[600px]" data-why-statement>
+              <h2 className={`${sectionHeading} max-w-[13ch]`} id="why-title">Know where your money went.</h2>
+              <p className="mt-7 max-w-[48ch] text-[clamp(.95rem,1.25vw,1.08rem)] leading-[1.8] text-[#555a5c]">
+                See what came in, what went out, and how your plans are holding up.
+                The details are there when you need them.
+              </p>
+            </div>
+            <div className="min-w-0" data-why-detail>
+              <div className="relative aspect-[1.85] overflow-hidden rounded-[26px] bg-[#e4e7e8]">
+                <Image
+                  src="/illustrations/why-spenles-receipt.webp"
+                  alt="An everyday receipt beside a wallet on a table"
+                  fill
+                  sizes="(max-width: 980px) 95vw, 50vw"
+                  className="object-cover"
+                />
               </div>
-              <ReceiptText className="text-[#555650]" size={25} strokeWidth={1.7} aria-hidden="true" />
-            </article>
-            <article className={whyItem} data-reveal="right" data-delay="60">
-              <div>
-                <h3 className={whyItemHeading}>See the pattern</h3>
-                <p className={whyItemCopy}>Compare income, spending, and budget progress in one calm view.</p>
+              <div className="mt-7 grid gap-0 text-[#171717]">
+                <div className="grid grid-cols-[minmax(0,11rem)_minmax(0,1fr)] gap-5 border-t border-[#d5d9da] py-4 max-[720px]:grid-cols-1 max-[720px]:gap-1">
+                  <h3 className="text-[.9rem] font-semibold">Find the details</h3>
+                  <p className="text-[.83rem] leading-[1.65] text-[#596064]">Return to a payment by date, account, or category.</p>
+                </div>
+                <div className="grid grid-cols-[minmax(0,11rem)_minmax(0,1fr)] gap-5 border-t border-[#d5d9da] py-4 max-[720px]:grid-cols-1 max-[720px]:gap-1">
+                  <h3 className="text-[.9rem] font-semibold">See what is changing</h3>
+                  <p className="text-[.83rem] leading-[1.65] text-[#596064]">Review spending beside income and the limits you set.</p>
+                </div>
+                <div className="grid grid-cols-[minmax(0,11rem)_minmax(0,1fr)] gap-5 border-t border-[#d5d9da] py-4 max-[720px]:grid-cols-1 max-[720px]:gap-1">
+                  <h3 className="text-[.9rem] font-semibold">Keep it yours</h3>
+                  <p className="text-[.83rem] leading-[1.65] text-[#596064]">Each person has a separate Spenles account and records.</p>
+                </div>
               </div>
-              <ChartNoAxesCombined className="text-[#555650]" size={25} strokeWidth={1.7} aria-hidden="true" />
-            </article>
-            <article className={whyItem} data-reveal="right" data-delay="120">
-              <div>
-                <h3 className={whyItemHeading}>Stay in control</h3>
-                <p className={whyItemCopy}>Your accounts and records remain in your own private Spenles space.</p>
-              </div>
-              <LockKeyhole className="text-[#555650]" size={25} strokeWidth={1.7} aria-hidden="true" />
-            </article>
+            </div>
           </div>
         </section>
         <section
@@ -172,7 +173,7 @@ export function DesktopLanding() {
             </div>
             <ScrollStackItem className={`${featureLayout} max-[720px]:content-start`}>
               <div className={`${styles.featureCopy} max-[900px]:max-w-72`}>
-                <h3 className={`${featureHeading} max-w-[13ch]`} data-reveal="left">Settle the table, down to the last rupiah.</h3>
+                <h3 className={`${featureHeading} max-w-[50ch]`} data-reveal="left">Settle the table, down to the last rupiah.</h3>
                 <p className={featureDescription} data-reveal="left" data-delay="70">
                   Assign items to people, include tax and service, and get
                   shares that add up to the final bill.
@@ -305,22 +306,37 @@ export function DesktopLanding() {
         </section>
       </main>
       <footer className="w-full rounded-t-[38px] bg-[#171717] text-white [&_a:focus-visible]:outline-white">
-        <div className={`${styles.footerInner} pt-16 pb-8`}>
-          <div className="flex items-start justify-between gap-12 pb-16 max-[900px]:gap-8 max-[720px]:flex-col">
+        <div className={`${styles.footerInner} pt-[clamp(4rem,7vw,7rem)] pb-8`}>
+          <div className="grid grid-cols-[minmax(0,1.25fr)_minmax(0,.75fr)] gap-16 pb-20 max-[900px]:grid-cols-1 max-[900px]:gap-14 max-[720px]:pb-14">
             <div className="[&_a]:text-white [&_img]:brightness-0 [&_img]:invert" data-reveal="left">
               <Brand showLabel />
-              <p className="mt-[1.1rem] text-[.83rem] text-[#b3b3b0]">Less complexity. More confidence.</p>
+              <p className="mt-10 max-w-[16ch] text-[clamp(2.5rem,4.5vw,4.8rem)] font-semibold leading-[1.13] tracking-[-.045em] text-balance">Less complexity.<br />More confidence.</p>
+              <p className="mt-6 max-w-[43ch] text-[.9rem] leading-[1.75] text-[#b7b8b6]">A calmer place to understand your spending, plan ahead, and settle the everyday details.</p>
             </div>
-            <div className="grid justify-items-end gap-[.9rem] text-[.78rem] font-medium max-[720px]:justify-items-start" data-reveal="right">
-              <span className="text-[#b3b3b0]">Developer</span>
-              <div className="flex gap-[.65rem]" aria-label="Developer contact links">
-                <a className={contactLink} href="https://www.linkedin.com/in/mnabilmaulana/" target="_blank" rel="noopener noreferrer" aria-label="Developer on LinkedIn"><LinkedinLogo /></a>
-                <a className={contactLink} href="https://github.com/Nabilmln" target="_blank" rel="noopener noreferrer" aria-label="Developer on GitHub"><GithubLogo /></a>
-                <a className={contactLink} href="mailto:nabilmaulana212@gmail.com" aria-label="Email the developer"><Mail size={19} aria-hidden="true" /></a>
+            <div className="grid grid-cols-2 gap-x-10 gap-y-12 self-end max-[560px]:gap-x-6" data-reveal="right">
+              <nav aria-label="Footer navigation" className="grid content-start gap-4 text-[.86rem] [&_a:hover]:text-white">
+                <h2 className="mb-2 text-[.75rem] font-medium text-[#aeb0af]">Explore</h2>
+                <a className="text-[#e6e7e6] transition-colors" href="#why-spenles">Why Spenles</a>
+                <a className="text-[#e6e7e6] transition-colors" href="#features">Features</a>
+                <a className="text-[#e6e7e6] transition-colors" href="#insights">Insights</a>
+                <a className="text-[#e6e7e6] transition-colors" href="#get-started">Try Spenles</a>
+              </nav>
+              <div className="grid content-start gap-4 text-[.86rem] [&_a:hover]:text-white">
+                <h2 className="mb-2 text-[.75rem] font-medium text-[#aeb0af]">Developer</h2>
+                <a className="text-[#e6e7e6] transition-colors" href="https://github.com/Nabilmln" target="_blank" rel="noopener noreferrer">GitHub</a>
+                <a className="text-[#e6e7e6] transition-colors" href="https://www.linkedin.com/in/mnabilmaulana/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                <a className="text-[#e6e7e6] transition-colors" href="mailto:nabilmaulana212@gmail.com">Email</a>
               </div>
             </div>
           </div>
-          <p className="m-0 border-t border-[#3c3c3a] pt-6 text-xs text-[#b3b3b0]">© {new Date().getFullYear()} Spenles. All rights reserved.</p>
+          <div className="grid grid-cols-2 gap-x-16 gap-y-8 border-t border-[#393c3b] py-8 max-[720px]:grid-cols-1">
+            <p className="max-w-[47ch] text-[.78rem] leading-[1.75] text-[#aeb0af]"><strong className="mr-3 font-medium text-white">Privacy</strong>Each Spenles account keeps its financial records separate.</p>
+            <p className="max-w-[47ch] text-[.78rem] leading-[1.75] text-[#aeb0af]"><strong className="mr-3 font-medium text-white">About the app</strong>Spenles helps you track money. It does not hold or move funds.</p>
+          </div>
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#393c3b] pt-6 text-xs text-[#aeb0af]">
+            <span>© {new Date().getFullYear()} Spenles</span>
+            <span>Made for a clearer everyday.</span>
+          </div>
         </div>
       </footer>
     </div>
