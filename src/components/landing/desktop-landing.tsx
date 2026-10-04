@@ -160,13 +160,13 @@ export function DesktopLanding() {
             </div>
             <ScrollStackItem className={`${featureLayout} ${styles.splitFeature} max-[720px]:content-start`}>
               <div className={`${styles.featureCopy} max-[900px]:max-w-72`}>
-                <h3 className={`${featureHeading} max-w-[50ch]`} data-reveal="left">Settle the table, down to the last rupiah.</h3>
-                <p className={featureDescription} data-reveal="left" data-delay="70">
+                <h3 className={`${featureHeading} max-w-[50ch]`} data-feature-motion="slide-left">Settle the table, down to the last rupiah.</h3>
+                <p className={featureDescription} data-feature-motion="slide-left" data-motion-step="1">
                   Add a shared bill once, then see what each person owes
                   without working it out in a chat.
                 </p>
               </div>
-              <figure className={styles.splitPhone} data-reveal="fade">
+              <figure className={styles.splitPhone} data-feature-motion="rise" data-motion-step="1">
                 <Image
                   src="/illustrations/split-bill-phone.png"
                   alt="Spenles Split Bill Result on a phone, showing each person's share of a burger bill"
@@ -176,25 +176,25 @@ export function DesktopLanding() {
                   priority={false}
                 />
               </figure>
-              <aside className={styles.splitAside} aria-label="How split bills are calculated" data-reveal="right">
-                <h4>Every part of the bill has a place.</h4>
-                <p>Each person&apos;s result shows their items and share of the extras.</p>
+              <aside className={styles.splitAside} aria-label="How split bills are calculated">
+                <h4 data-feature-motion="slide-right" data-motion-step="2">Every part of the bill has a place.</h4>
+                <p data-feature-motion="slide-right" data-motion-step="3">Each person&apos;s result shows their items and share of the extras.</p>
                 <div className={styles.splitReceipt}>
-                  <div><span>Items</span><strong>Assigned</strong></div>
-                  <div><span>Tax + service</span><strong>Included</strong></div>
-                  <div><span>Final total</span><strong>Fully shared</strong></div>
+                  <div data-feature-motion="lift" data-motion-step="3"><span>Items</span><strong>Assigned</strong></div>
+                  <div data-feature-motion="lift" data-motion-step="4"><span>Tax + service</span><strong>Included</strong></div>
+                  <div data-feature-motion="lift" data-motion-step="5"><span>Final total</span><strong>Fully shared</strong></div>
                 </div>
               </aside>
             </ScrollStackItem>
             {/* These illustrations use fixed, fictional figures and never read account data. */}
             <ScrollStackItem className={`${featureLayout} ${styles.featureVisualCard}`}>
               <div className={styles.featureCopy}>
-                <h3 className={`${featureHeading} max-w-[14ch]`} data-reveal="up">Know what the month can hold.</h3>
-                <p className={featureDescription} data-reveal="up" data-delay="70">
+                <h3 className={`${featureHeading} max-w-[14ch]`} data-feature-motion="lift">Know what the month can hold.</h3>
+                <p className={featureDescription} data-feature-motion="fade" data-motion-step="1">
                   Set a limit for each category. A quick look tells you where
                   there is room and where to slow down.
                 </p>
-                <svg className={styles.budgetEnvelopes} viewBox="0 0 310 144" fill="none" aria-hidden="true" data-reveal="up" data-delay="120">
+                <svg className={styles.budgetEnvelopes} viewBox="0 0 310 144" fill="none" aria-hidden="true" data-feature-motion="fan" data-motion-step="2">
                   <g transform="translate(64 1) rotate(9 105 55)">
                     <rect x="0.75" y="0.75" width="209.5" height="103.5" rx="14" fill="#dfe6e9" stroke="#c9d2d6" strokeWidth="1.5" />
                     <path d="M2 19 105 75 209 19" stroke="#b7c5cb" strokeWidth="1.5" />
@@ -211,26 +211,26 @@ export function DesktopLanding() {
                   </g>
                 </svg>
               </div>
-              <div className={styles.budgetBoard} aria-label="Illustration of monthly category budgets" data-reveal="up">
+              <div className={styles.budgetBoard} aria-label="Illustration of monthly category budgets" data-feature-motion="slide-right" data-motion-step="1">
                 <div className="flex items-start justify-between gap-3">
                   <div><span className="text-[.69rem] text-[#697074]">Monthly plan</span><strong className="mt-1 block text-[1.45rem] font-semibold tracking-[-.04em]">Three limits. One view.</strong></div>
-                  <span className={styles.budgetTokens} aria-hidden="true"><i /><i /><i /></span>
+                  <span className={styles.budgetTokens} aria-hidden="true" data-feature-motion="pop" data-motion-step="2"><i /><i /><i /></span>
                 </div>
                 <div className="mt-8 grid gap-5">
-                  <div><div className="mb-2 flex justify-between gap-2 text-[.72rem]"><strong>Food & drinks</strong><span>Rp 244.000 / 650.000</span></div><span className={styles.budgetDemoTrack} role="progressbar" aria-label="Food and drinks budget used" aria-valuenow={37.5} aria-valuemin={0} aria-valuemax={100}><i className="!w-[37.5%]" /></span></div>
-                  <div><div className="mb-2 flex justify-between gap-2 text-[.72rem]"><strong>Transport</strong><span>Rp 117.000 / 350.000</span></div><span className={styles.budgetDemoTrack} role="progressbar" aria-label="Transport budget used" aria-valuenow={33.4} aria-valuemin={0} aria-valuemax={100}><i className="!w-[33.4%]" /></span></div>
-                  <div><div className="mb-2 flex justify-between gap-2 text-[.72rem]"><strong>Home</strong><span>Rp 705.000 / 900.000</span></div><span className={styles.budgetDemoTrack} role="progressbar" aria-label="Home budget used" aria-valuenow={78.3} aria-valuemin={0} aria-valuemax={100}><i className="!w-[78.3%]" /></span></div>
+                  <div data-feature-motion="lift" data-motion-step="3"><div className="mb-2 flex justify-between gap-2 text-[.72rem]"><strong>Food & drinks</strong><span>Rp 244.000 / 650.000</span></div><span className={styles.budgetDemoTrack} role="progressbar" aria-label="Food and drinks budget used" aria-valuenow={37.5} aria-valuemin={0} aria-valuemax={100}><i className="!w-[37.5%]" /></span></div>
+                  <div data-feature-motion="lift" data-motion-step="4"><div className="mb-2 flex justify-between gap-2 text-[.72rem]"><strong>Transport</strong><span>Rp 117.000 / 350.000</span></div><span className={styles.budgetDemoTrack} role="progressbar" aria-label="Transport budget used" aria-valuenow={33.4} aria-valuemin={0} aria-valuemax={100}><i className="!w-[33.4%]" /></span></div>
+                  <div data-feature-motion="lift" data-motion-step="5"><div className="mb-2 flex justify-between gap-2 text-[.72rem]"><strong>Home</strong><span>Rp 705.000 / 900.000</span></div><span className={styles.budgetDemoTrack} role="progressbar" aria-label="Home budget used" aria-valuenow={78.3} aria-valuemin={0} aria-valuemax={100}><i className="!w-[78.3%]" /></span></div>
                 </div>
               </div>
             </ScrollStackItem>
             <ScrollStackItem className={`${featureLayout} ${styles.reportVisualCard}`}>
               <div className={`${styles.featureCopy} ${styles.reportFeatureCopy}`}>
-                <h3 className={`${featureHeading} max-w-[14ch]`} data-reveal="up">See what took the biggest share.</h3>
-                <p className={featureDescription} data-reveal="up" data-delay="70">
+                <h3 className={`${featureHeading} max-w-[14ch]`} data-feature-motion="slide-right">See what took the biggest share.</h3>
+                <p className={featureDescription} data-feature-motion="slide-right" data-motion-step="1">
                   Reports turn a long list of payments into a clear picture of
                   the categories behind them.
                 </p>
-                <svg className={styles.reportTrend} viewBox="0 0 370 124" fill="none" aria-hidden="true" data-reveal="up" data-delay="120">
+                <svg className={styles.reportTrend} viewBox="0 0 370 124" fill="none" aria-hidden="true" data-feature-motion="draw" data-motion-step="3">
                   <defs>
                     <linearGradient id="feature-trend-fill" x1="0" y1="0" x2="0" y2="1">
                       <stop stopColor="#168fe5" stopOpacity=".25" />
@@ -244,39 +244,39 @@ export function DesktopLanding() {
                   <circle cx="368" cy="13" r="4" fill="#191c1e" stroke="#168fe5" strokeWidth="2" />
                 </svg>
               </div>
-              <div className={styles.reportBreakdown} aria-label="Illustration of spending by category" data-reveal="up">
-                <div className="flex justify-between gap-3 text-[.7rem] text-[#b8c0c3]"><span>Spending by category</span><span>Monthly view</span></div>
+              <div className={styles.reportBreakdown} aria-label="Illustration of spending by category">
+                <div className="flex justify-between gap-3 text-[.7rem] text-[#b8c0c3]" data-feature-motion="fade"><span>Spending by category</span><span>Monthly view</span></div>
                 <div className={styles.reportBreakdownBody}>
-                  <div className={styles.reportDonut} data-report-donut aria-hidden="true"><div><span>Largest share</span><strong>42%</strong></div></div>
+                  <div className={styles.reportDonut} aria-hidden="true" data-feature-motion="pop" data-motion-step="1"><div><span>Largest share</span><strong>42%</strong></div></div>
                   <div className="grid content-center gap-4 text-[.74rem]">
-                    <div className="flex items-start gap-2.5"><i className="mt-1 size-2.5 shrink-0 rounded-[3px] bg-[#168fe5]" /><span><strong className="block font-medium">Food & drinks</strong><small className="text-[#aeb7ba]">42% of spending</small></span></div>
-                    <div className="flex items-start gap-2.5"><i className="mt-1 size-2.5 shrink-0 rounded-[3px] bg-white" /><span><strong className="block font-medium">Home</strong><small className="text-[#aeb7ba]">33% of spending</small></span></div>
-                    <div className="flex items-start gap-2.5"><i className="mt-1 size-2.5 shrink-0 rounded-[3px] bg-[#6d787e]" /><span><strong className="block font-medium">Everything else</strong><small className="text-[#aeb7ba]">25% of spending</small></span></div>
+                    <div className="flex items-start gap-2.5" data-feature-motion="slide-right" data-motion-step="2"><i className="mt-1 size-2.5 shrink-0 rounded-[3px] bg-[#168fe5]" /><span><strong className="block font-medium">Food & drinks</strong><small className="text-[#aeb7ba]">42% of spending</small></span></div>
+                    <div className="flex items-start gap-2.5" data-feature-motion="slide-right" data-motion-step="3"><i className="mt-1 size-2.5 shrink-0 rounded-[3px] bg-white" /><span><strong className="block font-medium">Home</strong><small className="text-[#aeb7ba]">33% of spending</small></span></div>
+                    <div className="flex items-start gap-2.5" data-feature-motion="slide-right" data-motion-step="4"><i className="mt-1 size-2.5 shrink-0 rounded-[3px] bg-[#6d787e]" /><span><strong className="block font-medium">Everything else</strong><small className="text-[#aeb7ba]">25% of spending</small></span></div>
                   </div>
                 </div>
-                <p className="mt-5 border-t border-[#3c454a] pt-4 text-[.7rem] text-[#b8c0c3]">A closer look at the month, without sorting every payment yourself.</p>
+                <p className="mt-5 border-t border-[#3c454a] pt-4 text-[.7rem] text-[#b8c0c3]" data-feature-motion="fade" data-motion-step="5">A closer look at the month, without sorting every payment yourself.</p>
               </div>
             </ScrollStackItem>
             <ScrollStackItem className={`${featureLayout} ${styles.featureVisualCard} ${styles.recordsFeature}`}>
               <div className={styles.featureCopy}>
-                <h3 className={`${featureHeading} max-w-[13ch]`} data-reveal="left">The details stay within reach.</h3>
-                <p className={featureDescription} data-reveal="left" data-delay="70">
+                <h3 className={`${featureHeading} max-w-[13ch]`} data-feature-motion="lift">The details stay within reach.</h3>
+                <p className={featureDescription} data-feature-motion="lift" data-motion-step="1">
                   Find a past payment, move money between your accounts, and
                   organize spending your way.
                 </p>
               </div>
-              <div className={styles.recordBoard} aria-label="Illustration of transaction history, an account transfer, and personal categories" data-reveal="right">
-                <div className={styles.recordSheet}>
-                  <div className="flex items-center justify-between text-[.68rem] text-[#656b6f]"><span>Transaction history</span><span>All accounts</span></div>
-                  <div className="mt-5 flex items-center justify-between gap-3 border-t border-[#e3e6e7] py-3 text-[.78rem]"><span><strong className="block font-semibold">Market run</strong><small className="text-[#71777b]">Food & drinks</small></span><strong className="whitespace-nowrap font-semibold">- Rp 74.000</strong></div>
-                  <div className="flex items-center justify-between gap-3 border-t border-[#e3e6e7] py-3 text-[.78rem]"><span><strong className="block font-semibold">Bus fare</strong><small className="text-[#71777b]">Transport</small></span><strong className="whitespace-nowrap font-semibold">- Rp 12.000</strong></div>
+              <div className={styles.recordBoard} aria-label="Illustration of transaction history, an account transfer, and personal categories" data-feature-motion="fade">
+                <div className={styles.recordSheet} data-feature-motion="unfold" data-motion-step="1">
+                  <div className="flex items-center justify-between text-[.68rem] text-[#656b6f]" data-feature-motion="fade" data-motion-step="2"><span>Transaction history</span><span>All accounts</span></div>
+                  <div className="mt-5 flex items-center justify-between gap-3 border-t border-[#e3e6e7] py-3 text-[.78rem]" data-feature-motion="lift" data-motion-step="3"><span><strong className="block font-semibold">Market run</strong><small className="text-[#71777b]">Food & drinks</small></span><strong className="whitespace-nowrap font-semibold">- Rp 74.000</strong></div>
+                  <div className="flex items-center justify-between gap-3 border-t border-[#e3e6e7] py-3 text-[.78rem]" data-feature-motion="lift" data-motion-step="4"><span><strong className="block font-semibold">Bus fare</strong><small className="text-[#71777b]">Transport</small></span><strong className="whitespace-nowrap font-semibold">- Rp 12.000</strong></div>
                 </div>
-                <div className={styles.transferSlip}>
+                <div className={styles.transferSlip} data-feature-motion="slide-right" data-motion-step="3">
                   <span className="text-[.68rem] text-[#bfc8cc]">Between your accounts</span>
                   <strong className="mt-1 block text-[1.18rem] tracking-[-.03em]">Rp 125.000</strong>
                   <span className="mt-1 block text-[.69rem] text-[#cbd1d4]">Cash account · Savings</span>
                 </div>
-                <div className={styles.categorySlip}><span>Your categories</span><strong>Food · Travel · Bills</strong></div>
+                <div className={styles.categorySlip} data-feature-motion="slide-left" data-motion-step="4"><span>Your categories</span><strong>Food · Travel · Bills</strong></div>
               </div>
             </ScrollStackItem>
           </ScrollStack>

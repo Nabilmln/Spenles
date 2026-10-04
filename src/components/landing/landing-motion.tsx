@@ -13,10 +13,12 @@ export function LandingMotion() {
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const reveals = [...root.querySelectorAll<HTMLElement>("[data-reveal]")];
     const budgetFills = [...root.querySelectorAll<HTMLElement>("[role='progressbar'] i")];
-    const reportDonut = root.querySelector<HTMLElement>("[data-report-donut]");
     const stack = root.querySelector<HTMLElement>("[data-scroll-stack]");
     const stackStage = stack?.querySelector<HTMLElement>("[data-scroll-stack-stage]");
     const stackCards = [...(stack?.querySelectorAll<HTMLElement>("[data-scroll-stack-card]") ?? [])];
+    const featureMotions = stackCards.map((card) =>
+      [...card.querySelectorAll<HTMLElement | SVGElement>("[data-feature-motion]")],
+    );
     let frame = 0;
 
     function clearMotion() {
@@ -25,7 +27,13 @@ export function LandingMotion() {
         element.style.removeProperty("translate");
       }
       for (const fill of budgetFills) fill.style.removeProperty("transform");
-      reportDonut?.style.removeProperty("scale");
+      for (const cardParts of featureMotions) {
+        for (const element of cardParts) {
+          for (const property of ["opacity", "translate", "scale", "rotate", "clip-path"]) {
+            element.style.removeProperty(property);
+          }
+        }
+      }
       stack?.removeAttribute("data-stack-ready");
       for (const card of stackCards) {
         card.style.removeProperty("opacity");
@@ -55,6 +63,8 @@ export function LandingMotion() {
       const cardArrivals = stackCards.map((_, index) => index === 0
         ? 1
         : ease(clamp((stackProgress - (index - 1) * 0.25 - 0.08) / 0.13)));
+      const firstCardTop = stackCards[0]?.getBoundingClientRect().top ?? viewport;
+      const firstCardEntry = ease(clamp((viewport * 0.92 - firstCardTop) / (viewport * 0.43)));
 
       // The same viewport progress drives both directions of the scroll.
       const progressFor = (element: Element) => {
@@ -68,8 +78,35 @@ export function LandingMotion() {
         const depth = cardArrivals.slice(index + 1).reduce((sum, value) => sum + value, 0);
         const offset = index * 14 + (1 - arrival) * 90;
         const scale = 1 - depth * 0.018;
-        card.style.opacity = arrival.toFixed(3);
+        // Make the incoming surface opaque early so older card text cannot show through it.
+        card.style.opacity = Math.min(1, arrival * 10).toFixed(3);
         card.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0) scale(${scale.toFixed(3)})`;
+      });
+
+      featureMotions.forEach((parts, cardIndex) => {
+        const cardProgress = cardIndex === 0 ? firstCardEntry : cardArrivals[cardIndex];
+        for (const element of parts) {
+          const step = Number(element.getAttribute("data-motion-step") ?? 0);
+          const progress = ease(clamp((cardProgress - step * 0.1) / 0.48));
+          const hidden = 1 - progress;
+          const kind = element.getAttribute("data-feature-motion");
+          element.style.opacity = progress.toFixed(3);
+          element.style.translate = kind === "slide-left" ? `${(-42 * hidden).toFixed(1)}px 0`
+            : kind === "slide-right" ? `${(42 * hidden).toFixed(1)}px 0`
+            : kind === "rise" ? `0 ${(96 * hidden).toFixed(1)}px`
+            : kind === "unfold" ? `0 ${(48 * hidden).toFixed(1)}px`
+            : kind === "lift" || kind === "fan" || kind === "pop" ? `0 ${(28 * hidden).toFixed(1)}px`
+            : "0 0";
+          element.style.scale = kind === "rise" ? (0.92 + 0.08 * progress).toFixed(3)
+            : kind === "fan" ? (0.88 + 0.12 * progress).toFixed(3)
+            : kind === "pop" ? (0.72 + 0.28 * progress).toFixed(3)
+            : kind === "unfold" ? (0.94 + 0.06 * progress).toFixed(3)
+            : "1";
+          element.style.rotate = kind === "fan" ? `${(-7 * hidden).toFixed(1)}deg`
+            : kind === "unfold" ? `${(-4 * hidden).toFixed(1)}deg`
+            : "0deg";
+          element.style.clipPath = kind === "draw" ? `inset(0 ${(100 * hidden).toFixed(1)}% 0 0)` : "none";
+        }
       });
 
       reveals.forEach((element, index) => {
@@ -87,12 +124,10 @@ export function LandingMotion() {
           : `0 ${shift.toFixed(1)}px`;
       });
 
-      for (const fill of budgetFills) {
-        fill.style.transform = `scaleX(${(cardArrivals[1] ?? 1).toFixed(3)})`;
-      }
-      if (reportDonut) {
-        reportDonut.style.scale = (0.72 + 0.28 * (cardArrivals[2] ?? 1)).toFixed(3);
-      }
+      budgetFills.forEach((fill, index) => {
+        const progress = ease(clamp(((cardArrivals[1] ?? 1) - 0.38 - index * 0.1) / 0.38));
+        fill.style.transform = `scaleX(${progress.toFixed(3)})`;
+      });
     }
 
     function schedule() {
