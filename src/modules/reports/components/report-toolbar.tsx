@@ -4,12 +4,24 @@ import { useState } from "react";
 import { CalendarRange, ChevronRight, Send, Upload } from "lucide-react";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { CalendarRangeSelector } from "@/components/ui/calendar-range-selector";
-import { buttonClass, fieldClass, fieldLabelClass, inputClass } from "@/components/ui/styles";
+import {
+  buttonClass,
+  fieldClass,
+  fieldLabelClass,
+  inputClass,
+} from "@/components/ui/styles";
 import { useToastActionState } from "@/components/ui/toast";
 import { cn } from "@/lib/utils";
 import { AccountSelectionSheet } from "@/modules/transactions/components/selection-sheets";
-import { emailReportAction, type EmailReportState } from "../actions/email-report";
-import { formatReportDateChip, formatReportRange, formatReportRangeShort } from "../lib/report-date";
+import {
+  emailReportAction,
+  type EmailReportState,
+} from "../actions/email-report";
+import {
+  formatReportDateChip,
+  formatReportRange,
+  formatReportRangeShort,
+} from "../lib/report-date";
 
 type Sheet = "none" | "range" | "export" | "export-account" | "export-range";
 
@@ -32,12 +44,10 @@ export function ReportToolbar({
   const [accountId, setAccountId] = useState("");
   const [exportFrom, setExportFrom] = useState(from);
   const [exportTo, setExportTo] = useState(to);
-  const [, sendAction, sending] = useToastActionState<EmailReportState, FormData>(
-    emailReportAction,
-    {},
-    undefined,
-    () => setSheet("none"),
-  );
+  const [, sendAction, sending] = useToastActionState<
+    EmailReportState,
+    FormData
+  >(emailReportAction, {}, undefined, () => setSheet("none"));
   const rangeLabel = formatReportRange(from, to);
   const exportRangeLabel = formatReportRangeShort(exportFrom, exportTo);
   const selectedAccount = accounts.find((account) => account.id === accountId);
@@ -111,7 +121,12 @@ export function ReportToolbar({
         ariaLabel="Export report"
         zIndex="z-[85]"
         footer={
-          <button className={cn(buttonClass("primary"), "w-full")} disabled={sending || !accountId} form="email-report-form" type="submit">
+          <button
+            className={cn(buttonClass("primary"), "w-full")}
+            disabled={sending || !accountId}
+            form="email-report-form"
+            type="submit"
+          >
             <Send aria-hidden="true" size={18} />
             {sending ? "Preparing report..." : "Email report"}
           </button>
@@ -119,7 +134,9 @@ export function ReportToolbar({
       >
         <form action={sendAction} className="grid gap-5" id="email-report-form">
           <div className={fieldClass}>
-            <label className={fieldLabelClass} htmlFor="report-recipient">Send to</label>
+            <label className={fieldLabelClass} htmlFor="report-recipient">
+              Send to
+            </label>
             <input
               autoComplete="email"
               className={inputClass}
@@ -132,17 +149,28 @@ export function ReportToolbar({
             />
           </div>
           <div className={fieldClass}>
-            <span className={fieldLabelClass} id="report-account-label">Source account</span>
+            <span className={fieldLabelClass} id="report-account-label">
+              Source account
+            </span>
             <button
               aria-haspopup="dialog"
               aria-labelledby="report-account-label report-account-value"
-              className={cn(inputClass, "flex items-center justify-between gap-2 bg-white text-left")}
+              className={cn(
+                inputClass,
+                "flex items-center justify-between gap-2 bg-white text-left",
+              )}
               disabled={accounts.length === 0}
               onClick={() => setSheet("export-account")}
               type="button"
             >
-              <span className="min-w-0 truncate" id="report-account-value">{selectedAccount?.name ?? "Choose an account"}</span>
-              <ChevronRight aria-hidden="true" className="shrink-0 text-muted" size={18} />
+              <span className="min-w-0 truncate" id="report-account-value">
+                {selectedAccount?.name ?? "Choose an account"}
+              </span>
+              <ChevronRight
+                aria-hidden="true"
+                className="shrink-0 text-muted"
+                size={18}
+              />
             </button>
             <input name="accountId" type="hidden" value={accountId} />
           </div>
@@ -151,7 +179,10 @@ export function ReportToolbar({
             <button
               aria-haspopup="dialog"
               aria-label="Choose report date range"
-              className={cn(inputClass, "flex items-center justify-between bg-white text-left")}
+              className={cn(
+                inputClass,
+                "flex items-center justify-between bg-white text-left",
+              )}
               onClick={() => setSheet("export-range")}
               type="button"
             >
@@ -162,7 +193,8 @@ export function ReportToolbar({
             <input name="to" type="hidden" value={exportTo} />
           </div>
           <p className="m-0 text-[.76rem] leading-relaxed text-muted">
-            A PDF with this account’s transactions for the selected dates will be emailed to the address above.
+            A PDF with this account’s transactions for the selected dates will
+            be emailed to the address above.
           </p>
         </form>
       </BottomSheet>
