@@ -20,7 +20,7 @@ const income = [49, 56, 53, 63, 59, 68, 64, 73, 70, 77, 74, 84];
 const expenses = [27, 34, 31, 43, 39, 47, 45, 54, 49, 59, 55, 64];
 const heroTitleWords = ["Your", "money,", "clearly", "in", "view."];
 const sectionHeading = "m-0 text-[clamp(2.7rem,4.3vw,4.7rem)] font-semibold leading-[1.1] tracking-[-0.045em] text-balance";
-const sectionDescription = "mt-[1.2rem] max-w-[52ch] text-[.92rem] leading-[1.8] text-[#656660] text-pretty";
+const sectionDescription = "mt-[1rem] max-w-[100ch] text-[.92rem] leading-[1.8] text-[#656660] text-pretty";
 const featureLayout = "grid grid-cols-[minmax(0,1fr)_minmax(0,.9fr)] items-center gap-16 px-[clamp(2rem,5vw,5rem)] py-14 max-[900px]:gap-6 max-[900px]:p-10 max-[720px]:grid-cols-1 max-[720px]:content-center max-[720px]:gap-6 max-[720px]:p-8";
 const whyItem = "grid grid-cols-[minmax(0,1fr)_1.7rem] items-start gap-[1.1rem] px-[.4rem] py-[1.8rem] transition-[padding,background] duration-300 hover:bg-[#f8f9f9] hover:px-[.9rem] motion-reduce:transition-none";
 const whyItemHeading = "m-0 text-[clamp(1.2rem,1.65vw,1.55rem)] font-semibold tracking-[-.03em]";
@@ -160,15 +160,14 @@ export function DesktopLanding() {
         </section>
         <section
           aria-labelledby="features-title"
-          className={`${styles.features} pt-4 pb-12`}
+          className={`${styles.features} pt-2 pb-8`}
           id="features"
         >
           <ScrollStack>
             <div className={`${styles.featureIntro} mb-9 max-w-[700px]`}>
               <h2 className={`${sectionHeading} max-w-[13ch]`} id="features-title" data-reveal="up">The right tools, without the noise.</h2>
               <p className={sectionDescription} data-reveal="up">
-                Split a shared bill, set a limit, or step back to see the month.
-                Each task has its own clear place.
+                Split a shared bill, set a limit, or step back to see the month. Each task has its own clear place.
               </p>
             </div>
             <ScrollStackItem className={`${featureLayout} max-[720px]:content-start`}>

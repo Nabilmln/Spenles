@@ -76,7 +76,7 @@
 }
 .featureStack {
   --stack-card-height: 460px;
-  --stack-stage-top: clamp(350px, calc(100vh - 550px), 380px);
+  --stack-stage-top: clamp(300px, calc(100vh - 550px), 380px);
   position: relative;
   isolation: isolate;
 }
