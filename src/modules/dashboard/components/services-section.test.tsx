@@ -8,6 +8,8 @@ import {
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ServicesSection } from "./services-section";
 
+vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
+
 vi.mock("@/modules/transactions/components/add-transaction-sheet", () => ({
   AddTransactionSheet: ({ open }: { open: boolean }) =>
     open ? <div role="dialog" aria-label="Add transaction" /> : null,
@@ -15,6 +17,7 @@ vi.mock("@/modules/transactions/components/add-transaction-sheet", () => ({
 
 vi.mock("@/modules/profiles/actions/update-profile", () => ({
   updateProfileAction: vi.fn(async () => ({})),
+  updateProfileAvatarAction: vi.fn(async () => ({ success: "Profile photo updated." })),
 }));
 
 vi.mock("@/modules/auth/actions/logout", () => ({
@@ -27,6 +30,7 @@ const profile = {
   id: "p-1",
   userId: "u-1",
   displayName: "Budi",
+  avatarIndex: null,
   defaultCurrency: "IDR",
   timezone: "Asia/Jakarta",
   createdAt: new Date(),

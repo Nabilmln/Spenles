@@ -50,6 +50,8 @@ investment, or professional accounting service.
 - Split-bill friends use one of five bundled portrait avatars. Owners can choose
   a portrait when adding or editing a friend; older contacts receive a stable
   default portrait until changed.
+- Profile photos use the same five bundled portraits. Users can change theirs
+  from the profile sheet; an unchanged profile keeps a stable default portrait.
 - Authoritative money amounts are integer rupiah and financial calculations
   happen on the server. Split-bill totals reconcile exactly.
 - The PWA caches static assets, not authenticated page navigation or API data.

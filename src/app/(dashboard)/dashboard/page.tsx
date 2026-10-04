@@ -20,6 +20,7 @@ function profileFallback(userId: string): Profile {
     id: userId,
     userId,
     displayName: "Spenles User",
+    avatarIndex: null,
     defaultCurrency: "IDR",
     timezone: "Asia/Jakarta",
     createdAt: new Date(),

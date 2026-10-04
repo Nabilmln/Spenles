@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import type { Profile } from "@/db/schema";
-import { defaultProfileAvatar } from "./default-profile-avatar";
+import { avatarIndexForId, avatarPath } from "@/lib/avatars";
 import { ProfileSheet } from "./profile-sheet";
 
 export function ProfileMenu({
@@ -14,7 +14,9 @@ export function ProfileMenu({
   email: string;
 }) {
   const [open, setOpen] = useState(false);
-  const avatar = defaultProfileAvatar(profile.userId);
+  const [avatarOverride, setAvatarIndex] = useState<number | null>(null);
+  const avatarIndex = avatarOverride ?? profile.avatarIndex ?? avatarIndexForId(profile.userId);
+  const avatar = avatarPath(avatarIndex);
 
   return (
     <div className="relative z-40">
@@ -34,6 +36,8 @@ export function ProfileMenu({
         onClose={() => setOpen(false)}
         profile={profile}
         email={email}
+        avatarIndex={avatarIndex}
+        onAvatarChange={setAvatarIndex}
       />
     </div>
   );

@@ -9,6 +9,7 @@ const profile = {
   id: "p-1",
   userId: "u-1",
   displayName: "Budi",
+  avatarIndex: null,
   defaultCurrency: "IDR",
   timezone: "Asia/Jakarta",
   createdAt: new Date(),
@@ -16,10 +17,10 @@ const profile = {
 };
 
 describe("ProfileForm", () => {
-  it("keeps the account settings and excludes theme controls", () => {
-    render(<ProfileForm profile={profile} email="budi@example.com" />);
+  it("keeps only the editable name visible", () => {
+    render(<ProfileForm profile={profile} />);
     expect(screen.getByLabelText("Display name")).toHaveValue("Budi");
-    expect(screen.getByLabelText("Email")).toHaveValue("budi@example.com");
+    expect(screen.queryByLabelText("Email")).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Save changes" })).toBeInTheDocument();
     expect(screen.queryByLabelText("Theme")).not.toBeInTheDocument();
   });

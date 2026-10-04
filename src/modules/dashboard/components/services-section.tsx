@@ -9,6 +9,7 @@ import { ProfileSheet } from "@/components/layout/profile-sheet";
 import { SERVICES_SHEET_ITEMS } from "./services";
 import { DashboardFeatureGrid } from "./dashboard-feature-grid";
 import type { Profile } from "@/db/schema";
+import { avatarIndexForId } from "@/lib/avatars";
 
 export function ServicesSection({
   profile,
@@ -20,6 +21,8 @@ export function ServicesSection({
   const [open, setOpen] = useState(false);
   const [addExpenseOpen, setAddExpenseOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [avatarOverride, setAvatarIndex] = useState<number | null>(null);
+  const avatarIndex = avatarOverride ?? profile.avatarIndex ?? avatarIndexForId(profile.userId);
 
   function handleItem(id: string) {
     if (id === "add-expense") {
@@ -97,6 +100,8 @@ export function ServicesSection({
         onClose={() => setProfileOpen(false)}
         profile={profile}
         email={email}
+        avatarIndex={avatarIndex}
+        onAvatarChange={setAvatarIndex}
       />
     </section>
   );

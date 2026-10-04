@@ -27,6 +27,7 @@ const profile = {
   id: "p-1",
   userId: "u-1",
   displayName: "Budi",
+  avatarIndex: null,
   defaultCurrency: "IDR",
   timezone: "Asia/Jakarta",
   createdAt: new Date(),

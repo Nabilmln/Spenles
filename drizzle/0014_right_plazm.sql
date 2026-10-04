@@ -1,0 +1,2 @@
+ALTER TABLE "profiles" ADD COLUMN "avatar_index" smallint;--> statement-breakpoint
+ALTER TABLE "profiles" ADD CONSTRAINT "profiles_avatar_index_range" CHECK ("profiles"."avatar_index" between 1 and 5);

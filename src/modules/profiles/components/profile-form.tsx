@@ -5,75 +5,30 @@ import type { Profile } from "@/db/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FormMessage } from "@/components/ui/form-message";
-import {
-  fieldClass,
-  fieldHintClass,
-  fieldLabelClass,
-  inputDisplayClass,
-} from "@/components/ui/styles";
-import {
-  updateProfileAction,
-  type ProfileActionState,
-} from "../actions/update-profile";
+import { fieldClass, fieldLabelClass } from "@/components/ui/styles";
+import { updateProfileAction, type ProfileActionState } from "../actions/update-profile";
 
 const initialState: ProfileActionState = {};
 
-export function ProfileForm({
-  profile,
-  email,
-  onSuccess,
-}: {
-  profile: Profile;
-  email: string;
-  onSuccess?: () => void;
-}) {
+export function ProfileForm({ profile, onSuccess }: { profile: Profile; onSuccess?: () => void }) {
   const [state, action, pending] = useToastActionState(
-    updateProfileAction,
-    initialState,
-    undefined,
-    onSuccess,
+    updateProfileAction, initialState, undefined, onSuccess,
   );
 
   return (
-    <form action={action} className="grid gap-[1.25rem]">
+    <form action={action} className="grid gap-4">
       <div className={fieldClass}>
         <label htmlFor="displayName" className={fieldLabelClass}>Display name</label>
         <Input
-          id="displayName"
-          name="displayName"
-          defaultValue={profile.displayName}
+          id="displayName" name="displayName" defaultValue={profile.displayName}
           aria-describedby="display-name-error"
-          aria-invalid={Boolean(state.fieldErrors?.displayName)}
-          required
+          aria-invalid={Boolean(state.fieldErrors?.displayName)} required
         />
-        <FormMessage id="display-name-error">
-          {state.fieldErrors?.displayName?.[0]}
-        </FormMessage>
+        <FormMessage id="display-name-error">{state.fieldErrors?.displayName?.[0]}</FormMessage>
       </div>
-      <div className={fieldClass}>
-        <label htmlFor="profileEmail" className={fieldLabelClass}>Email</label>
-        <Input id="profileEmail" value={email} readOnly disabled />
-        <span className={fieldHintClass}>Email is managed by the authentication service.</span>
-      </div>
-      <div className="grid grid-cols-2 gap-[1rem] max-[540px]:grid-cols-1">
-        <div className={fieldClass}>
-          <label htmlFor="defaultCurrency" className={fieldLabelClass}>Currency</label>
-          <div className={inputDisplayClass} id="defaultCurrency">
-            IDR — Indonesian Rupiah
-          </div>
-          <input type="hidden" name="defaultCurrency" value="IDR" />
-          <span className={fieldHintClass}>Spenles only supports IDR.</span>
-        </div>
-        <div className={fieldClass}>
-          <label htmlFor="timezone" className={fieldLabelClass}>Timezone</label>
-          <div className={inputDisplayClass} id="timezone">Asia/Jakarta</div>
-          <input type="hidden" name="timezone" value="Asia/Jakarta" />
-          <span className={fieldHintClass}>
-            Spenles only supports Asia/Jakarta.
-          </span>
-        </div>
-      </div>
-      <Button type="submit" disabled={pending}>
+      <input type="hidden" name="defaultCurrency" value="IDR" />
+      <input type="hidden" name="timezone" value="Asia/Jakarta" />
+      <Button type="submit" disabled={pending} className="w-full rounded-full">
         {pending ? "Saving..." : "Save changes"}
       </Button>
     </form>

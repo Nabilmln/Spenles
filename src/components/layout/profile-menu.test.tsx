@@ -8,12 +8,15 @@ import {
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ProfileMenu } from "./profile-menu";
 
+vi.mock("next/navigation", () => ({ useRouter: () => ({ refresh: vi.fn() }) }));
+
 vi.mock("@/modules/auth/actions/logout", () => ({
   logoutAction: vi.fn(),
 }));
 
 vi.mock("@/modules/profiles/actions/update-profile", () => ({
   updateProfileAction: vi.fn(async () => ({})),
+  updateProfileAvatarAction: vi.fn(async () => ({ success: "Profile photo updated." })),
 }));
 
 const { logoutAction } = await import("@/modules/auth/actions/logout");
@@ -24,6 +27,7 @@ const profile = {
   id: "p-1",
   userId: "u-1",
   displayName: "Budi",
+  avatarIndex: null,
   defaultCurrency: "IDR",
   timezone: "Asia/Jakarta",
   createdAt: new Date(),
@@ -51,19 +55,30 @@ describe("ProfileMenu", () => {
     renderMenu();
     fireEvent.click(screen.getByRole("button", { name: "Open profile" }));
 
-    expect(screen.getAllByText("Budi").length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByLabelText("Display name")).toHaveValue("Budi");
     expect(screen.getAllByText("budi@example.com").length).toBeGreaterThanOrEqual(1);
     expect(screen.getByRole("button", { name: "Save changes" })).toBeInTheDocument();
   });
 
-  it("places logout inside the sheet, styled as destructive", () => {
+  it("places logout inside the sheet as an outlined action", () => {
     renderMenu();
     fireEvent.click(screen.getByRole("button", { name: "Open profile" }));
     const logout = screen
       .getAllByText("Log out")[0]
       .closest("button") as HTMLButtonElement;
-    expect(logout).toHaveClass("text-expense");
+    expect(logout).toHaveClass("rounded-full");
     expect(logout).toHaveAttribute("type", "submit");
+  });
+
+  it("opens the photo picker and updates the header avatar after saving", async () => {
+    renderMenu();
+    const trigger = screen.getByRole("button", { name: "Open profile" });
+    fireEvent.click(trigger);
+    fireEvent.click(screen.getByRole("button", { name: "Change profile photo" }));
+    expect(screen.getByRole("dialog", { name: "Choose profile photo" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("radio", { name: "Photo 3" }));
+    fireEvent.click(screen.getByRole("button", { name: "Save photo" }));
+    await waitFor(() => expect(trigger.querySelector("img")).toHaveAttribute("src", expect.stringContaining("default-3")));
   });
 
   it("closes the sheet with the Escape key", async () => {
