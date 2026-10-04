@@ -210,6 +210,8 @@ The account chosen for Home carries a small Home badge. Its detail sheet uses a 
 
 ### Navigation
 
+- **App launch:** The mobile redirect and root loading fallback show only the centered ink S mark on the app canvas. Loading text remains available to screen readers; notification sheets can appear above the launch surface.
+
 - **Mobile header:** The shared header stays at the top while pages scroll, using the same canvas color without a separate panel treatment. The dashboard shows the bare open S logo at left and the profile portrait at right. Secondary screens keep their back control at left with the arrow in a small white circle, and the portrait at right. Five coordinated 3D illustrated portraits are assigned as stable default avatars by user ID; the same portrait appears in the profile sheet. A small edit control opens a sheet to choose and save one of those portraits.
 - **Mobile app:** A solid graphite floating bar holds the existing icon links and expands the active label in a quiet translucent pill. The add button is white with an ink icon.
 - **Brand:** The shared open S in ink anchors app and landing navigation without a drawn tile. Favicon and install icons use the same vector; opaque PWA canvases and centered Android maskable exports meet platform requirements.

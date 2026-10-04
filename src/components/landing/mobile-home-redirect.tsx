@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { AppLaunchScreen } from "@/components/feedback/app-launch-screen";
 
 export function MobileHomeRedirect({ destination }: { destination: string }) {
   const router = useRouter();
@@ -16,5 +17,5 @@ export function MobileHomeRedirect({ destination }: { destination: string }) {
     return () => mobile.removeEventListener("change", goToApp);
   }, [destination, router]);
 
-  return <p className="p-6 text-center text-sm text-muted">Opening Spenles…</p>;
+  return <AppLaunchScreen />;
 }
