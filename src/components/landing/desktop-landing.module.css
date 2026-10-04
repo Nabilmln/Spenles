@@ -64,7 +64,7 @@
 .budgetDemoTrack i::after {
   position: absolute;
   top: 50%;
-  right: -5px;
+  right: 0px;
   width: 14px;
   height: 14px;
   transform: translateY(-50%);
@@ -154,9 +154,9 @@
 }
 .budgetDemoTrack i { width: 57.5%; }
 .insights {
-  --report-phone-width: 510px;
-  --report-phone-right: 0px;
-  --report-phone-bottom: -18px;
+  --report-phone-width: 960px;
+  --report-phone-right: -300px;
+  --report-phone-bottom: -10px;
   position: relative;
   display: grid;
   grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);

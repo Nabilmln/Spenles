@@ -276,7 +276,7 @@ export function DesktopLanding() {
         </section>
         <section
           aria-labelledby="insights-title"
-          className={styles.insights}
+          className={`${styles.insights} mt-[clamp(3rem,5vw,4.5rem)]`}
           id="insights"
         >
           <div>
@@ -301,11 +301,11 @@ export function DesktopLanding() {
           </div>
           <Image
             className={styles.insightMockup}
-            src="/illustrations/report-phone-right-hand.png"
+            src="/illustrations/report-phone-right-hand-wide.png"
             alt="Spenles Reports screen on a phone held in a right hand"
-            width={1024}
-            height={1536}
-            sizes="(max-width: 980px) 90vw, 600px"
+            width={1469}
+            height={1071}
+            sizes="960px"
             data-reveal="right"
           />
         </section>
