@@ -116,13 +116,13 @@ export function DesktopLanding() {
         </section>
         <section
           aria-labelledby="why-title"
-          className="relative w-full bg-[#f2f3f3]"
+          className="relative w-full bg-white"
           id="why-spenles"
           data-why-section
         >
           <WhySpenlesMotion />
           <div
-            className="relative mx-auto grid min-h-[calc(100svh-80px)] w-[min(calc(100%-7rem),1340px)] grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] items-center gap-[clamp(3rem,6vw,7rem)] py-16 max-[1220px]:w-[min(calc(100%-4rem),1120px)] max-[980px]:w-[calc(100%-3rem)] max-[980px]:min-h-0 max-[980px]:grid-cols-1 max-[980px]:gap-12 max-[980px]:py-24"
+            className="relative mx-auto grid min-h-[calc(100svh-80px)] w-[min(calc(100%-7rem),1340px)] grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] items-center gap-[clamp(3rem,6vw,7rem)] py-8 max-[1220px]:w-[min(calc(100%-4rem),1120px)] max-[980px]:w-[calc(100%-3rem)] max-[980px]:min-h-0 max-[980px]:grid-cols-1 max-[980px]:gap-12 max-[980px]:py-24"
             data-why-stage
           >
             <div className="max-w-[600px]" data-why-statement>
@@ -132,30 +132,43 @@ export function DesktopLanding() {
                 The details are there when you need them.
               </p>
             </div>
-            <div className="min-w-0" data-why-detail>
-              <div className="relative aspect-[1.85] overflow-hidden rounded-[26px] bg-[#e4e7e8]">
+            <div className="flex min-w-0 flex-col gap-3" data-why-detail>
+              <div className="relative aspect-[3.2] w-full overflow-hidden rounded-[22px] bg-[#e4e7e8]" data-why-photo>
                 <Image
                   src="/illustrations/why-spenles-receipt.webp"
                   alt="An everyday receipt beside a wallet on a table"
                   fill
-                  sizes="(max-width: 980px) 95vw, 50vw"
+                  sizes="(max-width: 980px) 95vw, 52vw"
                   className="object-cover"
                 />
               </div>
-              <div className="mt-7 grid gap-0 text-[#171717]">
-                <div className="grid grid-cols-[minmax(0,11rem)_minmax(0,1fr)] gap-5 border-t border-[#d5d9da] py-4 max-[720px]:grid-cols-1 max-[720px]:gap-1">
-                  <h3 className="text-[.9rem] font-semibold">Find the details</h3>
-                  <p className="text-[.83rem] leading-[1.65] text-[#596064]">Return to a payment by date, account, or category.</p>
-                </div>
-                <div className="grid grid-cols-[minmax(0,11rem)_minmax(0,1fr)] gap-5 border-t border-[#d5d9da] py-4 max-[720px]:grid-cols-1 max-[720px]:gap-1">
-                  <h3 className="text-[.9rem] font-semibold">See what is changing</h3>
-                  <p className="text-[.83rem] leading-[1.65] text-[#596064]">Review spending beside income and the limits you set.</p>
-                </div>
-                <div className="grid grid-cols-[minmax(0,11rem)_minmax(0,1fr)] gap-5 border-t border-[#d5d9da] py-4 max-[720px]:grid-cols-1 max-[720px]:gap-1">
-                  <h3 className="text-[.9rem] font-semibold">Keep it yours</h3>
-                  <p className="text-[.83rem] leading-[1.65] text-[#596064]">Each person has a separate Spenles account and records.</p>
-                </div>
+              <p className="ml-auto max-w-[68%] text-[.82rem] leading-[1.55] text-[#4f5455]" data-why-copy>
+                Keep the amount, account, category, and date together in one record.
+              </p>
+              <div className="relative ml-auto aspect-[3.2] w-2/3 overflow-hidden rounded-[20px] bg-[#e4e7e8]" data-why-photo>
+                <Image
+                  src="/illustrations/why-spenles-notes.webp"
+                  alt="Someone recording everyday spending in a phone note"
+                  fill
+                  sizes="(max-width: 980px) 63vw, 35vw"
+                  className="object-cover"
+                />
               </div>
+              <p className="mr-auto max-w-[68%] text-[.82rem] leading-[1.55] text-[#4f5455]" data-why-copy>
+                Find a payment later by date, account, or category.
+              </p>
+              <div className="relative mr-auto aspect-[3.2] w-1/2 overflow-hidden rounded-[18px] bg-[#e4e7e8]" data-why-photo>
+                <Image
+                  src="/illustrations/why-spenles-calculator.webp"
+                  alt="Someone calculating expenses with a physical calculator"
+                  fill
+                  sizes="(max-width: 980px) 48vw, 26vw"
+                  className="object-cover"
+                />
+              </div>
+              <p className="ml-auto max-w-[68%] text-[.82rem] leading-[1.55] text-[#4f5455]" data-why-copy>
+                See spending beside income and the budgets you set.
+              </p>
             </div>
           </div>
         </section>
