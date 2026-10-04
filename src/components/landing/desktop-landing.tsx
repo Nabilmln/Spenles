@@ -169,32 +169,16 @@ export function DesktopLanding() {
                   shares that add up to the final bill.
                 </p>
               </div>
-              <div
-                className={styles.splitDemo}
-                aria-label="Split bill preview"
-                data-reveal="fade"
-              >
-                <div className={styles.splitDemoTop}>
-                  <ReceiptText size={19} />
-                  <span>Weekend dinner</span>
-                  <strong>Rp 480,000</strong>
-                </div>
-                <div>
-                  <span>Alex</span>
-                  <strong>Rp 160,000</strong>
-                </div>
-                <div>
-                  <span>Ben</span>
-                  <strong>Rp 160,000</strong>
-                </div>
-                <div>
-                  <span>Chris</span>
-                  <strong>Rp 160,000</strong>
-                </div>
-                <p>
-                  <Check size={14} /> Every share adds up
-                </p>
-              </div>
+              <figure className={styles.splitPhone} data-reveal="fade">
+                <Image
+                  src="/illustrations/split-bill-phone.png"
+                  alt="Spenles Split Bill Result on a phone, showing each person's share of a burger bill"
+                  width={1024}
+                  height={1536}
+                  sizes="(max-width: 720px) 338px, 400px"
+                  priority={false}
+                />
+              </figure>
             </ScrollStackItem>
             <ScrollStackItem className={styles.budgetFeature}>
               <div className={styles.featureCopy}>

@@ -400,44 +400,19 @@
 .splitFeature .featureCopy h3 {
   max-width: 13ch;
 }
-.splitDemo {
-  width: min(100%, 405px);
-  margin-inline: auto;
-  padding: 1.1rem 1.35rem 1.2rem;
-  border: 1px solid #e6e8e9;
-  border-radius: 22px;
-  background: #fff;
-  color: #171717;
-  box-shadow: 0 26px 60px rgb(22 28 34 / 10%);
-  font-size: 0.79rem;
-  transform: rotate(2deg);
+.splitPhone {
+  --split-phone-top: 0px;
+  position: absolute;
+  top: var(--split-phone-top);
+  right: clamp(0.5rem, 6vw, 6rem);
+  height: calc((var(--stack-card-height) - var(--split-phone-top)) * 1.4);
+  margin: 0;
+  pointer-events: none;
 }
-.splitDemo > div {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 48px;
-  border-bottom: 1px solid #eceeef;
-}
-.splitDemo > div strong {
-  font-size: 0.84rem;
-}
-.splitDemoTop {
-  display: flex;
-  gap: 0.6rem;
-  min-height: 58px !important;
-  font-weight: 600;
-}
-.splitDemoTop span {
-  flex: 1;
-}
-.splitDemo p {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin: 1rem 0 0;
-  color: #4f5a54;
-  font-size: 0.72rem;
+.splitPhone img {
+  display: block;
+  width: auto;
+  height: 100%;
 }
 .budgetFeature,
 .reportFeature {
@@ -564,10 +539,9 @@
   color: #168fe5;
 }
 .insightMockup {
-  /* Change this value to resize the Reports phone. */
   --report-phone-width: 430px;
   width: min(100%, var(--report-phone-width));
-  margin: 0 auto;
+  /* margin: 0 auto; */
 }
 .insightMockup img {
   display: block;
@@ -892,6 +866,8 @@
   .budgetFeature,
   .reportFeature,
   .moreFeatureCard { gap: 1.5rem; padding: 2.5rem; }
+  .splitFeature .featureCopy { max-width: 18rem; }
+  .splitPhone { right: 0; }
 }
 @media (max-width: 720px) {
   .header { justify-content: space-between; gap: 1rem; }
@@ -912,10 +888,15 @@
     gap: 1.5rem;
     padding: 2rem;
   }
-  .splitDemo,
   .budgetDemo,
   .reportDemo,
   .moreFeatureList { width: min(100%, 380px); margin-inline: auto; }
+  .splitFeature { align-content: start; }
+  .splitPhone {
+    --split-phone-top: 220px;
+    right: 50%;
+    transform: translateX(50%);
+  }
   .insights { padding: 2rem; }
   .footerTop { flex-direction: column; }
   .footerContact { justify-items: start; }
