@@ -19,6 +19,16 @@ const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "
 const income = [49, 56, 53, 63, 59, 68, 64, 73, 70, 77, 74, 84];
 const expenses = [27, 34, 31, 43, 39, 47, 45, 54, 49, 59, 55, 64];
 const heroTitleWords = ["Your", "money,", "clearly", "in", "view."];
+const sectionHeading = "m-0 text-[clamp(2.7rem,4.3vw,4.7rem)] font-semibold leading-[1.1] tracking-[-0.045em] text-balance";
+const sectionDescription = "mt-[1.2rem] max-w-[52ch] text-[.92rem] leading-[1.8] text-[#656660] text-pretty";
+const featureLayout = "grid grid-cols-[minmax(0,1fr)_minmax(0,.9fr)] items-center gap-16 px-[clamp(2rem,5vw,5rem)] py-14 max-[900px]:gap-6 max-[900px]:p-10 max-[720px]:grid-cols-1 max-[720px]:content-center max-[720px]:gap-6 max-[720px]:p-8";
+const whyItem = "grid grid-cols-[minmax(0,1fr)_1.7rem] items-start gap-[1.1rem] px-[.4rem] py-[1.8rem] transition-[padding,background] duration-300 hover:bg-[#f8f9f9] hover:px-[.9rem] motion-reduce:transition-none";
+const whyItemHeading = "m-0 text-[clamp(1.2rem,1.65vw,1.55rem)] font-semibold tracking-[-.03em]";
+const whyItemCopy = "mt-[.55rem] max-w-[42ch] text-[.82rem] leading-[1.7] text-[#676862]";
+const contactLink = "grid size-11 place-items-center rounded-full border border-[#4c4c4a] bg-[#242423] text-white transition-[background,color,transform] duration-200 hover:-translate-y-0.5 hover:bg-white hover:text-[#171717] motion-reduce:transition-none";
+const featureHeading = "my-[.85rem] text-[clamp(1.85rem,2.7vw,3rem)] font-semibold leading-[1.14] tracking-[-.042em] text-balance";
+const featureDescription = "m-0 max-w-[42ch] text-[.86rem] leading-[1.75] text-[#62645f]";
+const previewCard = "ml-auto w-[min(100%,370px)] rounded-[19px] border border-[#e6e8e9] bg-white p-[1.3rem] text-[.75rem] text-[#171717] shadow-[0_16px_38px_rgb(22_28_34_/_7%)] max-[720px]:mx-auto max-[720px]:w-[min(100%,380px)]";
 
 function linePath(values: number[]) {
   const points = values.map((value, index) => ({
@@ -57,50 +67,50 @@ function IllustrativeLineChart({ id }: { id: string }) {
 
 export function DesktopLanding() {
   return (
-    <div className={styles.landing} lang="en" data-landing-root>
+    <div className={`${styles.landing} min-h-screen overflow-clip bg-white text-[#171717] tabular-nums scroll-smooth`} lang="en" data-landing-root>
       <LandingMotion />
       <LandingEntrance />
-      <header className={styles.header}>
-        <div className={styles.headerBrand} data-entry-logo><Brand showLabel /></div>
-        <nav aria-label="Landing page" className={styles.headerNav} data-entry-nav>
-          <a href="#why-spenles">Why Spenles</a>
+      <header className={`${styles.header} sticky top-0 z-50 flex min-h-20 items-center gap-8 bg-white max-[720px]:justify-between max-[720px]:gap-4`}>
+        <div className="shrink-0" data-entry-logo><Brand showLabel /></div>
+        <nav aria-label="Landing page" className="ml-auto flex items-center gap-[2.3rem] text-[.82rem] font-medium max-[980px]:gap-4 max-[720px]:hidden [&_a]:transition-opacity [&_a]:duration-200 [&_a:hover]:opacity-55" data-entry-nav>
+          <a className="max-[980px]:hidden" href="#why-spenles">Why Spenles</a>
           <a href="#features">Features</a>
           <a href="#insights">Insights</a>
         </nav>
-        <a className={styles.headerAction} href="#get-started" data-entry-nav>
+        <a className="inline-flex min-h-12 items-center justify-center gap-[.65rem] whitespace-nowrap rounded-full bg-[#171717] px-[1.18rem] py-[.7rem] text-[.82rem] font-semibold text-white transition-[background,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-[#353531] hover:shadow-[0_10px_24px_rgb(0_0_0_/_13%)]" href="#get-started" data-entry-nav>
           Try Spenles
         </a>
       </header>
       <main>
-        <section aria-labelledby="landing-title" className={styles.hero}>
-          <div className={styles.heroCopy}>
-            <h1 id="landing-title" data-reveal="up">
+        <section aria-labelledby="landing-title" className={`${styles.hero} pt-[5.4rem] text-center max-[980px]:pt-[4.2rem] max-[720px]:pt-14`}>
+          <div className="grid justify-items-center">
+            <h1 className="m-0 max-w-[18ch] text-[clamp(3.6rem,6.1vw,6.4rem)] font-semibold leading-[1.07] tracking-[-.04em] text-balance max-[980px]:text-[clamp(3.3rem,7vw,5.5rem)] max-[720px]:text-[clamp(2.7rem,7vw,3.5rem)]" id="landing-title" data-reveal="up">
               {heroTitleWords.map((word, index) => (
                 <span key={word}>
-                  <span className={styles.heroWordMask}><span data-entry-word>{word}</span></span>
+                  <span className="inline-block overflow-hidden align-bottom"><span className="inline-block" data-entry-word>{word}</span></span>
                   {index < heroTitleWords.length - 1 ? " " : null}
                 </span>
               ))}
             </h1>
-            <p data-reveal="up" data-delay="80">
-              <span className={styles.heroDescriptionText} data-entry-description>
+            <p className="mt-[1.4rem] max-w-[54ch] text-base leading-[1.75] text-[#62625f] text-pretty" data-reveal="up" data-delay="80">
+              <span className="block" data-entry-description>
                 Spenles brings everyday spending, shared bills, budgets, and
                 reports into one personal finance app for your phone.
               </span>
             </p>
-            <div className={styles.heroActions} data-reveal="up" data-delay="140">
-              <a className={styles.primaryAction} href="#get-started" data-entry-action>
+            <div className="mt-[2.1rem] flex flex-wrap items-center justify-center gap-x-[1.6rem] gap-y-[.9rem]" data-reveal="up" data-delay="140">
+              <a className="inline-flex min-h-14 items-center justify-center gap-[.65rem] whitespace-nowrap rounded-full bg-[#171717] px-6 py-[.7rem] text-[.82rem] font-semibold text-white transition-[background,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-[#353531] hover:shadow-[0_10px_24px_rgb(0_0_0_/_13%)]" href="#get-started" data-entry-action>
                 Try Spenles on your phone{" "}
                 <ArrowRight aria-hidden="true" size={18} />
               </a>
-              <a className={styles.secondaryAction} href="#features" data-entry-action>
+              <a className="inline-flex min-h-14 items-center justify-center gap-[.4rem] rounded-full border border-[#171717] bg-white px-[1.4rem] py-[.7rem] text-[.82rem] font-semibold text-[#171717] transition-[background,transform] duration-200 hover:-translate-y-0.5 hover:bg-[#f3f3f1]" href="#features" data-entry-action>
                 Explore the features
               </a>
             </div>
           </div>
-          <div className={styles.heroVisual}>
+          <div className="relative mt-14 h-[clamp(400px,44vw,545px)] overflow-hidden max-[980px]:mt-12 max-[720px]:h-[340px]">
             <Image
-              className={styles.heroPhonesImage}
+              className={`${styles.heroPhonesImage} mx-auto block h-auto w-[min(100%,1080px)]`}
               src="/illustrations/landing-phones-v2.png"
               alt="Spenles transactions, home, and split bill screens on three phones"
               width={1536}
@@ -113,58 +123,58 @@ export function DesktopLanding() {
         </section>
         <section
           aria-labelledby="why-title"
-          className={styles.why}
+          className={`${styles.why} grid grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] gap-[clamp(3rem,8vw,9rem)] pt-32 pb-36 max-[980px]:grid-cols-1 max-[980px]:gap-[3.2rem] max-[980px]:pt-24 max-[980px]:pb-28`}
           id="why-spenles"
         >
-          <div className={styles.whyIntro}>
-            <span className={styles.sectionKicker} data-reveal="up">A clearer everyday</span>
-            <h2 id="why-title" data-reveal="up">Know where you stand, at a glance.</h2>
-            <p data-reveal="up">
+          <div>
+            <span className="mb-[1.2rem] block text-[.72rem] font-semibold tracking-[.06em] text-[#747570]" data-reveal="up">A clearer everyday</span>
+            <h2 className={`${sectionHeading} max-w-[12ch] max-[980px]:max-w-[18ch]`} id="why-title" data-reveal="up">Know where you stand, at a glance.</h2>
+            <p className={sectionDescription} data-reveal="up">
               Keep the small details organized, so your next money decision
               feels easier to make.
             </p>
           </div>
-          <div className={styles.whyList}>
-            <article data-reveal="right">
+          <div className="self-center">
+            <article className={whyItem} data-reveal="right">
               <div>
-                <h3>Follow the everyday</h3>
-                <p>Record income and payments, then find them by account, category, or date.</p>
+                <h3 className={whyItemHeading}>Follow the everyday</h3>
+                <p className={whyItemCopy}>Record income and payments, then find them by account, category, or date.</p>
               </div>
-              <ReceiptText size={25} strokeWidth={1.7} aria-hidden="true" />
+              <ReceiptText className="text-[#555650]" size={25} strokeWidth={1.7} aria-hidden="true" />
             </article>
-            <article data-reveal="right" data-delay="60">
+            <article className={whyItem} data-reveal="right" data-delay="60">
               <div>
-                <h3>See the pattern</h3>
-                <p>Compare income, spending, and budget progress in one calm view.</p>
+                <h3 className={whyItemHeading}>See the pattern</h3>
+                <p className={whyItemCopy}>Compare income, spending, and budget progress in one calm view.</p>
               </div>
-              <ChartNoAxesCombined size={25} strokeWidth={1.7} aria-hidden="true" />
+              <ChartNoAxesCombined className="text-[#555650]" size={25} strokeWidth={1.7} aria-hidden="true" />
             </article>
-            <article data-reveal="right" data-delay="120">
+            <article className={whyItem} data-reveal="right" data-delay="120">
               <div>
-                <h3>Stay in control</h3>
-                <p>Your accounts and records remain in your own private Spenles space.</p>
+                <h3 className={whyItemHeading}>Stay in control</h3>
+                <p className={whyItemCopy}>Your accounts and records remain in your own private Spenles space.</p>
               </div>
-              <LockKeyhole size={25} strokeWidth={1.7} aria-hidden="true" />
+              <LockKeyhole className="text-[#555650]" size={25} strokeWidth={1.7} aria-hidden="true" />
             </article>
           </div>
         </section>
         <section
           aria-labelledby="features-title"
-          className={styles.features}
+          className={`${styles.features} pt-4 pb-12`}
           id="features"
         >
-          <div className={styles.sectionIntro}>
-            <h2 id="features-title" data-reveal="up">The right tools, without the noise.</h2>
-            <p data-reveal="up">
+          <div className="mb-14 max-w-[700px]">
+            <h2 className={`${sectionHeading} max-w-[13ch]`} id="features-title" data-reveal="up">The right tools, without the noise.</h2>
+            <p className={sectionDescription} data-reveal="up">
               Split a shared bill, set a limit, or step back to see the month.
               Each task has its own clear place.
             </p>
           </div>
           <ScrollStack>
-            <ScrollStackItem className={styles.splitFeature}>
-              <div className={styles.featureCopy}>
-                <h3 data-reveal="left">Settle the table, down to the last rupiah.</h3>
-                <p data-reveal="left" data-delay="70">
+            <ScrollStackItem className={`${featureLayout} max-[720px]:content-start`}>
+              <div className={`${styles.featureCopy} max-[900px]:max-w-72`}>
+                <h3 className={`${featureHeading} max-w-[13ch]`} data-reveal="left">Settle the table, down to the last rupiah.</h3>
+                <p className={featureDescription} data-reveal="left" data-delay="70">
                   Assign items to people, include tax and service, and get
                   shares that add up to the final bill.
                 </p>
@@ -180,63 +190,63 @@ export function DesktopLanding() {
                 />
               </figure>
             </ScrollStackItem>
-            <ScrollStackItem className={styles.budgetFeature}>
+            <ScrollStackItem className={featureLayout}>
               <div className={styles.featureCopy}>
-                <h3 data-reveal="up">Give your spending a plan.</h3>
-                <p data-reveal="up" data-delay="70">
+                <h3 className={`${featureHeading} max-w-[14ch]`} data-reveal="up">Give your spending a plan.</h3>
+                <p className={featureDescription} data-reveal="up" data-delay="70">
                   Set limits by category and see what remains as the month moves
                   on.
                 </p>
               </div>
               <div
-                className={styles.budgetDemo}
+                className={previewCard}
                 aria-label="Budget preview"
                 data-reveal="up"
               >
-                <div>
+                <div className="mb-4 grid gap-1">
                   <span>Food & drinks</span>
-                  <strong>Rp 340,000 left</strong>
+                  <strong className="text-[1.06rem]">Rp 340,000 left</strong>
                 </div>
                 <span className={styles.budgetDemoTrack} role="progressbar" aria-label="Food and drinks budget used" aria-valuenow={57.5} aria-valuemin={0} aria-valuemax={100}>
                   <i />
                 </span>
-                <small>Rp 460,000 of Rp 800,000 used</small>
+                <small className="mt-3 block text-[.67rem] text-[#747775]">Rp 460,000 of Rp 800,000 used</small>
               </div>
             </ScrollStackItem>
-            <ScrollStackItem className={styles.reportFeature}>
+            <ScrollStackItem className={featureLayout}>
               <div className={styles.featureCopy}>
-                <h3 data-reveal="up">See the story behind the numbers.</h3>
-                <p data-reveal="up" data-delay="70">
+                <h3 className={`${featureHeading} max-w-[14ch]`} data-reveal="up">See the story behind the numbers.</h3>
+                <p className={featureDescription} data-reveal="up" data-delay="70">
                   See what came in, what went out, and where you spent.
                   Revisit your report whenever you need it.
                 </p>
               </div>
               <div
-                className={styles.reportDemo}
+                className={previewCard}
                 aria-label="Report preview"
                 data-reveal="up"
               >
-                <div>
+                <div className="flex items-center justify-between font-semibold">
                   <span>Money in and out</span>
                   <ChartNoAxesCombined size={17} />
                 </div>
-                <div className={styles.reportDemoChart}>
+                <div className="mt-[.7rem] h-[92px]">
                   <IllustrativeLineChart id="feature-report-fill" />
                 </div>
-                <span>
-                  Jan <b>Jun</b> Dec
+                <span className="mt-[.4rem] flex justify-between text-[.65rem] text-[#868985]">
+                  Jan <b className="font-normal">Jun</b> Dec
                 </span>
               </div>
             </ScrollStackItem>
-            <ScrollStackItem className={styles.moreFeatureCard}>
+            <ScrollStackItem className={featureLayout}>
               <div className={styles.featureCopy}>
-                <h3 data-reveal="left">And many more features.</h3>
-                <p data-reveal="left" data-delay="70">
+                <h3 className={`${featureHeading} max-w-[13ch]`} data-reveal="left">And many more features.</h3>
+                <p className={featureDescription} data-reveal="left" data-delay="70">
                   The everyday details have a place too, from your accounts to
                   the records you want to keep.
                 </p>
               </div>
-              <ul className={styles.moreFeatureList} aria-label="More Spenles features">
+              <ul className="ml-auto grid w-[min(100%,430px)] list-none gap-[.65rem] p-0 max-[720px]:mx-auto max-[720px]:w-[min(100%,380px)] [&_li]:rounded-[15px] [&_li]:border [&_li]:border-[#e1e4e5] [&_li]:bg-[#f5f6f7] [&_li]:px-[1.2rem] [&_li]:py-4 [&_li]:text-[.84rem] [&_li]:font-medium" aria-label="More Spenles features">
                 <li data-reveal="right">Income & expense tracking</li>
                 <li data-reveal="right" data-delay="50">Accounts & transfers</li>
                 <li data-reveal="right" data-delay="100">Custom categories</li>
@@ -250,15 +260,15 @@ export function DesktopLanding() {
           className={styles.insights}
           id="insights"
         >
-          <div className={styles.insightsCopy}>
-            <span className={styles.insightsLabel} data-reveal="left">INSIGHTS & REPORTS</span>
-            <h2 id="insights-title" data-reveal="left">Understand more than your balance.</h2>
-            <p data-reveal="left">
+          <div>
+            <span className="text-[.72rem] font-semibold tracking-[.06em] text-[#747570]" data-reveal="left">INSIGHTS & REPORTS</span>
+            <h2 className={`${sectionHeading} mt-[1.1rem] max-w-[12ch] max-[980px]:max-w-[18ch]`} id="insights-title" data-reveal="left">Understand more than your balance.</h2>
+            <p className={sectionDescription} data-reveal="left">
               See how income and expenses move across the months. Find where
               money went by category and turn the details into a report you can
               revisit.
             </p>
-            <ul>
+            <ul className="mt-8 grid list-none gap-[.9rem] p-0 [&_li]:flex [&_li]:items-center [&_li]:gap-[.7rem] [&_li]:text-[.79rem] [&_svg]:size-[22px] [&_svg]:shrink-0 [&_svg]:rounded-full [&_svg]:bg-[#171717] [&_svg]:p-1 [&_svg]:text-white">
               <li data-reveal="left">
                 <Check size={17} /> Compare income with expenses
               </li>
@@ -282,12 +292,12 @@ export function DesktopLanding() {
         </section>
         <section
           aria-labelledby="get-started-title"
-          className={styles.getStarted}
+          className={`${styles.getStarted} grid grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] gap-[clamp(2.5rem,7vw,8rem)] pt-24 pb-32 max-[980px]:grid-cols-1 max-[980px]:gap-12 max-[980px]:pt-20 max-[980px]:pb-24`}
           id="get-started"
         >
-          <div className={styles.getStartedIntro}>
-            <h2 id="get-started-title" data-reveal="left">Choose how to begin.</h2>
-            <p data-reveal="left">
+          <div>
+            <h2 className={`${sectionHeading} max-w-[13ch]`} id="get-started-title" data-reveal="left">Choose how to begin.</h2>
+            <p className={sectionDescription} data-reveal="left">
               Use Spenles on your phone, preview its phone layout on desktop,
               or set up your own copy.
             </p>
@@ -295,23 +305,23 @@ export function DesktopLanding() {
           <GettingStartedTabs />
         </section>
       </main>
-      <footer className={styles.footer}>
-        <div className={styles.footerInner}>
-          <div className={styles.footerTop}>
-            <div className={styles.footerIdentity} data-reveal="left">
+      <footer className="w-full rounded-t-[38px] bg-[#171717] text-white [&_a:focus-visible]:outline-white">
+        <div className={`${styles.footerInner} pt-16 pb-8`}>
+          <div className="flex items-start justify-between gap-12 pb-16 max-[900px]:gap-8 max-[720px]:flex-col">
+            <div className="[&_a]:text-white [&_img]:brightness-0 [&_img]:invert" data-reveal="left">
               <Brand showLabel />
-              <p>Less complexity. More confidence.</p>
+              <p className="mt-[1.1rem] text-[.83rem] text-[#b3b3b0]">Less complexity. More confidence.</p>
             </div>
-            <div className={styles.footerContact} data-reveal="right">
-              <span>Developer</span>
-              <div className={styles.footerLinks} aria-label="Developer contact links">
-                <a href="https://www.linkedin.com/in/mnabilmaulana/" target="_blank" rel="noopener noreferrer" aria-label="Developer on LinkedIn"><LinkedinLogo /></a>
-                <a href="https://github.com/Nabilmln" target="_blank" rel="noopener noreferrer" aria-label="Developer on GitHub"><GithubLogo /></a>
-                <a href="mailto:nabilmaulana212@gmail.com" aria-label="Email the developer"><Mail size={19} aria-hidden="true" /></a>
+            <div className="grid justify-items-end gap-[.9rem] text-[.78rem] font-medium max-[720px]:justify-items-start" data-reveal="right">
+              <span className="text-[#b3b3b0]">Developer</span>
+              <div className="flex gap-[.65rem]" aria-label="Developer contact links">
+                <a className={contactLink} href="https://www.linkedin.com/in/mnabilmaulana/" target="_blank" rel="noopener noreferrer" aria-label="Developer on LinkedIn"><LinkedinLogo /></a>
+                <a className={contactLink} href="https://github.com/Nabilmln" target="_blank" rel="noopener noreferrer" aria-label="Developer on GitHub"><GithubLogo /></a>
+                <a className={contactLink} href="mailto:nabilmaulana212@gmail.com" aria-label="Email the developer"><Mail size={19} aria-hidden="true" /></a>
               </div>
             </div>
           </div>
-          <p className={styles.footerCopyright}>© {new Date().getFullYear()} Spenles. All rights reserved.</p>
+          <p className="m-0 border-t border-[#3c3c3a] pt-6 text-xs text-[#b3b3b0]">© {new Date().getFullYear()} Spenles. All rights reserved.</p>
         </div>
       </footer>
     </div>
