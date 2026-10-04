@@ -63,16 +63,18 @@ export function DesktopLanding() {
     <div className={`${styles.landing} min-h-screen overflow-clip bg-white text-[#171717] tabular-nums scroll-smooth`} lang="en" data-landing-root>
       <LandingMotion />
       <LandingEntrance />
-      <header className={`${styles.header} sticky top-0 z-50 flex min-h-20 items-center gap-8 bg-white max-[720px]:justify-between max-[720px]:gap-4`}>
-        <div className="shrink-0" data-entry-logo><Brand showLabel /></div>
-        <nav aria-label="Landing page" className="ml-auto flex items-center gap-[2.3rem] text-[.82rem] font-medium max-[980px]:gap-4 max-[720px]:hidden [&_a]:transition-opacity [&_a]:duration-200 [&_a:hover]:opacity-55" data-entry-nav>
-          <a className="max-[980px]:hidden" href="#why-spenles">Why Spenles</a>
-          <a href="#features">Features</a>
-          <a href="#insights">Insights</a>
-        </nav>
-        <a className="inline-flex min-h-12 items-center justify-center gap-[.65rem] whitespace-nowrap rounded-full bg-[#171717] px-[1.18rem] py-[.7rem] text-[.82rem] font-semibold text-white transition-[background,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-[#353531] hover:shadow-[0_10px_24px_rgb(0_0_0_/_13%)]" href="#get-started" data-entry-nav>
-          Try Spenles
-        </a>
+      <header className="sticky top-0 z-50 w-full bg-white">
+        <div className={`${styles.headerInner} flex min-h-20 items-center gap-8 max-[720px]:justify-between max-[720px]:gap-4`}>
+          <div className="shrink-0" data-entry-logo><Brand showLabel /></div>
+          <nav aria-label="Landing page" className="ml-auto flex items-center gap-[2.3rem] text-[.82rem] font-medium max-[980px]:gap-4 max-[720px]:hidden [&_a]:transition-opacity [&_a]:duration-200 [&_a:hover]:opacity-55" data-entry-nav>
+            <a className="max-[980px]:hidden" href="#why-spenles">Why Spenles</a>
+            <a href="#features">Features</a>
+            <a href="#insights">Insights</a>
+          </nav>
+          <a className="inline-flex min-h-12 items-center justify-center gap-[.65rem] whitespace-nowrap rounded-full bg-[#171717] px-[1.18rem] py-[.7rem] text-[.82rem] font-semibold text-white transition-[background,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-[#353531] hover:shadow-[0_10px_24px_rgb(0_0_0_/_13%)]" href="#get-started" data-entry-nav>
+            Try Spenles
+          </a>
+        </div>
       </header>
       <main>
         <section aria-labelledby="landing-title" className={`${styles.hero} pt-[5.4rem] text-center max-[980px]:pt-[4.2rem] max-[720px]:pt-14`}>
@@ -134,14 +136,16 @@ export function DesktopLanding() {
             </div>
             <div className="flex min-w-0 flex-col gap-3" data-why-detail>
               <div className="flex min-w-0 items-center gap-5">
-                <div className="relative aspect-[4/3] w-[clamp(240px,34vh,360px)] max-w-[58%] shrink-0 overflow-hidden rounded-[22px] bg-[#e4e7e8]" data-why-photo>
-                  <Image
-                    src="/illustrations/why-spenles-receipt.webp"
-                    alt="An everyday receipt beside a wallet on a table"
-                    fill
-                    sizes="(max-width: 980px) 58vw, 360px"
-                    className="object-cover"
-                  />
+                <div className="w-[clamp(240px,34vh,360px)] max-w-[58%] shrink-0 rounded-[22px] bg-[#171717] p-1.5 pr-5" data-why-photo>
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-[16px]">
+                    <Image
+                      src="/illustrations/why-spenles-receipt.webp"
+                      alt="An everyday receipt beside a wallet on a table"
+                      fill
+                      sizes="(max-width: 980px) 58vw, 360px"
+                      className="object-cover"
+                    />
+                  </div>
                 </div>
                 <p className="min-w-0 max-w-[30ch] text-[.9rem] leading-[1.6] text-[#4f5455]" data-why-copy>
                   Keep the amount, account, category, and date together in one record.
@@ -151,25 +155,29 @@ export function DesktopLanding() {
                 <p className="min-w-0 max-w-[29ch] text-[.9rem] leading-[1.6] text-[#4f5455]" data-why-copy>
                   Find a payment later by date, account, or category.
                 </p>
-                <div className="relative aspect-[4/3] w-[clamp(160px,22.67vh,240px)] max-w-[39%] shrink-0 overflow-hidden rounded-[20px] bg-[#e4e7e8]" data-why-photo>
-                  <Image
-                    src="/illustrations/why-spenles-notes.webp"
-                    alt="Someone recording everyday spending in a phone note"
-                    fill
-                    sizes="(max-width: 980px) 39vw, 240px"
-                    className="object-cover"
-                  />
+                <div className="w-[clamp(160px,22.67vh,240px)] max-w-[39%] shrink-0 rounded-[20px] bg-[#171717] p-1.5 pl-5" data-why-photo>
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-[14px]">
+                    <Image
+                      src="/illustrations/why-spenles-notes.webp"
+                      alt="Someone recording everyday spending in a phone note"
+                      fill
+                      sizes="(max-width: 980px) 39vw, 240px"
+                      className="object-cover"
+                    />
+                  </div>
                 </div>
               </div>
               <div className="flex min-w-0 items-center gap-5">
-                <div className="relative aspect-[4/3] w-[clamp(120px,17vh,180px)] max-w-[29%] shrink-0 overflow-hidden rounded-[18px] bg-[#e4e7e8]" data-why-photo>
-                  <Image
-                    src="/illustrations/why-spenles-calculator.webp"
-                    alt="Someone calculating expenses with a physical calculator"
-                    fill
-                    sizes="(max-width: 980px) 29vw, 180px"
-                    className="object-cover"
-                  />
+                <div className="w-[clamp(120px,17vh,180px)] max-w-[29%] shrink-0 rounded-[18px] bg-[#171717] p-1.5 pr-5" data-why-photo>
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-[12px]">
+                    <Image
+                      src="/illustrations/why-spenles-calculator.webp"
+                      alt="Someone calculating expenses with a physical calculator"
+                      fill
+                      sizes="(max-width: 980px) 29vw, 180px"
+                      className="object-cover"
+                    />
+                  </div>
                 </div>
                 <p className="min-w-0 max-w-[30ch] text-[.9rem] leading-[1.6] text-[#4f5455]" data-why-copy>
                   See spending beside income and the budgets you set.
@@ -324,7 +332,7 @@ export function DesktopLanding() {
           <GettingStartedTabs />
         </section>
       </main>
-      <footer className="w-full rounded-t-[38px] bg-[#171717] text-white [&_a:focus-visible]:outline-white">
+      <footer className="w-full bg-[#171717] text-white [&_a:focus-visible]:outline-white">
         <div className={`${styles.footerInner} pt-[clamp(4rem,7vw,7rem)] pb-8`}>
           <div className="grid grid-cols-[minmax(0,1.25fr)_minmax(0,.75fr)] gap-16 pb-20 max-[900px]:grid-cols-1 max-[900px]:gap-14 max-[720px]:pb-14">
             <div className="[&_a]:text-white [&_img]:brightness-0 [&_img]:invert" data-reveal="left">

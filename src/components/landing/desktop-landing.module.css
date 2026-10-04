@@ -9,12 +9,12 @@
 .landing ::selection { background: #d8d8d3; color: var(--ink); }
 .landing a:focus-visible,
 .landing button:focus-visible { outline: 3px solid #4c4c48; outline-offset: 4px; }
-.header, .hero, .features, .insights, .getStarted {
+.headerInner, .hero, .features, .insights, .getStarted {
   width: min(100% - 7rem, 1340px);
   margin-inline: auto;
 }
 .landing section[id] { scroll-margin-top: 7rem; }
-.header :global(a[aria-label="Spenles"]) { font-size: 1.05rem; letter-spacing: -0.035em; }
+.headerInner :global(a[aria-label="Spenles"]) { font-size: 1.05rem; letter-spacing: -0.035em; }
 .heroPhonesImage {
   -webkit-mask-image: linear-gradient(#000 0%, #000 56%, transparent 76%);
   mask-image: linear-gradient(#000 0%, #000 56%, transparent 76%);
@@ -239,7 +239,7 @@
 }
 .footerInner { width: min(100% - 7rem, 1340px); margin-inline: auto; }
 @media (max-width: 1220px) {
-  .header,
+  .headerInner,
   .hero,
   .features,
   .insights,
@@ -247,7 +247,7 @@
   .footerInner { width: min(100% - 4rem, 1120px); }
 }
 @media (max-width: 980px) {
-  .header,
+  .headerInner,
   .hero,
   .features,
   .insights,
