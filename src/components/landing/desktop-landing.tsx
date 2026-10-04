@@ -122,7 +122,7 @@ export function DesktopLanding() {
         >
           <WhySpenlesMotion />
           <div
-            className="relative mx-auto grid min-h-[calc(100svh-80px)] w-[min(calc(100%-7rem),1340px)] grid-cols-[minmax(0,.9fr)_minmax(0,1.1fr)] items-center gap-[clamp(3rem,6vw,7rem)] py-8 max-[1220px]:w-[min(calc(100%-4rem),1120px)] max-[980px]:w-[calc(100%-3rem)] max-[980px]:min-h-0 max-[980px]:grid-cols-1 max-[980px]:gap-12 max-[980px]:py-24"
+            className="relative mx-auto grid min-h-[calc(100svh-80px)] w-[min(calc(100%-7rem),1340px)] grid-cols-[minmax(0,2fr)_minmax(0,3fr)] items-center gap-[clamp(2rem,4vw,4.5rem)] py-8 max-[1220px]:w-[min(calc(100%-4rem),1120px)] max-[980px]:w-[calc(100%-3rem)] max-[980px]:min-h-0 max-[980px]:grid-cols-1 max-[980px]:gap-12 max-[980px]:py-24"
             data-why-stage
           >
             <div className="max-w-[600px]" data-why-statement>
@@ -133,42 +133,48 @@ export function DesktopLanding() {
               </p>
             </div>
             <div className="flex min-w-0 flex-col gap-3" data-why-detail>
-              <div className="relative aspect-[3.2] w-full overflow-hidden rounded-[22px] bg-[#e4e7e8]" data-why-photo>
-                <Image
-                  src="/illustrations/why-spenles-receipt.webp"
-                  alt="An everyday receipt beside a wallet on a table"
-                  fill
-                  sizes="(max-width: 980px) 95vw, 52vw"
-                  className="object-cover"
-                />
+              <div className="flex min-w-0 items-center gap-5">
+                <div className="relative aspect-[4/3] w-[clamp(240px,34vh,360px)] max-w-[58%] shrink-0 overflow-hidden rounded-[22px] bg-[#e4e7e8]" data-why-photo>
+                  <Image
+                    src="/illustrations/why-spenles-receipt.webp"
+                    alt="An everyday receipt beside a wallet on a table"
+                    fill
+                    sizes="(max-width: 980px) 58vw, 360px"
+                    className="object-cover"
+                  />
+                </div>
+                <p className="min-w-0 max-w-[30ch] text-[.9rem] leading-[1.6] text-[#4f5455]" data-why-copy>
+                  Keep the amount, account, category, and date together in one record.
+                </p>
               </div>
-              <p className="ml-auto max-w-[68%] text-[.82rem] leading-[1.55] text-[#4f5455]" data-why-copy>
-                Keep the amount, account, category, and date together in one record.
-              </p>
-              <div className="relative ml-auto aspect-[3.2] w-2/3 overflow-hidden rounded-[20px] bg-[#e4e7e8]" data-why-photo>
-                <Image
-                  src="/illustrations/why-spenles-notes.webp"
-                  alt="Someone recording everyday spending in a phone note"
-                  fill
-                  sizes="(max-width: 980px) 63vw, 35vw"
-                  className="object-cover"
-                />
+              <div className="flex min-w-0 items-center justify-end gap-5">
+                <p className="min-w-0 max-w-[29ch] text-[.9rem] leading-[1.6] text-[#4f5455]" data-why-copy>
+                  Find a payment later by date, account, or category.
+                </p>
+                <div className="relative aspect-[4/3] w-[clamp(160px,22.67vh,240px)] max-w-[39%] shrink-0 overflow-hidden rounded-[20px] bg-[#e4e7e8]" data-why-photo>
+                  <Image
+                    src="/illustrations/why-spenles-notes.webp"
+                    alt="Someone recording everyday spending in a phone note"
+                    fill
+                    sizes="(max-width: 980px) 39vw, 240px"
+                    className="object-cover"
+                  />
+                </div>
               </div>
-              <p className="mr-auto max-w-[68%] text-[.82rem] leading-[1.55] text-[#4f5455]" data-why-copy>
-                Find a payment later by date, account, or category.
-              </p>
-              <div className="relative mr-auto aspect-[3.2] w-1/2 overflow-hidden rounded-[18px] bg-[#e4e7e8]" data-why-photo>
-                <Image
-                  src="/illustrations/why-spenles-calculator.webp"
-                  alt="Someone calculating expenses with a physical calculator"
-                  fill
-                  sizes="(max-width: 980px) 48vw, 26vw"
-                  className="object-cover"
-                />
+              <div className="flex min-w-0 items-center gap-5">
+                <div className="relative aspect-[4/3] w-[clamp(120px,17vh,180px)] max-w-[29%] shrink-0 overflow-hidden rounded-[18px] bg-[#e4e7e8]" data-why-photo>
+                  <Image
+                    src="/illustrations/why-spenles-calculator.webp"
+                    alt="Someone calculating expenses with a physical calculator"
+                    fill
+                    sizes="(max-width: 980px) 29vw, 180px"
+                    className="object-cover"
+                  />
+                </div>
+                <p className="min-w-0 max-w-[30ch] text-[.9rem] leading-[1.6] text-[#4f5455]" data-why-copy>
+                  See spending beside income and the budgets you set.
+                </p>
               </div>
-              <p className="ml-auto max-w-[68%] text-[.82rem] leading-[1.55] text-[#4f5455]" data-why-copy>
-                See spending beside income and the budgets you set.
-              </p>
             </div>
           </div>
         </section>

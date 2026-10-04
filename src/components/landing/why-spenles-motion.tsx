@@ -20,29 +20,69 @@ export function WhySpenlesMotion() {
 
     media.add("(min-width: 981px) and (prefers-reduced-motion: no-preference)", () => {
       const centeredX = () => stage.clientWidth / 2 - statement.offsetLeft - statement.offsetWidth / 2;
-      gsap.set(photos, { autoAlpha: 0, y: 72, scale: 0.97, transformOrigin: "center bottom" });
-      gsap.set(copies, { autoAlpha: 0, y: 20 });
-      const timeline = gsap.timeline({
+      gsap.set(photos, { autoAlpha: 0, y: 54, scale: 0.35, transformOrigin: "50% 100%" });
+      gsap.set(copies, { autoAlpha: 0, y: 14 });
+
+      const reveal = gsap.timeline({ paused: true });
+      photos.forEach((photo, index) => {
+        reveal
+          .to(photo, { autoAlpha: 1, y: 0, scale: 1, duration: 0.38, ease: "back.out(1.15)" })
+          .to(copies[index], { autoAlpha: 1, y: 0, duration: 0.24, ease: "power2.out" }, "-=0.06");
+      });
+      const dismissal = gsap.timeline({ paused: true }).to(detail, {
+        autoAlpha: 0,
+        y: 36,
+        scale: 0.94,
+        transformOrigin: "50% 100%",
+        duration: 1,
+        ease: "none",
+      });
+
+      let pending: gsap.core.Tween | undefined;
+      let revealArmed = false;
+      const movement = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: "top 80px",
-          end: "+=180%",
+          end: "+=190%",
           pin: true,
-          scrub: 0.7,
+          scrub: 0.8,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          onUpdate: ({ progress }) => {
+            if (progress >= 0.37 && !revealArmed) {
+              revealArmed = true;
+              pending = gsap.delayedCall(0.45, () => {
+                pending = undefined;
+                reveal.timeScale(1).play();
+              });
+            } else if (progress < 0.37 && revealArmed) {
+              revealArmed = false;
+              pending?.kill();
+              pending = undefined;
+              reveal.timeScale(1.6).reverse();
+            }
+
+            // Complete a skipped reveal before the section starts leaving.
+            if (progress >= 0.79) {
+              pending?.kill();
+              pending = undefined;
+              if (reveal.progress() < 1) reveal.progress(1);
+            }
+            dismissal.progress(gsap.utils.clamp(0, 1, (progress - 0.8) / 0.16));
+          },
         },
       });
 
-      timeline
-        .fromTo(statement, { x: centeredX }, { x: 0, duration: 0.34, ease: "none" }, 0.1)
-        .to(photos[0], { autoAlpha: 1, y: 0, scale: 1, duration: 0.2, ease: "power2.out" }, 0.35)
-        .to(copies[0], { autoAlpha: 1, y: 0, duration: 0.14, ease: "power2.out" }, 0.53)
-        .to(photos[1], { autoAlpha: 1, y: 0, scale: 1, duration: 0.2, ease: "power2.out" }, 0.63)
-        .to(copies[1], { autoAlpha: 1, y: 0, duration: 0.14, ease: "power2.out" }, 0.81)
-        .to(photos[2], { autoAlpha: 1, y: 0, scale: 1, duration: 0.2, ease: "power2.out" }, 0.91)
-        .to(copies[2], { autoAlpha: 1, y: 0, duration: 0.14, ease: "power2.out" }, 1.09)
-        .to({}, { duration: 0.18 }, 1.23);
+      movement
+        .fromTo(statement, { x: centeredX }, { x: 0, duration: 0.3, ease: "none" }, 0.1)
+        .to({}, { duration: 0.6 }, 0.4);
+
+      return () => {
+        pending?.kill();
+        reveal.kill();
+        dismissal.kill();
+      };
     });
 
     return () => media.revert();
