@@ -15,14 +15,15 @@ const PRIVACY_MASK = "••••••";
 
 export function AccountCard({
   account,
+  isHome,
   hidden = false,
   onDetail,
 }: {
   account: AccountBalanceRow;
+  isHome: boolean;
   hidden?: boolean;
   onDetail: (account: AccountBalanceRow) => void;
 }) {
-  const active = account.status === "active";
   const negative = BigInt(account.balance) < 0n;
 
   return (
@@ -37,14 +38,7 @@ export function AccountCard({
         <h2 className="m-0 min-w-0 truncate text-[.95rem] tracking-[-.02em]">
           {account.name}
         </h2>
-        <span
-          className={cn(
-            "inline-flex min-h-[1.6rem] shrink-0 items-center rounded-full px-[.55rem] py-[.15rem] whitespace-nowrap text-[.7rem] font-medium",
-            active ? "bg-white/20 text-white" : "bg-white/10 text-white/70",
-          )}
-        >
-          {active ? "Active" : "Inactive"}
-        </span>
+        {isHome ? <span className="inline-flex min-h-[1.6rem] shrink-0 items-center rounded-full bg-white/20 px-[.55rem] py-[.15rem] text-[.7rem] font-medium text-white">Home</span> : null}
       </div>
 
       <p className="relative z-[1] m-0 text-[.82rem] text-white/80">

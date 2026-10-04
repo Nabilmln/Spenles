@@ -70,46 +70,17 @@ export async function updateOwnedAccount(
   return result.rows[0] ?? null;
 }
 
-export async function setOwnedAccountStatus(
-  database: Database,
-  userId: string,
-  accountId: string,
-  status: "active" | "archived",
-) {
-  if (status === "active") {
-    const result = await database.execute<ReturnedId>(sql`
-      update accounts
-      set status = 'active', updated_at = now()
-      where id = ${accountId}::uuid
-        and user_id = ${userId}
-      returning id
-    `);
-    return result.rows[0]
-      ? { ok: true as const, id: result.rows[0].id }
-      : { ok: false as const, reason: "not-found" as const };
-  }
-
+export async function setOwnedHomeAccount(database: Database, userId: string, accountId: string) {
   const result = await database.execute<ReturnedId>(sql`
-    with archived_account as (
-      update accounts as account
-      set status = 'archived', updated_at = now()
-      where account.id = ${accountId}::uuid
-        and account.user_id = ${userId}
-        and account.status = 'active'
-        and exists (
-          select 1
-          from accounts as alternative
-          where alternative.user_id = ${userId}
-            and alternative.status = 'active'
-            and alternative.id <> account.id
-        )
-      returning account.id
-    )
-    select id from archived_account
+    update profiles as profile
+    set home_account_id = account.id, updated_at = now()
+    from accounts as account
+    where profile.user_id = ${userId}
+      and account.user_id = profile.user_id
+      and account.id = ${accountId}::uuid
+    returning account.id
   `);
-  return result.rows[0]
-    ? { ok: true as const, id: result.rows[0].id }
-    : { ok: false as const, reason: "last-active-or-not-found" as const };
+  return result.rows[0] ?? null;
 }
 
 export async function deleteOwnedAccount(
@@ -147,6 +118,14 @@ export async function deleteOwnedAccount(
       and user_id = ${userId}
     returning id
   `);
+  if (result.rows[0]) {
+    await database.execute(sql`
+      update profiles
+      set home_account_id = null, updated_at = now()
+      where user_id = ${userId}
+        and home_account_id = ${accountId}::uuid
+    `);
+  }
   return result.rows[0]
     ? { ok: true as const, id: result.rows[0].id }
     : { ok: false as const, reason: "not-found" as const };

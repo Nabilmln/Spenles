@@ -1,7 +1,7 @@
 import { requireSessionUser } from "@/lib/auth/require-session";
 import { cardClass, pageDescriptionClass, pageStackClass } from "@/components/ui/styles";
 import {
-  listActiveAccountOptions,
+  listOwnedAccountOptions,
   listOwnedTransfers,
   TransferForm,
   TransferList,
@@ -12,7 +12,7 @@ export const dynamic = "force-dynamic";
 export default async function TransfersPage() {
   const user = await requireSessionUser();
   const [accounts, rows] = await Promise.all([
-    listActiveAccountOptions(user.id),
+    listOwnedAccountOptions(user.id),
     listOwnedTransfers(user.id),
   ]);
   return (
@@ -24,7 +24,7 @@ export default async function TransfersPage() {
           {accounts.length >= 2 ? (
             <TransferForm accounts={accounts} />
           ) : (
-            <p>Add at least two active accounts to create a transfer.</p>
+            <p>Add at least two accounts to create a transfer.</p>
           )}
         </section>
         <section>

@@ -78,7 +78,6 @@ export async function listOwnedAccounts(
     from accounts as account
     where account.user_id = ${userId}
     order by
-      case when account.status = 'active' then 0 else 1 end,
       lower(account.name),
       account.id
   `);
@@ -107,7 +106,7 @@ export async function getOwnedAccount(
   return result.rows[0] ? mapRow(result.rows[0]) : null;
 }
 
-export async function listActiveAccountOptions(
+export async function listOwnedAccountOptions(
   userId: string,
   database: Database = db,
 ) {
@@ -115,7 +114,6 @@ export async function listActiveAccountOptions(
     select id, name
     from accounts
     where user_id = ${userId}
-      and status = 'active'
       and currency = 'IDR'
     order by lower(name), id
   `);
@@ -155,11 +153,9 @@ export async function getPeriodSavings(
     inner join accounts as source
       on source.id = transfer.source_account_id
       and source.user_id = transfer.user_id
-      and source.status = 'active'
     inner join accounts as destination
       on destination.id = transfer.destination_account_id
       and destination.user_id = transfer.user_id
-      and destination.status = 'active'
     where transfer.user_id = ${userId}
       and transfer.reversal_of_id is null
       and transfer.transferred_at >= ${start}

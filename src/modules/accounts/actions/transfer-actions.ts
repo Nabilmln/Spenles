@@ -44,7 +44,7 @@ export async function createTransferAction(
       transferredAt,
     });
     if (!created) {
-      return { error: "Both accounts must be active, different, and owned by you." };
+      return { error: "Choose two different accounts that belong to you." };
     }
   } catch {
     return { error: "Transfer could not be saved." };

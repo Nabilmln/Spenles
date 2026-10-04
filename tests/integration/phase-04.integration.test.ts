@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { eq, inArray, sql } from "drizzle-orm";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import {
+  accounts,
   categories,
   profiles,
   transfers,
@@ -9,7 +10,7 @@ import {
 import { ensureUserFoundationWithDatabase } from "@/modules/onboarding/services/ensure-user-foundation";
 import {
   createOwnedAccount,
-  setOwnedAccountStatus,
+  setOwnedHomeAccount,
 } from "@/modules/accounts/services/account-mutations";
 import {
   createOwnedTransfer,
@@ -261,20 +262,46 @@ describe("Phase 04 financial domains", () => {
     expect(rows[0]?.destinationAccountId).toBe(accountA);
   });
 
-  it("preserves at least one active account and scopes archival", async () => {
+  it("saves one owned account for the Home balance", async () => {
     await expect(
-      setOwnedAccountStatus(database, userB, accountA, "archived"),
-    ).resolves.toEqual({ ok: false, reason: "last-active-or-not-found" });
+      setOwnedHomeAccount(database, userB, accountA),
+    ).resolves.toBeNull();
     await expect(
-      setOwnedAccountStatus(database, userB, foreignAccount, "archived"),
-    ).resolves.toEqual({ ok: false, reason: "last-active-or-not-found" });
+      setOwnedHomeAccount(database, userA, foreignAccount),
+    ).resolves.toBeNull();
     await expect(
-      setOwnedAccountStatus(database, userA, accountB, "archived"),
-    ).resolves.toMatchObject({ ok: true });
+      setOwnedHomeAccount(database, userA, accountB),
+    ).resolves.toMatchObject({ id: accountB });
     await expect(
-      setOwnedAccountStatus(database, userA, accountA, "archived"),
-    ).resolves.toEqual({ ok: false, reason: "last-active-or-not-found" });
-    await setOwnedAccountStatus(database, userA, accountB, "active");
+      setOwnedHomeAccount(database, userA, accountA),
+    ).resolves.toMatchObject({ id: accountA });
+    const [profile] = await database.select({ homeAccountId: profiles.homeAccountId }).from(profiles).where(eq(profiles.userId, userA));
+    expect(profile.homeAccountId).toBe(accountA);
+  });
+
+  it("allows transactions and transfers with a previously archived owned account", async () => {
+    const [legacy] = await database.insert(accounts).values({
+      userId: userA,
+      name: "Legacy wallet",
+      status: "archived",
+    }).returning({ id: accounts.id });
+    const transaction = await createOwnedTransaction(database, userA, {
+      type: "expense",
+      amount: 1n,
+      accountId: legacy.id,
+      categoryId: expenseCategory,
+      transactionAt: new Date("2020-01-01T00:00:00Z"),
+      note: null,
+    });
+    const transfer = await createOwnedTransfer(database, userA, {
+      sourceAccountId: legacy.id,
+      destinationAccountId: accountA,
+      amount: 1n,
+      transferredAt: new Date("2020-01-02T00:00:00Z"),
+      note: null,
+    });
+    expect(transaction).not.toBeNull();
+    expect(transfer).not.toBeNull();
   });
 
   it("enforces active budget uniqueness and exact usage", async () => {

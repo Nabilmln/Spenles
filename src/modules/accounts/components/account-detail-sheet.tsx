@@ -12,7 +12,6 @@ import {
   fieldClass,
   fieldHintClass,
   fieldLabelClass,
-  fieldLabelRowClass,
 } from "@/components/ui/styles";
 import { cn } from "@/lib/utils";
 import {
@@ -23,44 +22,17 @@ import {
 import { accountTypeLabel, ACCOUNT_TYPES } from "../constants/account-types";
 import type { AccountBalanceRow } from "../queries/accounts";
 
-function StatusSwitch({
-  active,
-  onToggle,
-}: {
-  active: boolean;
-  onToggle: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={active}
-      aria-label="Active account"
-      className={cn(
-        "relative h-[1.55rem] w-[2.7rem] shrink-0 cursor-pointer rounded-full transition-colors duration-150",
-        active ? "bg-primary-600" : "border border-border bg-surface-subtle",
-      )}
-      onClick={onToggle}
-    >
-      <span
-        className={cn(
-          "absolute top-1/2 size-[1.2rem] -translate-y-1/2 rounded-full bg-white shadow-[0_1px_4px_rgb(15_15_18/30%)] transition-[left] duration-150",
-          active ? "left-[calc(100%-1.3rem)]" : "left-[.15rem]",
-        )}
-      />
-    </button>
-  );
-}
-
 export function AccountDetailSheet({
   row,
+  isHome,
   onClose,
 }: {
   row: AccountBalanceRow | null;
+  isHome: boolean;
   onClose: () => void;
 }) {
   const router = useRouter();
-  const [active, setActive] = useState(row?.status === "active");
+  const [showOnHome, setShowOnHome] = useState(isHome);
   const [type, setType] = useState<string>(row?.type ?? "cash");
   const [typeSheetOpen, setTypeSheetOpen] = useState(false);
   const [confirming, setConfirming] = useState(false);
@@ -69,7 +41,7 @@ export function AccountDetailSheet({
   const [prevRowId, setPrevRowId] = useState(row?.id ?? null);
   if (prevRowId !== (row?.id ?? null)) {
     setPrevRowId(row?.id ?? null);
-    setActive(row?.status === "active");
+    setShowOnHome(isHome);
     setType(row?.type ?? "cash");
     setTypeSheetOpen(false);
     setConfirming(false);
@@ -106,16 +78,11 @@ export function AccountDetailSheet({
           <form action={updateAction} className="grid gap-[1.1rem]">
             <input type="hidden" name="id" value={row.id} />
             <input type="hidden" name="openingBalance" value={row.openingBalance} />
-            <input type="hidden" name="status" value={active ? "active" : "archived"} />
+            <input type="hidden" name="showOnHome" value={showOnHome ? "true" : "false"} />
             <input type="hidden" name="type" value={type} />
 
             <div className={fieldClass}>
-              <div className={fieldLabelRowClass}>
-                <label htmlFor="detail-account-name" className={fieldLabelClass}>
-                  Account name
-                </label>
-                <StatusSwitch active={active} onToggle={() => setActive((value) => !value)} />
-              </div>
+              <label htmlFor="detail-account-name" className={fieldLabelClass}>Account name</label>
               <Input
                 id="detail-account-name"
                 name="name"
@@ -124,6 +91,21 @@ export function AccountDetailSheet({
                 required
               />
             </div>
+
+            <button
+              type="button"
+              aria-pressed={showOnHome}
+              aria-label={showOnHome ? "Home balance selected" : "Use for Home balance"}
+              disabled={isHome}
+              onClick={() => setShowOnHome((value) => !value)}
+              className={cn(
+                "flex min-h-12 w-full items-center justify-between rounded-[1.12rem] border px-4 text-left text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600",
+                showOnHome ? "border-[#171717] bg-[#171717] text-white" : "border-border bg-surface-subtle text-foreground hover:border-[#171717]",
+              )}
+            >
+              <span>Show balance on Home</span>
+              <span className="text-xs">{showOnHome ? "Selected" : "Select"}</span>
+            </button>
 
             <div className={fieldClass}>
               <label htmlFor="detail-account-type" className={fieldLabelClass}>

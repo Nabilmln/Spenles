@@ -4,6 +4,7 @@ import { requireSessionUser } from "@/lib/auth/require-session";
 import { buttonClass, cardClass, entityHeadingClass, narrowPageClass, pageDescriptionClass, pageHeadingCopyClass, pageHeadingRowClass, pageStackClass } from "@/components/ui/styles";
 import { formatIdr } from "@/lib/money/format-idr";
 import { getOwnedAccount } from "@/modules/accounts";
+import { accountTypeLabel } from "@/modules/accounts/constants/account-types";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +23,7 @@ export default async function AccountDetailPage({
       <div className={pageHeadingRowClass}>
         <div className={pageHeadingCopyClass}>
           <h2 className={entityHeadingClass}>{account.name}</h2>
-          <p className={pageDescriptionClass}>{account.status === "active" ? "Active account" : "Archived account"}</p>
+          <p className={pageDescriptionClass}>{accountTypeLabel(account.type)} account</p>
         </div>
         <Link className={buttonClass("secondary")} href={`/accounts/${account.id}/edit`}>Edit</Link>
       </div>

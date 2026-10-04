@@ -19,18 +19,19 @@ export function DashboardCardSkeleton({ label }: { label: string }) {
   );
 }
 
-export async function DashboardBalanceSection({ accountsPromise }: {
+export async function DashboardBalanceSection({ accountsPromise, homeAccountId }: {
   accountsPromise: Promise<AccountBalanceRow[]>;
+  homeAccountId: string | null;
 }) {
-  let activeAccounts: AccountBalanceRow[] = [];
+  let balance = 0n;
   try {
     const accounts = await accountsPromise;
-    activeAccounts = accounts.filter((account) => account.status === "active");
+    const homeAccount = accounts.find((account) => account.id === homeAccountId) ?? accounts[0];
+    balance = BigInt(homeAccount?.balance ?? "0");
   } catch {
     // The balance card retains its zero fallback state.
   }
-  const totalBalance = activeAccounts.reduce((sum, account) => sum + BigInt(account.balance), 0n);
-  return <MobileBalanceCard balance={totalBalance} />;
+  return <MobileBalanceCard balance={balance} />;
 }
 
 export async function DashboardRecentActivitySection({ activityPromise }: {

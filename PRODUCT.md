@@ -52,6 +52,9 @@ investment, or professional accounting service.
   default portrait until changed.
 - Profile photos use the same five bundled portraits. Users can change theirs
   from the profile sheet; an unchanged profile keeps a stable default portrait.
+- Users choose one owned account whose balance appears on Home. Every owned
+  account remains available for transactions and transfers; Accounts shows the
+  combined total separately.
 - Authoritative money amounts are integer rupiah and financial calculations
   happen on the server. Split-bill totals reconcile exactly.
 - The PWA caches static assets, not authenticated page navigation or API data.

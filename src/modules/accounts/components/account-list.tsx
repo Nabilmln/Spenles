@@ -8,9 +8,10 @@ import { AccountCard } from "./account-card";
 import { AccountCreateSheet } from "./account-create-sheet";
 import { AccountDetailSheet } from "./account-detail-sheet";
 
-export function AccountList({ rows }: { rows: AccountBalanceRow[] }) {
+export function AccountList({ rows, homeAccountId }: { rows: AccountBalanceRow[]; homeAccountId: string | null }) {
   const [selected, setSelected] = useState<AccountBalanceRow | null>(null);
   const [creating, setCreating] = useState(false);
+  const displayedHomeId = rows.find((row) => row.id === homeAccountId)?.id ?? rows[0]?.id;
 
   return (
     <section aria-label="Accounts">
@@ -26,7 +27,7 @@ export function AccountList({ rows }: { rows: AccountBalanceRow[] }) {
       {rows.length ? (
         <div className="grid gap-[.9rem] max-[540px]:grid-cols-1 max-[1100px]:grid-cols-[repeat(2,minmax(0,1fr))] min-[1101px]:grid-cols-[repeat(3,minmax(0,1fr))]">
           {rows.map((account) => (
-            <AccountCard key={account.id} account={account} onDetail={setSelected} />
+            <AccountCard key={account.id} account={account} isHome={account.id === displayedHomeId} onDetail={setSelected} />
           ))}
         </div>
       ) : (
@@ -35,7 +36,7 @@ export function AccountList({ rows }: { rows: AccountBalanceRow[] }) {
         </p>
       )}
 
-      <AccountDetailSheet row={selected} onClose={() => setSelected(null)} />
+      <AccountDetailSheet row={selected} isHome={selected?.id === displayedHomeId} onClose={() => setSelected(null)} />
       <AccountCreateSheet open={creating} onClose={() => setCreating(false)} />
     </section>
   );

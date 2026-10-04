@@ -196,6 +196,8 @@ Working fields use gently rounded corners, with cards slightly rounder than fiel
 
 ### Inputs / Fields
 
+The account chosen for Home carries a small Home badge. Its detail sheet uses a single Home balance selection; every owned account stays available for transactions and transfers. The Accounts total continues to sum all accounts.
+
 - **Style:** Subtle gray fill, fine border, 1.12rem corners matched to the inner transaction row, and at least 2.6rem height. Picker fields and their boxed choices follow the same curve.
 - **Focus:** Ink border with a visible neutral outline. Disabled fields reduce opacity and signal the inactive state.
 - **Labels:** Medium-weight text stays near the field; helper and error text use quieter or semantic colors.

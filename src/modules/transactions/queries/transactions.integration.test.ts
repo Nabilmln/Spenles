@@ -250,10 +250,12 @@ describe("transaction search and pagination", () => {
     ).toBe(true);
   });
 
-  it("exposes only owned active accounts and categories as filter options", async () => {
+  it("exposes archived owned accounts and active owned categories as options", async () => {
+    const [archivedAccount] = await database.insert(accounts).values({ userId: userA, name: "Older wallet", status: "archived" }).returning({ id: accounts.id });
     const options = await getTransactionOptions(userA, undefined, database);
 
     expect(options.accounts.some((item) => item.id === accountA)).toBe(true);
+    expect(options.accounts.some((item) => item.id === archivedAccount.id)).toBe(true);
     expect(options.accounts.some((item) => item.id === accountB)).toBe(false);
     expect(
       options.categories.some((item) => item.id === categoryByNameA),

@@ -21,6 +21,7 @@ function profileFallback(userId: string): Profile {
     userId,
     displayName: "Spenles User",
     avatarIndex: null,
+    homeAccountId: null,
     defaultCurrency: "IDR",
     timezone: "Asia/Jakarta",
     createdAt: new Date(),
@@ -58,7 +59,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   return (
     <div className="grid gap-[1.55rem]">
       <Suspense fallback={<DashboardCardSkeleton label="Financial summary" />}>
-        <DashboardBalanceSection accountsPromise={accountsPromise} />
+        <DashboardBalanceSection accountsPromise={accountsPromise} homeAccountId={profile?.homeAccountId ?? null} />
       </Suspense>
       <ServicesSection profile={profile ?? profileFallback(user.id)} email={user.email ?? ""} />
       <Suspense fallback={<DashboardCardSkeleton label="Recent activity" />}>

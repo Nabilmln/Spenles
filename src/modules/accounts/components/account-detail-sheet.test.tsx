@@ -41,24 +41,32 @@ afterEach(cleanup);
 
 describe("AccountDetailSheet", () => {
   it("does not render when no account is selected", () => {
-    render(<AccountDetailSheet row={null} onClose={vi.fn()} />);
+    render(<AccountDetailSheet row={null} isHome={false} onClose={vi.fn()} />);
     expect(screen.queryByText("Account Details")).not.toBeInTheDocument();
   });
 
-  it("renders the edit form with name, type and status toggle", () => {
-    render(<AccountDetailSheet row={row} onClose={vi.fn()} />);
+  it("renders the edit form with the Home balance choice", () => {
+    render(<AccountDetailSheet row={row} isHome={true} onClose={vi.fn()} />);
     expect(screen.getByText("Account Details")).toBeInTheDocument();
     expect(screen.getByDisplayValue("BCA Savings")).toBeInTheDocument();
     expect(screen.getByText("Savings")).toBeInTheDocument();
-    expect(screen.getByRole("switch", { name: "Active account" })).toHaveAttribute(
-      "aria-checked",
+    expect(screen.getByRole("button", { name: "Home balance selected" })).toHaveAttribute(
+      "aria-pressed",
       "true",
     );
     expect(screen.getByRole("button", { name: "Save Edit" })).toBeInTheDocument();
   });
 
+  it("lets another account become the Home balance", () => {
+    render(<AccountDetailSheet row={row} isHome={false} onClose={vi.fn()} />);
+    const choice = screen.getByRole("button", { name: "Use for Home balance" });
+    fireEvent.click(choice);
+    expect(choice).toHaveAttribute("aria-pressed", "true");
+    expect(document.querySelector('input[name="showOnHome"]')).toHaveValue("true");
+  });
+
   it("opens the account type curtain and selects a type", async () => {
-    render(<AccountDetailSheet row={row} onClose={vi.fn()} />);
+    render(<AccountDetailSheet row={row} isHome={true} onClose={vi.fn()} />);
     fireEvent.click(screen.getByText("Savings"));
 
     expect(
@@ -76,7 +84,7 @@ describe("AccountDetailSheet", () => {
   });
 
   it("shows a delete confirmation before deleting", () => {
-    render(<AccountDetailSheet row={row} onClose={vi.fn()} />);
+    render(<AccountDetailSheet row={row} isHome={true} onClose={vi.fn()} />);
     fireEvent.click(screen.getByRole("button", { name: "Delete Account" }));
 
     expect(
@@ -88,7 +96,7 @@ describe("AccountDetailSheet", () => {
   });
 
   it("closes the confirmation dialog without deleting on cancel", async () => {
-    render(<AccountDetailSheet row={row} onClose={vi.fn()} />);
+    render(<AccountDetailSheet row={row} isHome={true} onClose={vi.fn()} />);
     fireEvent.click(screen.getByRole("button", { name: "Delete Account" }));
     fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
 
@@ -99,9 +107,9 @@ describe("AccountDetailSheet", () => {
 import { AccountList } from "./account-list";
 
 describe("AccountList", () => {
-  it("renders account cards with status badge and detail button", () => {
+  it("marks only the chosen account as Home", () => {
     render(
-      <AccountList
+      <AccountList homeAccountId={row.id}
         rows={[
           row,
           { ...row, id: "22222222-2222-4222-8222-222222222222", name: "Old", status: "archived" },
@@ -114,13 +122,14 @@ describe("AccountList", () => {
     expect(screen.getAllByText("Savings")).toHaveLength(2);
     expect(screen.getAllByText("Balance")).toHaveLength(2);
     expect(screen.getAllByText("Rp 12.500.000")).toHaveLength(2);
-    expect(screen.getByText("Active")).toBeInTheDocument();
-    expect(screen.getByText("Inactive")).toBeInTheDocument();
+    expect(screen.getByText("Home")).toBeInTheDocument();
+    expect(screen.getAllByText("Home")).toHaveLength(1);
+    expect(screen.queryByText("Inactive")).not.toBeInTheDocument();
     expect(screen.getAllByText("Detail")).toHaveLength(2);
   });
 
   it("opens the detail sheet when detail is pressed", () => {
-    render(<AccountList rows={[row]} />);
+    render(<AccountList rows={[row]} homeAccountId={row.id} />);
     fireEvent.click(screen.getByRole("button", { name: "Open details for BCA Savings" }));
 
     expect(screen.getByText("Account Details")).toBeInTheDocument();

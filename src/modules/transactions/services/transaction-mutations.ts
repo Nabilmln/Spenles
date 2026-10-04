@@ -41,7 +41,6 @@ export async function createOwnedTransaction(
     cross join categories as owned_category
     where owned_account.id = ${input.accountId}::uuid
       and owned_account.user_id = ${userId}
-      and owned_account.status = 'active'
       and owned_account.currency = 'IDR'
       and owned_category.id = ${input.categoryId}::uuid
       and owned_category.user_id = ${userId}
@@ -77,7 +76,6 @@ export async function updateOwnedTransaction(
         from accounts as owned_account
         where owned_account.id = ${input.accountId}::uuid
           and owned_account.user_id = ${userId}
-          and owned_account.status = 'active'
           and owned_account.currency = 'IDR'
       )
       and exists (

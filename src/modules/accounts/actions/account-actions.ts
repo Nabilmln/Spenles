@@ -7,7 +7,7 @@ import { accountIdSchema, accountSchema } from "../schemas/account";
 import {
   createOwnedAccount,
   deleteOwnedAccount,
-  setOwnedAccountStatus,
+  setOwnedHomeAccount,
   updateOwnedAccount,
 } from "../services/account-mutations";
 
@@ -113,7 +113,7 @@ export async function updateAccountFromSheetAction(
   const user = await requireSessionUser();
   const id = accountIdSchema.safeParse(formData.get("id"));
   const parsed = accountSchema.safeParse(accountValues(formData));
-  const status = formData.get("status") === "active" ? "active" : "archived";
+  const showOnHome = formData.get("showOnHome") === "true";
   if (!id.success || !parsed.success) {
     return {
       error: parsed.success ? "Account not found." : parsed.error.issues[0]?.message,
@@ -130,14 +130,8 @@ export async function updateAccountFromSheetAction(
           "Account not found, or opening balance cannot be changed once the account has history.",
       };
     }
-    const statusResult = await setOwnedAccountStatus(db, user.id, id.data, status);
-    if (!statusResult.ok) {
-      return {
-        error:
-          status === "archived"
-            ? "The last active account cannot be archived."
-            : "Account not found.",
-      };
+    if (showOnHome && !await setOwnedHomeAccount(db, user.id, id.data)) {
+      return { error: "Account not found." };
     }
   } catch {
     return { error: "Account could not be updated." };

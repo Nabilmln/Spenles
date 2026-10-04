@@ -8,6 +8,7 @@ export const profiles = pgTable(
     userId: text("user_id").notNull().unique(),
     displayName: varchar("display_name", { length: 100 }).notNull(),
     avatarIndex: smallint("avatar_index"),
+    homeAccountId: uuid("home_account_id"),
     defaultCurrency: varchar("default_currency", { length: 3 })
       .notNull()
       .default("IDR"),

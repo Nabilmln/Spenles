@@ -39,11 +39,9 @@ export async function createOwnedTransfer(
     cross join accounts as destination
     where source.id = ${input.sourceAccountId}::uuid
       and source.user_id = ${userId}
-      and source.status = 'active'
       and source.currency = 'IDR'
       and destination.id = ${input.destinationAccountId}::uuid
       and destination.user_id = ${userId}
-      and destination.status = 'active'
       and destination.currency = 'IDR'
       and source.id <> destination.id
     returning id
@@ -79,12 +77,10 @@ export async function reverseOwnedTransfer(
       inner join accounts as source
         on source.id = original.destination_account_id
         and source.user_id = ${userId}
-        and source.status = 'active'
         and source.currency = 'IDR'
       inner join accounts as destination
         on destination.id = original.source_account_id
         and destination.user_id = ${userId}
-        and destination.status = 'active'
         and destination.currency = 'IDR'
       where original.id = ${transferId}::uuid
         and original.user_id = ${userId}
