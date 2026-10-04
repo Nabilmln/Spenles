@@ -76,7 +76,7 @@
 }
 .featureStack {
   --stack-card-height: 460px;
-  --stack-stage-top: clamp(100px, calc(50vh - 272px), 240px);
+  --stack-stage-top: clamp(350px, calc(100vh - 550px), 380px);
   position: relative;
   isolation: isolate;
 }
@@ -84,18 +84,26 @@
   display: grid;
   gap: 1.2rem;
 }
-.featureStackCard:nth-child(1),
-.featureStackCard:nth-child(3) {
+.featureStackCard:nth-of-type(1),
+.featureStackCard:nth-of-type(3) {
   border-color: #292d30;
   background: #191c1e;
   color: #fff;
 }
-.featureStackCard:nth-child(1) .featureCopy p,
-.featureStackCard:nth-child(3) .featureCopy p {
+.featureStackCard:nth-of-type(1) .featureCopy p,
+.featureStackCard:nth-of-type(3) .featureCopy p {
   color: #ced1d3;
 }
 .featureStack[data-stack-ready] {
+  margin-top: calc(var(--stack-stage-top) - 80px);
   height: calc(var(--stack-stage-top) + var(--stack-card-height) + 42px + 210vh);
+}
+.featureStack[data-stack-ready] .featureIntro {
+  position: absolute;
+  top: calc(6rem - var(--stack-stage-top));
+  left: 0;
+  width: min(100%, 700px);
+  margin: 0;
 }
 .featureStack[data-stack-ready] .featureStackStage {
   position: sticky;
@@ -114,16 +122,16 @@
   transform-origin: top center;
   will-change: transform, opacity;
 }
-.featureStack[data-stack-ready] .featureStackCard:nth-child(1) {
+.featureStack[data-stack-ready] .featureStackCard:nth-of-type(1) {
   z-index: 1;
 }
-.featureStack[data-stack-ready] .featureStackCard:nth-child(2) {
+.featureStack[data-stack-ready] .featureStackCard:nth-of-type(2) {
   z-index: 2;
 }
-.featureStack[data-stack-ready] .featureStackCard:nth-child(3) {
+.featureStack[data-stack-ready] .featureStackCard:nth-of-type(3) {
   z-index: 3;
 }
-.featureStack[data-stack-ready] .featureStackCard:nth-child(4) {
+.featureStack[data-stack-ready] .featureStackCard:nth-of-type(4) {
   z-index: 4;
 }
 .featureCopy {
@@ -256,7 +264,7 @@
 @media (max-width: 720px) {
   .featureStack {
     --stack-card-height: 600px;
-    --stack-stage-top: clamp(64px, calc(50vh - 320px), 130px);
+    --stack-stage-top: clamp(305px, calc(50vh - 145px), 340px);
   }
   .splitPhone {
     --split-phone-top: 220px;

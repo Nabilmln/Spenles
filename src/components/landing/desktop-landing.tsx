@@ -163,14 +163,14 @@ export function DesktopLanding() {
           className={`${styles.features} pt-4 pb-12`}
           id="features"
         >
-          <div className="mb-14 max-w-[700px]">
-            <h2 className={`${sectionHeading} max-w-[13ch]`} id="features-title" data-reveal="up">The right tools, without the noise.</h2>
-            <p className={sectionDescription} data-reveal="up">
-              Split a shared bill, set a limit, or step back to see the month.
-              Each task has its own clear place.
-            </p>
-          </div>
           <ScrollStack>
+            <div className={`${styles.featureIntro} mb-9 max-w-[700px]`}>
+              <h2 className={`${sectionHeading} max-w-[13ch]`} id="features-title" data-reveal="up">The right tools, without the noise.</h2>
+              <p className={sectionDescription} data-reveal="up">
+                Split a shared bill, set a limit, or step back to see the month.
+                Each task has its own clear place.
+              </p>
+            </div>
             <ScrollStackItem className={`${featureLayout} max-[720px]:content-start`}>
               <div className={`${styles.featureCopy} max-[900px]:max-w-72`}>
                 <h3 className={`${featureHeading} max-w-[13ch]`} data-reveal="left">Settle the table, down to the last rupiah.</h3>
