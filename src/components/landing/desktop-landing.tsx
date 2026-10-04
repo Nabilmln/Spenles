@@ -158,12 +158,12 @@ export function DesktopLanding() {
                 Split a shared bill, set a limit, or step back to see the month. Each task has its own clear place.
               </p>
             </div>
-            <ScrollStackItem className={`${featureLayout} max-[720px]:content-start`}>
+            <ScrollStackItem className={`${featureLayout} ${styles.splitFeature} max-[720px]:content-start`}>
               <div className={`${styles.featureCopy} max-[900px]:max-w-72`}>
                 <h3 className={`${featureHeading} max-w-[50ch]`} data-reveal="left">Settle the table, down to the last rupiah.</h3>
                 <p className={featureDescription} data-reveal="left" data-delay="70">
-                  Assign items to people, include tax and service, and get
-                  shares that add up to the final bill.
+                  Add a shared bill once, then see what each person owes
+                  without working it out in a chat.
                 </p>
               </div>
               <figure className={styles.splitPhone} data-reveal="fade">
@@ -176,6 +176,15 @@ export function DesktopLanding() {
                   priority={false}
                 />
               </figure>
+              <aside className={styles.splitAside} aria-label="How split bills are calculated" data-reveal="right">
+                <h4>Every part of the bill has a place.</h4>
+                <p>Each person&apos;s result shows their items and share of the extras.</p>
+                <div className={styles.splitReceipt}>
+                  <div><span>Items</span><strong>Assigned</strong></div>
+                  <div><span>Tax + service</span><strong>Included</strong></div>
+                  <div><span>Final total</span><strong>Fully shared</strong></div>
+                </div>
+              </aside>
             </ScrollStackItem>
             {/* These illustrations use fixed, fictional figures and never read account data. */}
             <ScrollStackItem className={featureLayout}>

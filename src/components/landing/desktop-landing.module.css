@@ -237,6 +237,56 @@
   width: auto;
   height: 100%;
 }
+.splitAside { display: none; }
+.splitAside h4 {
+  max-width: 17ch;
+  font-size: clamp(1.25rem, 1.8vw, 1.8rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -.035em;
+}
+.splitAside p {
+  margin-top: .9rem;
+  color: #ced1d3;
+  font-size: .78rem;
+  line-height: 1.7;
+}
+.splitReceipt {
+  display: grid;
+  gap: 0;
+  margin-top: 1.4rem;
+  border-top: 1px solid #41494c;
+  font-size: .69rem;
+}
+.splitReceipt div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: .65rem 0;
+  border-bottom: 1px solid #41494c;
+}
+.splitReceipt span { color: #b9c1c4; }
+.splitReceipt strong { color: #fff; font-weight: 600; text-align: right; }
+@media (min-width: 1000px) {
+  .splitFeature { display: block; position: relative; }
+  .splitFeature .featureCopy {
+    position: absolute;
+    top: 50%;
+    left: clamp(2rem, 5vw, 5rem);
+    width: min(26%, 330px);
+    transform: translateY(-50%);
+  }
+  .splitPhone { left: 50%; right: auto; transform: translateX(-50%); }
+  .splitAside {
+    position: absolute;
+    top: 50%;
+    right: clamp(2rem, 5vw, 5rem);
+    display: block;
+    width: min(22%, 255px);
+    transform: translateY(-50%);
+  }
+}
 .insights {
   --report-phone-width: 960px;
   --report-phone-right: -300px;
