@@ -1,7 +1,6 @@
 import Image from "next/image";
 import {
   ArrowRight,
-  ChartNoAxesCombined,
   Check,
 } from "lucide-react";
 import { Brand } from "@/components/layout/brand";
@@ -12,51 +11,12 @@ import { LandingMotion } from "./landing-motion";
 import { WhySpenlesMotion } from "./why-spenles-motion";
 import styles from "./desktop-landing.module.css";
 
-const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-const income = [49, 56, 53, 63, 59, 68, 64, 73, 70, 77, 74, 84];
-const expenses = [27, 34, 31, 43, 39, 47, 45, 54, 49, 59, 55, 64];
 const heroTitleWords = ["Your", "money,", "clearly", "in", "view."];
 const sectionHeading = "m-0 text-[clamp(2.7rem,4.3vw,4.7rem)] font-semibold leading-[1.1] tracking-[-0.045em] text-balance";
 const sectionDescription = "mt-[1rem] max-w-[100ch] text-[.92rem] leading-[1.8] text-[#656660] text-pretty";
 const featureLayout = "grid grid-cols-[minmax(0,1fr)_minmax(0,.9fr)] items-center gap-16 px-[clamp(2rem,5vw,5rem)] py-14 max-[900px]:gap-6 max-[900px]:p-10 max-[720px]:grid-cols-1 max-[720px]:content-center max-[720px]:gap-6 max-[720px]:p-8";
 const featureHeading = "my-[.85rem] text-[clamp(1.85rem,2.7vw,3rem)] font-semibold leading-[1.14] tracking-[-.042em] text-balance";
 const featureDescription = "m-0 max-w-[42ch] text-[.86rem] leading-[1.75] text-[#62645f]";
-const previewCard = "ml-auto w-[min(100%,370px)] rounded-[19px] border border-[#e6e8e9] bg-white p-[1.3rem] text-[.75rem] text-[#171717] shadow-[0_16px_38px_rgb(22_28_34_/_7%)] max-[720px]:mx-auto max-[720px]:w-[min(100%,380px)]";
-
-function linePath(values: number[]) {
-  const points = values.map((value, index) => ({
-    x: 8 + (index * 584) / (values.length - 1),
-    y: 150 - value * 1.38,
-  }));
-  return points.reduce((path, point, index) => {
-    if (index === 0) return `M ${point.x} ${point.y}`;
-    const previous = points[index - 1];
-    const before = points[index - 2] ?? previous;
-    const next = points[index + 1] ?? point;
-    return `${path} C ${previous.x + (point.x - before.x) / 6} ${previous.y + (point.y - before.y) / 6}, ${point.x - (next.x - previous.x) / 6} ${point.y - (next.y - previous.y) / 6}, ${point.x} ${point.y}`;
-  }, "");
-}
-
-function IllustrativeLineChart({ id }: { id: string }) {
-  const expensePath = linePath(expenses);
-  return (
-    <svg className={styles.lineChart} viewBox="0 0 600 160" preserveAspectRatio="none" aria-hidden="true">
-      <defs>
-        <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="var(--analytics)" stopOpacity="0.18" />
-          <stop offset="100%" stopColor="var(--analytics)" stopOpacity="0" />
-        </linearGradient>
-      </defs>
-      {months.map((month, index) => (
-        <line key={month} x1={8 + (index * 584) / 11} x2={8 + (index * 584) / 11} y1="8" y2="150" className={styles.lineChartGuide} />
-      ))}
-      <line x1="8" x2="592" y1="150" y2="150" className={styles.lineChartGuide} />
-      <path d={`${expensePath} L 592 150 L 8 150 Z`} fill={`url(#${id})`} />
-      <path d={linePath(income)} className={`${styles.lineChartIncome} landing-trend-line`} pathLength={1} />
-      <path d={expensePath} className={`${styles.lineChartExpense} landing-trend-line`} pathLength={1} />
-    </svg>
-  );
-}
 
 export function DesktopLanding() {
   return (
@@ -217,68 +177,69 @@ export function DesktopLanding() {
                 />
               </figure>
             </ScrollStackItem>
+            {/* These illustrations use fixed, fictional figures and never read account data. */}
             <ScrollStackItem className={featureLayout}>
               <div className={styles.featureCopy}>
-                <h3 className={`${featureHeading} max-w-[14ch]`} data-reveal="up">Give your spending a plan.</h3>
+                <h3 className={`${featureHeading} max-w-[14ch]`} data-reveal="up">Know what the month can hold.</h3>
                 <p className={featureDescription} data-reveal="up" data-delay="70">
-                  Set limits by category and see what remains as the month moves
-                  on.
+                  Set a limit for each category. A quick look tells you where
+                  there is room and where to slow down.
                 </p>
               </div>
-              <div
-                className={previewCard}
-                aria-label="Budget preview"
-                data-reveal="up"
-              >
-                <div className="mb-4 grid gap-1">
-                  <span>Food & drinks</span>
-                  <strong className="text-[1.06rem]">Rp 340,000 left</strong>
+              <div className={styles.budgetBoard} aria-label="Illustration of monthly category budgets" data-reveal="up">
+                <div className="flex items-start justify-between gap-3">
+                  <div><span className="text-[.69rem] text-[#697074]">Monthly plan</span><strong className="mt-1 block text-[1.45rem] font-semibold tracking-[-.04em]">Three limits. One view.</strong></div>
+                  <span className={styles.budgetTokens} aria-hidden="true"><i /><i /><i /></span>
                 </div>
-                <span className={styles.budgetDemoTrack} role="progressbar" aria-label="Food and drinks budget used" aria-valuenow={57.5} aria-valuemin={0} aria-valuemax={100}>
-                  <i />
-                </span>
-                <small className="mt-3 block text-[.67rem] text-[#747775]">Rp 460,000 of Rp 800,000 used</small>
+                <div className="mt-6 grid gap-[1.05rem]">
+                  <div><div className="mb-2 flex justify-between gap-2 text-[.72rem]"><strong>Food & drinks</strong><span>Rp 244.000 / 650.000</span></div><span className={styles.budgetDemoTrack} role="progressbar" aria-label="Food and drinks budget used" aria-valuenow={37.5} aria-valuemin={0} aria-valuemax={100}><i className="!w-[37.5%]" /></span></div>
+                  <div><div className="mb-2 flex justify-between gap-2 text-[.72rem]"><strong>Transport</strong><span>Rp 117.000 / 350.000</span></div><span className={styles.budgetDemoTrack} role="progressbar" aria-label="Transport budget used" aria-valuenow={33.4} aria-valuemin={0} aria-valuemax={100}><i className="!w-[33.4%]" /></span></div>
+                  <div><div className="mb-2 flex justify-between gap-2 text-[.72rem]"><strong>Home</strong><span>Rp 705.000 / 900.000</span></div><span className={styles.budgetDemoTrack} role="progressbar" aria-label="Home budget used" aria-valuenow={78.3} aria-valuemin={0} aria-valuemax={100}><i className="!w-[78.3%]" /></span></div>
+                </div>
               </div>
             </ScrollStackItem>
             <ScrollStackItem className={featureLayout}>
-              <div className={styles.featureCopy}>
-                <h3 className={`${featureHeading} max-w-[14ch]`} data-reveal="up">See the story behind the numbers.</h3>
+              <div className={`${styles.featureCopy} ${styles.reportFeatureCopy}`}>
+                <h3 className={`${featureHeading} max-w-[14ch]`} data-reveal="up">See what took the biggest share.</h3>
                 <p className={featureDescription} data-reveal="up" data-delay="70">
-                  See what came in, what went out, and where you spent.
-                  Revisit your report whenever you need it.
+                  Reports turn a long list of payments into a clear picture of
+                  the categories behind them.
                 </p>
               </div>
-              <div
-                className={previewCard}
-                aria-label="Report preview"
-                data-reveal="up"
-              >
-                <div className="flex items-center justify-between font-semibold">
-                  <span>Money in and out</span>
-                  <ChartNoAxesCombined size={17} />
+              <div className={styles.reportBreakdown} aria-label="Illustration of spending by category" data-reveal="up">
+                <div className="flex justify-between gap-3 text-[.7rem] text-[#b8c0c3]"><span>Spending by category</span><span>Monthly view</span></div>
+                <div className={styles.reportBreakdownBody}>
+                  <div className={styles.reportDonut} data-report-donut aria-hidden="true"><div><span>Largest share</span><strong>42%</strong></div></div>
+                  <div className="grid content-center gap-4 text-[.74rem]">
+                    <div className="flex items-start gap-2.5"><i className="mt-1 size-2.5 shrink-0 rounded-[3px] bg-[#168fe5]" /><span><strong className="block font-medium">Food & drinks</strong><small className="text-[#aeb7ba]">42% of spending</small></span></div>
+                    <div className="flex items-start gap-2.5"><i className="mt-1 size-2.5 shrink-0 rounded-[3px] bg-white" /><span><strong className="block font-medium">Home</strong><small className="text-[#aeb7ba]">33% of spending</small></span></div>
+                    <div className="flex items-start gap-2.5"><i className="mt-1 size-2.5 shrink-0 rounded-[3px] bg-[#6d787e]" /><span><strong className="block font-medium">Everything else</strong><small className="text-[#aeb7ba]">25% of spending</small></span></div>
+                  </div>
                 </div>
-                <div className="mt-[.7rem] h-[92px]">
-                  <IllustrativeLineChart id="feature-report-fill" />
-                </div>
-                <span className="mt-[.4rem] flex justify-between text-[.65rem] text-[#868985]">
-                  Jan <b className="font-normal">Jun</b> Dec
-                </span>
+                <p className="mt-5 border-t border-[#3c454a] pt-4 text-[.7rem] text-[#b8c0c3]">A closer look at the month, without sorting every payment yourself.</p>
               </div>
             </ScrollStackItem>
-            <ScrollStackItem className={featureLayout}>
+            <ScrollStackItem className={`${featureLayout} ${styles.recordsFeature}`}>
               <div className={styles.featureCopy}>
-                <h3 className={`${featureHeading} max-w-[13ch]`} data-reveal="left">And many more features.</h3>
+                <h3 className={`${featureHeading} max-w-[13ch]`} data-reveal="left">The details stay within reach.</h3>
                 <p className={featureDescription} data-reveal="left" data-delay="70">
-                  The everyday details have a place too, from your accounts to
-                  the records you want to keep.
+                  Find a past payment, move money between your accounts, and
+                  organize spending your way.
                 </p>
               </div>
-              <ul className="ml-auto grid w-[min(100%,430px)] list-none gap-[.65rem] p-0 max-[720px]:mx-auto max-[720px]:w-[min(100%,380px)] [&_li]:rounded-[15px] [&_li]:border [&_li]:border-[#e1e4e5] [&_li]:bg-[#f5f6f7] [&_li]:px-[1.2rem] [&_li]:py-4 [&_li]:text-[.84rem] [&_li]:font-medium" aria-label="More Spenles features">
-                <li data-reveal="right">Income & expense tracking</li>
-                <li data-reveal="right" data-delay="50">Accounts & transfers</li>
-                <li data-reveal="right" data-delay="100">Custom categories</li>
-                <li data-reveal="right" data-delay="150">Save a copy of your records</li>
-              </ul>
+              <div className={styles.recordBoard} aria-label="Illustration of transaction history, an account transfer, and personal categories" data-reveal="right">
+                <div className={styles.recordSheet}>
+                  <div className="flex items-center justify-between text-[.68rem] text-[#656b6f]"><span>Transaction history</span><span>All accounts</span></div>
+                  <div className="mt-5 flex items-center justify-between gap-3 border-t border-[#e3e6e7] py-3 text-[.78rem]"><span><strong className="block font-semibold">Market run</strong><small className="text-[#71777b]">Food & drinks</small></span><strong className="whitespace-nowrap font-semibold">- Rp 74.000</strong></div>
+                  <div className="flex items-center justify-between gap-3 border-t border-[#e3e6e7] py-3 text-[.78rem]"><span><strong className="block font-semibold">Bus fare</strong><small className="text-[#71777b]">Transport</small></span><strong className="whitespace-nowrap font-semibold">- Rp 12.000</strong></div>
+                </div>
+                <div className={styles.transferSlip}>
+                  <span className="text-[.68rem] text-[#bfc8cc]">Between your accounts</span>
+                  <strong className="mt-1 block text-[1.18rem] tracking-[-.03em]">Rp 125.000</strong>
+                  <span className="mt-1 block text-[.69rem] text-[#cbd1d4]">Cash account · Savings</span>
+                </div>
+                <div className={styles.categorySlip}><span>Your categories</span><strong>Food · Travel · Bills</strong></div>
+              </div>
             </ScrollStackItem>
           </ScrollStack>
         </section>

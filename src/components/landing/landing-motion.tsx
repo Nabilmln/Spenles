@@ -12,12 +12,11 @@ export function LandingMotion() {
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const reveals = [...root.querySelectorAll<HTMLElement>("[data-reveal]")];
-    const budgetFill = root.querySelector<HTMLElement>("[role='progressbar'] i");
-    const chartLines = [...root.querySelectorAll<SVGPathElement>(".landing-trend-line")];
+    const budgetFills = [...root.querySelectorAll<HTMLElement>("[role='progressbar'] i")];
+    const reportDonut = root.querySelector<HTMLElement>("[data-report-donut]");
     const stack = root.querySelector<HTMLElement>("[data-scroll-stack]");
     const stackStage = stack?.querySelector<HTMLElement>("[data-scroll-stack-stage]");
     const stackCards = [...(stack?.querySelectorAll<HTMLElement>("[data-scroll-stack-card]") ?? [])];
-    const chartCardIndex = chartLines.map((line) => stackCards.findIndex((card) => card.contains(line)));
     let frame = 0;
 
     function clearMotion() {
@@ -25,11 +24,8 @@ export function LandingMotion() {
         element.style.removeProperty("opacity");
         element.style.removeProperty("translate");
       }
-      budgetFill?.style.removeProperty("transform");
-      for (const line of chartLines) {
-        line.style.removeProperty("stroke-dasharray");
-        line.style.removeProperty("stroke-dashoffset");
-      }
+      for (const fill of budgetFills) fill.style.removeProperty("transform");
+      reportDonut?.style.removeProperty("scale");
       stack?.removeAttribute("data-stack-ready");
       for (const card of stackCards) {
         card.style.removeProperty("opacity");
@@ -66,8 +62,6 @@ export function LandingMotion() {
         return clamp((viewport - rect.top) / (viewport + rect.height));
       };
       const revealProgress = reveals.map(progressFor);
-      const budgetProgress = budgetFill ? progressFor(budgetFill) : 0;
-      const chartProgress = chartLines.map(progressFor);
 
       stackCards.forEach((card, index) => {
         const arrival = cardArrivals[index];
@@ -93,16 +87,12 @@ export function LandingMotion() {
           : `0 ${shift.toFixed(1)}px`;
       });
 
-      if (budgetFill) {
-        const fill = ease(clamp(budgetProgress / 0.42)) * (cardArrivals[1] ?? 1);
-        budgetFill.style.transform = `scaleX(${fill.toFixed(3)})`;
+      for (const fill of budgetFills) {
+        fill.style.transform = `scaleX(${(cardArrivals[1] ?? 1).toFixed(3)})`;
       }
-      chartLines.forEach((line, index) => {
-        const cardArrival = cardArrivals[chartCardIndex[index]] ?? 1;
-        const draw = ease(clamp(chartProgress[index] / 0.44)) * cardArrival;
-        line.style.strokeDasharray = "1";
-        line.style.strokeDashoffset = (1 - draw).toFixed(3);
-      });
+      if (reportDonut) {
+        reportDonut.style.scale = (0.72 + 0.28 * (cardArrivals[2] ?? 1)).toFixed(3);
+      }
     }
 
     function schedule() {
