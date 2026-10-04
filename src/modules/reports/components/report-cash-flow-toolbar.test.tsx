@@ -92,8 +92,9 @@ describe("report toolbar", () => {
     );
 
     const dateButton = screen.getByRole("button", { name: /Select date range/ });
-    expect(dateButton).toHaveClass("bg-white", "w-full");
-    expect(dateButton.parentElement).toHaveClass("bg-primary-700");
+    expect(dateButton).toHaveClass("bg-primary-700", "text-white", "w-full");
+    expect(within(dateButton).getByText("1 Aug 26")).toHaveClass("bg-white");
+    expect(within(dateButton).getByText("7 Aug 26")).toHaveClass("bg-white");
     expect(screen.queryByRole("button", { name: "Export report" })).not.toBeInTheDocument();
     expect(within(dateButton).getByText("1 Aug 26")).toBeInTheDocument();
     expect(within(dateButton).getByText("-")).toBeInTheDocument();
