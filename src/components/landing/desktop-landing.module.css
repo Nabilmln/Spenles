@@ -19,11 +19,13 @@
   -webkit-mask-image: linear-gradient(#000 0%, #000 56%, transparent 76%);
   mask-image: linear-gradient(#000 0%, #000 56%, transparent 76%);
 }
+.featureStackCard.featureVisualCard { grid-template-columns: minmax(0, .76fr) minmax(0, 1.24fr); }
+.featureStackCard.reportVisualCard { grid-template-columns: minmax(0, 1.24fr) minmax(0, .76fr); }
 .budgetBoard {
   width: 100%;
-  max-width: 440px;
+  max-width: 590px;
   margin-left: auto;
-  padding: clamp(1.25rem, 2.5vw, 1.8rem);
+  padding: clamp(1.35rem, 2.7vw, 2.25rem);
   border: 1px solid #e3e7e9;
   border-radius: 24px;
   background: #f3f5f6;
@@ -32,27 +34,40 @@
 .budgetTokens {
   position: relative;
   display: block;
-  flex: 0 0 57px;
-  height: 37px;
+  flex: 0 0 92px;
+  height: 58px;
 }
 .budgetTokens i {
   position: absolute;
-  top: 5px;
+  top: 6px;
   left: 0;
-  width: 27px;
-  height: 27px;
+  width: 45px;
+  height: 45px;
   border: 2px solid #f3f5f6;
   border-radius: 50%;
   background: #a7b2b8;
 }
-.budgetTokens i:nth-child(2) { left: 14px; background: #168fe5; }
-.budgetTokens i:nth-child(3) { left: 28px; background: repeating-linear-gradient(135deg, #d3eafa 0 3px, #86c9f2 3px 5px); }
+.budgetTokens i:nth-child(2) { left: 23px; background: #168fe5; }
+.budgetTokens i:nth-child(3) { left: 46px; background: repeating-linear-gradient(135deg, #d3eafa 0 3px, #86c9f2 3px 5px); }
+.budgetEnvelopes {
+  display: block;
+  width: min(82%, 310px);
+  height: auto;
+  margin-top: 1.75rem;
+  overflow: visible;
+}
 .reportFeatureCopy { grid-column: 2; grid-row: 1; }
+.reportTrend {
+  display: block;
+  width: min(100%, 370px);
+  height: auto;
+  margin-top: 1.8rem;
+}
 .reportBreakdown {
   grid-column: 1;
   grid-row: 1;
   width: 100%;
-  max-width: 470px;
+  max-width: 600px;
   margin-right: auto;
   color: #fff;
 }
@@ -66,11 +81,13 @@
 .reportDonut {
   position: relative;
   display: grid;
-  width: min(100%, 190px);
+  width: min(100%, 255px);
   aspect-ratio: 1;
   place-items: center;
   border-radius: 50%;
   background: conic-gradient(#168fe5 0 42%, #fff 42% 75%, #6d787e 75% 100%);
+  outline: 1px solid #394247;
+  outline-offset: 10px;
 }
 .reportDonut::before {
   position: absolute;
@@ -90,13 +107,26 @@
   align-self: end;
   position: relative;
   width: 100%;
-  max-width: 470px;
-  height: 315px;
+  max-width: 590px;
+  height: 346px;
   margin-left: auto;
 }
+.recordBoard::before {
+  position: absolute;
+  top: 14px;
+  left: -10px;
+  width: 80%;
+  height: 225px;
+  border: 1px solid #e5e8ea;
+  border-radius: 22px;
+  background: #e9edef;
+  transform: rotate(-3deg);
+  content: "";
+}
 .recordSheet {
-  width: 88%;
-  min-height: 225px;
+  position: relative;
+  width: 83%;
+  min-height: 248px;
   padding: clamp(1rem, 2vw, 1.4rem);
   border: 1px solid #e4e7e8;
   border-radius: 22px;
@@ -104,9 +134,9 @@
 }
 .transferSlip {
   position: absolute;
-  top: 204px;
+  top: 225px;
   right: 0;
-  width: 54%;
+  width: 52%;
   padding: 1rem 1.1rem;
   border-radius: 17px;
   background: #191c1e;
@@ -119,7 +149,7 @@
   left: 0;
   display: grid;
   gap: .15rem;
-  width: 42%;
+  width: 40%;
   padding: .85rem 1rem;
   border: 1px solid #e4e7e8;
   border-radius: 14px;
@@ -394,6 +424,8 @@
   .splitPhone { right: 0; }
 }
 @media (max-width: 720px) {
+  .featureStackCard.featureVisualCard,
+  .featureStackCard.reportVisualCard { grid-template-columns: minmax(0, 1fr); }
   .featureStack {
     --stack-card-height: 600px;
     --stack-stage-top: clamp(305px, calc(50vh - 145px), 340px);

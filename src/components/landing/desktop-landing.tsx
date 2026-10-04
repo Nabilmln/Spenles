@@ -187,33 +187,62 @@ export function DesktopLanding() {
               </aside>
             </ScrollStackItem>
             {/* These illustrations use fixed, fictional figures and never read account data. */}
-            <ScrollStackItem className={featureLayout}>
+            <ScrollStackItem className={`${featureLayout} ${styles.featureVisualCard}`}>
               <div className={styles.featureCopy}>
                 <h3 className={`${featureHeading} max-w-[14ch]`} data-reveal="up">Know what the month can hold.</h3>
                 <p className={featureDescription} data-reveal="up" data-delay="70">
                   Set a limit for each category. A quick look tells you where
                   there is room and where to slow down.
                 </p>
+                <svg className={styles.budgetEnvelopes} viewBox="0 0 310 144" fill="none" aria-hidden="true" data-reveal="up" data-delay="120">
+                  <g transform="translate(64 1) rotate(9 105 55)">
+                    <rect x="0.75" y="0.75" width="209.5" height="103.5" rx="14" fill="#dfe6e9" stroke="#c9d2d6" strokeWidth="1.5" />
+                    <path d="M2 19 105 75 209 19" stroke="#b7c5cb" strokeWidth="1.5" />
+                  </g>
+                  <g transform="translate(30 17) rotate(-5 105 55)">
+                    <rect x="0.75" y="0.75" width="209.5" height="103.5" rx="14" fill="#e6f3fc" stroke="#91c9ea" strokeWidth="1.5" />
+                    <path d="M2 19 105 75 209 19" stroke="#91c9ea" strokeWidth="1.5" />
+                  </g>
+                  <g transform="translate(2 37)">
+                    <rect x="0.75" y="0.75" width="209.5" height="103.5" rx="14" fill="#fff" stroke="#c8d1d6" strokeWidth="1.5" />
+                    <path d="M2 19 105 75 209 19" stroke="#aab8be" strokeWidth="1.5" />
+                    <circle cx="105" cy="75" r="18" fill="#168fe5" />
+                    <path d="m98 75 5 5 10-11" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
+                  </g>
+                </svg>
               </div>
               <div className={styles.budgetBoard} aria-label="Illustration of monthly category budgets" data-reveal="up">
                 <div className="flex items-start justify-between gap-3">
                   <div><span className="text-[.69rem] text-[#697074]">Monthly plan</span><strong className="mt-1 block text-[1.45rem] font-semibold tracking-[-.04em]">Three limits. One view.</strong></div>
                   <span className={styles.budgetTokens} aria-hidden="true"><i /><i /><i /></span>
                 </div>
-                <div className="mt-6 grid gap-[1.05rem]">
+                <div className="mt-8 grid gap-5">
                   <div><div className="mb-2 flex justify-between gap-2 text-[.72rem]"><strong>Food & drinks</strong><span>Rp 244.000 / 650.000</span></div><span className={styles.budgetDemoTrack} role="progressbar" aria-label="Food and drinks budget used" aria-valuenow={37.5} aria-valuemin={0} aria-valuemax={100}><i className="!w-[37.5%]" /></span></div>
                   <div><div className="mb-2 flex justify-between gap-2 text-[.72rem]"><strong>Transport</strong><span>Rp 117.000 / 350.000</span></div><span className={styles.budgetDemoTrack} role="progressbar" aria-label="Transport budget used" aria-valuenow={33.4} aria-valuemin={0} aria-valuemax={100}><i className="!w-[33.4%]" /></span></div>
                   <div><div className="mb-2 flex justify-between gap-2 text-[.72rem]"><strong>Home</strong><span>Rp 705.000 / 900.000</span></div><span className={styles.budgetDemoTrack} role="progressbar" aria-label="Home budget used" aria-valuenow={78.3} aria-valuemin={0} aria-valuemax={100}><i className="!w-[78.3%]" /></span></div>
                 </div>
               </div>
             </ScrollStackItem>
-            <ScrollStackItem className={featureLayout}>
+            <ScrollStackItem className={`${featureLayout} ${styles.reportVisualCard}`}>
               <div className={`${styles.featureCopy} ${styles.reportFeatureCopy}`}>
                 <h3 className={`${featureHeading} max-w-[14ch]`} data-reveal="up">See what took the biggest share.</h3>
                 <p className={featureDescription} data-reveal="up" data-delay="70">
                   Reports turn a long list of payments into a clear picture of
                   the categories behind them.
                 </p>
+                <svg className={styles.reportTrend} viewBox="0 0 370 124" fill="none" aria-hidden="true" data-reveal="up" data-delay="120">
+                  <defs>
+                    <linearGradient id="feature-trend-fill" x1="0" y1="0" x2="0" y2="1">
+                      <stop stopColor="#168fe5" stopOpacity=".25" />
+                      <stop offset="1" stopColor="#168fe5" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M2 8v112m61-112v112m61-112v112m61-112v112m61-112v112m61-112v112m61-112v112" stroke="#394247" strokeWidth="1" />
+                  <path d="M2 120h366" stroke="#394247" strokeWidth="1" />
+                  <path d="M2 100 C28 96 38 91 63 94 S98 59 124 69 S159 77 185 55 S222 69 246 64 S280 34 307 39 S340 18 368 13 V120 H2Z" fill="url(#feature-trend-fill)" />
+                  <path d="M2 100 C28 96 38 91 63 94 S98 59 124 69 S159 77 185 55 S222 69 246 64 S280 34 307 39 S340 18 368 13" stroke="#168fe5" strokeWidth="2.5" strokeLinecap="round" />
+                  <circle cx="368" cy="13" r="4" fill="#191c1e" stroke="#168fe5" strokeWidth="2" />
+                </svg>
               </div>
               <div className={styles.reportBreakdown} aria-label="Illustration of spending by category" data-reveal="up">
                 <div className="flex justify-between gap-3 text-[.7rem] text-[#b8c0c3]"><span>Spending by category</span><span>Monthly view</span></div>
@@ -228,7 +257,7 @@ export function DesktopLanding() {
                 <p className="mt-5 border-t border-[#3c454a] pt-4 text-[.7rem] text-[#b8c0c3]">A closer look at the month, without sorting every payment yourself.</p>
               </div>
             </ScrollStackItem>
-            <ScrollStackItem className={`${featureLayout} ${styles.recordsFeature}`}>
+            <ScrollStackItem className={`${featureLayout} ${styles.featureVisualCard} ${styles.recordsFeature}`}>
               <div className={styles.featureCopy}>
                 <h3 className={`${featureHeading} max-w-[13ch]`} data-reveal="left">The details stay within reach.</h3>
                 <p className={featureDescription} data-reveal="left" data-delay="70">
