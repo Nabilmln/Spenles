@@ -55,61 +55,6 @@ function IllustrativeLineChart({ id }: { id: string }) {
   );
 }
 
-function InsightPreview() {
-  return (
-    <div
-      className={styles.insightPreview}
-      aria-label="Report preview"
-      data-reveal="right"
-    >
-      <div className={styles.insightPreviewHeader} data-reveal="up">
-        <div>
-          <span>Yearly overview</span>
-          <strong>Income & expenses</strong>
-        </div>
-        <span>Jan–Dec</span>
-      </div>
-      <div className={styles.insightTotals} data-reveal="up">
-        <div>
-          <span>Income</span>
-          <strong>Rp 12,000,000</strong>
-        </div>
-        <div>
-          <span>Expenses</span>
-          <strong>Rp 3,550,000</strong>
-        </div>
-      </div>
-      <div
-        className={styles.insightChart}
-        aria-label="Income and expense trends from January through December"
-        data-reveal="up"
-      >
-        <IllustrativeLineChart id="insight-report-fill" />
-        <div className={styles.insightChartMonths}>
-          {months.map((month) => <span key={month}>{month}</span>)}
-        </div>
-      </div>
-      <div className={styles.insightLegend} data-reveal="up">
-        <span>
-          <i /> Income
-        </span>
-        <span>
-          <i /> Expenses
-        </span>
-      </div>
-      <div className={styles.insightCategory} data-reveal="up">
-        <div>
-          <span>Spending by category</span>
-          <strong>Food & drinks</strong>
-        </div>
-        <span>
-          See breakdown
-        </span>
-      </div>
-    </div>
-  );
-}
-
 export function DesktopLanding() {
   return (
     <div className={styles.landing} lang="en" data-landing-root>
@@ -279,7 +224,7 @@ export function DesktopLanding() {
                 <h3 data-reveal="up">See the story behind the numbers.</h3>
                 <p data-reveal="up" data-delay="70">
                   See what came in, what went out, and where you spent.
-                  Download a report when you need one.
+                  Revisit your report whenever you need it.
                 </p>
               </div>
               <div
@@ -337,11 +282,19 @@ export function DesktopLanding() {
                 <Check size={17} /> See where your money went
               </li>
               <li data-reveal="left" data-delay="120">
-                <Check size={17} /> Download a personal report
+                <Check size={17} /> Review reports by date
               </li>
             </ul>
           </div>
-          <InsightPreview />
+          <figure className={styles.insightMockup} data-reveal="right">
+            <Image
+              src="/illustrations/report-phone-right-hand.png"
+              alt="Spenles Reports screen on a phone held in a right hand"
+              width={1024}
+              height={1536}
+              sizes="(max-width: 980px) 90vw, 430px"
+            />
+          </figure>
         </section>
         <section
           aria-labelledby="get-started-title"

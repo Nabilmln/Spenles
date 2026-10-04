@@ -563,106 +563,16 @@
 .insightsCopy li svg {
   color: #168fe5;
 }
-.insightPreview {
-  min-width: 0;
-  padding: clamp(1.35rem, 2.5vw, 2.3rem);
-  border: 1px solid #e6e8e9;
-  border-radius: 24px;
-  background: #fff;
-  color: var(--ink);
-  box-shadow: 0 22px 65px rgb(22 28 34 / 8%);
+.insightMockup {
+  /* Change this value to resize the Reports phone. */
+  --report-phone-width: 430px;
+  width: min(100%, var(--report-phone-width));
+  margin: 0 auto;
 }
-.insightPreviewHeader,
-.insightTotals,
-.insightLegend,
-.insightCategory {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-}
-.insightPreviewHeader div,
-.insightTotals > div,
-.insightCategory div {
-  display: grid;
-  gap: 0.3rem;
-}
-.insightPreviewHeader div span,
-.insightTotals span,
-.insightCategory div span {
-  color: #797c77;
-  font-size: 0.71rem;
-}
-.insightPreviewHeader strong {
-  font-size: 1.1rem;
-}
-.insightPreviewHeader > span {
-  align-self: start;
-  padding: 0.45rem 0.65rem;
-  border: 1px solid #e7e9ea;
-  border-radius: 999px;
-  color: #60635e;
-  font-size: 0.67rem;
-  white-space: nowrap;
-}
-.insightTotals {
-  margin-top: 1.8rem;
-}
-.insightTotals > div {
-  flex: 1;
-  padding: 1rem;
-  border-radius: 14px;
-  background: #f5f6f7;
-}
-.insightTotals strong {
-  font-size: clamp(0.85rem, 1.15vw, 1.1rem);
-}
-.insightChart {
-  height: 220px;
-  margin-top: 1.7rem;
-}
-.insightChart > .lineChart {
-  height: 190px;
-}
-.insightChartMonths {
-  display: grid;
-  grid-template-columns: repeat(12, minmax(0, 1fr));
-  margin-top: 0.3rem;
-}
-.insightChartMonths span {
-  color: #8b8e89;
-  font-size: 0.6rem;
-  text-align: center;
-}
-.insightLegend {
-  justify-content: center;
-  margin-top: 0.9rem;
-  color: #696c67;
-  font-size: 0.72rem;
-}
-.insightLegend span {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-.insightLegend i {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #292929;
-}
-.insightLegend span:last-child i {
-  background: var(--analytics);
-}
-.insightCategory {
-  align-items: center;
-  margin-top: 1.5rem;
-  padding-top: 1.1rem;
-}
-.insightCategory strong {
-  font-size: 0.87rem;
-}
-.insightCategory > span {
-  font-size: 0.7rem;
+.insightMockup img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 .getStarted {
   display: grid;

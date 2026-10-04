@@ -10,7 +10,7 @@ export type ReportTotals = {
 
 const cardCellClass = cn(
   cardClass,
-  "grid min-w-0 justify-items-center gap-[.2rem] text-center shadow-none",
+  "grid min-w-0 justify-items-center mt-1 gap-[.2rem] text-center shadow-none",
 );
 const labelClass = "m-0 text-[.68rem] font-medium text-foreground";
 const valueClass =
