@@ -502,15 +502,22 @@
   font-weight: 500;
 }
 .insights {
+  /* Image controls in pixels. Negative right/bottom values move the hand past the card edge. */
+  --report-phone-width: 510px;
+  --report-phone-right: 0px;
+  --report-phone-bottom: -18px;
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
   align-items: center;
   gap: clamp(2.5rem, 5vw, 5rem);
+  min-height: calc(647px + 2 * clamp(3rem, 5vw, 5rem));
   margin-bottom: 8rem;
   padding: clamp(3rem, 5vw, 5rem);
   border: 1px solid #e9ebec;
   border-radius: 32px;
   background: #f5f6f7;
+  overflow: hidden;
 }
 .insightsLabel {
   color: #747570;
@@ -539,13 +546,12 @@
   color: #168fe5;
 }
 .insightMockup {
-  --report-phone-width: 430px;
-  width: min(100%, var(--report-phone-width));
-  /* margin: 0 auto; */
-}
-.insightMockup img {
+  position: absolute;
+  right: var(--report-phone-right);
+  bottom: var(--report-phone-bottom);
   display: block;
-  width: 100%;
+  width: var(--report-phone-width);
+  max-width: none;
   height: auto;
 }
 .getStarted {
@@ -856,7 +862,7 @@
   .getStarted { grid-template-columns: 1fr; }
   .why { gap: 3.2rem; padding-block: 6rem 7rem; }
   .whyIntro h2 { max-width: 18ch; }
-  .insights { gap: 3rem; padding: 3rem; }
+  .insights { gap: 3rem; padding: 3rem 3rem calc(645px + 6rem); }
   .insightsCopy h2 { max-width: 18ch; }
   .getStarted { gap: 3rem; padding-block: 5rem 6rem; }
 }
@@ -897,7 +903,7 @@
     right: 50%;
     transform: translateX(50%);
   }
-  .insights { padding: 2rem; }
+  .insights { padding: 2rem 2rem calc(645px + 5rem); }
   .footerTop { flex-direction: column; }
   .footerContact { justify-items: start; }
 }

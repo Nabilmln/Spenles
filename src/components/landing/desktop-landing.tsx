@@ -270,15 +270,15 @@ export function DesktopLanding() {
               </li>
             </ul>
           </div>
-          <figure className={styles.insightMockup} data-reveal="right">
-            <Image
-              src="/illustrations/report-phone-right-hand.png"
-              alt="Spenles Reports screen on a phone held in a right hand"
-              width={1024}
-              height={1536}
-              sizes="(max-width: 980px) 90vw, 430px"
-            />
-          </figure>
+          <Image
+            className={styles.insightMockup}
+            src="/illustrations/report-phone-right-hand.png"
+            alt="Spenles Reports screen on a phone held in a right hand"
+            width={1024}
+            height={1536}
+            sizes="(max-width: 980px) 90vw, 600px"
+            data-reveal="right"
+          />
         </section>
         <section
           aria-labelledby="get-started-title"
