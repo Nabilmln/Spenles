@@ -64,7 +64,13 @@ export function LandingMotion() {
         ? 1
         : ease(clamp((stackProgress - (index - 1) * 0.25 - 0.08) / 0.13)));
       const firstCardTop = stackCards[0]?.getBoundingClientRect().top ?? viewport;
-      const firstCardEntry = ease(clamp((viewport * 0.92 - firstCardTop) / (viewport * 0.43)));
+      const firstCardEntry = ease(clamp(
+        (viewport * 0.92 - firstCardTop) / Math.max(1, viewport * 0.92 - stackTop),
+      ));
+      // Give each card's details more scroll distance than the card surface itself.
+      const contentProgress = stackCards.map((_, index) => index === 0
+        ? firstCardEntry
+        : ease(clamp((stackProgress - (index - 1) * 0.25 - 0.06) / 0.21)));
 
       // The same viewport progress drives both directions of the scroll.
       const progressFor = (element: Element) => {
@@ -84,10 +90,12 @@ export function LandingMotion() {
       });
 
       featureMotions.forEach((parts, cardIndex) => {
-        const cardProgress = cardIndex === 0 ? firstCardEntry : cardArrivals[cardIndex];
+        const cardProgress = contentProgress[cardIndex];
         for (const element of parts) {
           const step = Number(element.getAttribute("data-motion-step") ?? 0);
-          const progress = ease(clamp((cardProgress - step * 0.1) / 0.48));
+          const start = step * 0.1;
+          const span = cardIndex === 0 ? Math.min(0.78, 1 - start) : 0.48;
+          const progress = ease(clamp((cardProgress - start) / span));
           const hidden = 1 - progress;
           const kind = element.getAttribute("data-feature-motion");
           element.style.opacity = progress.toFixed(3);
@@ -125,7 +133,7 @@ export function LandingMotion() {
       });
 
       budgetFills.forEach((fill, index) => {
-        const progress = ease(clamp(((cardArrivals[1] ?? 1) - 0.38 - index * 0.1) / 0.38));
+        const progress = ease(clamp(((contentProgress[1] ?? 1) - 0.38 - index * 0.1) / 0.38));
         fill.style.transform = `scaleX(${progress.toFixed(3)})`;
       });
     }

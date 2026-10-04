@@ -159,6 +159,8 @@ The landing uses Tailwind utilities for ordinary layout, spacing, typography, co
 
 ## Elevation & Depth
 
+The feature card surface arrives first; its details continue revealing over a longer scroll distance and finish before the next card enters. The first card's phone and receipt details use a longer reveal that completes as the card settles into the stack. The budget fills follow the slower content timing.
+
 The app uses pale canvas contrast and fine borders for most separation. A low ambient card shadow adds lift to working surfaces. Stronger shadows are reserved for floating mobile navigation, dialogs, and focal landing previews.
 
 ### Shadow Vocabulary
