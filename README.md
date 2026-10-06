@@ -1,233 +1,46 @@
-# Spenles
+﻿# Spenles
 
-Spenles adalah aplikasi web pengelolaan keuangan pribadi untuk banyak pengguna
-dengan akun dan data privat masing-masing. Bahasa UI yang dituju adalah
-Inggris (sebagian teks saat ini masih campuran), berbasis IDR, dan dikembangkan
-sebagai PWA untuk penggunaan di ponsel. Tujuan utamanya adalah mencatat arus kas
-harian, mengelola pengeluaran per kategori, membagi tagihan, dan menyajikan
-laporan finansial dengan perhitungan yang deterministik dan dapat diaudit.
+Spenles is a personal finance app for tracking income, expenses, accounts, budgets, and shared bills. It helps you see where your money goes without turning daily tracking into accounting work.
 
-Aplikasi ini bukan platform bank, pembayaran, investasi, atau akuntansi
-profesional.
+[Try Spenles](https://spenles.vercel.app/) · Designed for phones as an installable web app. On larger screens, the site shows a product overview and phone setup guide.
 
-Pada layar selebar 601 px atau lebih, termasuk tablet, situs menampilkan
-landing page tentang Spenles dengan lima bagian: pengenalan, alasan penggunaan, fitur utama
-(split bill, budget, laporan), insight pemasukan/pengeluaran, dan panduan
-ponsel. Tampilan memakai warna hitam dan putih serta logo S tanpa bingkai.
-Tombol “Try Spenles” menuju tiga panduan: memakai aplikasi di ponsel, mencoba
-tampilan ponsel lewat device toolbar di browser desktop, atau menjalankan
-salinan pengembangan pribadi dari repositori. Tampilan desktop hanya untuk
-pratinjau; aplikasi keuangan tetap dirancang untuk ponsel. Lihat `PRODUCT.md`
-untuk konteks produk ringkas dan
-`DESIGN.md` untuk sistem visual.
+## What you can do
 
-Spenles adalah **Progressive Web App (PWA)**: berbasis web, tetapi dapat
-diinstal di perangkat pengguna dan dibuka berdiri sendiri (standalone) dari
-home screen, tanpa harus melalui toko aplikasi. Web App Manifest menyediakan
-ikon dan tema, sementara service worker men-cache aset statis (style, script,
-gambar, font) agar aplikasi terasa ringan di koneksi lambat. Navigasi dan
-request API sengaja tidak di-cache sehingga halaman yang sudah login selalu
-menampilkan data terbaru.
+- Record income and expenses, organize categories, and move money between your own accounts.
+- See balances, recent activity, spending trends, and reports for a selected date range.
+- Set monthly category budgets and calculate itemized split bills with tax and service charges.
+- Download a JSON backup of your personal records.
 
-## Fitur utama
+Spenles tracks money; it does not hold funds or process payments. Amounts are stored as whole Indonesian rupiah (IDR), and each user's records are private.
 
-- **Transaksi pemasukan dan pengeluaran** dengan kalkulasi server-side yang
-  aman dan bebas floating point (rupiah disimpan sebagai integer).
-- **Kategori transaksi** personal yang dapat dikelola per pengguna, termasuk
-  kategori bawaan untuk pemasukan dan pengeluaran.
-- **Dashboard arus kas** dengan periode tervalidasi, ringkasan perbandingan,
-  grafik aksesibel (Recharts), profil saldo, dan transaksi terbaru.
-- **Banyak akun/wallet IDR** dengan saldo otoritatif dan transfer internal
-  antar-akun.
-- **Anggaran kategori bulanan** dan pemantauan pemakaian.
-- **Split bill** dengan rincian tanggung jawab per orang yang deterministik:
-  subtotal, diskon, pajak, service charge, dan total final yang tersimpan
-  sebagai snapshot bernomor versi.
-- **Laporan dan backup**: ringkasan, grafik, dan rincian kategori dapat dilihat
-  untuk rentang tanggal yang dipilih; backup data pribadi berupa JSON ber-versi
-  tetap dapat diunduh.
+## Architecture
 
-## Masalah dan solusi
+![Spenles architecture: phone app, Next.js server, Neon Auth, domain modules, Drizzle, and Neon PostgreSQL](public/spenles-architecture.png)
 
-- **Pencatatan keuangan tersebar di spreadsheet atau catatan manual** —
-  Spenles memusatkan pemasukan, pengeluaran, dan saldo dalam satu aplikasi
-  dengan kategori yang dapat diatur sendiri.
-- **Kesalahan hitung dan hasil yang tidak konsisten** — uang disimpan sebagai
-  integer rupiah dan semua perhitungan keuangan dilakukan di server, sehingga
-  total selalu deterministik dan dapat diaudit.
-- **Privasi data diragukan** — setiap data di-scope oleh sesi pengguna yang
-  terverifikasi; laporan dan unduhan dibuat server-side dan tidak pernah
-  membocorkan kredensial database ke browser.
-- **Membagi tagihan antar-teman terasa rumit** — split bill menghitung
-  otomatis tanggung jawab tiap orang termasuk pajak dan service charge,
-  lengkap dengan snapshot final.
-- **Tidak punya gambaran arah keuangan** — dashboard arus kas, grafik,
-  anggaran bulanan, dan laporan interaktif memberikan ringkasan yang jelas per
-  periode.
-
-## Manfaat
-
-- **Kontrol keuangan harian** dalam satu aplikasi, tanpa spreadsheet yang
-  rawan salah hitung.
-- **Perhitungan yang dapat dipercaya**: semua operasi keuangan dilakukan di
-  server dengan integer rupiah, sehingga hasil selalu deterministik dan
-  konsisten.
-- **Privasi data**: data dipisahkan per pengguna, laporan dibuat server-side
-  dari sesi terverifikasi, dan tidak ada kredensial database yang bocor ke
-  browser.
-- **Mudah berbagi tagihan**: fitur split bill menghitung otomatis berapa
-  tanggung jawab masing-masing orang, termasuk pajak dan service charge.
-- **Keputusan berbasis data** berkat grafik, laporan, dan ringkasan bulanan.
-
-## Hal yang dipelajari dari proyek ini
-
-- **Next.js App Router** untuk aplikasi full-stack modular monolith yang
-  benar-benar server-first.
-- **TypeScript strict** dan pola pemisahan kode server-only dari komponen
-  client.
-- **Drizzle ORM + Neon PostgreSQL** dengan migrasi ber-versi dan Database yang
-  memiliki constraint untuk menjamin integritas finansial.
-- **Authentikasi server-side** (Neon Auth) dengan otorisasi pada setiap query
-  berdasarkan sesi pengguna.
-- **Kalkulasi uang yang benar**: penyimpanan integer rupiah, perhitungan
-  otoritatif di server, dan penanganan pembulatan secara eksplisit.
-- **Server Actions dan Route Handlers** untuk mutasi internal dan
-  eksternal yang aman.
-- **Pengujian berlapis**: unit test (Vitest), integration test terisolasi
-  (Neon branch), dan E2E (Playwright + aksesibilitas).
-- **Deployment serverless**: Vercel dan validasi environment saat rilis.
+The app is a Next.js modular monolith. Server actions and routes check the user session before domain code reads or changes records in Neon PostgreSQL.
 
 ## Tech stack
 
-- Next.js (App Router) + React + TypeScript strict
-- Neon PostgreSQL + Drizzle ORM + driver serverless Neon + Neon Auth
-- Tailwind CSS, Recharts, Zod
-- Vitest, Testing Library, Playwright
-- npm sebagai satu-satunya package manager
+| Icon | Technology | Role |
+| :---: | --- | --- |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/nextjs/nextjs-original.svg" width="22" alt="" /> | **Next.js + React** | App Router, server rendering, and the PWA |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/typescript/typescript-original.svg" width="22" alt="" /> | **TypeScript** | Typed application code |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/tailwindcss/tailwindcss-original.svg" width="22" alt="" /> | **Tailwind CSS** | Interface styling; Recharts draws reports |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg" width="22" alt="" /> | **Neon PostgreSQL + Drizzle** | Data storage and migrations; Neon Auth handles sign-in |
+| <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vitest/vitest-original.svg" width="22" alt="" /> | **Vitest + Playwright** | Unit and browser tests |
 
-## Prasyarat
+## Run locally
 
-- Node.js 22 LTS (di-pin oleh `.nvmrc` / `.node-version`; `engines` =
-  `>=22 <23`)
-- Dashboard Neon PostgreSQL dengan Neon Auth aktif
-- npm
+You need **Node.js 22**, **npm**, and a **Neon project with PostgreSQL and Neon Auth enabled**. Use credentials from your own Neon project.
 
-Gunakan Node 22 LTS: `node --version` diharapkan 22.x sebelum menjalankan
-`npm ci` / `npm run build`.
+1. Install dependencies: `npm ci`.
+2. Copy `.env.example` to `.env.local` (`cp .env.example .env.local`; in PowerShell, use `Copy-Item .env.example .env.local`).
+3. Set `DATABASE_URL` and `NEON_AUTH_BASE_URL` from Neon. Set `NEON_AUTH_COOKIE_SECRET` to a stable secret of at least 32 characters. Generate one with `node -e "console.log(require('node:crypto').randomBytes(32).toString('hex'))"`. Keep `NEXT_PUBLIC_APP_URL=http://localhost:3000`.
+4. Apply the database migrations: `npm run db:migrate`.
+5. Start the app: `npm run dev`, then open [localhost:3000](http://localhost:3000) on your laptop. Use the browser's phone preview to see the finance UI.
 
-## Set up lokal
+Use a separate `TEST_DATABASE_URL` only when running integration tests. Never commit `.env.local`.
 
-```bash
-# 1. Install dependensi dengan npm saja
-npm ci
+## Checks
 
-# 2. Siapkan environment
-cp .env.example .env.local
-```
-
-Reports are available in the app with a selectable date range. The report PDF
-and email export flow has been removed. Personal-data JSON backup remains
-available from the app.
-
-Isi `.env.local`:
-
-- `DATABASE_URL` — koneksi PostgreSQL server-only
-- `NEON_AUTH_BASE_URL` — endpoint Neon Auth
-- `NEON_AUTH_COOKIE_SECRET` — rahasia acak minimal 32 karakter
-- `NEXT_PUBLIC_APP_URL` — URL aplikasi
-
-```bash
-# 3. Migrasikan database
-npm run db:migrate
-
-# 4. Jalankan aplikasi
-npm run dev
-```
-
-Buka `http://localhost:3000`.
-
-## Testing
-
-```bash
-npm run lint          # ESLint
-npm run typecheck     # tsc --noEmit
-npm run test          # unit test (Vitest)
-npm run test:integration  # integration test wajib memakai TEST_DATABASE_URL
-```
-
-Integration test menggunakan Neon branch/database terpisah melalui
-`TEST_DATABASE_URL` dan berhenti jika variabel hilang, sama dengan
-`DATABASE_URL`, atau mengarah ke target production.
-
-E2E (Playwright) berjalan melawan server dev lokal dan isolated Neon
-branchable Auth:
-
-```bash
-cp .env.e2e.example .env.e2e.local  # isi semua variabel
-npm run test:e2e
-```
-
-Konfigurasi E2E fail-closed: tanpa `.env.e2e.local` yang lengkap, perintah
-berhenti. Jangan pernah mengisi target production atau kredensial nyata pada
-file tersebut.
-
-## Deployment (Vercel)
-
-1. Impor repositori ke Vercel dan atur framework preset Next.js (Node 22).
-2. Tambahkan variabel environment di dashboard Vercel (lihat daftar pada
-   bagian set up lokal). Jangan pernah mengekspos `DATABASE_URL` ke browser.
-3. Sebelum atau setelah deployment, jalankan migrasi terhadap database
-   tujuan:
-
-   ```bash
-   npm run db:migrate
-   ```
-
-4. Pastikan `npm run validate:env` lolos dengan environment rilis.
-5. Pastikan `vercel.json` tidak memicu cron yang sudah tidak dipakai. Fitur
-   transaksi berulang telah dihapus dan tidak memiliki endpoint cron lagi.
-
-Catatan: jadwal Vercel Cron berjalan dalam UTC sedangkan aplikasi memakai
-timezone Asia/Jakarta. Jangan commit `.env.local` / `.env.e2e.local`.
-
-## Rencana pengembangan
-
-Spenles masih memiliki rencana pengembangan yang tetap berada di dalam cakupan
-produk pengelolaan keuangan pribadi:
-
-- integrasi dengan saluran pembayaran, misalnya mencocokkan transaksi dan
-  menerima notifikasi pembayaran;
-- impor transaksi dari bank atau penyedia layanan keuangan;
-- analitik lain seperti perbandingan kategori antarperiode dan target tabungan;
-- sinkronisasi data lintas perangkat yang lebih halus, termasuk mode
-  offline-first yang lebih jauh.
-
-Catatan: Spenles **bukan dan tidak berfokus pada investasi**. Fitur seperti
-rekomendasi portofolio, trading, atau perencanaan aset investasi tidak termasuk
-dalam roadmap produk ini.
-
-## Perintah umum
-
-```bash
-npm run dev             # server development
-npm run build           # build produksi
-npm run start           # menjalankan hasil build
-npm run lint            # lint
-npm run typecheck       # type check
-npm run test            # unit test
-npm run test:integration
-npm run test:e2e        # E2E (Playwright)
-npm run validate:env    # validasi environment rilis
-npm run db:generate     # generate migrasi Drizzle
-npm run db:migrate      # jalankan migrasi
-npm run db:studio       # browse schema
-```
-
-Kode aplikasi berada di `src/`. Akses database hanya boleh melalui modul
-server-only di `src/db/`.
-
-## Lisensi
-
-Proyek ini bersifat privat (`"private": true` pada `package.json`) dan
-belum dilisensikan untuk penggunaan publik; seluruh hak cipta dilindungi.
-Tetapkan lisensi terbuka yang sesuai sebelum proyek ini dirilis ke publik.
+Run `npm run lint`, `npm run typecheck`, `npm run test`, and `npm run build` before shipping changes.
