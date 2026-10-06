@@ -5,7 +5,6 @@ import { accounts, categories, profiles } from "@/db/schema";
 import { createOwnedAccount } from "@/modules/accounts/services/account-mutations";
 import { createOwnedTransfer } from "@/modules/accounts/services/transfer-mutations";
 import { ensureUserFoundationWithDatabase } from "@/modules/onboarding/services/ensure-user-foundation";
-import { getPersonalDataBackupJson } from "@/modules/reports/queries/backup-query";
 import { getReportAnalysis, getReportCategoryBreakdown } from "@/modules/reports/queries/report-queries";
 import {
   createOwnedTransaction,
@@ -13,7 +12,7 @@ import {
 } from "@/modules/transactions/services/transaction-mutations";
 import { getTestDatabase } from "@/test/database";
 
-describe("Phase 06 authenticated reports and exports", () => {
+describe("Phase 06 authenticated reports", () => {
   const database = getTestDatabase();
   const userA = `phase06-test-a-${randomUUID()}`;
   const userB = `phase06-test-b-${randomUUID()}`;
@@ -22,7 +21,6 @@ describe("Phase 06 authenticated reports and exports", () => {
   let foreignAccount: string;
   let incomeCategory: string;
   let expenseCategory: string;
-  let deletedTransactionId: string;
 
   beforeAll(async () => {
     await ensureUserFoundationWithDatabase(database, {
@@ -89,8 +87,7 @@ describe("Phase 06 authenticated reports and exports", () => {
       transactionAt: new Date("2026-08-04T04:00:00.000Z"),
       note: "Dihapus",
     });
-    deletedTransactionId = deleted!.id;
-    await softDeleteOwnedTransaction(database, userA, deletedTransactionId);
+    await softDeleteOwnedTransaction(database, userA, deleted!.id);
     await createOwnedTransaction(database, userB, {
       accountId: foreignAccount,
       categoryId: foreignCategories.find((row) => row.type === "expense")!.id,
@@ -133,27 +130,6 @@ describe("Phase 06 authenticated reports and exports", () => {
       ),
     ).toBe(25_000n);
     expect(breakdown.totalIdr).toBe("25000");
-  });
-
-  it("produces one versioned allowlisted snapshot including deleted personal data", async () => {
-    const text = await getPersonalDataBackupJson(
-      userA,
-      new Date("2026-08-06T06:00:00.000Z"),
-      database,
-    );
-    const backup = JSON.parse(text) as {
-      schemaVersion: string;
-      data: {
-        transactions: Array<{ id: string; deletedAt: string | null }>;
-      };
-    };
-    expect(backup.schemaVersion).toBe("1.1");
-    expect(
-      backup.data.transactions.find((row) => row.id === deletedTransactionId)
-        ?.deletedAt,
-    ).toBeTruthy();
-    expect(text).not.toMatch(/"userId"|"systemKey"|"normalizedName"/u);
-    expect(text).not.toContain("Milik user B");
   });
 
 });

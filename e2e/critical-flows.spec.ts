@@ -26,7 +26,7 @@ async function expectNoSeriousAxeViolations(page: Page) {
   ).toEqual([]);
 }
 
-test("authentication, private navigation, transaction, report, and backup", async ({
+test("authentication, private navigation, transaction, and report", async ({
   page,
 }) => {
   await page.goto("/reports");
@@ -64,10 +64,6 @@ test("authentication, private navigation, transaction, report, and backup", asyn
   await page.goto("/reports");
   await expect(page.getByRole("button", { name: /Select date range/u })).toBeVisible();
   await expect(page.getByRole("button", { name: "Export report" })).toHaveCount(0);
-
-  const backup = await page.request.get("/api/exports/backup");
-  expect(backup.status()).toBe(200);
-  expect((await backup.json()).schemaVersion).toBe("1.1");
 
   await page.getByRole("button", { name: "Keluar" }).click();
   await expect(page).toHaveURL(/\/login$/u);

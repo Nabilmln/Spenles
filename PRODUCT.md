@@ -20,7 +20,7 @@ account and financial dataset. Split-bill participants do not need accounts.
 ## Product Purpose
 
 Spenles helps users record income and expenses, understand cash flow, manage
-accounts and category budgets, calculate shared bills, and review or export
+accounts and category budgets, calculate shared bills, and review
 their own financial data. The application is an installable mobile PWA, with
 online access and fresh authenticated pages. It is not a banking, payment,
 investment, or professional accounting service.
@@ -43,8 +43,8 @@ investment, or professional accounting service.
 
 - Personal income and expense transactions, categories, accounts, internal
   transfers, budgets, dashboard summaries, split bills, interactive reports,
-  and a downloadable versioned JSON backup are in the current app. PDF report
-  generation and report email delivery have been removed.
+  are in the current app. PDF report generation, report email delivery, and
+  personal-data download have been removed.
 - Registration, sign-in, and password recovery use Neon Auth. Financial data
   belongs to the authenticated user; split-bill contacts are personal records.
 - Split-bill friends use one of five bundled portrait avatars. Owners can choose

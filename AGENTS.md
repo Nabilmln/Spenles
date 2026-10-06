@@ -13,7 +13,6 @@ The application allows users to:
 - manage multiple accounts or wallets;
 - generate financial reports;
 - calculate split bills;
-- export personal financial data.
 
 ## Product defaults
 
