@@ -37,7 +37,6 @@ async function savePng(file, source, size) {
 await Promise.all([
   savePng("public/favicon-16.png", transparent, 16),
   savePng("public/favicon-32.png", transparent, 32),
-  savePng("public/favicon-48.png", transparent, 48),
   savePng("public/icon-192.png", full, 192),
   savePng("public/icon-512.png", full, 512),
   savePng("public/icon-maskable-192.png", maskable, 192),
