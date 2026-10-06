@@ -44,7 +44,7 @@ describe("ProfileMenu", () => {
     renderMenu();
     const trigger = screen.getByRole("button", { name: "Open profile" });
     expect(trigger).toBeInTheDocument();
-    expect(trigger.querySelector("img")).toHaveAttribute("src", expect.stringContaining("default-"));
+    expect(trigger.querySelector("img")).toHaveAttribute("src", expect.stringContaining(".webp"));
     expect(screen.queryByRole("dialog", { name: "Profile" })).not.toBeInTheDocument();
 
     fireEvent.click(trigger);
@@ -79,7 +79,7 @@ describe("ProfileMenu", () => {
     expect(screen.getByRole("dialog", { name: "Choose profile photo" })).toBeInTheDocument();
     fireEvent.click(screen.getByRole("radio", { name: "Photo 3" }));
     fireEvent.click(screen.getByRole("button", { name: "Save photo" }));
-    await waitFor(() => expect(trigger.querySelector("img")).toHaveAttribute("src", expect.stringContaining("default-3")));
+    await waitFor(() => expect(trigger.querySelector("img")).toHaveAttribute("src", expect.stringContaining("bear.webp")));
   });
 
   it("closes the sheet with the Escape key", async () => {

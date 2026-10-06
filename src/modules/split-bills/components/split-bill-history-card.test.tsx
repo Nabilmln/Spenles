@@ -36,7 +36,7 @@ describe("split-bill history card", () => {
       />,
     );
     const stack = screen.getByRole("img", { name: "4 participants" });
-    expect(stack.querySelector("img")?.getAttribute("src")).toContain("default-3.png");
+    expect(stack.querySelector("img")?.getAttribute("src")).toContain("bear.webp");
   });
 
   it("shows the Draft badge and hides the amount for draft bills", () => {

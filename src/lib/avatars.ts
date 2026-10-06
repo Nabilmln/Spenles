@@ -1,9 +1,10 @@
 export const defaultAvatarPaths = [
-  "/avatars/default-1.png",
-  "/avatars/default-2.png",
-  "/avatars/default-3.png",
-  "/avatars/default-4.png",
-  "/avatars/default-5.png",
+  "/avatars/fox.webp",
+  "/avatars/cat.webp",
+  "/avatars/bear.webp",
+  "/avatars/rabbit.webp",
+  "/avatars/otter.webp",
+  "/avatars/panda.webp",
 ] as const;
 
 export function avatarIndexForId(id: string): number {

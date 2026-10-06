@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { friends } from "@/db/schema";
 import { requireSessionUser } from "@/lib/auth/require-session";
+import { defaultAvatarPaths } from "@/lib/avatars";
 import { friendAvatarIndexSchema, friendIdSchema, friendNameSchema } from "../schemas/friend";
 
 export type FriendActionState = {
@@ -41,7 +42,7 @@ export async function createFriendAction(
   await db.insert(friends).values({
     userId: user.id,
     name: parsed.data,
-    avatarIndex: parsedAvatar?.data ?? Math.floor(Math.random() * 5) + 1,
+    avatarIndex: parsedAvatar?.data ?? Math.floor(Math.random() * defaultAvatarPaths.length) + 1,
   });
 
   revalidatePath("/split-bills");

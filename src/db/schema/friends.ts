@@ -20,7 +20,7 @@ export const friends = pgTable(
   },
   (table) => [
     index("friends_user_id_idx").on(table.userId),
-    check("friends_avatar_index_range", sql`${table.avatarIndex} BETWEEN 1 AND 5`),
+    check("friends_avatar_index_range", sql`${table.avatarIndex} BETWEEN 1 AND 6`),
   ],
 );
 

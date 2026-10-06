@@ -13,7 +13,7 @@ export function FriendAvatarPicker({
   return (
     <fieldset className="grid min-w-0 gap-[.6rem] border-0 p-0">
       <legend className="mb-[.6rem] text-[.86rem] font-medium">Avatar</legend>
-      <div className="grid grid-cols-5 gap-2">
+      <div className="grid grid-cols-3 gap-2 min-[380px]:grid-cols-6">
         {defaultAvatarPaths.map((src, index) => {
           const choice = index + 1;
           return (

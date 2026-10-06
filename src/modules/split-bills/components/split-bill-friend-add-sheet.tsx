@@ -3,6 +3,7 @@
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToastActionState } from "@/components/ui/toast";
+import { defaultAvatarPaths } from "@/lib/avatars";
 import { BottomSheet } from "@/components/ui/bottom-sheet";
 import { buttonClass, fieldClass, inputClass } from "@/components/ui/styles";
 import { createFriendAction } from "../../friends/actions/friend-actions";
@@ -20,7 +21,7 @@ export function SplitBillFriendAddSheet({
 }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [avatarIndex, setAvatarIndex] = useState(
-    () => Math.floor(Math.random() * 5) + 1,
+    () => Math.floor(Math.random() * defaultAvatarPaths.length) + 1,
   );
   const router = useRouter();
   const [state, action, pending] = useToastActionState(
@@ -29,7 +30,7 @@ export function SplitBillFriendAddSheet({
     undefined,
     () => {
       formRef.current?.reset();
-      setAvatarIndex(Math.floor(Math.random() * 5) + 1);
+      setAvatarIndex(Math.floor(Math.random() * defaultAvatarPaths.length) + 1);
       onClose();
       router.refresh();
     },
@@ -40,7 +41,7 @@ export function SplitBillFriendAddSheet({
       open={open}
       onClose={() => {
         formRef.current?.reset();
-        setAvatarIndex(Math.floor(Math.random() * 5) + 1);
+        setAvatarIndex(Math.floor(Math.random() * defaultAvatarPaths.length) + 1);
         onClose();
       }}
       title="Add Friend"

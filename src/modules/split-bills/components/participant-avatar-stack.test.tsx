@@ -15,7 +15,7 @@ describe("participant avatar stack", () => {
   it("renders a single participant avatar", () => {
     render(<ParticipantAvatarStack names={["Ayu"]} count={1} />);
     const stack = screen.getByRole("img", { name: "1 participants" });
-    expect(stack.querySelector("img")?.getAttribute("src")).toContain("default-");
+    expect(stack.querySelector("img")?.getAttribute("src")).toContain(".webp");
   });
 
   it("stacks the selected friend images and shows the remaining count", () => {
@@ -29,9 +29,9 @@ describe("participant avatar stack", () => {
     const stack = screen.getByRole("img", { name: "5 participants" });
     const images = [...stack.querySelectorAll("img")];
     expect(images).toHaveLength(3);
-    expect(images[0].getAttribute("src")).toContain("default-2.png");
-    expect(images[1].getAttribute("src")).toContain("default-4.png");
-    expect(images[2].getAttribute("src")).toContain("default-5.png");
+    expect(images[0].getAttribute("src")).toContain("cat.webp");
+    expect(images[1].getAttribute("src")).toContain("rabbit.webp");
+    expect(images[2].getAttribute("src")).toContain("otter.webp");
     expect(screen.getByText("+2")).toBeInTheDocument();
   });
 

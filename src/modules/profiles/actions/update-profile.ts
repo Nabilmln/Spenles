@@ -6,6 +6,7 @@ import { z } from "zod";
 import { db } from "@/db";
 import { profiles } from "@/db/schema";
 import { requireSessionUser } from "@/lib/auth/require-session";
+import { defaultAvatarPaths } from "@/lib/avatars";
 import { profileSchema } from "../schemas/profile";
 
 export type ProfileActionState = {
@@ -50,7 +51,7 @@ export async function updateProfileAction(
 
 export async function updateProfileAvatarAction(index: number): Promise<ProfileActionState> {
   const user = await requireSessionUser();
-  const parsed = z.number().int().min(1).max(5).safeParse(index);
+  const parsed = z.number().int().min(1).max(defaultAvatarPaths.length).safeParse(index);
   if (!parsed.success) return { error: "Choose a profile photo." };
 
   const updated = await db

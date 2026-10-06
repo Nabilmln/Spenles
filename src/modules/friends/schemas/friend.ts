@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { defaultAvatarPaths } from "@/lib/avatars";
 
 export const friendNameSchema = z
   .string()
@@ -8,4 +9,4 @@ export const friendNameSchema = z
 
 export const friendIdSchema = z.string().uuid();
 
-export const friendAvatarIndexSchema = z.coerce.number<number>().int().min(1).max(5);
+export const friendAvatarIndexSchema = z.coerce.number<number>().int().min(1).max(defaultAvatarPaths.length);

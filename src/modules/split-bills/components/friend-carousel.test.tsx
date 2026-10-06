@@ -35,7 +35,7 @@ describe("friend carousel", () => {
     );
     expect(screen.getByText("Ayu")).toBeInTheDocument();
     expect(screen.getByText("Bima")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Ayu" }).querySelector("img")?.getAttribute("src")).toContain("default-2.png");
+    expect(screen.getByRole("button", { name: "Ayu" }).querySelector("img")?.getAttribute("src")).toContain("cat.webp");
     expect(screen.getByRole("button", { name: "Bima" }).querySelector("img")).toBeTruthy();
     fireEvent.click(screen.getByRole("button", { name: /^add$/i }));
     expect(onAddFriend).toHaveBeenCalledTimes(1);

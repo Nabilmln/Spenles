@@ -47,11 +47,11 @@ investment, or professional accounting service.
   personal-data download have been removed.
 - Registration, sign-in, and password recovery use Neon Auth. Financial data
   belongs to the authenticated user; split-bill contacts are personal records.
-- Split-bill friends use one of five bundled portrait avatars. Owners can choose
-  a portrait when adding or editing a friend; older contacts receive a stable
-  default portrait until changed.
-- Profile photos use the same five bundled portraits. Users can change theirs
-  from the profile sheet; an unchanged profile keeps a stable default portrait.
+- Split-bill friends use one of six bundled animal avatars. Owners can choose
+  an avatar when adding or editing a friend; older contacts receive a stable
+  default animal until changed.
+- Profile photos use the same six animal avatars. Users can change theirs
+  from the profile sheet; an unchanged profile keeps a stable default animal.
 - Users choose one owned account whose balance appears on Home. Every owned
   account remains available for transactions and transfers; Accounts shows the
   combined total separately.

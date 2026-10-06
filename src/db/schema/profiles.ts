@@ -25,7 +25,7 @@ export const profiles = pgTable(
   (table) => [
     check("profiles_display_name_not_blank", sql`length(trim(${table.displayName})) > 0`),
     check("profiles_currency_idr", sql`${table.defaultCurrency} = 'IDR'`),
-    check("profiles_avatar_index_range", sql`${table.avatarIndex} between 1 and 5`),
+    check("profiles_avatar_index_range", sql`${table.avatarIndex} between 1 and 6`),
   ],
 );
 

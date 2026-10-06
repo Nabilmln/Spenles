@@ -13,16 +13,16 @@ vi.mock("../../friends/actions/friend-actions", () => ({
 afterEach(cleanup);
 
 describe("split-bill friend add sheet", () => {
-  it("starts with one portrait and submits the one selected by the user", () => {
+  it("starts with one animal avatar and submits the one selected by the user", () => {
     render(<SplitBillFriendAddSheet open onClose={vi.fn()} />);
 
     const choices = screen.getAllByRole("radio", { name: /^Avatar \d$/ });
-    expect(choices).toHaveLength(5);
+    expect(choices).toHaveLength(6);
     expect(choices.filter((choice) => (choice as HTMLInputElement).checked)).toHaveLength(1);
 
-    fireEvent.click(screen.getByRole("radio", { name: "Avatar 5" }));
+    fireEvent.click(screen.getByRole("radio", { name: "Avatar 6" }));
     const form = screen.getByLabelText("Friend name").closest("form") as HTMLFormElement;
-    expect(new FormData(form).get("avatarIndex")).toBe("5");
+    expect(new FormData(form).get("avatarIndex")).toBe("6");
   });
 
   it("closes after a friend is added", async () => {

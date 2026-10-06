@@ -140,7 +140,7 @@ describe("split-bill history section", () => {
     expect(screen.getByText("Split Bill History")).toBeInTheDocument();
     expect(screen.getByText("Warung Bu Endah")).toBeInTheDocument();
     const stack = screen.getByRole("img", { name: "3 participants" });
-    expect(stack.querySelector("img")?.getAttribute("src")).toContain("default-2.png");
+    expect(stack.querySelector("img")?.getAttribute("src")).toContain("cat.webp");
   });
 
   it("shows an empty state when there are no bills", () => {
