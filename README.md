@@ -63,7 +63,3 @@ You need accounts for [GitHub](https://github.com/), [Neon](https://console.neon
 If you use a different Neon database for production, run `npm run db:migrate` with that database's `DATABASE_URL` before testing the deployed app. The migration command changes the database named in your local `.env.local`, so check that value first.
 
 Use a separate `TEST_DATABASE_URL` only when running integration tests.
-
-## Checks
-
-Run `npm run lint`, `npm run typecheck`, `npm run test`, and `npm run build` before shipping changes.
