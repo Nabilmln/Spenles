@@ -47,7 +47,7 @@ export default function RootLayout({
             if (!desktop.matches || navigation?.type !== "reload" || !("scrollRestoration" in history)) return;
             history.scrollRestoration = "manual";
             window.addEventListener("pageshow", () => {
-              if (desktop.matches) window.scrollTo(0, 0);
+              if (desktop.matches) window.scrollTo({ top: 0, left: 0, behavior: "instant" });
             }, { once: true });
             desktop.addEventListener("change", () => {
               if (!desktop.matches) history.scrollRestoration = "auto";

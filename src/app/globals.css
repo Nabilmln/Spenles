@@ -68,6 +68,7 @@ html {
 
 @media (min-width: 601px) {
   html:has([data-landing-root]) {
+    scroll-behavior: smooth;
     scrollbar-width: none;
   }
   html:has([data-landing-root])::-webkit-scrollbar {

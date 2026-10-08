@@ -20,7 +20,7 @@ const featureDescription = "m-0 max-w-[42ch] text-[.86rem] leading-[1.75] text-[
 
 export function DesktopLanding() {
   return (
-    <div className={`${styles.landing} min-h-screen overflow-clip bg-white text-[#171717] tabular-nums scroll-smooth`} lang="en" data-landing-root>
+    <div className={`${styles.landing} min-h-screen overflow-clip bg-white text-[#171717] tabular-nums`} lang="en" data-landing-root>
       <LandingMotion />
       <LandingEntrance />
       <header className="sticky top-0 z-50 w-full bg-white">

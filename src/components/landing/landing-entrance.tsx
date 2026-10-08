@@ -13,8 +13,8 @@ export function LandingEntrance() {
     let resetFrame = 0;
     if (reloaded && root.getClientRects().length) {
       // Hydration can finish after the browser attempts to restore its old position.
-      window.scrollTo(0, 0);
-      resetFrame = requestAnimationFrame(() => window.scrollTo(0, 0));
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      resetFrame = requestAnimationFrame(() => window.scrollTo({ top: 0, left: 0, behavior: "instant" }));
     }
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
